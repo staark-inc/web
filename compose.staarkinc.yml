@@ -1,0 +1,18 @@
+services:
+  website:
+    build: .
+    restart: unless-stopped
+    init: true
+    stop_grace_period: 30s
+    networks:
+      - staark-network
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: "staark-network"
+      traefik.http.routers.staarkinc-main.rule: "Host(`staarkinc.com`) || Host(`www.staarkinc.com`)"
+      traefik.http.routers.staarkinc-main.service: "staarkinc-main"
+      traefik.http.services.staarkinc-main.loadbalancer.server.port: "3000"
+
+networks:
+  staark-network:
+    external: true
