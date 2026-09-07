@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { Moon, Sun } from 'lucide-react';
-import staarkLogo from '@/public/staark-logo.png';
+import staarkLogo from '../../logo.png';
 import { X, Menu, Mail } from 'lucide-react';
 
 export default function Navigation({ scrolled, isLight, t, setThemeMode, lang, setLang }: { scrolled: boolean; isLight: boolean; t: any; setThemeMode: React.Dispatch<React.SetStateAction<'dark' | 'light'>>; lang: 'EN' | 'SV'; setLang: React.Dispatch<React.SetStateAction<'EN' | 'SV'>>; }) {
