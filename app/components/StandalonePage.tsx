@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, ChevronDown, Code2, Globe2, Mail, MapPin, Phone, Search, ShieldCheck } from "lucide-react";
+import { Check, ChevronDown, Mail, MapPin, Phone } from "lucide-react";
 import { useState } from "react";
 import { StandaloneLayout } from "./SiteChrome";
 import ContactForm from "./ContactForm";
@@ -13,10 +13,10 @@ const faqs = [
 ] as const;
 
 const serviceItems = [
-  ["Webbdesign & Utveckling", "Vi bygger moderna, snabba webbplatser med Next.js och React", Code2],
-  ["SEO & Synlighet", "Vi optimerar din webbplats så att lokala kunder hittar dig på Google", Search],
-  ["Underhåll & Support", "Löpande uppdateringar, säkerhetskopiering och teknisk support", ShieldCheck],
-  ["Hosting & Drift", "Snabb och säker hosting med 99.9% upptid", Globe2],
+  ["Webbdesign & Utveckling", "Vi bygger moderna, snabba webbplatser med Next.js och React", "/icon-layout.svg"],
+  ["SEO & Synlighet", "Vi optimerar din webbplats så att lokala kunder hittar dig på Google", "/icon-search.svg"],
+  ["Underhåll & Support", "Löpande uppdateringar, säkerhetskopiering och teknisk support", "/icon-smartphone.svg"],
+  ["Hosting & Drift", "Snabb och säker hosting med 99.9% upptid", "/icon-help-circle.svg"],
 ] as const;
 
 function Heading({ label, title, text }: { label: string; title: string; text: string }) {
@@ -25,15 +25,15 @@ function Heading({ label, title, text }: { label: string; title: string; text: s
 
 export default function StandalonePage({ type }: { type: "about" | "services" | "process" | "pricing" | "faq" | "contact" }) {
   if (type === "about") return <StandaloneLayout><section className="about standalone section-white"><div className="mission-art" /><div><Heading label="Om oss" title="Vår mission: Digitalisera lokala företag i Jönköping och Värnamo" text="Vi hjälper småföretagare att ta steget online med rena, snabba och ekonomiskt tillgängliga lösningar." /><div className="about-copy"><p>Vi är ett dedikerat team av utvecklare och designers som brinner för att hjälpa småföretagare ta steget online. Ett lokalt bageri, en verkstad eller en mottagning behöver inte en enorm budget för att lyckas digitalt.</p><p>Staark Inc. kombinerar modern teknik med personlig service och tydliga priser.</p></div><div className="tech"><strong>MODERNA TEKNIKER VI ANVÄNDER</strong><div><span>Next.js</span><span>React</span><span>Tailwind CSS</span><span>Vercel</span></div></div></div></section></StandaloneLayout>;
-  if (type === "services") return <StandaloneLayout><section className="section standalone-section section-white"><Heading label="Vad vi erbjuder" title="Allt ditt företag behöver för att växa online" text="En enkel, ren och effektiv webbplats. Vi tar hand om den tekniska komplexiteten så att du kan fokusera på det du gör bäst." /><div className="service-grid">{serviceItems.map(([title, description, Icon]) => <article className="service-card" key={title}><span className="icon-box"><Icon size={20} /></span><div><h3>{title}</h3><p>{description}</p></div></article>)}</div></section></StandaloneLayout>;
+  if (type === "services") return <StandaloneLayout><section className="section standalone-section section-white"><Heading label="Vad vi erbjuder" title="Allt ditt företag behöver för att växa online" text="En enkel, ren och effektiv webbplats. Vi tar hand om den tekniska komplexiteten så att du kan fokusera på det du gör bäst." /><div className="service-grid">{serviceItems.map(([title, description, icon]) => <article className="service-card" key={title}><span className="icon-box"><img src={icon} alt="" /></span><div><h3>{title}</h3><p>{description}</p></div></article>)}</div></section></StandaloneLayout>;
   if (type === "process") return <StandaloneLayout><section className="section standalone-section"><Heading label="Vår process" title="Från idé till färdig webbplats på bara tre enkla steg" text="Du bidrar med berättelsen, vi bidrar med den digitala närvaron." /><div className="steps">{[["01", "Kontakta oss", "Fyll i formuläret eller ring oss direkt."], ["02", "Vi diskuterar dina behov", "Vi bestämmer tillsammans innehåll, sidor och bilder."], ["03", "Du får din färdiga webbplats", "Vi skriver koden, optimerar och sätter sajten live."]].map(([number, title, text]) => <article className="step-card" key={number}><strong>{number}</strong><div><h3>{title}</h3><p>{text}</p></div></article>)}</div></section></StandaloneLayout>;
   if (type === "pricing") {
     const pricingPackages = [
       ["Starter", "2 999 SEK", ["Enkel webbplats (upp till 5 sidor)", "6 månaders gratis hosting", "Grundläggande SEO", "Responsiv design", "E-postsupport"]],
       ["Professionell", "5 999 SEK", ["Webbplats upp till 15 sidor", "6 månaders gratis hosting", "Avancerad SEO-optimering", "Kontaktformulär & Google Maps", "Prioriterad support", "Underhåll ingår i 6 månader"]],
-      ["Företag", "9 999 SEK", ["Skräddarsydd webbplats", "6 månaders gratis hosting", "Full SEO-optimering", "Avancerade integrationer", "Prioriterad support", "Löpande underhåll"]],
+      ["Företag", "9 999 SEK", ["Skräddarsydd webbplats", "6 månaders gratis hosting", "Full SEO-strategi", "E-handelsfunktioner", "Dedikerad projektledare", "Underhåll ingår i 12 månader"]],
     ] as const;
-    return <StandaloneLayout><section className="pricing standalone-pricing"><div className="pricing-panel"><span className="promo">Kampanjpris - Begränsat erbjudande!</span><strong className="pricing-eyebrow">Våra paket</strong><h1>Hitta rätt paket för ditt företag</h1><p>Välj det paket som passar din verksamhet. Alla paket inkluderar 6 månaders kostnadsfri hosting.</p><div className="package-grid">{pricingPackages.map(([name, price, features], index) => <article className={index === 1 ? "package featured" : "package"} key={name}>{index === 1 && <span className="popular">Populärast</span>}<div><small>{name}</small><h3>{price}</h3></div><ul>{features.map((feature) => <li key={feature}><Check size={14} />{feature}</li>)}</ul><a className={index === 1 ? "button button-primary" : "button button-light"} href="/contact">Välj {name}</a></article>)}</div></div></section></StandaloneLayout>;
+    return <StandaloneLayout><section className="pricing standalone-pricing"><div className="pricing-panel"><span className="promo">Kampanjpris - Begränsat erbjudande!</span><strong className="pricing-eyebrow">Våra paket</strong><h1>Hitta rätt paket för ditt företag</h1><p>Välj det paket som passar din verksamhet. Alla paket inkluderar 6 månaders kostnadsfri hosting.</p><div className="package-grid">{pricingPackages.map(([name, price, features], index) => <article className={index === 1 ? "package featured" : "package"} key={name}>{index === 1 && <span className="popular">Mest populär</span>}<div><small>{name}</small><h3>{price}</h3></div><ul>{features.map((feature) => <li key={feature}><span className="check-box"><img src="/icon-check.svg" alt="" /></span>{feature}</li>)}</ul><a className="button button-primary" href="/contact">{index === 2 ? "Kontakta oss" : `Välj ${name}`}</a></article>)}</div><small className="pricing-note">Alla paket inkluderar 6 månaders kostnadsfri hosting. Efter kampanjperioden från 99 SEK/mån.</small></div></section></StandaloneLayout>;
   }
   if (type === "faq") return <StandaloneLayout><section className="faq standalone section-white"><Heading label="Vanliga frågor" title="Vanliga frågor om våra webbplatser" text="Răspunsuri clare om proces, prețuri și hosting." /><div className="faq-list">{faqs.map(([question, answer], index) => <FaqItem key={question} question={question} answer={answer} index={index} />)}</div></section></StandaloneLayout>;
   return <StandaloneLayout><section className="contact standalone section-white"><div><Heading label="Kontakta oss" title="Låt oss prata om din framtida webbplats" text="Vi svarar på frågor om priser, tider och teknisk process." /><div className="contact-details"><a href="mailto:contact@staarkinc.com"><Mail size={20} /><span>Skicka ett mejl till<strong>contact@staarkinc.com</strong></span></a><a href="tel:+46722000000"><Phone size={20} /><span>Ring oss direkt på<strong>+46 72 200 00 00</strong></span></a><span><MapPin size={20} /><span>Kontor<strong>Jönköping och Värnamo, Sverige</strong></span></span></div></div><ContactForm /></section></StandaloneLayout>;

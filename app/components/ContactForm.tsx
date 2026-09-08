@@ -32,14 +32,14 @@ export default function ContactForm() {
   return (
     <form className="contact-form" onSubmit={submit}>
       <h3>Skicka ett snabbmeddelande</h3>
-      <label>Namn<input name="name" required maxLength={120} placeholder="ex. Andersson Anna" /></label>
-      <label>E-post<input name="email" required maxLength={320} type="email" placeholder="ex. anna@foretag.se" /></label>
-      <label>Berätta kort om ditt projekt<textarea name="message" required maxLength={5000} placeholder="Vad behöver du hjälp med?" rows={5} /></label>
+      <label htmlFor="contact-name">Namn<input id="contact-name" name="name" required maxLength={120} placeholder="ex. Andersson Anna" /></label>
+      <label htmlFor="contact-email">E-post<input id="contact-email" name="email" required maxLength={320} type="email" placeholder="ex. anna@foretag.se" /></label>
+      <label htmlFor="contact-message">Berätta kort om ditt projekt<textarea id="contact-message" name="message" required maxLength={5000} placeholder="Vad behöver du hjälp med?" rows={5} /></label>
       <button className="button button-primary" disabled={status === "sending"} type="submit">
         {status === "sending" ? "Skickar..." : "Skicka meddelande"} <ArrowUpRight size={16} />
       </button>
-      {status === "success" && <p className="form-status success">Tack! Ditt meddelande har skickats.</p>}
-      {status === "error" && <p className="form-status error">Meddelandet kunde inte skickas. Försök igen.</p>}
+      {status === "success" && <p className="form-status success" role="status">Tack! Ditt meddelande har skickats.</p>}
+      {status === "error" && <p className="form-status error" role="alert">Meddelandet kunde inte skickas. Försök igen.</p>}
     </form>
   );
 }

@@ -3,22 +3,19 @@
 import { useState } from "react";
 import {
   Code2,
-  Globe2,
   Mail,
   MapPin,
   Menu,
   Phone,
-  Search,
-  ShieldCheck,
   X,
 } from "lucide-react";
 import ContactForm from "./components/ContactForm";
 
 const services = [
-  ["Webbdesign & Utveckling", "Vi bygger moderna, snabba webbplatser med Next.js och React", Code2],
-  ["SEO & Synlighet", "Vi optimerar din webbplats så att lokala kunder hittar dig på Google", Search],
-  ["Underhåll & Support", "Löpande uppdateringar, säkerhetskopiering och teknisk support", ShieldCheck],
-  ["Hosting & Drift", "Snabb och säker hosting med 99.9% upptid", Globe2],
+  ["Webbdesign & Utveckling", "Vi bygger moderna, snabba webbplatser med Next.js och React", "/icon-layout.svg"],
+  ["SEO & Synlighet", "Vi optimerar din webbplats så att lokala kunder hittar dig på Google", "/icon-search.svg"],
+  ["Underhåll & Support", "Löpande uppdateringar, säkerhetskopiering och teknisk support", "/icon-smartphone.svg"],
+  ["Hosting & Drift", "Snabb och säker hosting med 99.9% upptid", "/icon-help-circle.svg"],
 ] as const;
 
 function SectionHeading({ eyebrow, title, description }: { eyebrow: string; title: string; description?: string }) {
@@ -69,10 +66,10 @@ export default function Page() {
     <main>
       <header className="navbar">
         <Brand />
-        <button className="mobile-menu" onClick={() => setMenuOpen(!menuOpen)} aria-label="Öppna meny">
+        <button className="mobile-menu" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="primary-navigation" aria-label={menuOpen ? "Stäng meny" : "Öppna meny"}>
           {menuOpen ? <X /> : <Menu />}
         </button>
-        <nav className={menuOpen ? "nav-links open" : "nav-links"}>
+        <nav id="primary-navigation" className={menuOpen ? "nav-links open" : "nav-links"}>
           <a href="/services">Tjänster</a><a href="/process">Hur det fungerar</a><a href="/about">Om oss</a><a href="/pricing">Priser</a><a href="/faq">FAQ</a>
         </nav>
         <a className="button button-light nav-cta" href="/contact">Kontakta oss</a>
@@ -92,7 +89,7 @@ export default function Page() {
 
       <section className="section section-white" id="services">
         <SectionHeading eyebrow="Vad vi erbjuder" title="Allt ditt företag behöver för att växa online" description="En enkel, ren och effektiv webbplats. Vi tar hand om den tekniska komplexiteten så att du kan fokusera på det du gör bäst." />
-        <div className="service-grid">{services.map(([title, description, Icon]) => <article className="service-card" key={title}><span className="icon-box"><Icon size={20} /></span><div><h3>{title}</h3><p>{description}</p></div></article>)}</div>
+        <div className="service-grid">{services.map(([title, description, icon]) => <article className="service-card" key={title}><span className="icon-box"><img src={icon} alt="" /></span><div><h3>{title}</h3><p>{description}</p></div></article>)}</div>
       </section>
 
       <section className="section" id="process">

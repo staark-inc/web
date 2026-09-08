@@ -18,8 +18,8 @@ export function SiteHeader() {
   return (
     <header className="navbar">
       <Link href="/"><Brand /></Link>
-      <button className="mobile-menu" onClick={() => setMenuOpen(!menuOpen)} aria-label="Öppna meny">{menuOpen ? <X /> : <Menu />}</button>
-      <nav className={menuOpen ? "nav-links open" : "nav-links"}>
+      <button className="mobile-menu" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="primary-navigation" aria-label={menuOpen ? "Stäng meny" : "Öppna meny"}>{menuOpen ? <X /> : <Menu />}</button>
+      <nav id="primary-navigation" className={menuOpen ? "nav-links open" : "nav-links"}>
         <Link onClick={() => setMenuOpen(false)} href="/services">Tjänster</Link>
         <Link onClick={() => setMenuOpen(false)} href="/process">Hur det fungerar</Link>
         <Link onClick={() => setMenuOpen(false)} href="/about">Om oss</Link>
