@@ -583,6 +583,9 @@ h1 {
 }
 
 .pricing-panel {
+  display: grid;
+  gap: 40px;
+  align-items: center;
   max-width: 960px;
   width: 100%;
   margin: auto;
@@ -600,8 +603,14 @@ h1 {
   color: #fff;
 }
 
+.pricing-header {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
 .pricing-eyebrow {
-  margin-top: 12px;
   padding: 0;
   border: 0;
   background: none;
@@ -609,15 +618,16 @@ h1 {
 }
 
 .pricing-panel h2 {
-  margin-top: 12px;
   font-size: 48px;
   line-height: 1.1;
 }
 
-.pricing-panel>p {
+.pricing-header > p {
   max-width: 600px;
-  margin: 12px auto 40px;
+  margin: 0 auto;
   color: var(--muted);
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 .package-grid {
@@ -724,6 +734,10 @@ h1 {
   grid-template-columns: 1fr 1fr;
   gap: 80px;
   align-items: center;
+}
+
+.faq.standalone {
+  min-height: 620px;
 }
 
 .faq .section-heading {
@@ -957,6 +971,7 @@ footer {
 
   .pricing-panel {
     padding: 40px 24px;
+    gap: 32px;
   }
 
   .package-grid {
@@ -965,6 +980,38 @@ footer {
 
   .package {
     gap: 16px;
+  }
+
+  .faq {
+    gap: 32px;
+    align-items: start;
+  }
+
+  .faq .section-heading h1,
+  .faq .section-heading h2 {
+    max-width: none;
+    font-size: 36px;
+    line-height: 1.1;
+  }
+
+  .faq-list {
+    width: 100%;
+  }
+
+  .faq-item button {
+    gap: 16px;
+    padding: 18px 0;
+    font-size: 15px;
+    line-height: 1.35;
+  }
+
+  .faq-item button span {
+    max-width: calc(100% - 32px);
+  }
+
+  .faq-item p {
+    padding: 0 0 18px;
+    font-size: 14px;
   }
 
   .footer-top {
@@ -1031,6 +1078,29 @@ footer {
 
   .pricing-panel h2 {
     font-size: 36px;
+  }
+
+  .standalone-pricing {
+    padding: 64px 20px;
+  }
+
+  .standalone-pricing .pricing-panel {
+    padding: 32px 16px;
+  }
+
+  .standalone-pricing h1 {
+    font-size: 36px;
+    line-height: 1.1;
+  }
+
+  .standalone-pricing .package {
+    padding: 24px;
+  }
+
+  .popular {
+    top: -12px;
+    right: 16px;
+    transform: none;
   }
 
   .browser-url {
