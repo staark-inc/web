@@ -111,6 +111,11 @@ main {
   border-color: var(--line);
 }
 
+.nav-cta {
+  padding: 10px 18px;
+  font-size: 14px;
+}
+
 .mobile-menu {
   display: none;
   border: 0;
@@ -416,34 +421,63 @@ h1 {
 
 .partners {
   grid-template-columns: repeat(2, 1fr);
-  max-width: 1040px;
+  max-width: 760px;
   width: 100%;
   margin: auto;
+  gap: 16px;
 }
 
 .partner {
   display: grid;
-  justify-items: center;
-  gap: 16px;
-  padding: 32px;
+  grid-template-columns: 48px 1fr;
+  grid-template-rows: auto auto;
+  align-items: center;
+  column-gap: 16px;
+  row-gap: 3px;
+  padding: 18px 20px;
   border: 1px solid var(--line);
   border-radius: 12px;
   background: #fff;
+  transition: border-color .2s, transform .2s, box-shadow .2s;
+}
+
+.partner:hover {
+  border-color: #c9c5bf;
+  box-shadow: 0 8px 18px #0000000a;
+  transform: translateY(-2px);
 }
 
 .partner span {
   display: grid;
   place-items: center;
-  width: 72px;
-  height: 72px;
+  grid-row: 1 / span 2;
+  width: 48px;
+  height: 48px;
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: 10px;
   background: #f5f4f0;
+  color: var(--blue);
+  font-family: var(--font-display);
   font-weight: 800;
+}
+
+.partner strong,
+.partner small {
+  text-align: left;
+}
+
+.partner strong {
+  font-size: 15px;
 }
 
 .partner small {
   color: var(--muted);
+  font-size: 12px;
+}
+
+.partner small b {
+  color: var(--blue);
+  font-size: 14px;
 }
 
 .about {
