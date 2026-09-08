@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Schibsted_Grotesk, Unbounded } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -12,16 +12,41 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const schibsted = Schibsted_Grotesk({
+  variable: "--font-schibsted",
+  subsets: ["latin"],
+});
+
+const unbounded = Unbounded({
+  variable: "--font-unbounded",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
-  title: "Staark Inc",
-  description: "Bespoke digital design, 10GB web storage hosting, web panel access, MySQL databases, and PHP web development studio for companies in Sweden.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://staarkinc.com"),
+  title: {
+    default: "Staark Inc. | Webbyrå i Jönköping och Värnamo",
+    template: "%s | Staark Inc.",
+  },
+  description: "Professionella, snabba och prisvärda webbplatser för småföretag i Jönköping, Värnamo och Småland.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Staark Inc. | Webbyrå i Jönköping och Värnamo",
+    description: "Vi bygger webbplatser som växer ditt företag.",
+    url: "/",
+    siteName: "Staark Inc.",
+    locale: "sv_SE",
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      lang="sv"
+      className={`${geistSans.variable} ${geistMono.variable} ${schibsted.variable} ${unbounded.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

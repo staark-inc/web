@@ -1,9 +1,8 @@
-"use client";
-
-import { useState } from "react";
-import { ChevronDown, Code2, Mail, MapPin, Menu, Phone, X } from "lucide-react";
-import Link from "next/link";
+import { Mail, MapPin, Phone } from "lucide-react";
+import Image from "next/image";
 import ContactForm from "./components/ContactForm";
+import ClientFaqItem from "./components/ClientFaqItem";
+import HomeHeader, { HomeFooter } from "./components/HomeHeader";
 
 const services = [
   ["Webbdesign & Utveckling", "Vi bygger moderna, snabba och konverterande webbplatser.", "/icon-layout.svg"],
@@ -31,33 +30,14 @@ const faqs = [
   ["Kan ni hjälpa till med texter och bilder?", "Absolut. Vi hjälper gärna till att strukturera innehållet och rekommenderar rätt material."],
 ] as const;
 
-function Brand() {
-  return <Link className="v2-brand" href="/" aria-label="Staark startsida">STAARK<span /></Link>;
-}
-
 function SectionHeader({ eyebrow, title, description, centered = false }: { eyebrow: string; title: string; description?: string; centered?: boolean }) {
   return <div className={centered ? "v2-section-header centered" : "v2-section-header"}><span>{eyebrow}</span><h2>{title}</h2>{description && <p>{description}</p>}</div>;
 }
 
-function FaqItem({ question, answer, index }: { question: string; answer: string; index: number }) {
-  const [open, setOpen] = useState(index === 0);
-  return <div className="v2-faq-item"><button onClick={() => setOpen(!open)} aria-expanded={open}><span>{question}</span><ChevronDown size={20} className={open ? "rotate" : ""} /></button>{open && <p>{answer}</p>}</div>;
-}
-
 export default function Page() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const closeMenu = () => setMenuOpen(false);
-
   return (
     <main className="v2-page">
-      <header className="v2-navbar">
-        <Brand />
-        <button className="v2-menu" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="v2-navigation" aria-label="Öppna meny">{menuOpen ? <X /> : <Menu />}</button>
-        <nav id="v2-navigation" className={menuOpen ? "v2-nav open" : "v2-nav"}>
-          <a href="#services" onClick={closeMenu}>Tjänster</a><a href="#portfolio" onClick={closeMenu}>Portfolio</a><a href="#pricing" onClick={closeMenu}>Priser</a><a href="#about" onClick={closeMenu}>Om Oss</a><a href="#faq" onClick={closeMenu}>FAQ</a><a href="#contact" onClick={closeMenu}>Kontakt</a>
-        </nav>
-        <a className="v2-button v2-button-primary v2-nav-button" href="#contact">Boka samtal</a>
-      </header>
+      <HomeHeader />
 
       <section className="v2-hero">
         <div className="v2-hero-copy"><span className="v2-pill">Webbyrå i Jönköping &amp; Värnamo</span><h1>Vi bygger webbplatser som växer ditt företag</h1><p>Professionella, snabba och prisvärda hemsidor skräddarsydda för småföretagare i Småland. Låt oss sätta ditt företag på kartan online.</p></div>
@@ -68,7 +48,7 @@ export default function Page() {
 
       <section className="v2-section v2-services" id="services"><SectionHeader eyebrow="Vad vi erbjuder" title="Allt ditt småföretag behöver för att lyckas digitalt" description="Vi tar hand om tekniken så att du kan fokusera på att driva ditt företag." /><div className="v2-service-grid">{services.map(([title, description, icon]) => <article className="v2-service-card" key={title}><span className="v2-icon"><img src={icon} alt="" /></span><h3>{title}</h3><p>{description}</p></article>)}</div></section>
 
-      <section className="v2-section v2-portfolio" id="portfolio"><SectionHeader eyebrow="Våra projekt" title="Projekt vi är stolta över" description="Se hur vi har hjälpt andra småföretag att växa med en stark digital närvaro." /><div className="v2-project-grid">{projects.map(([name, tier, description, image]) => <article className="v2-project" key={name}><img src={image} alt="" /><div><span>{tier}</span><h3>{name}</h3><p>{description}</p></div></article>)}</div></section>
+      <section className="v2-section v2-portfolio" id="portfolio"><SectionHeader eyebrow="Våra projekt" title="Projekt vi är stolta över" description="Se hur vi har hjälpt andra småföretag att växa med en stark digital närvaro." /><div className="v2-project-grid">{projects.map(([name, tier, description, image]) => <article className="v2-project" key={name}><Image src={image} alt="" width={512} height={373} /><div><span>{tier}</span><h3>{name}</h3><p>{description}</p></div></article>)}</div></section>
 
       <section className="v2-section v2-process"><SectionHeader eyebrow="Processen" title="Från idé till färdig hemsida" centered /><div className="v2-process-grid">{[["01", "Berätta om ditt företag", "Vi börjar med ett kort samtal om dina mål, kunder och behov."], ["02", "Vi bygger tillsammans", "Du får se framstegen och ge feedback under hela processen."], ["03", "Få fler kunder online", "Din nya webbplats lanseras och börjar arbeta för ditt företag."]].map(([number, title, description]) => <article key={number}><strong>{number}</strong><h3>{title}</h3><p>{description}</p></article>)}</div></section>
 
@@ -76,13 +56,13 @@ export default function Page() {
 
       <section className="v2-partners" aria-label="Partners"><strong>Förtroende från lokala verksamheter</strong><div><a href="https://alexdack.se" target="_blank" rel="noreferrer"><span>AS</span>Alexdack Service (alexdack.se)</a><a href="https://tutorialeips.ro" target="_blank" rel="noreferrer"><span>TI</span>TutorialeIPS (tutorialeips.ro)</a></div></section>
 
-      <section className="v2-section v2-about" id="about"><img src="/figma-v2/about.png" alt="Lokalt företag i Småland" /><div><SectionHeader eyebrow="Om oss" title="Vi brinner för småföretagare i Småland" description="Vi vet att varje företag har en unik historia. Vårt jobb är att berätta den på bästa sätt online." /><a className="v2-text-link" href="/about">Läs mer om oss →</a></div></section>
+      <section className="v2-section v2-about" id="about"><Image src="/figma-v2/about.png" alt="Lokalt företag i Småland" width={512} height={373} loading="lazy" /><div><SectionHeader eyebrow="Om oss" title="Vi brinner för småföretagare i Småland" description="Vi vet att varje företag har en unik historia. Vårt jobb är att berätta den på bästa sätt online." /><a className="v2-text-link" href="/about">Läs mer om oss →</a></div></section>
 
-      <section className="v2-section v2-faq" id="faq"><SectionHeader eyebrow="Vanliga frågor" title="Allt du behöver veta" centered /><div className="v2-faq-list">{faqs.map(([question, answer], index) => <FaqItem key={question} question={question} answer={answer} index={index} />)}</div></section>
+      <section className="v2-section v2-faq" id="faq"><SectionHeader eyebrow="Vanliga frågor" title="Allt du behöver veta" centered /><div className="v2-faq-list">{faqs.map(([question, answer], index) => <ClientFaqItem key={question} question={question} answer={answer} index={index} />)}</div></section>
 
       <section className="v2-section v2-contact" id="contact"><div><SectionHeader eyebrow="Kontakta oss" title="Låt oss prata om ditt nästa projekt" description="Har du en idé eller behöver du hjälp att komma igång? Fyll i formuläret så återkommer vi inom en arbetsdag." /><div className="v2-contact-details"><a href="mailto:contact@staarkinc.com"><Mail size={18} />contact@staarkinc.com</a><a href="tel:+46722000000"><Phone size={18} />+46 72 200 00 00</a><span><MapPin size={18} />Jönköping och Värnamo, Sverige</span></div></div><ContactForm /></section>
 
-      <footer className="v2-footer"><div className="v2-footer-top"><div><Brand /><p>Vi bygger webbplatser som växer ditt företag.</p></div><div className="v2-footer-links"><div><strong>Snabblänkar</strong><a href="#services">Tjänster</a><a href="#portfolio">Portfolio</a><a href="#pricing">Priser</a></div><div><strong>Följ oss</strong><a href="#contact">Instagram</a><a href="#contact">Facebook</a><a href="#contact">LinkedIn</a></div></div></div><div className="v2-footer-bottom"><span>© 2026 Staark Inc. Alla rättigheter förbehållna.</span><span>Byggt med <Code2 size={15} /> React &amp; Next.js</span></div></footer>
+      <HomeFooter />
     </main>
   );
 }

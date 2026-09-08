@@ -1,9 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Schibsted+Grotesk:wght@400;500;600;700;800&family=Unbounded:wght@400;500;600;700;800;900&display=swap');
 @import 'tailwindcss';
 
 @theme {
-  --font-sans: 'Geist', system-ui, -apple-system, sans-serif;
-  --font-display: 'Schibsted Grotesk', system-ui, sans-serif;
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-display: var(--font-schibsted), system-ui, sans-serif;
 }
 
 .v2-page {
@@ -13,9 +12,9 @@
   --v2-line: #e5e7eb;
   background: #fff;
   color: var(--v2-ink);
-  font-family: 'Geist', system-ui, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
-.v2-page h1,.v2-page h2,.v2-page h3,.v2-brand,.v2-price strong,.v2-proof strong,.v2-process-grid strong { font-family: 'Unbounded', system-ui, sans-serif; }
+.v2-page h1,.v2-page h2,.v2-page h3,.v2-brand,.v2-price strong,.v2-proof strong,.v2-process-grid strong { font-family: var(--font-unbounded), system-ui, sans-serif; }
 .v2-navbar { height: 96px; padding: 0 max(24px, calc((100% - 1200px)/2)); display:flex; align-items:center; justify-content:space-between; border:1px solid var(--v2-line); background:#fff; }
 .v2-brand { display:flex; align-items:center; gap:5px; font-size:22px; font-weight:800; letter-spacing:-1px; }
 .v2-brand span { width:6px; height:6px; border-radius:3px; background:var(--v2-blue); }

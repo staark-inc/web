@@ -1,9 +1,7 @@
-"use client";
-
-import { ChevronDown, Mail, MapPin, Phone } from "lucide-react";
-import { useState } from "react";
+import { Mail, MapPin, Phone } from "lucide-react";
 import { StandaloneLayout } from "./SiteChrome";
 import ContactForm from "./ContactForm";
+import StandaloneFaqItem from "./StandaloneFaqItem";
 
 const faqs = [
   ["Hur lång tid tar det att bygga en webbplats?", "De flesta webbplatser är redo att lanseras inom 2–4 veckor efter att vi fått allt material."],
@@ -35,11 +33,6 @@ export default function StandalonePage({ type }: { type: "about" | "services" | 
     ] as const;
     return <StandaloneLayout><section className="v2-section v2-pricing v2-pricing-standalone"><div className="v2-section-header centered"><span>Prisplaner</span><h1>Fast pris utan dolda avgifter</h1><p className="v2-pricing-note">Obs: Alla paket inkluderar 6 månaders kostnadsfri hosting.</p></div><div className="v2-package-grid">{pricingPackages.map(([name, price, features], index) => <article className={index === 1 ? "v2-package featured" : "v2-package"} key={name}><div className="v2-package-head"><h3>{name}</h3>{index === 1 && <span>MEST POPULÄR</span>}</div><div className="v2-price"><strong>{price}</strong><small>SEK</small></div><hr /><ul>{features.map((feature) => <li key={feature}><img src="/icon-check.svg" alt="" />{feature}</li>)}</ul><a className={index === 1 ? "v2-button v2-button-primary" : "v2-button v2-button-light"} href="/contact">Välj paket</a></article>)}</div></section></StandaloneLayout>;
   }
-  if (type === "faq") return <StandaloneLayout><section className="faq standalone section-white"><Heading label="Vanliga frågor" title="Vanliga frågor om våra webbplatser" text="Răspunsuri clare om proces, prețuri și hosting." /><div className="faq-list">{faqs.map(([question, answer], index) => <FaqItem key={question} question={question} answer={answer} index={index} />)}</div></section></StandaloneLayout>;
+  if (type === "faq") return <StandaloneLayout><section className="faq standalone section-white"><Heading label="Vanliga frågor" title="Vanliga frågor om våra webbplatser" text="Răspunsuri clare om proces, prețuri și hosting." /><div className="faq-list">{faqs.map(([question, answer], index) => <StandaloneFaqItem key={question} question={question} answer={answer} index={index} />)}</div></section></StandaloneLayout>;
   return <StandaloneLayout><section className="contact standalone section-white"><div><Heading label="Kontakta oss" title="Låt oss prata om din framtida webbplats" text="Vi svarar på frågor om priser, tider och teknisk process." /><div className="contact-details"><a href="mailto:contact@staarkinc.com"><Mail size={20} /><span>Skicka ett mejl till<strong>contact@staarkinc.com</strong></span></a><a href="tel:+46722000000"><Phone size={20} /><span>Ring oss direkt på<strong>+46 72 200 00 00</strong></span></a><span><MapPin size={20} /><span>Kontor<strong>Jönköping och Värnamo, Sverige</strong></span></span></div></div><ContactForm /></section></StandaloneLayout>;
-}
-
-function FaqItem({ question, answer, index }: { question: string; answer: string; index: number }) {
-  const [open, setOpen] = useState(index === 0);
-  return <div className="faq-item"><button onClick={() => setOpen(!open)}><span>{question}</span><ChevronDown className={open ? "rotate" : ""} size={18} /></button>{open && <p>{answer}</p>}</div>;
 }
