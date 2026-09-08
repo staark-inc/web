@@ -461,6 +461,29 @@ h1 {
   border-radius: 12px;
 }
 
+.standalone {
+  min-height: 620px;
+}
+
+.standalone-section {
+  min-height: 620px;
+}
+
+.standalone-section .section-heading h1,
+.standalone-pricing h1 {
+  max-width: 850px;
+  font-size: clamp(40px, 5vw, 56px);
+  line-height: 1.15;
+}
+
+.mission-art {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: linear-gradient(135deg, #4f321f, #c48146 48%, #21150e);
+}
+
 .about .section-heading {
   justify-items: start;
   text-align: left;

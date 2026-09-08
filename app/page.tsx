@@ -92,9 +92,9 @@ export default function Page() {
           {menuOpen ? <X /> : <Menu />}
         </button>
         <nav className={menuOpen ? "nav-links open" : "nav-links"}>
-          <a href="#services">Tjänster</a><a href="#process">Hur det fungerar</a><a href="#about">Om oss</a><a href="#pricing">Priser</a>
+          <a href="/services">Tjänster</a><a href="/process">Hur det fungerar</a><a href="/about">Om oss</a><a href="/pricing">Priser</a><a href="/faq">FAQ</a>
         </nav>
-        <a className="button button-light nav-cta" href="#contact">Kontakta oss</a>
+        <a className="button button-light nav-cta" href="/contact">Kontakta oss</a>
       </header>
 
       <section className="hero">
