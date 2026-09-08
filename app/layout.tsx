@@ -1,19 +1,9 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Schibsted_Grotesk, Unbounded } from "next/font/google";
+import { Geist, Unbounded } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const schibsted = Schibsted_Grotesk({
-  variable: "--font-schibsted",
   subsets: ["latin"],
 });
 
@@ -46,7 +36,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="sv"
-      className={`${geistSans.variable} ${geistMono.variable} ${schibsted.variable} ${unbounded.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${unbounded.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
