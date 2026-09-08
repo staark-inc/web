@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import {
+  ChevronDown,
   Code2,
   Mail,
   MapPin,
@@ -17,6 +18,21 @@ const services = [
   ["Underhåll & Support", "Löpande uppdateringar, säkerhetskopiering och teknisk support", "/icon-smartphone.svg"],
   ["Hosting & Drift", "Snabb och säker hosting med 99.9% upptid", "/icon-help-circle.svg"],
 ] as const;
+
+const missionImage = "/mission-workshop.png";
+
+const faqs = [
+  ["Hur lång tid tar det att bygga en webbplats?", "De flesta webbplatser är redo att lanseras inom 2–4 veckor efter att vi fått allt material."],
+  ["Vad kostar en webbplats?", "Våra paket börjar på 2 999 SEK. Vi ger alltid en tydlig offert innan vi börjar."],
+  ["Behöver jag köpa hosting separat?", "Nej. Alla våra paket inkluderar sex månaders gratis hosting och därefter ett enkelt månadspris."],
+  ["Kan ni hjälpa till med texter och bilder?", "Absolut. Vi hjälper gärna till att strukturera innehållet och rekommenderar rätt material för din verksamhet."],
+] as const;
+
+const packages = [
+  { name: "Starter", price: "2 999 SEK", features: ["Enkel webbplats (upp till 5 sidor)", "6 månaders gratis hosting", "Grundläggande SEO", "Responsiv design", "E-postsupport"] },
+  { name: "Professionell", price: "5 999 SEK", featured: true, features: ["Webbplats upp till 15 sidor", "6 månaders gratis hosting", "Avancerad SEO-optimering", "Kontaktformulär & Google Maps", "Prioriterad support", "Underhåll ingår i 6 månader"] },
+  { name: "Företag", price: "9 999 SEK", features: ["Skräddarsydd webbplats", "6 månaders gratis hosting", "Full SEO-strategi", "E-handelsfunktioner", "Dedikerad projektledare", "Underhåll ingår i 12 månader"] },
+];
 
 function SectionHeading({ eyebrow, title, description }: { eyebrow: string; title: string; description?: string }) {
   return (
@@ -102,9 +118,36 @@ export default function Page() {
         <div className="partners"><a className="partner" href="https://alexdack.se" target="_blank" rel="noreferrer"><span>AS</span><strong>Alexdack Service</strong><small>alexdack.se <b aria-hidden="true">↗</b></small></a><a className="partner" href="https://tutorialeips.ro" target="_blank" rel="noreferrer"><span>TI</span><strong>TutorialeIPS</strong><small>tutorialeips.ro <b aria-hidden="true">↗</b></small></a></div>
       </section>
 
+      <section className="about section-white" id="about">
+        <img src={missionImage} alt="Hantverkare i en lokal verkstad" />
+        <div>
+          <SectionHeading eyebrow="Om oss" title="Vår mission: Digitalisera lokala företag i Jönköping och Värnamo" />
+          <div className="about-copy"><p>Vi är ett dedikerat team av utvecklare och designers som brinner för att hjälpa småföretagare ta steget online. Vi vet att ett lokalt bageri, en snickeriverkstad, en tandläkarmottagning eller ett familjepensionat inte behöver enorma budgetar eller komplicerade webbstrukturer för att lyckas.</p><p>Staark Inc. är skapad för att möta just de här behoven: rena, snabba och ekonomiskt tillgängliga lösningar med samma tekniska krav som stora SaaS-företag.</p></div>
+          <div className="tech"><strong>MODERNA TEKNIKER VI ANVÄNDER</strong><div><span>Next.js</span><span>React</span><span>Tailwind CSS</span><span>Vercel</span></div></div>
+        </div>
+      </section>
+
+      <section className="pricing" id="pricing">
+        <div className="pricing-panel">
+          <div className="pricing-header"><span className="promo">Kampanjpris - Begränsat erbjudande!</span><strong className="pricing-eyebrow">Våra paket</strong><h2>Hitta rätt paket för ditt företag</h2><p>Välj det paket som passar din verksamhet. Alla paket inkluderar 6 månaders kostnadsfri hosting.</p></div>
+          <div className="package-grid">{packages.map((item) => <article className={item.featured ? "package featured" : "package"} key={item.name}>{item.featured && <span className="popular">Mest populär</span>}<div><small>{item.name}</small><h3>{item.price}</h3></div><ul>{item.features.map((feature) => <li key={feature}><span className="check-box"><img src="/icon-check.svg" alt="" /></span>{feature}</li>)}</ul><a className="button button-primary" href="#contact">{item.name === "Företag" ? "Kontakta oss" : `Välj ${item.name}`}</a></article>)}</div>
+          <small className="pricing-note">Alla paket inkluderar 6 månaders kostnadsfri hosting. Efter kampanjperioden från 99 SEK/mån.</small>
+        </div>
+      </section>
+
+      <section className="faq section section-white" id="faq">
+        <SectionHeading eyebrow="Vanliga frågor" title="Vanliga frågor om våra webbplatser" />
+        <div className="faq-list">{faqs.map(([question, answer], index) => <HomeFaqItem key={question} question={question} answer={answer} index={index} />)}</div>
+      </section>
+
       <section className="contact section-white" id="contact"><div className="contact-copy"><SectionHeading eyebrow="Kontakta oss" title="Låt oss prata om din framtida webbplats" description="Vi finns här för att svara på alla dina frågor om priser, tider och teknisk process. Fyll i formuläret eller kontakta oss direkt." /><div className="contact-details"><a href="mailto:contact@staarkinc.com"><Mail size={20} /><span>Skicka ett mejl till<strong>contact@staarkinc.com</strong></span></a><a href="tel:+46722000000"><Phone size={20} /><span>Ring oss direkt på<strong>+46 72 200 00 00</strong></span></a><span><MapPin size={20} /><span>Kontor<strong>Jönköping och Värnamo, Sverige</strong></span></span></div></div><ContactForm /></section>
 
       <footer><div className="footer-top"><div className="footer-about"><Brand compact /><p>Vi skapar rena och snabba webbplatser för lokala företag i Jönköping och Värnamo, med modern teknik där det verkligen gör skillnad.</p></div><div className="footer-links"><div><strong>Tjänster</strong><a href="#services">Anpassad Design</a><a href="#services">SEO-optimering</a><a href="#services">Responsiv Webbplats</a><a href="#services">Dedikerat Support</a></div><div><strong>Team</strong><a href="/about">Om oss</a><a href="#contact">Kontakta oss</a><a href="/faq">Vanliga frågor</a></div><div><strong>Sociala medier</strong><a href="#contact">Facebook</a><a href="#contact">Instagram</a><a href="#contact">LinkedIn</a></div></div></div><div className="footer-bottom"><span>© 2026 Staark Inc. Alla rättigheter förbehållna.</span><span>Byggt med: <strong>React • Next.js • Tailwind</strong></span></div></footer>
     </main>
   );
+}
+
+function HomeFaqItem({ question, answer, index }: { question: string; answer: string; index: number }) {
+  const [open, setOpen] = useState(index === 0);
+  return <div className="faq-item"><button onClick={() => setOpen(!open)} aria-expanded={open}><span>{question}</span><ChevronDown className={open ? "rotate" : ""} size={18} /></button>{open && <p>{answer}</p>}</div>;
 }
