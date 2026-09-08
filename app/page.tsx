@@ -82,7 +82,7 @@ function BrowserPreview() {
 
 export default function Page() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   return (
     <main>
@@ -133,7 +133,7 @@ export default function Page() {
         <div className="pricing-panel"><span className="promo">Kampanjpris - Begränsat erbjudande!</span><strong className="pricing-eyebrow">Våra paket</strong><h2>Hitta rätt paket för ditt företag</h2><p>Välj det paket som passar din verksamhet. Alla paket inkluderar 6 månaders kostnadsfri hosting.</p><div className="package-grid">{packages.map((item) => <article className={item.featured ? "package featured" : "package"} key={item.name}>{item.featured && <span className="popular">Populärast</span>}<div><small>{item.name}</small><h3>{item.price}</h3></div><ul>{item.features.map((feature) => <li key={feature}><Check size={14} />{feature}</li>)}</ul><a className={item.featured ? "button button-primary" : "button button-light"} href="#contact">Välj {item.name}</a></article>)}</div></div>
       </section>
 
-      <section className="faq section-white"><SectionHeading eyebrow="Vanliga frågor" title="Vanliga frågor om våra webbplatser" /><div className="faq-list">{faqs.map(([question, answer], index) => <div className="faq-item" key={question}><button onClick={() => setOpenFaq(openFaq === index ? null : index)}><span>{question}</span><ChevronDown className={openFaq === index ? "rotate" : ""} size={18} /></button>{openFaq === index && <p>{answer}</p>}</div>)}</div></section>
+      <section className="faq section section-white"><SectionHeading eyebrow="Vanliga frågor" title="Vanliga frågor om våra webbplatser" /><div className="faq-list">{faqs.map(([question, answer], index) => <div className="faq-item" key={question}><button onClick={() => setOpenFaq(openFaq === index ? null : index)}><span>{question}</span><ChevronDown className={openFaq === index ? "rotate" : ""} size={18} /></button>{openFaq === index && <p>{answer}</p>}</div>)}</div></section>
 
       <section className="contact section-white" id="contact"><div className="contact-copy"><SectionHeading eyebrow="Kontakta oss" title="Låt oss prata om din framtida webbplats" description="Vi finns här för att svara på alla dina frågor om priser, tider och teknisk process. Fyll i formuläret eller kontakta oss direkt." /><div className="contact-details"><a href="mailto:contact@staarkinc.com"><Mail size={20} /><span>Skicka ett mejl till<strong>contact@staarkinc.com</strong></span></a><a href="tel:+46722000000"><Phone size={20} /><span>Ring oss direkt på<strong>+46 72 200 00 00</strong></span></a><span><MapPin size={20} /><span>Kontor<strong>Jönköping och Värnamo, Sverige</strong></span></span></div></div><ContactForm /></section>
 
