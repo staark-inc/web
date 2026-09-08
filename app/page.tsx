@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import {
-  ArrowUpRight,
   Check,
   ChevronDown,
   Code2,
@@ -15,9 +14,10 @@ import {
   ShieldCheck,
   X,
 } from "lucide-react";
+import ContactForm from "./components/ContactForm";
 
 const missionImage =
-  "https://www.figma.com/api/mcp/asset/1428b0cd-b06f-4cd9-9e94-73a47ea2d7cd.png";
+  "https://www.figma.com/api/mcp/asset/3c5dfa1c-a673-467f-a70a-d03aa856b1.png";
 
 const services = [
   ["Webbdesign & Utveckling", "Vi bygger moderna, snabba webbplatser med Next.js och React", Code2],
@@ -135,7 +135,7 @@ export default function Page() {
 
       <section className="faq section-white"><SectionHeading eyebrow="Vanliga frågor" title="Vanliga frågor om våra webbplatser" /><div className="faq-list">{faqs.map(([question, answer], index) => <div className="faq-item" key={question}><button onClick={() => setOpenFaq(openFaq === index ? null : index)}><span>{question}</span><ChevronDown className={openFaq === index ? "rotate" : ""} size={18} /></button>{openFaq === index && <p>{answer}</p>}</div>)}</div></section>
 
-      <section className="contact section-white" id="contact"><div className="contact-copy"><SectionHeading eyebrow="Kontakta oss" title="Låt oss prata om din framtida webbplats" description="Vi finns här för att svara på alla dina frågor om priser, tider och teknisk process. Fyll i formuläret eller kontakta oss direkt." /><div className="contact-details"><a href="mailto:contact@staarkinc.com"><Mail size={20} /><span>Skicka ett mejl till<strong>contact@staarkinc.com</strong></span></a><a href="tel:+46722000000"><Phone size={20} /><span>Ring oss direkt på<strong>+46 72 200 00 00</strong></span></a><span><MapPin size={20} /><span>Kontor<strong>Jönköping och Värnamo, Sverige</strong></span></span></div></div><form className="contact-form" onSubmit={(event) => event.preventDefault()}><h3>Skicka ett snabbmeddelande</h3><label>Namn<input placeholder="ex. Andersson Anna" /></label><label>E-post<input type="email" placeholder="ex. anna@foretag.se" /></label><label>Berätta kort om ditt projekt<textarea placeholder="Vad behöver du hjälp med?" rows={4} /></label><button className="button button-primary" type="submit">Skicka meddelande <ArrowUpRight size={16} /></button></form></section>
+      <section className="contact section-white" id="contact"><div className="contact-copy"><SectionHeading eyebrow="Kontakta oss" title="Låt oss prata om din framtida webbplats" description="Vi finns här för att svara på alla dina frågor om priser, tider och teknisk process. Fyll i formuläret eller kontakta oss direkt." /><div className="contact-details"><a href="mailto:contact@staarkinc.com"><Mail size={20} /><span>Skicka ett mejl till<strong>contact@staarkinc.com</strong></span></a><a href="tel:+46722000000"><Phone size={20} /><span>Ring oss direkt på<strong>+46 72 200 00 00</strong></span></a><span><MapPin size={20} /><span>Kontor<strong>Jönköping och Värnamo, Sverige</strong></span></span></div></div><ContactForm /></section>
 
       <footer><div className="footer-top"><div className="footer-about"><Brand compact /><p>Vi skapar rena och snabba webbplatser för lokala företag i Jönköping och Värnamo, med modern teknik där det verkligen gör skillnad.</p></div><div className="footer-links"><div><strong>Tjänster</strong><a href="#services">Anpassad Design</a><a href="#services">SEO-optimering</a><a href="#services">Responsiv Webbplats</a><a href="#services">Dedikerat Support</a></div><div><strong>Team</strong><a href="#about">Om oss</a><a href="#contact">Kontakta oss</a><a href="#faq">Vanliga frågor</a></div><div><strong>Sociala medier</strong><a href="#contact">Facebook</a><a href="#contact">Instagram</a><a href="#contact">LinkedIn</a></div></div></div><div className="footer-bottom"><span>© 2026 Staark Inc. Alla rättigheter förbehållna.</span><span>Byggt med: <strong>React • Next.js • Tailwind</strong></span></div></footer>
     </main>

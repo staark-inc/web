@@ -1,9 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap');
 @import 'tailwindcss';
 
 @theme {
-  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-sans: 'Geist', system-ui, -apple-system, sans-serif;
+  --font-display: 'Schibsted Grotesk', system-ui, sans-serif;
 }
 :root {
   --ink: #1c1917;
@@ -56,7 +56,7 @@ main {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-size: 20px;
 }
 
@@ -141,7 +141,7 @@ p {
 h1,
 h2,
 h3 {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
 }
 
 h1 {
@@ -481,7 +481,9 @@ h1 {
   aspect-ratio: 1;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: linear-gradient(135deg, #4f321f, #c48146 48%, #21150e);
+  background:
+    url("https://www.figma.com/api/mcp/asset/3c5dfa1c-a673-467f-a70a-d03aa856b1.png")
+    center / cover no-repeat;
 }
 
 .about .section-heading {
@@ -531,6 +533,7 @@ h1 {
 
 .pricing-panel {
   max-width: 960px;
+  width: 100%;
   margin: auto;
   padding: 64px;
   border: 1px solid var(--line);
@@ -579,6 +582,7 @@ h1 {
   border: 1px solid var(--line);
   border-radius: 12px;
   background: var(--paper);
+  min-height: 390px;
 }
 
 .package.featured {
@@ -596,6 +600,9 @@ h1 {
 .package h3 {
   margin-top: 8px;
   font-size: 32px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: 0;
 }
 
 .package ul {
@@ -616,6 +623,12 @@ h1 {
 .package li svg {
   flex: none;
   color: var(--blue);
+}
+
+.package > .button {
+  width: 100%;
+  padding: 14px 28px;
+  font-size: 15px;
 }
 
 .popular {
@@ -771,6 +784,23 @@ h1 {
 
 .contact-form button {
   width: max-content;
+}
+
+.contact-form button:disabled {
+  cursor: wait;
+  opacity: .7;
+}
+
+.form-status {
+  font-size: 13px;
+}
+
+.form-status.success {
+  color: #15803d;
+}
+
+.form-status.error {
+  color: #b91c1c;
 }
 
 footer {
