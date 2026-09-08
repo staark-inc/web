@@ -634,11 +634,28 @@ h1 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 80px;
+  align-items: center;
 }
 
 .faq .section-heading {
   justify-items: start;
   text-align: left;
+  align-self: center;
+}
+
+.faq .section-heading .eyebrow {
+  justify-self: start;
+  align-self: start;
+  width: max-content;
+  height: auto;
+  min-height: 0;
+}
+
+.faq .section-heading h1 {
+  max-width: 560px;
+  font-size: clamp(40px, 4vw, 56px);
+  line-height: 1.15;
+  letter-spacing: -.04em;
 }
 
 .faq-list {
@@ -815,6 +832,10 @@ footer {
   .faq {
     grid-template-columns: 1fr;
     gap: 48px;
+  }
+
+  .faq .section-heading {
+    align-self: start;
   }
 
   .browser-preview {
