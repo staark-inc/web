@@ -54,5 +54,52 @@ model Settings {
   senderEmail     String
   signature       String?
   defaultTemplate String   @default("staark-standard")
+
+  // Google Analytics
+  ga4RefreshToken String?
+  ga4ConnectedAt  DateTime?
+
   updatedAt       DateTime @updatedAt
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  WON
+  LOST
+}
+
+model Contact {
+  id        String   @id @default(cuid())
+  name      String?
+  email     String   @unique
+  phone     String?
+  company   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  leads Lead[]
+
+  @@index([email])
+  @@index([createdAt])
+}
+
+model Lead {
+  id        String     @id @default(cuid())
+  contactId String
+  contact   Contact    @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  service   String?
+  budget    String?
+  message   String?
+
+  status    LeadStatus @default(NEW)
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([contactId])
+  @@index([status])
+  @@index([createdAt])
 }

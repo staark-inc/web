@@ -1,18 +1,44 @@
 import Link from "next/link";
 import {
-  Inbox,
   PenSquare,
-  Settings,
   LogOut,
   Sparkles,
-  UserRound,
 } from "lucide-react";
 
-export default function HubDashboardLayout({
+import { prisma } from "@/lib/prisma";
+import HubNav from "./HubNav";
+import { redirect } from "next/navigation";
+import { getSession } from "@/lib/auth";
+export const dynamic = "force-dynamic";
+import SignOutButton from "./SignOutButton";
+
+export default async function HubDashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getSession();
+
+  if (!session || session.role !== "ADMIN") {
+    redirect("/hub/login");
+  }
+  
+const [unreadCount, newLeadCount] =
+  await Promise.all([
+    prisma.message.count({
+      where: {
+        direction: "INBOUND",
+        isRead: false,
+      },
+    }),
+
+    prisma.lead.count({
+      where: {
+        status: "NEW",
+      },
+    }),
+  ]);
+
   return (
     <div className="hub-dashboard">
       <aside className="hub-sidebar">
@@ -27,51 +53,47 @@ export default function HubDashboardLayout({
           </div>
         </div>
 
-        <Link href="/hub/compose" className="hub-compose-button">
+        <Link
+          href="/hub/compose"
+          className="hub-compose-button"
+        >
           <PenSquare size={18} />
           <span>Compose</span>
         </Link>
 
-        <nav className="hub-nav">
-          <Link href="/hub" className="hub-nav-item hub-nav-item-active">
-            <Inbox size={18} />
-            <span>Inbox</span>
-
-            <span className="hub-nav-count">3</span>
-          </Link>
-
-          <Link href="/hub/profile" className="hub-nav-item">
-            <UserRound size={18} />
-            <span>Profile</span>
-          </Link>
-
-          <Link href="/hub/settings" className="hub-nav-item">
-            <Settings size={18} />
-            <span>Settings</span>
-          </Link>
-        </nav>
+        <HubNav unreadCount={unreadCount} newLeadCount={newLeadCount} />
 
         <div className="hub-sidebar-bottom">
           <div className="hub-user">
-            <div className="hub-user-avatar">SI</div>
+            <div className="hub-user-avatar">
+              SI
+            </div>
 
             <div className="hub-user-info">
               <strong>Staark Inc.</strong>
               <span>Administrator</span>
             </div>
 
-            <button
-              type="button"
-              className="hub-icon-button"
-              aria-label="Sign out"
+            <form
+              action="/api/hub/logout"
+              method="post"
             >
-              <LogOut size={17} />
-            </button>
+              <button
+                type="submit"
+                className="hub-icon-button"
+                aria-label="Sign out"
+                title="Sign out"
+              >
+                <LogOut size={17} />
+              </button>
+            </form>
           </div>
         </div>
       </aside>
 
-      <main className="hub-content">{children}</main>
+      <main className="hub-content">
+        {children}
+      </main>
     </div>
   );
 }

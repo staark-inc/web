@@ -22,3 +22,14 @@ export const MessageDirection = {
 } as const
 
 export type MessageDirection = (typeof MessageDirection)[keyof typeof MessageDirection]
+
+
+export const LeadStatus = {
+  NEW: 'NEW',
+  CONTACTED: 'CONTACTED',
+  QUALIFIED: 'QUALIFIED',
+  WON: 'WON',
+  LOST: 'LOST'
+} as const
+
+export type LeadStatus = (typeof LeadStatus)[keyof typeof LeadStatus]

@@ -32,3 +32,13 @@ export type Message = Prisma.MessageModel
  * 
  */
 export type Settings = Prisma.SettingsModel
+/**
+ * Model Contact
+ * 
+ */
+export type Contact = Prisma.ContactModel
+/**
+ * Model Lead
+ * 
+ */
+export type Lead = Prisma.LeadModel

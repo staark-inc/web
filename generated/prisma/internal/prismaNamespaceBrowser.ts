@@ -53,7 +53,9 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   User: 'User',
   Message: 'Message',
-  Settings: 'Settings'
+  Settings: 'Settings',
+  Contact: 'Contact',
+  Lead: 'Lead'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -107,10 +109,39 @@ export const SettingsScalarFieldEnum = {
   senderEmail: 'senderEmail',
   signature: 'signature',
   defaultTemplate: 'defaultTemplate',
+  ga4RefreshToken: 'ga4RefreshToken',
+  ga4ConnectedAt: 'ga4ConnectedAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type SettingsScalarFieldEnum = (typeof SettingsScalarFieldEnum)[keyof typeof SettingsScalarFieldEnum]
+
+
+export const ContactScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  phone: 'phone',
+  company: 'company',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ContactScalarFieldEnum = (typeof ContactScalarFieldEnum)[keyof typeof ContactScalarFieldEnum]
+
+
+export const LeadScalarFieldEnum = {
+  id: 'id',
+  contactId: 'contactId',
+  service: 'service',
+  budget: 'budget',
+  message: 'message',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LeadScalarFieldEnum = (typeof LeadScalarFieldEnum)[keyof typeof LeadScalarFieldEnum]
 
 
 export const SortOrder = {

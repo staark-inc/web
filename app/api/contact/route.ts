@@ -25,21 +25,81 @@ function escapeHtml(value: string) {
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as {
-      name?: unknown;
-      email?: unknown;
-      message?: unknown;
-    };
+    const contentType =
+      request.headers.get("content-type") ?? "";
 
-    const name =
-      typeof body.name === "string" ? body.name.trim() : "";
+    let name = "";
+    let email = "";
+    let phone = "";
+    let company = "";
+    let service = "";
+    let budget = "";
+    let message = "";
 
-    const email =
-      typeof body.email === "string" ? body.email.trim() : "";
+    if (contentType.includes("application/json")) {
+      const body = (await request.json()) as {
+        name?: unknown;
+        email?: unknown;
+        phone?: unknown;
+        company?: unknown;
+        service?: unknown;
+        budget?: unknown;
+        message?: unknown;
+      };
 
-    const message =
-      typeof body.message === "string" ? body.message.trim() : "";
+      name =
+        typeof body.name === "string"
+          ? body.name.trim()
+          : "";
 
+      email =
+        typeof body.email === "string"
+          ? body.email.trim().toLowerCase()
+          : "";
+
+      phone =
+        typeof body.phone === "string"
+          ? body.phone.trim()
+          : "";
+
+      company =
+        typeof body.company === "string"
+          ? body.company.trim()
+          : "";
+
+      service =
+        typeof body.service === "string"
+          ? body.service.trim()
+          : "";
+
+      budget =
+        typeof body.budget === "string"
+          ? body.budget.trim()
+          : "";
+
+      message =
+        typeof body.message === "string"
+          ? body.message.trim()
+          : "";
+    } else {
+      const formData = await request.formData();
+
+      name = String(formData.get("name") ?? "").trim();
+
+      email = String(formData.get("email") ?? "")
+        .trim()
+        .toLowerCase();
+
+      phone = String(formData.get("phone") ?? "").trim();
+
+      company = String(formData.get("company") ?? "").trim();
+
+      service = String(formData.get("service") ?? "").trim();
+
+      budget = String(formData.get("budget") ?? "").trim();
+
+      message = String(formData.get("message") ?? "").trim();
+    }
     if (
       !name ||
       name.length > 120 ||
@@ -471,6 +531,55 @@ Skickat via kontaktformuläret på staarkinc.com
         isRead: false,
       },
     });
+
+    const contact = await prisma.contact.upsert({
+      where: {
+        email,
+      },
+
+      update: {
+        name,
+
+        ...(phone
+          ? {
+              phone,
+            }
+          : {}),
+
+        ...(company
+          ? {
+              company,
+            }
+          : {}),
+      },
+
+      create: {
+        name,
+        email,
+        phone: phone || null,
+        company: company || null,
+      },
+    });
+
+    await prisma.lead.create({
+      data: {
+        contactId: contact.id,
+        service: service || null,
+        budget: budget || null,
+        message,
+        status: "NEW",
+      },
+    });
+
+    const acceptsHtml =
+      !contentType.includes("application/json");
+
+    if (acceptsHtml) {
+      return NextResponse.redirect(
+        new URL("/kontakt?sent=1", request.url),
+        303
+      );
+    }
 
     return NextResponse.json({
       ok: true,

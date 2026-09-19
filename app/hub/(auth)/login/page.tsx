@@ -1,50 +1,47 @@
-import Link from "next/link";
-import { LockKeyhole, LogIn } from "lucide-react";
+import { redirect } from "next/navigation";
+import { Sparkles } from "lucide-react";
 
-export default function HubLoginPage() {
+import { getSession } from "@/lib/auth";
+import LoginForm from "./LoginForm";
+
+export const dynamic = "force-dynamic";
+
+export default async function HubLoginPage() {
+  const session = await getSession();
+
+  if (session) {
+    redirect("/hub");
+  }
+
   return (
-    <div className="hub-login">
-      <div className="hub-login-card">
-        <div className="hub-login-logo">S</div>
+    <div className="hub-login-page">
+      <div className="hub-login-container">
+        <div className="hub-login-brand">
+          <div className="hub-login-logo">
+            <Sparkles size={22} />
+          </div>
 
-        <div className="hub-login-heading">
-          <span className="hub-eyebrow">STAARK HUB</span>
-          <h1>Welcome back</h1>
-          <p>Sign in to access your Staark workspace.</p>
+          <div>
+            <strong>Staark</strong>
+            <span>Hub</span>
+          </div>
         </div>
 
-        <form className="hub-login-form">
-          <label>
-            <span>Email</span>
-            <input
-              type="email"
-              placeholder="name@staarkinc.com"
-              autoComplete="email"
-            />
-          </label>
+        <div className="hub-login-card">
+          <div className="hub-login-heading">
+            <h1>Welcome back</h1>
 
-          <label>
-            <span>Password</span>
+            <p>
+              Sign in to manage messages and
+              communication for Staark Inc.
+            </p>
+          </div>
 
-            <div className="hub-login-password">
-              <LockKeyhole size={16} />
-
-              <input
-                type="password"
-                placeholder="••••••••"
-                autoComplete="current-password"
-              />
-            </div>
-          </label>
-
-          <Link href="/hub" className="hub-login-button">
-            Sign in
-            <LogIn size={17} />
-          </Link>
-        </form>
+          <LoginForm />
+        </div>
 
         <p className="hub-login-footer">
-          Staark Inc. Internal Workspace
+          Staark Inc. © 2026
         </p>
       </div>
     </div>

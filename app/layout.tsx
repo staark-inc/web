@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { GoogleAnalytics } from "@next/third-parties/google";
 import { Geist, Unbounded } from "next/font/google";
+
+import SiteAnalytics from "./components/SiteAnalytics";
+
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,21 +16,35 @@ const unbounded = Unbounded({
 });
 
 const gaId =
-  process.env.NEXT_PUBLIC_GA_ID || "G-174NDSXWM0"
+  process.env.NEXT_PUBLIC_GA_ID ||
+  "G-174NDSXWM0";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://staarkinc.com"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ||
+      "https://staarkinc.com"
+  ),
+
   title: {
-    default: "Staark Inc. | Webbyrå i Jönköping och Värnamo",
+    default:
+      "Staark Inc. | Webbyrå i Jönköping och Värnamo",
     template: "%s | Staark Inc.",
   },
-  description: "Professionella, snabba och prisvärda webbplatser för småföretag i Jönköping, Värnamo och Småland.",
+
+  description:
+    "Professionella, snabba och prisvärda webbplatser för småföretag i Jönköping, Värnamo och Småland.",
+
   alternates: {
     canonical: "/",
   },
+
   openGraph: {
-    title: "Staark Inc. | Webbyrå i Jönköping och Värnamo",
-    description: "Vi bygger webbplatser som växer ditt företag.",
+    title:
+      "Staark Inc. | Webbyrå i Jönköping och Värnamo",
+
+    description:
+      "Vi bygger webbplatser som växer ditt företag.",
+
     url: "/",
     siteName: "Staark Inc.",
     locale: "sv_SE",
@@ -36,7 +52,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: LayoutProps<"/">) {
   return (
     <html
       lang="sv"
@@ -44,7 +62,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         {children}
-        <GoogleAnalytics gaId={gaId} />
+
+        <SiteAnalytics gaId={gaId} />
       </body>
     </html>
   );

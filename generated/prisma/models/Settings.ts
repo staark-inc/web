@@ -30,6 +30,8 @@ export type SettingsMinAggregateOutputType = {
   senderEmail: string | null
   signature: string | null
   defaultTemplate: string | null
+  ga4RefreshToken: string | null
+  ga4ConnectedAt: Date | null
   updatedAt: Date | null
 }
 
@@ -39,6 +41,8 @@ export type SettingsMaxAggregateOutputType = {
   senderEmail: string | null
   signature: string | null
   defaultTemplate: string | null
+  ga4RefreshToken: string | null
+  ga4ConnectedAt: Date | null
   updatedAt: Date | null
 }
 
@@ -48,6 +52,8 @@ export type SettingsCountAggregateOutputType = {
   senderEmail: number
   signature: number
   defaultTemplate: number
+  ga4RefreshToken: number
+  ga4ConnectedAt: number
   updatedAt: number
   _all: number
 }
@@ -59,6 +65,8 @@ export type SettingsMinAggregateInputType = {
   senderEmail?: true
   signature?: true
   defaultTemplate?: true
+  ga4RefreshToken?: true
+  ga4ConnectedAt?: true
   updatedAt?: true
 }
 
@@ -68,6 +76,8 @@ export type SettingsMaxAggregateInputType = {
   senderEmail?: true
   signature?: true
   defaultTemplate?: true
+  ga4RefreshToken?: true
+  ga4ConnectedAt?: true
   updatedAt?: true
 }
 
@@ -77,6 +87,8 @@ export type SettingsCountAggregateInputType = {
   senderEmail?: true
   signature?: true
   defaultTemplate?: true
+  ga4RefreshToken?: true
+  ga4ConnectedAt?: true
   updatedAt?: true
   _all?: true
 }
@@ -159,6 +171,8 @@ export type SettingsGroupByOutputType = {
   senderEmail: string
   signature: string | null
   defaultTemplate: string
+  ga4RefreshToken: string | null
+  ga4ConnectedAt: Date | null
   updatedAt: Date
   _count: SettingsCountAggregateOutputType | null
   _min: SettingsMinAggregateOutputType | null
@@ -189,6 +203,8 @@ export type SettingsWhereInput = {
   senderEmail?: Prisma.StringFilter<"Settings"> | string
   signature?: Prisma.StringNullableFilter<"Settings"> | string | null
   defaultTemplate?: Prisma.StringFilter<"Settings"> | string
+  ga4RefreshToken?: Prisma.StringNullableFilter<"Settings"> | string | null
+  ga4ConnectedAt?: Prisma.DateTimeNullableFilter<"Settings"> | Date | string | null
   updatedAt?: Prisma.DateTimeFilter<"Settings"> | Date | string
 }
 
@@ -198,6 +214,8 @@ export type SettingsOrderByWithRelationInput = {
   senderEmail?: Prisma.SortOrder
   signature?: Prisma.SortOrderInput | Prisma.SortOrder
   defaultTemplate?: Prisma.SortOrder
+  ga4RefreshToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  ga4ConnectedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
@@ -210,6 +228,8 @@ export type SettingsWhereUniqueInput = Prisma.AtLeast<{
   senderEmail?: Prisma.StringFilter<"Settings"> | string
   signature?: Prisma.StringNullableFilter<"Settings"> | string | null
   defaultTemplate?: Prisma.StringFilter<"Settings"> | string
+  ga4RefreshToken?: Prisma.StringNullableFilter<"Settings"> | string | null
+  ga4ConnectedAt?: Prisma.DateTimeNullableFilter<"Settings"> | Date | string | null
   updatedAt?: Prisma.DateTimeFilter<"Settings"> | Date | string
 }, "id">
 
@@ -219,6 +239,8 @@ export type SettingsOrderByWithAggregationInput = {
   senderEmail?: Prisma.SortOrder
   signature?: Prisma.SortOrderInput | Prisma.SortOrder
   defaultTemplate?: Prisma.SortOrder
+  ga4RefreshToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  ga4ConnectedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.SettingsCountOrderByAggregateInput
   _max?: Prisma.SettingsMaxOrderByAggregateInput
@@ -234,6 +256,8 @@ export type SettingsScalarWhereWithAggregatesInput = {
   senderEmail?: Prisma.StringWithAggregatesFilter<"Settings"> | string
   signature?: Prisma.StringNullableWithAggregatesFilter<"Settings"> | string | null
   defaultTemplate?: Prisma.StringWithAggregatesFilter<"Settings"> | string
+  ga4RefreshToken?: Prisma.StringNullableWithAggregatesFilter<"Settings"> | string | null
+  ga4ConnectedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Settings"> | Date | string | null
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Settings"> | Date | string
 }
 
@@ -243,6 +267,8 @@ export type SettingsCreateInput = {
   senderEmail: string
   signature?: string | null
   defaultTemplate?: string
+  ga4RefreshToken?: string | null
+  ga4ConnectedAt?: Date | string | null
   updatedAt?: Date | string
 }
 
@@ -252,6 +278,8 @@ export type SettingsUncheckedCreateInput = {
   senderEmail: string
   signature?: string | null
   defaultTemplate?: string
+  ga4RefreshToken?: string | null
+  ga4ConnectedAt?: Date | string | null
   updatedAt?: Date | string
 }
 
@@ -261,6 +289,8 @@ export type SettingsUpdateInput = {
   senderEmail?: Prisma.StringFieldUpdateOperationsInput | string
   signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultTemplate?: Prisma.StringFieldUpdateOperationsInput | string
+  ga4RefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ga4ConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -270,6 +300,8 @@ export type SettingsUncheckedUpdateInput = {
   senderEmail?: Prisma.StringFieldUpdateOperationsInput | string
   signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultTemplate?: Prisma.StringFieldUpdateOperationsInput | string
+  ga4RefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ga4ConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -279,6 +311,8 @@ export type SettingsCreateManyInput = {
   senderEmail: string
   signature?: string | null
   defaultTemplate?: string
+  ga4RefreshToken?: string | null
+  ga4ConnectedAt?: Date | string | null
   updatedAt?: Date | string
 }
 
@@ -288,6 +322,8 @@ export type SettingsUpdateManyMutationInput = {
   senderEmail?: Prisma.StringFieldUpdateOperationsInput | string
   signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultTemplate?: Prisma.StringFieldUpdateOperationsInput | string
+  ga4RefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ga4ConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -297,6 +333,8 @@ export type SettingsUncheckedUpdateManyInput = {
   senderEmail?: Prisma.StringFieldUpdateOperationsInput | string
   signature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultTemplate?: Prisma.StringFieldUpdateOperationsInput | string
+  ga4RefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ga4ConnectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -306,6 +344,8 @@ export type SettingsCountOrderByAggregateInput = {
   senderEmail?: Prisma.SortOrder
   signature?: Prisma.SortOrder
   defaultTemplate?: Prisma.SortOrder
+  ga4RefreshToken?: Prisma.SortOrder
+  ga4ConnectedAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
@@ -315,6 +355,8 @@ export type SettingsMaxOrderByAggregateInput = {
   senderEmail?: Prisma.SortOrder
   signature?: Prisma.SortOrder
   defaultTemplate?: Prisma.SortOrder
+  ga4RefreshToken?: Prisma.SortOrder
+  ga4ConnectedAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
@@ -324,6 +366,8 @@ export type SettingsMinOrderByAggregateInput = {
   senderEmail?: Prisma.SortOrder
   signature?: Prisma.SortOrder
   defaultTemplate?: Prisma.SortOrder
+  ga4RefreshToken?: Prisma.SortOrder
+  ga4ConnectedAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
@@ -335,6 +379,8 @@ export type SettingsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   senderEmail?: boolean
   signature?: boolean
   defaultTemplate?: boolean
+  ga4RefreshToken?: boolean
+  ga4ConnectedAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["settings"]>
 
@@ -344,6 +390,8 @@ export type SettingsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   senderEmail?: boolean
   signature?: boolean
   defaultTemplate?: boolean
+  ga4RefreshToken?: boolean
+  ga4ConnectedAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["settings"]>
 
@@ -353,6 +401,8 @@ export type SettingsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   senderEmail?: boolean
   signature?: boolean
   defaultTemplate?: boolean
+  ga4RefreshToken?: boolean
+  ga4ConnectedAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["settings"]>
 
@@ -362,10 +412,12 @@ export type SettingsSelectScalar = {
   senderEmail?: boolean
   signature?: boolean
   defaultTemplate?: boolean
+  ga4RefreshToken?: boolean
+  ga4ConnectedAt?: boolean
   updatedAt?: boolean
 }
 
-export type SettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "senderName" | "senderEmail" | "signature" | "defaultTemplate" | "updatedAt", ExtArgs["result"]["settings"]>
+export type SettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "senderName" | "senderEmail" | "signature" | "defaultTemplate" | "ga4RefreshToken" | "ga4ConnectedAt" | "updatedAt", ExtArgs["result"]["settings"]>
 
 export type $SettingsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Settings"
@@ -376,6 +428,8 @@ export type $SettingsPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     senderEmail: string
     signature: string | null
     defaultTemplate: string
+    ga4RefreshToken: string | null
+    ga4ConnectedAt: Date | null
     updatedAt: Date
   }, ExtArgs["result"]["settings"]>
   composites: {}
@@ -805,6 +859,8 @@ export interface SettingsFieldRefs {
   readonly senderEmail: Prisma.FieldRef<"Settings", 'String'>
   readonly signature: Prisma.FieldRef<"Settings", 'String'>
   readonly defaultTemplate: Prisma.FieldRef<"Settings", 'String'>
+  readonly ga4RefreshToken: Prisma.FieldRef<"Settings", 'String'>
+  readonly ga4ConnectedAt: Prisma.FieldRef<"Settings", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Settings", 'DateTime'>
 }
     
