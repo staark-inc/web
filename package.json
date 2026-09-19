@@ -1,7 +1,14 @@
 {
-  "name": "my-staark-app",
-  "version": "0.1.0",
+  "name": "staarkinc-app",
+  "version": "1.0.0",
   "private": true,
+  "description": "A Staark Inc application",
+  "author": "Staark Inc",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/staark-inc/web.git"
+  },  
   "scripts": {
     "dev": "next dev",
     "build": "next build",
