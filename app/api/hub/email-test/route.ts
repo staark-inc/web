@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { getSession } from "@/lib/auth";
 import { verifySmtpConnection } from "@/lib/smtp";
+import { redirectTo } from "@/lib/lib/redirect";
 
 export const dynamic = "force-dynamic";
 
@@ -23,25 +24,13 @@ export async function POST(
   try {
     await verifySmtpConnection();
 
-    return NextResponse.redirect(
-      new URL(
-        "/hub/settings?smtp=success",
-        request.url
-      ),
-      303
-    );
+    return redirectTo("/hub/settings?smtp=success");
   } catch (error) {
     console.error(
       "SMTP verification failed:",
       error
     );
 
-    return NextResponse.redirect(
-      new URL(
-        "/hub/settings?smtp=error",
-        request.url
-      ),
-      303
-    );
+    return redirectTo("/hub/settings?smtp=error");
   }
 }

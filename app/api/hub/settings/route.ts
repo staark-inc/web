@@ -5,18 +5,13 @@ import {
 
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { redirectTo } from "@/lib/lib/redirect";
 
 function redirectToSettings(
   request: NextRequest,
   params: string
 ) {
-  return NextResponse.redirect(
-    new URL(
-      `/hub/settings?${params}`,
-      request.url
-    ),
-    303
-  );
+  return redirectTo(`/hub/settings?${params}`);
 }
 
 export async function POST(
