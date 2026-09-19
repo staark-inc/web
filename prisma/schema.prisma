@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  ADMIN
+}
+
+enum MessageDirection {
+  INBOUND
+  OUTBOUND
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         UserRole @default(ADMIN)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Message {
+  id        String           @id @default(cuid())
+  direction MessageDirection
+
+  fromName  String?
+  fromEmail String
+  toEmail   String
+
+  subject   String
+  body      String
+
+  isRead    Boolean          @default(false)
+
+  createdAt DateTime         @default(now())
+  sentAt    DateTime?
+
+  @@index([createdAt])
+  @@index([direction])
+  @@index([isRead])
+  @@index([fromEmail])
+}
+
+model Settings {
+  id              String   @id @default("default")
+  senderName      String   @default("Staark Inc.")
+  senderEmail     String
+  signature       String?
+  defaultTemplate String   @default("staark-standard")
+  updatedAt       DateTime @updatedAt
+}

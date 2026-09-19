@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -457,6 +458,18 @@ Skickat via kontaktformuläret på staarkinc.com
   </body>
 </html>
       `,
+    });
+
+    await prisma.message.create({
+      data: {
+        direction: "INBOUND",
+        fromName: name,
+        fromEmail: email,
+        toEmail: to,
+        subject: `Ny förfrågan från ${name} | Staark Inc`,
+        body: message,
+        isRead: false,
+      },
     });
 
     return NextResponse.json({
