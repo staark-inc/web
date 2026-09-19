@@ -12,7 +12,7 @@ function redirectToProfile(
   const baseUrl =
     process.env.NEXT_PUBLIC_APP_URL ||
     process.env.NEXT_PUBLIC_SITE_URL ||
-    "http://192.168.0.10:3010";
+    "https://staarkinc.com/";
 
   return NextResponse.redirect(
     `${baseUrl}/hub/profile?${params}`,
