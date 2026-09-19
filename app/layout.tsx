@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { Geist, Unbounded } from "next/font/google";
 import "./globals.css";
 
@@ -11,6 +12,9 @@ const unbounded = Unbounded({
   variable: "--font-unbounded",
   subsets: ["latin"],
 });
+
+const gaId =
+  process.env.NEXT_PUBLIC_GA_ID || "G-174NDSXWM0"
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://staarkinc.com"),
@@ -38,7 +42,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="sv"
       className={`${geistSans.variable} ${unbounded.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+        <GoogleAnalytics gaId={gaId} />
+      </body>
     </html>
   );
 }
