@@ -1,68 +1,640 @@
-import { Mail, MapPin, Phone } from "lucide-react";
+import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
+import {
+  ArrowRight,
+  Check,
+  Code2,
+  Mail,
+  MapPin,
+  Search,
+  Smartphone,
+  Zap,
+} from "lucide-react";
+
 import ContactForm from "./components/ContactForm";
 import ClientFaqItem from "./components/ClientFaqItem";
-import HomeHeader, { HomeFooter } from "./components/HomeHeader";
+import {
+  SiteHeader,
+  SiteFooter,
+} from "./components/SiteChrome";
+
+import { projects } from "./data/projects";
+
+export const metadata: Metadata = {
+  title: "Webbyrå i Jönköping & Värnamo",
+  description:
+    "Staark Inc. bygger moderna, snabba och SEO-optimerade hemsidor för företag i Jönköping, Värnamo och Småland. Webbplatser från 2 999 kr.",
+
+  alternates: {
+    canonical: "/",
+  },
+
+  openGraph: {
+    title: "Webbyrå i Jönköping & Värnamo | Staark Inc.",
+    description:
+      "Moderna hemsidor, webbdesign, SEO och webbutveckling för företag i Småland.",
+    url: "/",
+    type: "website",
+  },
+};
 
 const services = [
-  ["Webbdesign & Utveckling", "Vi bygger moderna, snabba och konverterande webbplatser.", "/icon-layout.svg"],
-  ["SEO & Synlighet", "Vi hjälper dina kunder att hitta dig på Google.", "/icon-search.svg"],
-  ["Underhåll & Support", "Vi håller din webbplats uppdaterad, säker och snabb.", "/icon-smartphone.svg"],
-  ["Hosting & Drift", "Snabb och säker hosting med 99,9% upptid.", "/icon-help-circle.svg"],
-] as const;
-
-const projects = [
-  ["Bageri Solsken", "Starter Paket", "En mysig, lokalproducerad känsla med integrerad beställningsfunktion för bröd och tårtor.", "/figma-v2/project-1.png"],
-  ["AutoFix Värnamo", "Professionell", "En modern bilverkstadssajt med fokus på snabb tidsbokning och tydlig prislista för service.", "/figma-v2/project-2.png"],
-  ["Café Strömsund", "Företag", "Stilren design med stor bildyta, dynamisk meny och sociala medier-flöde integrerat direkt.", "/figma-v2/project-3.png"],
-] as const;
-
-const packages = [
-  { name: "Starter", price: "2 999", featured: false, features: ["Enkel webbplats", "Upp till 3 undersidor", "Grundläggande SEO", "6 månaders fri hosting", "Leverans inom 5 arbetsdagar"] },
-  { name: "Professionell", price: "5 999", featured: true, features: ["Upp till 5 undersidor", "Skräddarsydd grafisk profil", "Grundläggande SEO-optimering", "Integrerat kontaktformulär", "6 månaders fri hosting", "Support via e-post"] },
-  { name: "Företag", price: "9 999", featured: false, features: ["Skräddarsydd webbplats", "Obegränsat antal sidor", "Full SEO-strategi", "E-handelsfunktioner", "Löpande backup & underhåll ingår", "Dedikerad projektledare"] },
-] as const;
+  {
+    slug: "webbdesign",
+    icon: Smartphone,
+    title: "Webbdesign",
+    description:
+      "Modern och responsiv design anpassad efter ditt företag och dina kunder.",
+  },
+  {
+    slug: "webbutveckling",
+    icon: Code2,
+    title: "Webbutveckling",
+    description:
+      "Snabba och moderna webbplatser byggda med teknik som kan växa med ditt företag.",
+  },
+  {
+    slug: "seo",
+    icon: Search,
+    title: "SEO & synlighet",
+    description:
+      "En tekniskt SEO-vänlig grund som hjälper kunder att hitta ditt företag online.",
+  },
+  {
+    slug: "prestanda",
+    icon: Zap,
+    title: "Prestanda",
+    description:
+      "Snabb laddning och en bättre upplevelse på både mobil och dator.",
+  },
+];
 
 const faqs = [
-  ["Hur lång tid tar det att bygga en webbplats?", "De flesta webbplatser är redo att lanseras inom 2–4 veckor efter att vi fått allt material."],
-  ["Vad kostar en webbplats?", "Våra paket börjar på 2 999 SEK. Vi ger alltid en tydlig offert innan vi börjar."],
-  ["Behöver jag köpa hosting separat?", "Nej. Alla våra paket inkluderar sex månaders fri hosting."],
-  ["Kan ni hjälpa till med texter och bilder?", "Absolut. Vi hjälper gärna till att strukturera innehållet och rekommenderar rätt material."],
+  [
+    "Vad kostar en webbplats?",
+    "Enklare webbplatser börjar från 2 999 kr. Större och mer avancerade projekt får ett anpassat pris.",
+  ],
+  [
+    "Hur lång tid tar det att bygga en webbplats?",
+    "Tiden beror på projektets omfattning, innehåll och funktioner. Vi går igenom tidsplanen innan projektet börjar.",
+  ],
+  [
+    "Kan ni hjälpa företag i Jönköping och Värnamo?",
+    "Ja. Vi arbetar med företag i Jönköping, Värnamo och andra delar av Småland.",
+  ],
+  [
+    "Kan ni hjälpa till efter lanseringen?",
+    "Ja. Vi kan hjälpa till med support, underhåll, hosting och fortsatta förbättringar.",
+  ],
 ] as const;
 
-function SectionHeader({ eyebrow, title, description, centered = false }: { eyebrow: string; title: string; description?: string; centered?: boolean }) {
-  return <div className={centered ? "v2-section-header centered" : "v2-section-header"}><span>{eyebrow}</span><h2>{title}</h2>{description && <p>{description}</p>}</div>;
+function SectionHeader({
+  eyebrow,
+  title,
+  description,
+  centered = false,
+}: {
+  eyebrow: string;
+  title: string;
+  description?: string;
+  centered?: boolean;
+}) {
+  return (
+    <div
+      className={
+        centered
+          ? "v2-section-header centered"
+          : "v2-section-header"
+      }
+    >
+      <span>{eyebrow}</span>
+
+      <h2>{title}</h2>
+
+      {description && <p>{description}</p>}
+    </div>
+  );
 }
 
 export default function Page() {
+  const featuredProjects = projects.slice(0, 3);
+
   return (
     <main className="v2-page">
-      <HomeHeader />
+
+      <SiteHeader />
+
+
+      {/* =====================================================
+          HERO
+      ===================================================== */}
 
       <section className="v2-hero">
-        <div className="v2-hero-copy"><span className="v2-pill">Webbyrå i Jönköping &amp; Värnamo</span><h1>Vi bygger webbplatser som växer ditt företag</h1><p>Professionella, snabba och prisvärda hemsidor skräddarsydda för småföretagare i Småland. Låt oss sätta ditt företag på kartan online.</p></div>
-        <div className="v2-actions"><a className="v2-button v2-button-primary" href="#pricing">Se våra paket</a><a className="v2-button v2-button-outline" href="#contact">Boka gratis konsultation</a></div>
+
+        <div className="v2-hero-copy">
+
+          <span className="v2-pill">
+            WEBBYRÅ I JÖNKÖPING & VÄRNAMO
+          </span>
+
+          <h1>
+            Webbplatser som hjälper ditt företag att växa.
+          </h1>
+
+          <p>
+            Vi designar och utvecklar moderna, snabba och
+            SEO-vänliga webbplatser för företag i Jönköping,
+            Värnamo och Småland.
+          </p>
+
+          <div className="v2-actions">
+
+            <Link
+              href="/kontakt"
+              className="v2-button v2-button-primary"
+            >
+              Få kostnadsfri offert
+              <ArrowRight size={18} />
+            </Link>
+
+            <Link
+              href="/projekt"
+              className="v2-button v2-button-light"
+            >
+              Se våra projekt
+            </Link>
+
+          </div>
+
+        </div>
+
       </section>
 
-      <section className="v2-proof"><div><strong>50+</strong><span>Webbplatser lanserade</span></div><div><strong>99,9%</strong><span>Kundnöjdhet</span></div><div><strong>4,8/5</strong><span>Genomsnittligt betyg</span></div></section>
 
-      <section className="v2-section v2-services" id="services"><SectionHeader eyebrow="Vad vi erbjuder" title="Allt ditt småföretag behöver för att lyckas digitalt" description="Vi tar hand om tekniken så att du kan fokusera på att driva ditt företag." /><div className="v2-service-grid">{services.map(([title, description, icon]) => <article className="v2-service-card" key={title}><span className="v2-icon"><img src={icon} alt="" /></span><h3>{title}</h3><p>{description}</p></article>)}</div></section>
+      {/* =====================================================
+          TRUST / BENEFITS
+      ===================================================== */}
 
-      <section className="v2-section v2-portfolio" id="portfolio"><SectionHeader eyebrow="Våra projekt" title="Projekt vi är stolta över" description="Se hur vi har hjälpt andra småföretag att växa med en stark digital närvaro." /><div className="v2-project-grid">{projects.map(([name, tier, description, image]) => <article className="v2-project" key={name}><Image src={image} alt="" width={512} height={373} sizes="(max-width: 768px) 100vw, 33vw" /><div><span>{tier}</span><h3>{name}</h3><p>{description}</p></div></article>)}</div></section>
+      <section className="v2-proof">
 
-      <section className="v2-section v2-process"><SectionHeader eyebrow="Processen" title="Från idé till färdig hemsida" centered /><div className="v2-process-grid">{[["01", "Berätta om ditt företag", "Vi börjar med ett kort samtal om dina mål, kunder och behov."], ["02", "Vi bygger tillsammans", "Du får se framstegen och ge feedback under hela processen."], ["03", "Få fler kunder online", "Din nya webbplats lanseras och börjar arbeta för ditt företag."]].map(([number, title, description]) => <article key={number}><strong>{number}</strong><h3>{title}</h3><p>{description}</p></article>)}</div></section>
+        <div>
+          <Check size={20} />
 
-      <section className="v2-section v2-pricing" id="pricing"><SectionHeader eyebrow="Våra paket" title="Enkla priser, tydliga resultat" description="Välj det paket som passar ditt företag. Inga dolda kostnader eller överraskningar." centered /><div className="v2-package-grid">{packages.map((item) => <article className={item.featured ? "v2-package featured" : "v2-package"} key={item.name}><div className="v2-package-head"><h3>{item.name}</h3>{item.featured && <span>Mest Populär</span>}</div><div className="v2-price"><strong>{item.price}</strong><small>SEK</small></div><hr /><ul>{item.features.map((feature) => <li key={feature}><img src="/icon-check.svg" alt="" />{feature}</li>)}</ul><a className={item.featured ? "v2-button v2-button-primary" : "v2-button v2-button-light"} href="#contact">Välj paket</a></article>)}</div></section>
+          <span>
+            Mobilanpassade webbplatser
+          </span>
+        </div>
 
-      <section className="v2-partners" aria-label="Partners"><strong>Förtroende från lokala verksamheter</strong><div><a href="https://alexdack.se" target="_blank" rel="noreferrer"><span>AS</span>Alexdack Service (alexdack.se)</a><a href="https://tutorialeips.ro" target="_blank" rel="noreferrer"><span>TI</span>TutorialeIPS (tutorialeips.ro)</a></div></section>
+        <div>
+          <Check size={20} />
 
-      <section className="v2-section v2-about" id="about"><Image src="/figma-v2/about.png" alt="Lokalt företag i Småland" width={512} height={373} loading="lazy" sizes="(max-width: 768px) 100vw, 50vw" /><div><SectionHeader eyebrow="Om oss" title="Vi brinner för småföretagare i Småland" description="Vi vet att varje företag har en unik historia. Vårt jobb är att berätta den på bästa sätt online." /><a className="v2-text-link" href="/about">Läs mer om oss →</a></div></section>
+          <span>
+            SEO från början
+          </span>
+        </div>
 
-      <section className="v2-section v2-faq" id="faq"><SectionHeader eyebrow="Vanliga frågor" title="Allt du behöver veta" centered /><div className="v2-faq-list">{faqs.map(([question, answer], index) => <ClientFaqItem key={question} question={question} answer={answer} index={index} />)}</div></section>
+        <div>
+          <Check size={20} />
 
-      <section className="v2-section v2-contact" id="contact"><div><SectionHeader eyebrow="Kontakta oss" title="Låt oss prata om ditt nästa projekt" description="Har du en idé eller behöver du hjälp att komma igång? Fyll i formuläret så återkommer vi inom en arbetsdag." /><div className="v2-contact-details"><a href="mailto:contact@staarkinc.com"><Mail size={18} />contact@staarkinc.com</a><a href="tel:+46722000000"><Phone size={18} />+46 72 200 00 00</a><span><MapPin size={18} />Jönköping och Värnamo, Sverige</span></div></div><ContactForm /></section>
+          <span>
+            Personlig kontakt
+          </span>
+        </div>
 
-      <HomeFooter />
+      </section>
+
+
+      {/* =====================================================
+          SERVICES
+      ===================================================== */}
+
+      <section className="v2-section v2-services">
+
+        <SectionHeader
+          eyebrow="VAD VI GÖR"
+          title="Allt ditt företag behöver online."
+          description="Från design och utveckling till SEO och prestanda. Vi hjälper dig genom hela processen."
+        />
+
+
+        <div className="v2-service-grid">
+
+          {services.map((service) => {
+            const Icon = service.icon;
+
+            return (
+              <article
+                className="v2-service-card"
+                key={service.slug}
+              >
+
+                <div className="v2-icon">
+                  <Icon
+                    size={24}
+                    className="text-[var(--v2-blue)]"
+                  />
+                </div>
+
+                <h3>
+                  {service.title}
+                </h3>
+
+                <p>
+                  {service.description}
+                </p>
+
+                <Link
+                  href={`/tjanster/${service.slug}`}
+                  className="v2-text-link"
+                >
+                  Läs mer
+                  <ArrowRight size={15} />
+                </Link>
+
+              </article>
+            );
+          })}
+
+        </div>
+
+
+        <div className="home-section-action">
+
+          <Link
+            href="/tjanster"
+            className="v2-button v2-button-light"
+          >
+            Se alla tjänster
+            <ArrowRight size={17} />
+          </Link>
+
+        </div>
+
+      </section>
+
+
+      {/* =====================================================
+          PROJECTS
+      ===================================================== */}
+
+      <section className="v2-section v2-portfolio">
+
+        <SectionHeader
+          eyebrow="VÅRA PROJEKT"
+          title="Några av våra senaste projekt."
+          description="Se exempel på webbplatser och digitala lösningar vi har arbetat med."
+        />
+
+
+        <div className="v2-project-grid">
+
+          {featuredProjects.map((project) => (
+
+            <article
+              className="v2-project"
+              key={project.slug}
+            >
+
+              <Link href={`/projekt/${project.slug}`}>
+
+                <Image
+                  src={project.image}
+                  alt={`${project.title} – projekt av Staark Inc.`}
+                  width={512}
+                  height={373}
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
+
+              </Link>
+
+
+              <div>
+
+                <div className="v2-project-tags">
+                  {project.tags.map((tag) => (
+                    <span key={tag}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                <h3>
+                  {project.title}
+                </h3>
+
+                <p>
+                  {project.description}
+                </p>
+
+                <Link
+                  href={`/projekt/${project.slug}`}
+                  className="v2-text-link"
+                >
+                  Se projekt
+                  <ArrowRight size={15} />
+                </Link>
+
+              </div>
+
+            </article>
+
+          ))}
+
+        </div>
+
+
+        <div className="home-section-action">
+
+          <Link
+            href="/projekt"
+            className="v2-button v2-button-light"
+          >
+            Se alla projekt
+            <ArrowRight size={17} />
+          </Link>
+
+        </div>
+
+      </section>
+
+
+      {/* =====================================================
+          PROCESS
+      ===================================================== */}
+
+      <section className="v2-section v2-process">
+
+        <SectionHeader
+          eyebrow="PROCESSEN"
+          title="Från idé till färdig webbplats."
+          description="En tydlig process utan onödig komplexitet."
+          centered
+        />
+
+
+        <div className="v2-process-grid">
+
+          <article>
+
+            <strong>01</strong>
+
+            <h3>
+              Vi pratar
+            </h3>
+
+            <p>
+              Vi går igenom ditt företag, dina kunder,
+              dina mål och vad webbplatsen behöver.
+            </p>
+
+          </article>
+
+
+          <article>
+
+            <strong>02</strong>
+
+            <h3>
+              Vi designar & bygger
+            </h3>
+
+            <p>
+              Vi skapar en modern lösning med fokus på
+              design, användarupplevelse och prestanda.
+            </p>
+
+          </article>
+
+
+          <article>
+
+            <strong>03</strong>
+
+            <h3>
+              Vi lanserar
+            </h3>
+
+            <p>
+              När allt är klart lanserar vi webbplatsen
+              och kan fortsätta hjälpa dig efteråt.
+            </p>
+
+          </article>
+
+        </div>
+
+      </section>
+
+
+      {/* =====================================================
+          PRICE PREVIEW
+      ===================================================== */}
+
+      <section className="v2-section v2-pricing">
+
+        <div className="home-price">
+
+          <div className="v2-section-header">
+
+            <span>
+              TYDLIGA PRISER
+            </span>
+
+            <h2>
+              En professionell webbplats från 2 999 kr.
+            </h2>
+
+            <p>
+              Börja enkelt eller välj en mer avancerad
+              lösning. Vi går igenom vad ditt företag
+              behöver innan projektet börjar.
+            </p>
+
+          </div>
+
+
+          <div className="home-price-card">
+
+            <span>
+              FRÅN
+            </span>
+
+            <strong>
+              2 999
+            </strong>
+
+            <small>
+              SEK
+            </small>
+
+            <p>
+              För enklare webbprojekt.
+            </p>
+
+            <Link
+              href="/priser"
+              className="v2-button v2-button-primary"
+            >
+              Se priser
+              <ArrowRight size={17} />
+            </Link>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      {/* =====================================================
+          LOCAL
+      ===================================================== */}
+
+      <section className="v2-section home-local">
+
+        <SectionHeader
+          eyebrow="LOKALT I SMÅLAND"
+          title="Webbdesign nära ditt företag."
+          description="Vi hjälper lokala företag att skapa en starkare digital närvaro."
+          centered
+        />
+
+
+        <div className="home-local-links">
+
+          <Link href="/webbyra-jonkoping">
+            Webbyrå Jönköping
+            <ArrowRight size={17} />
+          </Link>
+
+          <Link href="/webbyra-varnamo">
+            Webbyrå Värnamo
+            <ArrowRight size={17} />
+          </Link>
+
+          <Link href="/webbyra-vaggeryd">
+            Webbyrå Vaggeryd
+            <ArrowRight size={17} />
+          </Link>
+
+        </div>
+
+      </section>
+
+
+      {/* =====================================================
+          ABOUT
+      ===================================================== */}
+
+      <section className="v2-section v2-about">
+
+        <Image
+          src="/figma-v2/about.png"
+          alt="Staark Inc. – webbyrå i Småland"
+          width={512}
+          height={373}
+          loading="lazy"
+          sizes="(max-width: 768px) 100vw, 50vw"
+        />
+
+
+        <div>
+
+          <SectionHeader
+            eyebrow="OM STAARK"
+            title="Digitala lösningar med personlig kontakt."
+            description="Vi hjälper företag att skapa moderna webbplatser utan att göra processen mer komplicerad än den behöver vara."
+          />
+
+          <Link
+            className="v2-text-link"
+            href="/om-oss"
+          >
+            Läs mer om oss
+            <ArrowRight size={15} />
+          </Link>
+
+        </div>
+
+      </section>
+
+
+      {/* =====================================================
+          FAQ
+      ===================================================== */}
+
+      <section className="v2-section v2-faq">
+
+        <SectionHeader
+          eyebrow="VANLIGA FRÅGOR"
+          title="Allt du behöver veta."
+          centered
+        />
+
+
+        <div className="v2-faq-list">
+
+          {faqs.map(
+            ([question, answer], index) => (
+
+              <ClientFaqItem
+                key={question}
+                question={question}
+                answer={answer}
+                index={index}
+              />
+
+            )
+          )}
+
+        </div>
+
+      </section>
+
+
+      {/* =====================================================
+          CONTACT
+      ===================================================== */}
+
+      <section
+        className="v2-section v2-contact"
+        id="contact"
+      >
+
+        <div>
+
+          <SectionHeader
+            eyebrow="KONTAKTA OSS"
+            title="Låt oss prata om ditt nästa projekt."
+            description="Berätta vad du behöver så återkommer vi med ett förslag anpassat efter ditt företag."
+          />
+
+
+          <div className="v2-contact-details">
+
+            <a href="mailto:contact@staarkinc.com">
+              <Mail size={18} />
+              contact@staarkinc.com
+            </a>
+
+            <span>
+              <MapPin size={18} />
+              Jönköping, Värnamo & Småland
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <ContactForm />
+
+      </section>
+
+
+      <SiteFooter />
+
     </main>
   );
 }
