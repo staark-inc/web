@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
+import { redirectTo } from "@/lib/lib/redirect";
 
 const allowedStatuses = [
   "NEW",
@@ -27,10 +28,7 @@ export async function POST(
   const session = await getSession();
 
   if (!session) {
-    return NextResponse.redirect(
-      new URL("/hub/login", request.url),
-      303
-    );
+    return redirectTo("/hub/login");
   }
 
   const { id } = await context.params;
@@ -48,13 +46,7 @@ export async function POST(
         status as LeadStatus
       )
     ) {
-      return NextResponse.redirect(
-        new URL(
-          `/hub/leads/${id}?error=invalid-status`,
-          request.url
-        ),
-        303
-      );
+      return redirectTo(`/hub/leads/${id}?error=invalid-status`);
     }
 
     await prisma.lead.update({
@@ -67,25 +59,13 @@ export async function POST(
       },
     });
 
-    return NextResponse.redirect(
-      new URL(
-        `/hub/leads/${id}?updated=1`,
-        request.url
-      ),
-      303
-    );
+    return redirectTo(`/hub/leads/${id}?updated=1`);
   } catch (error) {
     console.error(
       "Lead status update failed:",
       error
     );
 
-    return NextResponse.redirect(
-      new URL(
-        `/hub/leads/${id}?error=update-failed`,
-        request.url
-      ),
-      303
-    );
+    return redirectTo(`/hub/leads/${id}?error=update-failed`);
   }
 }

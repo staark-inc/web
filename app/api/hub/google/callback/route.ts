@@ -3,22 +3,19 @@ import { google } from "googleapis";
 
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { redirectTo } from "@/lib/lib/redirect";
 
 export async function GET(request: NextRequest) {
   const session = await getSession();
 
   if (!session) {
-    return NextResponse.redirect(
-      new URL("/hub/login", request.url)
-    );
+    return redirectTo("/hub/login");
   }
 
   const code = request.nextUrl.searchParams.get("code");
 
   if (!code) {
-    return NextResponse.redirect(
-      new URL("/hub?ga4=error&reason=no_code", request.url)
-    );
+    return redirectTo("/hub?ga4=error&reason=no_code");
   }
 
   const clientId = process.env.GOOGLE_OAUTH_CLIENT_ID;
@@ -28,9 +25,7 @@ export async function GET(request: NextRequest) {
   if (!clientId || !clientSecret || !redirectUri) {
     console.error("Google OAuth environment variables missing.");
 
-    return NextResponse.redirect(
-      new URL("/hub?ga4=error&reason=config", request.url)
-    );
+    return redirectTo("/hub?ga4=error&reason=config");
   }
 
   try {
@@ -47,12 +42,7 @@ export async function GET(request: NextRequest) {
         "Google did not return a refresh token."
       );
 
-      return NextResponse.redirect(
-        new URL(
-          "/hub?ga4=error&reason=no_refresh_token",
-          request.url
-        )
-      );
+      return redirectTo("/hub?ga4=error&reason=no_refresh_token");
     }
 
     await prisma.settings.upsert({
@@ -73,14 +63,10 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    return NextResponse.redirect(
-      new URL("/hub?ga4=connected", request.url)
-    );
+    return redirectTo("/hub?ga4=connected");
   } catch (error) {
     console.error("Google OAuth callback failed:", error);
 
-    return NextResponse.redirect(
-      new URL("/hub?ga4=error&reason=oauth", request.url)
-    );
+    return redirectTo("/hub?ga4=error&reason=oauth");
   }
 }

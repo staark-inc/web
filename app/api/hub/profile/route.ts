@@ -26,9 +26,9 @@ export async function POST(
   const session = await getSession();
 
   if (!session) {
-    return NextResponse.redirect(
-      new URL("/hub/login", request.url),
-      303
+    return redirectToProfile(
+      request,
+      "error=not_logged_in"
     );
   }
 
@@ -45,10 +45,11 @@ export async function POST(
   });
 
   if (!user) {
-    return NextResponse.redirect(
-      new URL("/hub/login", request.url),
-      303
-    );
+      return redirectToProfile(
+        request,
+        "error=not_logged_in"
+      );
+
   }
 
   /**

@@ -1,5 +1,7 @@
+import { NextRequest, NextResponse } from "next/server";
+import { redirectTo } from "@/lib/lib/redirect";
+// import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
-import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -575,10 +577,7 @@ Skickat via kontaktformuläret på staarkinc.com
       !contentType.includes("application/json");
 
     if (acceptsHtml) {
-      return NextResponse.redirect(
-        new URL("/kontakt?sent=1", request.url),
-        303
-      );
+      return redirectTo("/kontakt?sent=1");
     }
 
     return NextResponse.json({
