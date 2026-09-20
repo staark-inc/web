@@ -1,12 +1,15 @@
 import Link from "next/link";
+
 import {
   ArrowLeft,
   Building2,
   Mail,
   Phone,
   Save,
+  Trash2,
   UserRound,
 } from "lucide-react";
+
 import {
   notFound,
   redirect,
@@ -205,6 +208,37 @@ export default async function EditContactPage({
           </div>
         </form>
       </section>
+
+      <section
+        className="hub-settings-card"
+        style={{ marginTop: 18 }}
+      >
+        <div className="hub-settings-heading">
+          <div className="hub-settings-icon">
+            <Trash2 size={19} />
+          </div>
+
+          <div>
+            <h2>Danger zone</h2>
+
+            <p>
+              Permanently delete this client and all
+              connected leads.
+            </p>
+          </div>
+        </div>
+
+        <div className="hub-settings-actions">
+          <Link
+            href={`/hub/contacts/${contact.id}/delete`}
+            className="hub-danger-button"
+          >
+            <Trash2 size={15} />
+            Delete client
+          </Link>
+        </div>
+      </section>
+      
     </div>
   );
 }

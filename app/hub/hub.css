@@ -5130,3 +5130,30 @@
     font-size: 11px;
   }
 }
+
+.hub-danger-button {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  padding: 0 14px;
+
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+
+  background: #fef2f2;
+  color: #b91c1c;
+
+  font-size: 12px;
+  font-weight: 650;
+  text-decoration: none;
+
+  cursor: pointer;
+}
+
+.hub-danger-button:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+}
