@@ -3,7 +3,9 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, Mail, Reply } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
-
+import {
+  publishCurrentBadges,
+} from "@/lib/realtime";
 export const dynamic = "force-dynamic";
 
 type PageProps = {
@@ -43,6 +45,8 @@ export default async function MessagePage({ params }: PageProps) {
         isRead: true,
       },
     });
+
+    await publishCurrentBadges();
   }
 
   return (

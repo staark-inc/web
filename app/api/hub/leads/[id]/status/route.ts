@@ -1,8 +1,9 @@
-import { NextResponse } from "next/server";
-
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { redirectTo } from "@/lib/lib/redirect";
+import {
+  publishCurrentBadges,
+} from "@/lib/realtime";
 
 const allowedStatuses = [
   "NEW",
@@ -34,7 +35,8 @@ export async function POST(
   const { id } = await params;
 
   try {
-    const formData = await request.formData();
+    const formData =
+      await request.formData();
 
     const status = String(
       formData.get("status") ?? ""
@@ -45,25 +47,36 @@ export async function POST(
         status as LeadStatus
       )
     ) {
-      return redirectTo(`/hub/leads/${id}?error=invalid-status`);
+      return redirectTo(
+        `/hub/leads/${id}?error=invalid-status`
+      );
     }
 
     await prisma.lead.update({
       where: {
         id,
       },
+
       data: {
         status: status as LeadStatus,
       },
     });
 
-    return redirectTo(`/hub/leads/${id}?updated=1`);
+    // Actualizează badge-urile live
+    // după schimbarea statusului.
+    await publishCurrentBadges();
+
+    return redirectTo(
+      `/hub/leads/${id}?updated=1`
+    );
   } catch (error) {
     console.error(
       "Lead status update failed:",
       error
     );
 
-    return redirectTo(`/hub/leads/${id}?error=update-failed`);
+    return redirectTo(
+      `/hub/leads/${id}?error=update-failed`
+    );
   }
 }

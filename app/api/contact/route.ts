@@ -537,8 +537,6 @@ Skickat via kontaktformuläret på staarkinc.com
       },
     });
 
-    await publishCurrentBadges();
-
     const contact = await prisma.contact.upsert({
       where: {
         email,
@@ -578,6 +576,8 @@ Skickat via kontaktformuläret på staarkinc.com
       },
     });
 
+    await publishCurrentBadges();
+    
     const acceptsHtml =
       !contentType.includes("application/json");
 

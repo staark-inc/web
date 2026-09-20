@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { redirectTo } from "@/lib/lib/redirect";
+import { publishCurrentBadges } from "@/lib/realtime";
 
 const allowedStatuses = [
   "NEW",
@@ -58,6 +59,8 @@ export async function POST(
         status: status as LeadStatus,
       },
     });
+
+    await publishCurrentBadges();
 
     return redirectTo(`/hub/leads/${id}?updated=1`);
   } catch (error) {
