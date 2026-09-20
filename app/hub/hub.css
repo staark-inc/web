@@ -718,6 +718,9 @@
   display: flex;
   justify-content: flex-end;
   margin-top: 24px;
+  gap: 15px;
+  font-size: 13px;
+  flex-wrap: wrap;
 }
 
 .hub-profile-avatar-row {
