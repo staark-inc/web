@@ -1,65 +1,74 @@
+import dns from "node:dns/promises";
 import nodemailer from "nodemailer";
 
-function parseSecure(value: string | undefined) {
-  return value === "true" || value === "1";
-}
+const SMTP_HOST =
+  process.env.SMTP_HOST ??
+  "smtp-relay.gmail.com";
 
-export function getSmtpConfig() {
-  const host = process.env.SMTP_HOST;
-  const port = Number(process.env.SMTP_PORT);
-  const secure = parseSecure(
-    process.env.SMTP_SECURE
-  );
-  const user = process.env.SMTP_USER;
-  const password =
-    process.env.SMTP_PASSWORD;
+const SMTP_PORT =
+  Number(process.env.SMTP_PORT ?? "587");
 
-  if (
-    !host ||
-    !port ||
-    !user ||
-    !password
-  ) {
+async function createSmtpTransporter() {
+  const ipv4Addresses =
+    await dns.resolve4(SMTP_HOST);
+
+  const smtpIpv4 =
+    ipv4Addresses[0];
+
+  if (!smtpIpv4) {
     throw new Error(
-      "SMTP configuration is incomplete."
+      `Could not resolve IPv4 for ${SMTP_HOST}`
     );
   }
 
-  return {
-    host,
-    port,
-    secure,
-    user,
-    password,
-  };
-}
-
-export function createSmtpTransport() {
-  const config = getSmtpConfig();
+  console.log(
+    `[SMTP] Connecting to ${SMTP_HOST} via IPv4 ${smtpIpv4}`
+  );
 
   return nodemailer.createTransport({
-    host: config.host,
-    port: config.port,
-    secure: config.secure,
+    /*
+     * Connect directly over IPv4.
+     */
+    host: smtpIpv4,
 
-    auth: {
-      user: config.user,
-      pass: config.password,
+    port: SMTP_PORT,
+
+    /*
+     * Port 587 + STARTTLS.
+     */
+    secure: false,
+    requireTLS: true,
+
+    /*
+     * EHLO/HELO hostname.
+     */
+    name: "staarkinc.com",
+
+    /*
+     * Even though we connect to an IP,
+     * TLS must validate Google's hostname.
+     */
+    tls: {
+      servername: SMTP_HOST,
     },
-
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 15000,
   });
 }
 
 export async function verifySmtpConnection() {
   const transporter =
-    createSmtpTransport();
+    await createSmtpTransporter();
 
   await transporter.verify();
 
-  return {
-    connected: true,
-  };
+  console.log(
+    "[SMTP] Google Workspace relay verified successfully"
+  );
+
+  transporter.close();
+
+  return true;
+}
+
+export async function getSmtpTransporter() {
+  return createSmtpTransporter();
 }

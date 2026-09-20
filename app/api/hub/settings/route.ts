@@ -5,7 +5,7 @@ import {
 
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { redirectTo } from "@/lib/lib/redirect";
+import { redirectTo } from "@/lib/redirect";
 
 function redirectToSettings(
   request: NextRequest,

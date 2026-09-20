@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import { getSession } from "@/lib/auth";
 import { verifySmtpConnection } from "@/lib/smtp";
-import { redirectTo } from "@/lib/lib/redirect";
+import { redirectTo } from "@/lib/redirect";
 
 export const dynamic = "force-dynamic";
 

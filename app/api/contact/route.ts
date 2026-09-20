@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { redirectTo } from "@/lib/lib/redirect";
-// import { NextResponse } from "next/server";
+import { redirectTo } from "@/lib/redirect";
 import nodemailer from "nodemailer";
 import { prisma } from "@/lib/prisma";
 import {
   publishCurrentBadges,
 } from "@/lib/realtime";
+import dns from "node:dns/promises";
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -123,22 +123,44 @@ export async function POST(request: Request) {
       );
     }
 
-    const transporter = nodemailer.createTransport({
-      host: requiredEnv("SMTP_HOST"),
-      port: Number(process.env.SMTP_PORT ?? 587),
-      secure: process.env.SMTP_SECURE === "true",
+    const smtpHost =
+      process.env.SMTP_HOST ??
+      "smtp-relay.gmail.com";
 
-      auth: {
-        user: requiredEnv("SMTP_USER"),
-        pass: requiredEnv("SMTP_PASSWORD"),
+    const smtpPort =
+      Number(process.env.SMTP_PORT ?? "587");
+
+    const smtpIpv4Addresses =
+      await dns.resolve4(smtpHost);
+
+    const smtpIpv4 =
+      smtpIpv4Addresses[0];
+
+    if (!smtpIpv4) {
+      throw new Error(
+        `Could not resolve an IPv4 address for ${smtpHost}`
+      );
+    }
+
+    console.log(
+      `[SMTP] Connecting to ${smtpHost} via IPv4 ${smtpIpv4}`
+    );
+
+    const transporter = nodemailer.createTransport({
+      host: smtpIpv4,
+      port: smtpPort,
+      secure: false,
+      name: "staarkinc.com",
+      requireTLS: true,
+      tls: {
+        servername: smtpHost,
       },
     });
 
     const to = requiredEnv("CONTACT_TO_EMAIL");
-
-    const fromEmail =
-      process.env.CONTACT_FROM_EMAIL ??
-      requiredEnv("SMTP_USER");
+    const fromEmail = requiredEnv(
+      "CONTACT_FROM_EMAIL"
+    );
 
     /*
      * Escape user-controlled content before inserting it

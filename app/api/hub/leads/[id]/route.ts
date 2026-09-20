@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
-import { redirectTo } from "@/lib/lib/redirect";
+import { redirectTo } from "@/lib/redirect";
 import { publishCurrentBadges } from "@/lib/realtime";
 
 const allowedStatuses = [

@@ -3,7 +3,7 @@ import { google } from "googleapis";
 
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { redirectTo } from "@/lib/lib/redirect";
+import { redirectTo } from "@/lib/redirect";
 
 export async function GET(request: NextRequest) {
   const session = await getSession();
