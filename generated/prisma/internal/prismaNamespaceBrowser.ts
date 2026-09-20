@@ -96,6 +96,10 @@ export const SettingsScalarFieldEnum = {
   defaultTemplate: 'defaultTemplate',
   ga4RefreshToken: 'ga4RefreshToken',
   ga4ConnectedAt: 'ga4ConnectedAt',
+  gmailRefreshToken: 'gmailRefreshToken',
+  gmailHistoryId: 'gmailHistoryId',
+  gmailWatchExpiresAt: 'gmailWatchExpiresAt',
+  gmailConnectedAt: 'gmailConnectedAt',
   updatedAt: 'updatedAt'
 } as const
 
@@ -133,6 +137,7 @@ export const ThreadScalarFieldEnum = {
   id: 'id',
   contactId: 'contactId',
   subject: 'subject',
+  gmailThreadId: 'gmailThreadId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -151,6 +156,10 @@ export const MessageScalarFieldEnum = {
   subject: 'subject',
   body: 'body',
   isRead: 'isRead',
+  gmailMessageId: 'gmailMessageId',
+  rfcMessageId: 'rfcMessageId',
+  inReplyTo: 'inReplyTo',
+  references: 'references',
   createdAt: 'createdAt',
   sentAt: 'sentAt'
 } as const

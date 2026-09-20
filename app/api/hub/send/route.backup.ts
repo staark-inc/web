@@ -47,13 +47,12 @@ export async function POST(
   }
 
   try {
-    const body =
-      (await request.json()) as {
-        to?: unknown;
-        subject?: unknown;
-        message?: unknown;
-        threadId?: unknown;
-      };
+    const body = (await request.json()) as {
+      to?: unknown;
+      subject?: unknown;
+      message?: unknown;
+      threadId?: unknown;
+    };
 
     const to =
       typeof body.to === "string"
@@ -130,10 +129,9 @@ export async function POST(
     }
 
     /*
-     * REPLY:
-     * load existing conversation.
+     * If this is a reply, load the
+     * existing thread first.
      */
-
     const existingThread =
       requestedThreadId
         ? await prisma.thread.findUnique({
@@ -163,10 +161,10 @@ export async function POST(
     }
 
     /*
-     * Prevent sending an existing
-     * customer thread to another email.
+     * A thread connected to a contact
+     * should not suddenly send to a
+     * different email address.
      */
-
     if (
       existingThread?.contact &&
       existingThread.contact.email
@@ -195,24 +193,20 @@ export async function POST(
     const transporter =
       await getSmtpTransporter();
 
-    let rfcMessageId: string | null =
-      null;
+    let messageId = "";
 
     try {
       const info =
         await transporter.sendMail({
-          from:
-            `"Staark Inc." <${fromEmail}>`,
+          from: `"Staark Inc." <${fromEmail}>`,
 
           to,
 
           subject,
 
-          replyTo:
-            fromEmail,
+          replyTo: fromEmail,
 
-          text:
-            message,
+          text: message,
 
           html: `
 <!doctype html>
@@ -307,26 +301,28 @@ export async function POST(
           `,
         });
 
-      rfcMessageId =
-        info.messageId ||
-        null;
+      messageId =
+        info.messageId ?? "";
 
       console.log(
-        `[SMTP] Hub email sent successfully: ${rfcMessageId}`
+        `[SMTP] Hub email sent successfully: ${messageId}`
       );
     } finally {
       transporter.close();
     }
 
     /*
-     * SAVE CRM + THREAD
+     * SAVE CRM / THREAD DATA
      */
 
     const result =
       await prisma.$transaction(
         async (tx) => {
           /*
-           * Find/create customer.
+           * Find or create contact.
+           *
+           * Compose to a new email address
+           * automatically creates a contact.
            */
 
           let contact =
@@ -347,45 +343,51 @@ export async function POST(
           }
 
           /*
-           * Reply = reuse thread.
-           * Compose = create thread.
+           * Reply:
+           * reuse existing thread.
+           *
+           * Compose:
+           * create a new thread.
            */
 
-          const thread =
-            existingThread
-              ? await tx.thread.update({
-                  where: {
-                    id:
-                      existingThread.id,
-                  },
+          let thread;
 
-                  data: {
-                    contactId:
-                      existingThread
-                        .contactId ??
-                      contact.id,
+          if (existingThread) {
+            thread =
+              await tx.thread.update({
+                where: {
+                  id: existingThread.id,
+                },
 
-                    updatedAt:
-                      new Date(),
-                  },
-                })
-              : await tx.thread.create({
-                  data: {
-                    contactId:
-                      contact.id,
+                data: {
+                  contactId:
+                    existingThread.contactId ??
+                    contact.id,
 
-                    subject,
-                  },
-                });
+                  /*
+                   * Touch updatedAt so this
+                   * conversation moves to
+                   * the top of Inbox/Sent.
+                   */
+                  updatedAt:
+                    new Date(),
+                },
+              });
+          } else {
+            thread =
+              await tx.thread.create({
+                data: {
+                  contactId:
+                    contact.id,
+
+                  subject,
+                },
+              });
+          }
 
           /*
-           * Save outbound message.
-           *
-           * rfcMessageId is the key that
-           * later lets us recognize:
-           *
-           * In-Reply-To:
-           * <this-message-id>
+           * Save outbound message inside
+           * the conversation.
            */
 
           const savedMessage =
@@ -418,12 +420,11 @@ export async function POST(
 
                 sentAt:
                   new Date(),
-
-                rfcMessageId,
               },
             });
 
           return {
+            contact,
             thread,
             message:
               savedMessage,
@@ -434,8 +435,7 @@ export async function POST(
     return NextResponse.json({
       ok: true,
 
-      messageId:
-        rfcMessageId,
+      messageId,
 
       threadId:
         result.thread.id,

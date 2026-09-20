@@ -35,6 +35,10 @@ export type MessageMinAggregateOutputType = {
   subject: string | null
   body: string | null
   isRead: boolean | null
+  gmailMessageId: string | null
+  rfcMessageId: string | null
+  inReplyTo: string | null
+  references: string | null
   createdAt: Date | null
   sentAt: Date | null
 }
@@ -50,6 +54,10 @@ export type MessageMaxAggregateOutputType = {
   subject: string | null
   body: string | null
   isRead: boolean | null
+  gmailMessageId: string | null
+  rfcMessageId: string | null
+  inReplyTo: string | null
+  references: string | null
   createdAt: Date | null
   sentAt: Date | null
 }
@@ -65,6 +73,10 @@ export type MessageCountAggregateOutputType = {
   subject: number
   body: number
   isRead: number
+  gmailMessageId: number
+  rfcMessageId: number
+  inReplyTo: number
+  references: number
   createdAt: number
   sentAt: number
   _all: number
@@ -82,6 +94,10 @@ export type MessageMinAggregateInputType = {
   subject?: true
   body?: true
   isRead?: true
+  gmailMessageId?: true
+  rfcMessageId?: true
+  inReplyTo?: true
+  references?: true
   createdAt?: true
   sentAt?: true
 }
@@ -97,6 +113,10 @@ export type MessageMaxAggregateInputType = {
   subject?: true
   body?: true
   isRead?: true
+  gmailMessageId?: true
+  rfcMessageId?: true
+  inReplyTo?: true
+  references?: true
   createdAt?: true
   sentAt?: true
 }
@@ -112,6 +132,10 @@ export type MessageCountAggregateInputType = {
   subject?: true
   body?: true
   isRead?: true
+  gmailMessageId?: true
+  rfcMessageId?: true
+  inReplyTo?: true
+  references?: true
   createdAt?: true
   sentAt?: true
   _all?: true
@@ -200,6 +224,10 @@ export type MessageGroupByOutputType = {
   subject: string
   body: string
   isRead: boolean
+  gmailMessageId: string | null
+  rfcMessageId: string | null
+  inReplyTo: string | null
+  references: string | null
   createdAt: Date
   sentAt: Date | null
   _count: MessageCountAggregateOutputType | null
@@ -236,6 +264,10 @@ export type MessageWhereInput = {
   subject?: Prisma.StringFilter<"Message"> | string
   body?: Prisma.StringFilter<"Message"> | string
   isRead?: Prisma.BoolFilter<"Message"> | boolean
+  gmailMessageId?: Prisma.StringNullableFilter<"Message"> | string | null
+  rfcMessageId?: Prisma.StringNullableFilter<"Message"> | string | null
+  inReplyTo?: Prisma.StringNullableFilter<"Message"> | string | null
+  references?: Prisma.StringNullableFilter<"Message"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Message"> | Date | string
   sentAt?: Prisma.DateTimeNullableFilter<"Message"> | Date | string | null
   contact?: Prisma.XOR<Prisma.ContactNullableScalarRelationFilter, Prisma.ContactWhereInput> | null
@@ -253,6 +285,10 @@ export type MessageOrderByWithRelationInput = {
   subject?: Prisma.SortOrder
   body?: Prisma.SortOrder
   isRead?: Prisma.SortOrder
+  gmailMessageId?: Prisma.SortOrderInput | Prisma.SortOrder
+  rfcMessageId?: Prisma.SortOrderInput | Prisma.SortOrder
+  inReplyTo?: Prisma.SortOrderInput | Prisma.SortOrder
+  references?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   sentAt?: Prisma.SortOrderInput | Prisma.SortOrder
   contact?: Prisma.ContactOrderByWithRelationInput
@@ -261,6 +297,8 @@ export type MessageOrderByWithRelationInput = {
 
 export type MessageWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  gmailMessageId?: string
+  rfcMessageId?: string
   AND?: Prisma.MessageWhereInput | Prisma.MessageWhereInput[]
   OR?: Prisma.MessageWhereInput[]
   NOT?: Prisma.MessageWhereInput | Prisma.MessageWhereInput[]
@@ -273,11 +311,13 @@ export type MessageWhereUniqueInput = Prisma.AtLeast<{
   subject?: Prisma.StringFilter<"Message"> | string
   body?: Prisma.StringFilter<"Message"> | string
   isRead?: Prisma.BoolFilter<"Message"> | boolean
+  inReplyTo?: Prisma.StringNullableFilter<"Message"> | string | null
+  references?: Prisma.StringNullableFilter<"Message"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Message"> | Date | string
   sentAt?: Prisma.DateTimeNullableFilter<"Message"> | Date | string | null
   contact?: Prisma.XOR<Prisma.ContactNullableScalarRelationFilter, Prisma.ContactWhereInput> | null
   thread?: Prisma.XOR<Prisma.ThreadNullableScalarRelationFilter, Prisma.ThreadWhereInput> | null
-}, "id">
+}, "id" | "gmailMessageId" | "rfcMessageId">
 
 export type MessageOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -290,6 +330,10 @@ export type MessageOrderByWithAggregationInput = {
   subject?: Prisma.SortOrder
   body?: Prisma.SortOrder
   isRead?: Prisma.SortOrder
+  gmailMessageId?: Prisma.SortOrderInput | Prisma.SortOrder
+  rfcMessageId?: Prisma.SortOrderInput | Prisma.SortOrder
+  inReplyTo?: Prisma.SortOrderInput | Prisma.SortOrder
+  references?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   sentAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.MessageCountOrderByAggregateInput
@@ -311,6 +355,10 @@ export type MessageScalarWhereWithAggregatesInput = {
   subject?: Prisma.StringWithAggregatesFilter<"Message"> | string
   body?: Prisma.StringWithAggregatesFilter<"Message"> | string
   isRead?: Prisma.BoolWithAggregatesFilter<"Message"> | boolean
+  gmailMessageId?: Prisma.StringNullableWithAggregatesFilter<"Message"> | string | null
+  rfcMessageId?: Prisma.StringNullableWithAggregatesFilter<"Message"> | string | null
+  inReplyTo?: Prisma.StringNullableWithAggregatesFilter<"Message"> | string | null
+  references?: Prisma.StringNullableWithAggregatesFilter<"Message"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Message"> | Date | string
   sentAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Message"> | Date | string | null
 }
@@ -324,6 +372,10 @@ export type MessageCreateInput = {
   subject: string
   body: string
   isRead?: boolean
+  gmailMessageId?: string | null
+  rfcMessageId?: string | null
+  inReplyTo?: string | null
+  references?: string | null
   createdAt?: Date | string
   sentAt?: Date | string | null
   contact?: Prisma.ContactCreateNestedOneWithoutMessagesInput
@@ -341,6 +393,10 @@ export type MessageUncheckedCreateInput = {
   subject: string
   body: string
   isRead?: boolean
+  gmailMessageId?: string | null
+  rfcMessageId?: string | null
+  inReplyTo?: string | null
+  references?: string | null
   createdAt?: Date | string
   sentAt?: Date | string | null
 }
@@ -354,6 +410,10 @@ export type MessageUpdateInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.StringFieldUpdateOperationsInput | string
   isRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rfcMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inReplyTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  references?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contact?: Prisma.ContactUpdateOneWithoutMessagesNestedInput
@@ -371,6 +431,10 @@ export type MessageUncheckedUpdateInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.StringFieldUpdateOperationsInput | string
   isRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rfcMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inReplyTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  references?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -386,6 +450,10 @@ export type MessageCreateManyInput = {
   subject: string
   body: string
   isRead?: boolean
+  gmailMessageId?: string | null
+  rfcMessageId?: string | null
+  inReplyTo?: string | null
+  references?: string | null
   createdAt?: Date | string
   sentAt?: Date | string | null
 }
@@ -399,6 +467,10 @@ export type MessageUpdateManyMutationInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.StringFieldUpdateOperationsInput | string
   isRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rfcMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inReplyTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  references?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -414,6 +486,10 @@ export type MessageUncheckedUpdateManyInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.StringFieldUpdateOperationsInput | string
   isRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rfcMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inReplyTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  references?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -439,6 +515,10 @@ export type MessageCountOrderByAggregateInput = {
   subject?: Prisma.SortOrder
   body?: Prisma.SortOrder
   isRead?: Prisma.SortOrder
+  gmailMessageId?: Prisma.SortOrder
+  rfcMessageId?: Prisma.SortOrder
+  inReplyTo?: Prisma.SortOrder
+  references?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
 }
@@ -454,6 +534,10 @@ export type MessageMaxOrderByAggregateInput = {
   subject?: Prisma.SortOrder
   body?: Prisma.SortOrder
   isRead?: Prisma.SortOrder
+  gmailMessageId?: Prisma.SortOrder
+  rfcMessageId?: Prisma.SortOrder
+  inReplyTo?: Prisma.SortOrder
+  references?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
 }
@@ -469,6 +553,10 @@ export type MessageMinOrderByAggregateInput = {
   subject?: Prisma.SortOrder
   body?: Prisma.SortOrder
   isRead?: Prisma.SortOrder
+  gmailMessageId?: Prisma.SortOrder
+  rfcMessageId?: Prisma.SortOrder
+  inReplyTo?: Prisma.SortOrder
+  references?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   sentAt?: Prisma.SortOrder
 }
@@ -574,6 +662,10 @@ export type MessageCreateWithoutContactInput = {
   subject: string
   body: string
   isRead?: boolean
+  gmailMessageId?: string | null
+  rfcMessageId?: string | null
+  inReplyTo?: string | null
+  references?: string | null
   createdAt?: Date | string
   sentAt?: Date | string | null
   thread?: Prisma.ThreadCreateNestedOneWithoutMessagesInput
@@ -589,6 +681,10 @@ export type MessageUncheckedCreateWithoutContactInput = {
   subject: string
   body: string
   isRead?: boolean
+  gmailMessageId?: string | null
+  rfcMessageId?: string | null
+  inReplyTo?: string | null
+  references?: string | null
   createdAt?: Date | string
   sentAt?: Date | string | null
 }
@@ -633,6 +729,10 @@ export type MessageScalarWhereInput = {
   subject?: Prisma.StringFilter<"Message"> | string
   body?: Prisma.StringFilter<"Message"> | string
   isRead?: Prisma.BoolFilter<"Message"> | boolean
+  gmailMessageId?: Prisma.StringNullableFilter<"Message"> | string | null
+  rfcMessageId?: Prisma.StringNullableFilter<"Message"> | string | null
+  inReplyTo?: Prisma.StringNullableFilter<"Message"> | string | null
+  references?: Prisma.StringNullableFilter<"Message"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Message"> | Date | string
   sentAt?: Prisma.DateTimeNullableFilter<"Message"> | Date | string | null
 }
@@ -646,6 +746,10 @@ export type MessageCreateWithoutThreadInput = {
   subject: string
   body: string
   isRead?: boolean
+  gmailMessageId?: string | null
+  rfcMessageId?: string | null
+  inReplyTo?: string | null
+  references?: string | null
   createdAt?: Date | string
   sentAt?: Date | string | null
   contact?: Prisma.ContactCreateNestedOneWithoutMessagesInput
@@ -661,6 +765,10 @@ export type MessageUncheckedCreateWithoutThreadInput = {
   subject: string
   body: string
   isRead?: boolean
+  gmailMessageId?: string | null
+  rfcMessageId?: string | null
+  inReplyTo?: string | null
+  references?: string | null
   createdAt?: Date | string
   sentAt?: Date | string | null
 }
@@ -701,6 +809,10 @@ export type MessageCreateManyContactInput = {
   subject: string
   body: string
   isRead?: boolean
+  gmailMessageId?: string | null
+  rfcMessageId?: string | null
+  inReplyTo?: string | null
+  references?: string | null
   createdAt?: Date | string
   sentAt?: Date | string | null
 }
@@ -714,6 +826,10 @@ export type MessageUpdateWithoutContactInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.StringFieldUpdateOperationsInput | string
   isRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rfcMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inReplyTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  references?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   thread?: Prisma.ThreadUpdateOneWithoutMessagesNestedInput
@@ -729,6 +845,10 @@ export type MessageUncheckedUpdateWithoutContactInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.StringFieldUpdateOperationsInput | string
   isRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rfcMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inReplyTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  references?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -743,6 +863,10 @@ export type MessageUncheckedUpdateManyWithoutContactInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.StringFieldUpdateOperationsInput | string
   isRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rfcMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inReplyTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  references?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -757,6 +881,10 @@ export type MessageCreateManyThreadInput = {
   subject: string
   body: string
   isRead?: boolean
+  gmailMessageId?: string | null
+  rfcMessageId?: string | null
+  inReplyTo?: string | null
+  references?: string | null
   createdAt?: Date | string
   sentAt?: Date | string | null
 }
@@ -770,6 +898,10 @@ export type MessageUpdateWithoutThreadInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.StringFieldUpdateOperationsInput | string
   isRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rfcMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inReplyTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  references?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   contact?: Prisma.ContactUpdateOneWithoutMessagesNestedInput
@@ -785,6 +917,10 @@ export type MessageUncheckedUpdateWithoutThreadInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.StringFieldUpdateOperationsInput | string
   isRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rfcMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inReplyTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  references?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -799,6 +935,10 @@ export type MessageUncheckedUpdateManyWithoutThreadInput = {
   subject?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.StringFieldUpdateOperationsInput | string
   isRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gmailMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rfcMessageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inReplyTo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  references?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -816,6 +956,10 @@ export type MessageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   subject?: boolean
   body?: boolean
   isRead?: boolean
+  gmailMessageId?: boolean
+  rfcMessageId?: boolean
+  inReplyTo?: boolean
+  references?: boolean
   createdAt?: boolean
   sentAt?: boolean
   contact?: boolean | Prisma.Message$contactArgs<ExtArgs>
@@ -833,6 +977,10 @@ export type MessageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   subject?: boolean
   body?: boolean
   isRead?: boolean
+  gmailMessageId?: boolean
+  rfcMessageId?: boolean
+  inReplyTo?: boolean
+  references?: boolean
   createdAt?: boolean
   sentAt?: boolean
   contact?: boolean | Prisma.Message$contactArgs<ExtArgs>
@@ -850,6 +998,10 @@ export type MessageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   subject?: boolean
   body?: boolean
   isRead?: boolean
+  gmailMessageId?: boolean
+  rfcMessageId?: boolean
+  inReplyTo?: boolean
+  references?: boolean
   createdAt?: boolean
   sentAt?: boolean
   contact?: boolean | Prisma.Message$contactArgs<ExtArgs>
@@ -867,11 +1019,15 @@ export type MessageSelectScalar = {
   subject?: boolean
   body?: boolean
   isRead?: boolean
+  gmailMessageId?: boolean
+  rfcMessageId?: boolean
+  inReplyTo?: boolean
+  references?: boolean
   createdAt?: boolean
   sentAt?: boolean
 }
 
-export type MessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "direction" | "contactId" | "threadId" | "fromName" | "fromEmail" | "toEmail" | "subject" | "body" | "isRead" | "createdAt" | "sentAt", ExtArgs["result"]["message"]>
+export type MessageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "direction" | "contactId" | "threadId" | "fromName" | "fromEmail" | "toEmail" | "subject" | "body" | "isRead" | "gmailMessageId" | "rfcMessageId" | "inReplyTo" | "references" | "createdAt" | "sentAt", ExtArgs["result"]["message"]>
 export type MessageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   contact?: boolean | Prisma.Message$contactArgs<ExtArgs>
   thread?: boolean | Prisma.Message$threadArgs<ExtArgs>
@@ -902,6 +1058,10 @@ export type $MessagePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     subject: string
     body: string
     isRead: boolean
+    gmailMessageId: string | null
+    rfcMessageId: string | null
+    inReplyTo: string | null
+    references: string | null
     createdAt: Date
     sentAt: Date | null
   }, ExtArgs["result"]["message"]>
@@ -1339,6 +1499,10 @@ export interface MessageFieldRefs {
   readonly subject: Prisma.FieldRef<"Message", 'String'>
   readonly body: Prisma.FieldRef<"Message", 'String'>
   readonly isRead: Prisma.FieldRef<"Message", 'Boolean'>
+  readonly gmailMessageId: Prisma.FieldRef<"Message", 'String'>
+  readonly rfcMessageId: Prisma.FieldRef<"Message", 'String'>
+  readonly inReplyTo: Prisma.FieldRef<"Message", 'String'>
+  readonly references: Prisma.FieldRef<"Message", 'String'>
   readonly createdAt: Prisma.FieldRef<"Message", 'DateTime'>
   readonly sentAt: Prisma.FieldRef<"Message", 'DateTime'>
 }

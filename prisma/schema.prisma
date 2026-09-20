@@ -35,15 +35,20 @@ model User {
 }
 
 model Settings {
-  id              String   @id @default("default")
-  senderName      String   @default("Staark Inc.")
+  id              String  @id @default("default")
+  senderName      String  @default("Staark Inc.")
   senderEmail     String
   signature       String?
-  defaultTemplate String   @default("staark-standard")
+  defaultTemplate String  @default("staark-standard")
 
   // Google Analytics
   ga4RefreshToken String?
   ga4ConnectedAt  DateTime?
+
+  gmailRefreshToken   String?
+  gmailHistoryId      String?
+  gmailWatchExpiresAt DateTime?
+  gmailConnectedAt    DateTime?
 
   updatedAt DateTime @updatedAt
 }
@@ -90,7 +95,8 @@ model Thread {
   contactId String?
   contact   Contact? @relation(fields: [contactId], references: [id], onDelete: SetNull)
 
-  subject String
+  subject       String
+  gmailThreadId String? @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -120,7 +126,12 @@ model Message {
 
   isRead Boolean @default(false)
 
-  createdAt DateTime @default(now())
+  gmailMessageId String? @unique
+  rfcMessageId   String? @unique
+  inReplyTo      String?
+  references     String?
+
+  createdAt DateTime  @default(now())
   sentAt    DateTime?
 
   @@index([contactId])
@@ -129,4 +140,5 @@ model Message {
   @@index([direction])
   @@index([isRead])
   @@index([fromEmail])
+  @@index([inReplyTo])
 }

@@ -28,6 +28,7 @@ export type ThreadMinAggregateOutputType = {
   id: string | null
   contactId: string | null
   subject: string | null
+  gmailThreadId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -36,6 +37,7 @@ export type ThreadMaxAggregateOutputType = {
   id: string | null
   contactId: string | null
   subject: string | null
+  gmailThreadId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -44,6 +46,7 @@ export type ThreadCountAggregateOutputType = {
   id: number
   contactId: number
   subject: number
+  gmailThreadId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -54,6 +57,7 @@ export type ThreadMinAggregateInputType = {
   id?: true
   contactId?: true
   subject?: true
+  gmailThreadId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -62,6 +66,7 @@ export type ThreadMaxAggregateInputType = {
   id?: true
   contactId?: true
   subject?: true
+  gmailThreadId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -70,6 +75,7 @@ export type ThreadCountAggregateInputType = {
   id?: true
   contactId?: true
   subject?: true
+  gmailThreadId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -151,6 +157,7 @@ export type ThreadGroupByOutputType = {
   id: string
   contactId: string | null
   subject: string
+  gmailThreadId: string | null
   createdAt: Date
   updatedAt: Date
   _count: ThreadCountAggregateOutputType | null
@@ -180,6 +187,7 @@ export type ThreadWhereInput = {
   id?: Prisma.StringFilter<"Thread"> | string
   contactId?: Prisma.StringNullableFilter<"Thread"> | string | null
   subject?: Prisma.StringFilter<"Thread"> | string
+  gmailThreadId?: Prisma.StringNullableFilter<"Thread"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Thread"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Thread"> | Date | string
   contact?: Prisma.XOR<Prisma.ContactNullableScalarRelationFilter, Prisma.ContactWhereInput> | null
@@ -190,6 +198,7 @@ export type ThreadOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   contactId?: Prisma.SortOrderInput | Prisma.SortOrder
   subject?: Prisma.SortOrder
+  gmailThreadId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   contact?: Prisma.ContactOrderByWithRelationInput
@@ -198,6 +207,7 @@ export type ThreadOrderByWithRelationInput = {
 
 export type ThreadWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  gmailThreadId?: string
   AND?: Prisma.ThreadWhereInput | Prisma.ThreadWhereInput[]
   OR?: Prisma.ThreadWhereInput[]
   NOT?: Prisma.ThreadWhereInput | Prisma.ThreadWhereInput[]
@@ -207,12 +217,13 @@ export type ThreadWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Thread"> | Date | string
   contact?: Prisma.XOR<Prisma.ContactNullableScalarRelationFilter, Prisma.ContactWhereInput> | null
   messages?: Prisma.MessageListRelationFilter
-}, "id">
+}, "id" | "gmailThreadId">
 
 export type ThreadOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   contactId?: Prisma.SortOrderInput | Prisma.SortOrder
   subject?: Prisma.SortOrder
+  gmailThreadId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ThreadCountOrderByAggregateInput
@@ -227,6 +238,7 @@ export type ThreadScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Thread"> | string
   contactId?: Prisma.StringNullableWithAggregatesFilter<"Thread"> | string | null
   subject?: Prisma.StringWithAggregatesFilter<"Thread"> | string
+  gmailThreadId?: Prisma.StringNullableWithAggregatesFilter<"Thread"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Thread"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Thread"> | Date | string
 }
@@ -234,6 +246,7 @@ export type ThreadScalarWhereWithAggregatesInput = {
 export type ThreadCreateInput = {
   id?: string
   subject: string
+  gmailThreadId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   contact?: Prisma.ContactCreateNestedOneWithoutThreadsInput
@@ -244,6 +257,7 @@ export type ThreadUncheckedCreateInput = {
   id?: string
   contactId?: string | null
   subject: string
+  gmailThreadId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutThreadInput
@@ -252,6 +266,7 @@ export type ThreadUncheckedCreateInput = {
 export type ThreadUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
+  gmailThreadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contact?: Prisma.ContactUpdateOneWithoutThreadsNestedInput
@@ -262,6 +277,7 @@ export type ThreadUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   contactId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subject?: Prisma.StringFieldUpdateOperationsInput | string
+  gmailThreadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   messages?: Prisma.MessageUncheckedUpdateManyWithoutThreadNestedInput
@@ -271,6 +287,7 @@ export type ThreadCreateManyInput = {
   id?: string
   contactId?: string | null
   subject: string
+  gmailThreadId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -278,6 +295,7 @@ export type ThreadCreateManyInput = {
 export type ThreadUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
+  gmailThreadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -286,6 +304,7 @@ export type ThreadUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   contactId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subject?: Prisma.StringFieldUpdateOperationsInput | string
+  gmailThreadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -304,6 +323,7 @@ export type ThreadCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   contactId?: Prisma.SortOrder
   subject?: Prisma.SortOrder
+  gmailThreadId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -312,6 +332,7 @@ export type ThreadMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   contactId?: Prisma.SortOrder
   subject?: Prisma.SortOrder
+  gmailThreadId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -320,6 +341,7 @@ export type ThreadMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   contactId?: Prisma.SortOrder
   subject?: Prisma.SortOrder
+  gmailThreadId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -390,6 +412,7 @@ export type ThreadUpdateOneWithoutMessagesNestedInput = {
 export type ThreadCreateWithoutContactInput = {
   id?: string
   subject: string
+  gmailThreadId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   messages?: Prisma.MessageCreateNestedManyWithoutThreadInput
@@ -398,6 +421,7 @@ export type ThreadCreateWithoutContactInput = {
 export type ThreadUncheckedCreateWithoutContactInput = {
   id?: string
   subject: string
+  gmailThreadId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutThreadInput
@@ -436,6 +460,7 @@ export type ThreadScalarWhereInput = {
   id?: Prisma.StringFilter<"Thread"> | string
   contactId?: Prisma.StringNullableFilter<"Thread"> | string | null
   subject?: Prisma.StringFilter<"Thread"> | string
+  gmailThreadId?: Prisma.StringNullableFilter<"Thread"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Thread"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Thread"> | Date | string
 }
@@ -443,6 +468,7 @@ export type ThreadScalarWhereInput = {
 export type ThreadCreateWithoutMessagesInput = {
   id?: string
   subject: string
+  gmailThreadId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   contact?: Prisma.ContactCreateNestedOneWithoutThreadsInput
@@ -452,6 +478,7 @@ export type ThreadUncheckedCreateWithoutMessagesInput = {
   id?: string
   contactId?: string | null
   subject: string
+  gmailThreadId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -475,6 +502,7 @@ export type ThreadUpdateToOneWithWhereWithoutMessagesInput = {
 export type ThreadUpdateWithoutMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
+  gmailThreadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contact?: Prisma.ContactUpdateOneWithoutThreadsNestedInput
@@ -484,6 +512,7 @@ export type ThreadUncheckedUpdateWithoutMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   contactId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subject?: Prisma.StringFieldUpdateOperationsInput | string
+  gmailThreadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -491,6 +520,7 @@ export type ThreadUncheckedUpdateWithoutMessagesInput = {
 export type ThreadCreateManyContactInput = {
   id?: string
   subject: string
+  gmailThreadId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -498,6 +528,7 @@ export type ThreadCreateManyContactInput = {
 export type ThreadUpdateWithoutContactInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
+  gmailThreadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   messages?: Prisma.MessageUpdateManyWithoutThreadNestedInput
@@ -506,6 +537,7 @@ export type ThreadUpdateWithoutContactInput = {
 export type ThreadUncheckedUpdateWithoutContactInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
+  gmailThreadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   messages?: Prisma.MessageUncheckedUpdateManyWithoutThreadNestedInput
@@ -514,6 +546,7 @@ export type ThreadUncheckedUpdateWithoutContactInput = {
 export type ThreadUncheckedUpdateManyWithoutContactInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   subject?: Prisma.StringFieldUpdateOperationsInput | string
+  gmailThreadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -553,6 +586,7 @@ export type ThreadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   id?: boolean
   contactId?: boolean
   subject?: boolean
+  gmailThreadId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   contact?: boolean | Prisma.Thread$contactArgs<ExtArgs>
@@ -564,6 +598,7 @@ export type ThreadSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   id?: boolean
   contactId?: boolean
   subject?: boolean
+  gmailThreadId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   contact?: boolean | Prisma.Thread$contactArgs<ExtArgs>
@@ -573,6 +608,7 @@ export type ThreadSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   id?: boolean
   contactId?: boolean
   subject?: boolean
+  gmailThreadId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   contact?: boolean | Prisma.Thread$contactArgs<ExtArgs>
@@ -582,11 +618,12 @@ export type ThreadSelectScalar = {
   id?: boolean
   contactId?: boolean
   subject?: boolean
+  gmailThreadId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ThreadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "contactId" | "subject" | "createdAt" | "updatedAt", ExtArgs["result"]["thread"]>
+export type ThreadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "contactId" | "subject" | "gmailThreadId" | "createdAt" | "updatedAt", ExtArgs["result"]["thread"]>
 export type ThreadInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   contact?: boolean | Prisma.Thread$contactArgs<ExtArgs>
   messages?: boolean | Prisma.Thread$messagesArgs<ExtArgs>
@@ -609,6 +646,7 @@ export type $ThreadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     id: string
     contactId: string | null
     subject: string
+    gmailThreadId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["thread"]>
@@ -1039,6 +1077,7 @@ export interface ThreadFieldRefs {
   readonly id: Prisma.FieldRef<"Thread", 'String'>
   readonly contactId: Prisma.FieldRef<"Thread", 'String'>
   readonly subject: Prisma.FieldRef<"Thread", 'String'>
+  readonly gmailThreadId: Prisma.FieldRef<"Thread", 'String'>
   readonly createdAt: Prisma.FieldRef<"Thread", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Thread", 'DateTime'>
 }
