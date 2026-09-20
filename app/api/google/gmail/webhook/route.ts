@@ -230,6 +230,157 @@ function htmlToText(
     .trim();
 }
 
+function cleanReplyBody(
+  value: string
+) {
+  let text =
+    value
+      .replace(/\r\n/g, "\n")
+      .replace(/\r/g, "\n")
+      .trim();
+
+  /*
+   * Gmail / Outlook / Apple Mail often
+   * append the previous conversation.
+   *
+   * Examples:
+   *
+   * On Sun, 20 Sep ... wrote:
+   * În dum., 20 sept. ... a scris:
+   * Den sön ... skrev:
+   */
+
+  const replySeparators = [
+    /*
+     * English
+     */
+    /^On .+ wrote:\s*$/im,
+
+    /*
+     * Romanian
+     */
+    /^În .+ a scris:\s*$/im,
+    /^La data de .+ a scris:\s*$/im,
+
+    /*
+     * Swedish
+     */
+    /^Den .+ skrev .+:\s*$/im,
+    /^Den .+ skrev:\s*$/im,
+
+    /*
+     * Generic forwarded/original
+     * message separators.
+     */
+    /^-{2,}\s*Original Message\s*-{2,}\s*$/im,
+    /^-{2,}\s*Forwarded message\s*-{2,}\s*$/im,
+    /^-{2,}\s*Vidarebefordrat meddelande\s*-{2,}\s*$/im,
+  ];
+
+  let cutIndex =
+    text.length;
+
+  for (
+    const pattern of
+    replySeparators
+  ) {
+    const match =
+      pattern.exec(text);
+
+    if (
+      match?.index !== undefined &&
+      match.index < cutIndex
+    ) {
+      cutIndex =
+        match.index;
+    }
+  }
+
+  if (
+    cutIndex <
+    text.length
+  ) {
+    text =
+      text
+        .slice(
+          0,
+          cutIndex
+        )
+        .trim();
+  }
+
+  /*
+   * If quoted lines remain, remove
+   * them and everything following
+   * the first quoted block.
+   */
+
+  const lines =
+    text.split("\n");
+
+  const cleanedLines:
+    string[] = [];
+
+  for (
+    const line of lines
+  ) {
+    const trimmed =
+      line.trim();
+
+    if (
+      trimmed.startsWith(">")
+    ) {
+      break;
+    }
+
+    cleanedLines.push(
+      line
+    );
+  }
+
+  text =
+    cleanedLines
+      .join("\n")
+      .replace(
+        /\n{3,}/g,
+        "\n\n"
+      )
+      .trim();
+
+  /*
+   * Remove common mobile/email
+   * signature separators at the end.
+   */
+
+  const signaturePatterns = [
+    /\n--\s*\n[\s\S]*$/m,
+
+    /\nSent from my iPhone[\s\S]*$/i,
+    /\nSent from my Android[\s\S]*$/i,
+
+    /\nSkickat från min iPhone[\s\S]*$/i,
+    /\nSkickat från min Android[\s\S]*$/i,
+
+    /\nTrimis de pe iPhone[\s\S]*$/i,
+    /\nTrimis de pe Android[\s\S]*$/i,
+  ];
+
+  for (
+    const pattern of
+    signaturePatterns
+  ) {
+    text =
+      text
+        .replace(
+          pattern,
+          ""
+        )
+        .trim();
+  }
+
+  return text;
+}
+
 function extractBody(
   payload:
     | gmail_v1.Schema$MessagePart
@@ -570,11 +721,16 @@ async function importGmailMessage(
     }
   }
 
-  const body =
+  const rawBody =
     extractBody(
       gmailMessage.payload,
       gmailMessage.snippet ??
         ""
+    );
+
+  const body =
+    cleanReplyBody(
+      rawBody
     );
 
   const gmailThreadId =
