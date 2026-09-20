@@ -14,13 +14,24 @@ export type Project = {
 export const projects: Project[] = [
   {
     slug: "alex-dackservice",
-    title: "Alex Däckservice",
-    category: "Webbdesign & utveckling",
-    description:
-      "En modern och responsiv webbplats med fokus på tydlighet, prestanda och enkel kontakt.",
-    image: "/figma-v2/project-1.png",
 
-    tags: ["Webbdesign", "Utveckling", "SEO"],
+    title: "Alex Däckservice",
+
+    category:
+      "Webbdesign & webbutveckling",
+
+    description:
+      "En modern och mobilanpassad webbplats som gör det enklare för kunder att förstå tjänsterna och komma i kontakt med företaget.",
+
+    image:
+      "/figma-v2/project-1.png",
+
+    tags: [
+      "Webbdesign",
+      "Webbutveckling",
+      "SEO",
+      "Mobilanpassning",
+    ],
 
     services: [
       "Webbdesign",
@@ -30,68 +41,62 @@ export const projects: Project[] = [
     ],
 
     challenge:
-      "Målet var att skapa en modern och tydlig digital närvaro där besökare snabbt kan förstå företagets tjänster och enkelt ta kontakt.",
+      "Alex Däckservice behövde en tydligare och mer professionell digital närvaro där kunder snabbt kan förstå företagets tjänster, hitta rätt information och enkelt ta nästa steg.",
 
     solution:
-      "Vi skapade en snabb och responsiv webbplats med tydlig struktur, modern design och fokus på en enkel användarupplevelse.",
+      "Vi skapade en modern och responsiv webbplats med tydlig informationsstruktur, enkel navigation och fokus på mobil användarupplevelse, prestanda och sökmotorvänlig struktur.",
 
     result:
-      "Resultatet är en modern webbplats som fungerar lika bra på mobil som på dator och ger företaget en professionell digital närvaro.",
+      "Resultatet är en snabb och lättanvänd webbplats som presenterar företaget professionellt och gör det enklare för potentiella kunder att hitta information och ta kontakt.",
   },
 
   {
-    slug: "projekt-02",
-    title: "Projekt 02",
-    category: "Webbdesign",
+    slug: "staark-hub",
+
+    title: "Staark Hub",
+
+    category:
+      "CRM & intern plattform",
+
     description:
-      "En modern digital lösning med fokus på användarupplevelse och prestanda.",
-    image: "/figma-v2/project-2.png",
+      "En intern plattform för att hantera leads, kunder, e-postkonversationer och arbetsflöden på ett och samma ställe.",
 
-    tags: ["Webbdesign", "UI/UX"],
+    image:
+      "/figma-v2/staark-hub.png",
 
-    services: [
-      "Webbdesign",
+    tags: [
+      "CRM",
+      "Next.js",
+      "Gmail API",
+      "PostgreSQL",
+      "Automation",
       "UI/UX",
-      "Responsiv design",
     ],
-
-    challenge:
-      "Projektet behövde en tydligare och modernare digital upplevelse.",
-
-    solution:
-      "Vi tog fram en ren design med tydlig struktur och responsiv layout.",
-
-    result:
-      "En snabb och modern webbplats med bättre användarupplevelse.",
-  },
-
-  {
-    slug: "projekt-03",
-    title: "Projekt 03",
-    category: "Webbutveckling",
-    description:
-      "En snabb och responsiv webbplats skapad för en modern digital närvaro.",
-    image: "/figma-v2/project-3.png",
-
-    tags: ["Utveckling", "Webbdesign"],
 
     services: [
       "Webbutveckling",
-      "Prestanda",
-      "Mobilanpassning",
+      "Systemutveckling",
+      "UI/UX",
+      "API-integration",
+      "Automation",
     ],
 
     challenge:
-      "Behovet var en snabbare och mer modern webbplats.",
+      "Staark behövde ett enklare sätt att samla leads, kundinformation och e-postkommunikation utan att arbeta i flera separata system.",
 
     solution:
-      "Vi byggde lösningen med modern teknik och fokus på prestanda.",
+      "Vi byggde Staark Hub, en intern CRM- och kommunikationsplattform med leadhantering, kundregister, trådade e-postkonversationer, Gmail-synkronisering och automatiserade arbetsflöden.",
 
     result:
-      "En responsiv webbplats med snabb laddning och tydlig struktur.",
+      "Resultatet är ett samlat system där leads, kunder och kommunikation kan hanteras från samma plattform, vilket minskar manuellt arbete och skapar ett tydligare arbetsflöde.",
   },
 ];
 
-export function getProjectBySlug(slug: string) {
-  return projects.find((project) => project.slug === slug);
+export function getProjectBySlug(
+  slug: string
+): Project | undefined {
+  return projects.find(
+    (project) =>
+      project.slug === slug
+  );
 }

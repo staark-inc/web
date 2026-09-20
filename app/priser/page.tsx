@@ -1,25 +1,33 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+
 import {
   ArrowRight,
   Check,
-  HelpCircle,
 } from "lucide-react";
 
 import { StandaloneLayout } from "../components/SiteChrome";
 
 export const metadata: Metadata = {
-  title: "Priser | Webbdesign & Webbutveckling",
+  title:
+    "Priser | Webbdesign & Webbutveckling",
+
   description:
-    "Se våra priser för webbdesign och webbutveckling. Hemsidor från 2 999 kr med tydliga lösningar för små och växande företag.",
+    "Webbplatser från 2 999 kr. Se våra lösningar för webbdesign, webbutveckling, SEO och skräddarsydda digitala projekt.",
+
   alternates: {
     canonical: "/priser",
   },
+
   openGraph: {
-    title: "Priser | Staark Inc.",
+    title:
+      "Priser | Staark Inc.",
+
     description:
-      "Webbplatser från 2 999 kr. Välj en lösning som passar ditt företag.",
+      "Webbplatser från 2 999 kr. Tydliga lösningar för små och växande företag.",
+
     url: "/priser",
+
     type: "website",
   },
 };
@@ -27,12 +35,18 @@ export const metadata: Metadata = {
 const packages = [
   {
     name: "Starter",
+
     description:
-      "För mindre företag som behöver en enkel och professionell närvaro online.",
+      "För mindre företag som behöver en enkel och professionell webbplats.",
+
     price: "2 999",
+
     priceLabel: "från",
+
     suffix: "kr",
+
     featured: false,
+
     features: [
       "Modern webbdesign",
       "Mobilanpassad",
@@ -45,12 +59,18 @@ const packages = [
 
   {
     name: "Business",
+
     description:
-      "För företag som behöver en mer komplett webbplats med större flexibilitet.",
+      "För företag som behöver en mer komplett webbplats och större flexibilitet.",
+
     price: "Begär offert",
+
     priceLabel: "",
+
     suffix: "",
+
     featured: true,
+
     features: [
       "Allt i Starter",
       "Fler undersidor",
@@ -64,12 +84,18 @@ const packages = [
 
   {
     name: "Custom",
+
     description:
-      "För större eller mer avancerade projekt som kräver en skräddarsydd lösning.",
+      "För avancerade projekt, system och skräddarsydda digitala lösningar.",
+
     price: "Begär offert",
+
     priceLabel: "",
+
     suffix: "",
+
     featured: false,
+
     features: [
       "Skräddarsydd lösning",
       "Avancerad utveckling",
@@ -84,34 +110,50 @@ const packages = [
 
 const faq = [
   {
-    question: "Är 2 999 kr ett fast pris?",
+    question:
+      "Är 2 999 kr ett fast pris?",
+
     answer:
-      "2 999 kr är vårt startpris för enklare webbprojekt. Det slutliga priset beror på webbplatsens omfattning, funktioner och dina behov.",
+      "2 999 kr är vårt startpris för enklare webbprojekt. Det slutliga priset beror på omfattning, innehåll och funktioner.",
   },
+
   {
-    question: "Vad påverkar priset på en webbplats?",
+    question:
+      "Vad påverkar priset?",
+
     answer:
-      "Antalet sidor, design, specialfunktioner, integrationer, innehåll och projektets omfattning påverkar priset.",
+      "Antalet sidor, design, integrationer, specialfunktioner och projektets omfattning påverkar det slutliga priset.",
   },
+
   {
-    question: "Kan jag få en offert innan vi börjar?",
+    question:
+      "Får jag ett pris innan arbetet börjar?",
+
     answer:
-      "Ja. Berätta vad du behöver så går vi igenom projektet och återkommer med ett förslag innan arbetet börjar.",
+      "Ja. Vi går igenom dina behov och skickar ett tydligt förslag innan projektet startar.",
   },
+
   {
-    question: "Kan ni hjälpa till efter lanseringen?",
+    question:
+      "Kan ni hjälpa till efter lanseringen?",
+
     answer:
-      "Ja. Vi erbjuder support, underhåll och fortsatta förbättringar även efter att webbplatsen har lanserats.",
+      "Ja. Vi erbjuder support, underhåll, hosting och vidareutveckling även efter lanseringen.",
   },
 ];
 
 export default function PriserPage() {
   return (
     <div className="v2-page">
+
       <StandaloneLayout>
 
-        {/* HERO */}
+        {/* =====================================================
+            HERO
+        ===================================================== */}
+
         <section className="v2-hero">
+
           <div className="v2-hero-copy">
 
             <span className="v2-pill">
@@ -119,37 +161,37 @@ export default function PriserPage() {
             </span>
 
             <h1>
-              En webbplats behöver inte vara komplicerad.
+              Tydliga priser utan onödig komplexitet.
             </h1>
 
             <p>
-              Välj en lösning som passar ditt företag.
-              Enklare webbplatser börjar från 2 999 kr och
-              större projekt får ett anpassat pris.
+              Enklare webbplatser börjar från 2 999 kr.
+              Större och mer avancerade projekt får ett
+              anpassat pris.
             </p>
 
             <div className="v2-actions">
+
               <Link
                 href="/kontakt"
                 className="v2-button v2-button-primary"
               >
                 Få kostnadsfri offert
+
                 <ArrowRight size={18} />
               </Link>
 
-              <Link
-                href="/projekt"
-                className="v2-button v2-button-light"
-              >
-                Se våra projekt
-              </Link>
             </div>
 
           </div>
+
         </section>
 
 
-        {/* PACKAGES */}
+        {/* =====================================================
+            PACKAGES
+        ===================================================== */}
+
         <section className="v2-section v2-pricing">
 
           <div className="v2-section-header centered">
@@ -159,12 +201,12 @@ export default function PriserPage() {
             </span>
 
             <h2>
-              Tydliga alternativ för olika behov.
+              En lösning för varje behov.
             </h2>
 
             <p>
-              Alla företag är olika. Därför kan du börja
-              enkelt och bygga vidare när behovet växer.
+              Börja enkelt eller välj en mer avancerad
+              lösning när företaget behöver mer.
             </p>
 
           </div>
@@ -173,22 +215,28 @@ export default function PriserPage() {
           <div className="v2-package-grid">
 
             {packages.map((pkg) => (
+
               <article
                 key={pkg.name}
                 className={`v2-package ${
-                  pkg.featured ? "featured" : ""
+                  pkg.featured
+                    ? "featured"
+                    : ""
                 }`}
               >
 
                 <div className="v2-package-head">
 
-                  <h3>{pkg.name}</h3>
+                  <h3>
+                    {pkg.name}
+                  </h3>
 
-                  {pkg.featured && (
+
+                  {pkg.featured ? (
                     <span>
-                      POPULÄR
+                      REKOMMENDERAD
                     </span>
-                  )}
+                  ) : null}
 
                 </div>
 
@@ -200,11 +248,12 @@ export default function PriserPage() {
 
                 <div className="v2-price">
 
-                  {pkg.priceLabel && (
+                  {pkg.priceLabel ? (
                     <small>
                       {pkg.priceLabel}
                     </small>
-                  )}
+                  ) : null}
+
 
                   <strong
                     className={
@@ -216,11 +265,12 @@ export default function PriserPage() {
                     {pkg.price}
                   </strong>
 
-                  {pkg.suffix && (
+
+                  {pkg.suffix ? (
                     <small>
                       {pkg.suffix}
                     </small>
-                  )}
+                  ) : null}
 
                 </div>
 
@@ -229,7 +279,9 @@ export default function PriserPage() {
 
 
                 <ul>
+
                   {pkg.features.map((feature) => (
+
                     <li key={feature}>
 
                       <Check
@@ -242,7 +294,9 @@ export default function PriserPage() {
                       </span>
 
                     </li>
+
                   ))}
+
                 </ul>
 
 
@@ -262,6 +316,7 @@ export default function PriserPage() {
                 </Link>
 
               </article>
+
             ))}
 
           </div>
@@ -269,70 +324,11 @@ export default function PriserPage() {
         </section>
 
 
-        {/* PRICE INFORMATION */}
+        {/* =====================================================
+            FAQ
+        ===================================================== */}
+
         <section className="v2-section">
-
-          <div className="pricing-info">
-
-            <div className="v2-section-header">
-
-              <span>
-                BRA ATT VETA
-              </span>
-
-              <h2>
-                Vad kostar en webbplats?
-              </h2>
-
-              <p>
-                Priset beror på vad ditt företag behöver.
-                En mindre webbplats med några få sidor är
-                billigare än en skräddarsydd lösning med
-                integrationer och specialfunktioner.
-              </p>
-
-              <p>
-                Därför går vi igenom projektet tillsammans
-                innan arbetet börjar. Du vet vad som ingår
-                och vad lösningen kommer att kosta.
-              </p>
-
-            </div>
-
-
-            <div className="pricing-info-card">
-
-              <HelpCircle size={26} />
-
-              <div>
-                <strong>
-                  Osäker på vilket paket du behöver?
-                </strong>
-
-                <p>
-                  Det är helt okej. Berätta vad du vill
-                  uppnå så hjälper vi dig att hitta en
-                  lämplig lösning.
-                </p>
-
-                <Link
-                  href="/kontakt"
-                  className="v2-text-link"
-                >
-                  Prata med oss
-                  <ArrowRight size={15} />
-                </Link>
-              </div>
-
-            </div>
-
-          </div>
-
-        </section>
-
-
-        {/* FAQ */}
-        <section className="v2-section v2-portfolio">
 
           <div className="v2-section-header centered">
 
@@ -341,7 +337,7 @@ export default function PriserPage() {
             </span>
 
             <h2>
-              Frågor om priser.
+              Om priser och projekt.
             </h2>
 
           </div>
@@ -350,6 +346,7 @@ export default function PriserPage() {
           <div className="pricing-faq">
 
             {faq.map((item) => (
+
               <article
                 key={item.question}
                 className="pricing-faq-item"
@@ -364,6 +361,7 @@ export default function PriserPage() {
                 </p>
 
               </article>
+
             ))}
 
           </div>
@@ -371,23 +369,27 @@ export default function PriserPage() {
         </section>
 
 
-        {/* CTA */}
-        <section className="v2-section">
+        {/* =====================================================
+            FINAL CTA
+        ===================================================== */}
+
+        <section className="v2-section v2-pricing">
 
           <div className="v2-section-header centered">
 
             <span>
-              KOSTNADSFRI OFFERT
+              NÄSTA STEG
             </span>
 
             <h2>
-              Berätta om ditt nästa projekt.
+              Vill du veta vad ditt projekt kostar?
             </h2>
 
             <p>
-              Vi går igenom dina behov och hjälper dig
-              att hitta en lösning som passar ditt företag.
+              Berätta kort vad du behöver så återkommer
+              vi med ett förslag anpassat efter ditt företag.
             </p>
+
 
             <div className="v2-actions">
 
@@ -396,6 +398,7 @@ export default function PriserPage() {
                 className="v2-button v2-button-primary"
               >
                 Få kostnadsfri offert
+
                 <ArrowRight size={18} />
               </Link>
 
@@ -406,6 +409,7 @@ export default function PriserPage() {
         </section>
 
       </StandaloneLayout>
+
     </div>
   );
 }

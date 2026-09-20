@@ -1,32 +1,38 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+
 import {
   ArrowRight,
+  Check,
   Code2,
   Search,
-  Smartphone,
-  Zap,
   Server,
+  Smartphone,
   Wrench,
-  Check,
+  Zap,
 } from "lucide-react";
 
 import { StandaloneLayout } from "../components/SiteChrome";
 
 export const metadata: Metadata = {
   title: "Tjänster | Webbdesign, SEO & Webbutveckling",
+
   description:
-    "Webbdesign, webbutveckling, SEO, prestanda och support för företag i Jönköping, Värnamo och Småland. Upptäck Staark Inc:s tjänster.",
+    "Webbdesign, webbutveckling, SEO, prestanda, webbhotell och support för företag i Jönköping, Värnamo och Småland.",
 
   alternates: {
     canonical: "/tjanster",
   },
 
   openGraph: {
-    title: "Webbtjänster | Staark Inc.",
+    title:
+      "Webbdesign, SEO & Webbutveckling | Staark Inc.",
+
     description:
-      "Webbdesign, SEO och webbutveckling för företag som vill växa online.",
+      "Digitala lösningar för företag som vill ha en snabbare, tydligare och bättre webbplats.",
+
     url: "/tjanster",
+
     type: "website",
   },
 };
@@ -34,10 +40,14 @@ export const metadata: Metadata = {
 const services = [
   {
     slug: "webbdesign",
+
     icon: Smartphone,
+
     title: "Webbdesign",
+
     description:
-      "Modern och responsiv design som representerar ditt företag och fungerar på alla skärmstorlekar.",
+      "Modern och mobilanpassad design skapad för ditt företag och dina kunder.",
+
     features: [
       "Modern design",
       "Mobilanpassning",
@@ -47,10 +57,14 @@ const services = [
 
   {
     slug: "webbutveckling",
+
     icon: Code2,
+
     title: "Webbutveckling",
+
     description:
-      "Snabba och moderna webbplatser byggda med teknik anpassad efter ditt företags behov.",
+      "Snabba och moderna webbplatser byggda med teknik som kan växa med ditt företag.",
+
     features: [
       "Modern teknik",
       "Snabb laddning",
@@ -60,10 +74,14 @@ const services = [
 
   {
     slug: "seo",
+
     icon: Search,
-    title: "SEO",
+
+    title: "SEO & synlighet",
+
     description:
-      "Vi bygger webbplatser med en teknisk grund som hjälper sökmotorer att förstå och hitta ditt innehåll.",
+      "En stark teknisk grund som hjälper sökmotorer och kunder att hitta ditt företag.",
+
     features: [
       "Teknisk SEO",
       "Lokal SEO",
@@ -73,10 +91,14 @@ const services = [
 
   {
     slug: "prestanda",
+
     icon: Zap,
+
     title: "Prestanda",
+
     description:
-      "Vi optimerar webbplatsen för snabb laddning och en bättre upplevelse för dina besökare.",
+      "Vi optimerar webbplatsen för snabb laddning och en bättre upplevelse på alla enheter.",
+
     features: [
       "Prestandaoptimering",
       "Bildoptimering",
@@ -86,10 +108,14 @@ const services = [
 
   {
     slug: "webbhotell",
+
     icon: Server,
+
     title: "Webbhotell",
+
     description:
-      "En stabil teknisk miljö för din webbplats med fokus på prestanda och tillgänglighet.",
+      "Stabil och säker drift för din webbplats med fokus på prestanda och tillgänglighet.",
+
     features: [
       "SSL",
       "Drift",
@@ -99,10 +125,14 @@ const services = [
 
   {
     slug: "support-underhall",
+
     icon: Wrench,
+
     title: "Support & underhåll",
+
     description:
       "Vi hjälper dig även efter lanseringen med uppdateringar, förbättringar och teknisk support.",
+
     features: [
       "Uppdateringar",
       "Support",
@@ -116,7 +146,10 @@ export default function TjansterPage() {
     <div className="v2-page">
       <StandaloneLayout>
 
-        {/* HERO */}
+        {/* =====================================================
+            HERO
+        ===================================================== */}
+
         <section className="v2-hero">
           <div className="v2-hero-copy">
 
@@ -125,13 +158,12 @@ export default function TjansterPage() {
             </span>
 
             <h1>
-              Allt du behöver för en bättre närvaro online.
+              Det ditt företag behöver för en bättre webbplats.
             </h1>
 
             <p>
-              Från idé och design till utveckling, SEO och support.
-              Vi hjälper företag att bygga snabba och moderna
-              webbplatser som är enkla att använda.
+              Webbdesign, utveckling, SEO och teknisk drift
+              samlat på ett ställe.
             </p>
 
             <div className="v2-actions">
@@ -141,14 +173,15 @@ export default function TjansterPage() {
                 className="v2-button v2-button-primary"
               >
                 Få kostnadsfri offert
+
                 <ArrowRight size={18} />
               </Link>
 
               <Link
-                href="/projekt"
+                href="/priser"
                 className="v2-button v2-button-light"
               >
-                Se våra projekt
+                Se priser
               </Link>
 
             </div>
@@ -157,7 +190,43 @@ export default function TjansterPage() {
         </section>
 
 
-        {/* SERVICES */}
+        {/* =====================================================
+            QUICK TRUST
+        ===================================================== */}
+
+        <section className="v2-proof">
+
+          <div>
+            <Check size={20} />
+
+            <span>
+              Personlig kontakt
+            </span>
+          </div>
+
+          <div>
+            <Check size={20} />
+
+            <span>
+              Mobilanpassat från start
+            </span>
+          </div>
+
+          <div>
+            <Check size={20} />
+
+            <span>
+              SEO & prestanda i fokus
+            </span>
+          </div>
+
+        </section>
+
+
+        {/* =====================================================
+            SERVICES
+        ===================================================== */}
+
         <section className="v2-section v2-services">
 
           <div className="v2-section-header centered">
@@ -167,13 +236,12 @@ export default function TjansterPage() {
             </span>
 
             <h2>
-              Digitala lösningar för ditt företag.
+              Våra tjänster.
             </h2>
 
             <p>
-              Du behöver inte kombinera flera olika leverantörer.
-              Vi kan hjälpa dig genom hela processen från första
-              idé till färdig webbplats.
+              Välj det du behöver eller låt oss hjälpa dig
+              sätta ihop rätt lösning för ditt företag.
             </p>
 
           </div>
@@ -182,7 +250,6 @@ export default function TjansterPage() {
           <div className="v2-service-grid">
 
             {services.map((service) => {
-
               const Icon = service.icon;
 
               return (
@@ -191,28 +258,26 @@ export default function TjansterPage() {
                   className="v2-service-card"
                 >
 
-                  {/* ICON */}
                   <div className="v2-icon">
+
                     <Icon
                       size={24}
                       className="text-[var(--v2-blue)]"
                     />
+
                   </div>
 
 
-                  {/* TITLE */}
                   <h3>
                     {service.title}
                   </h3>
 
 
-                  {/* DESCRIPTION */}
                   <p>
                     {service.description}
                   </p>
 
 
-                  {/* FEATURES */}
                   <ul className="service-feature-list">
 
                     {service.features.map((feature) => (
@@ -231,12 +296,12 @@ export default function TjansterPage() {
                   </ul>
 
 
-                  {/* LINK TO SERVICE PAGE */}
                   <Link
                     href={`/tjanster/${service.slug}`}
                     className="v2-text-link flex items-center gap-2"
                   >
                     Läs mer
+
                     <ArrowRight size={15} />
                   </Link>
 
@@ -249,101 +314,10 @@ export default function TjansterPage() {
         </section>
 
 
-        {/* PROCESS */}
-        <section className="v2-section v2-portfolio">
+        {/* =====================================================
+            FINAL CTA
+        ===================================================== */}
 
-          <div className="v2-section-header centered">
-
-            <span>
-              FRÅN IDÉ TILL LANSERING
-            </span>
-
-            <h2>
-              En enkel process.
-            </h2>
-
-            <p>
-              Vi håller processen tydlig så att du alltid vet
-              vad nästa steg är.
-            </p>
-
-          </div>
-
-
-          <div className="v2-process-grid">
-
-            <article>
-              <strong>01</strong>
-
-              <h3>
-                Behov & mål
-              </h3>
-
-              <p>
-                Vi börjar med att förstå ditt företag,
-                dina kunder och vad webbplatsen ska uppnå.
-              </p>
-            </article>
-
-
-            <article>
-              <strong>02</strong>
-
-              <h3>
-                Design & utveckling
-              </h3>
-
-              <p>
-                Vi designar och bygger lösningen med fokus
-                på användarupplevelse och prestanda.
-              </p>
-            </article>
-
-
-            <article>
-              <strong>03</strong>
-
-              <h3>
-                Lansering & support
-              </h3>
-
-              <p>
-                När allt är klart lanserar vi webbplatsen
-                och kan fortsätta hjälpa dig efteråt.
-              </p>
-            </article>
-
-          </div>
-
-        </section>
-
-
-        {/* WHY STAARK */}
-        <section className="v2-section">
-
-          <div className="v2-section-header centered">
-
-            <span>
-              VARFÖR STAARK?
-            </span>
-
-            <h2>
-              Webbplatser byggda för verkliga företag.
-            </h2>
-
-            <p>
-              Vi fokuserar på det som faktiskt spelar roll:
-              tydlig design, snabb laddning, mobilanpassning
-              och en webbplats som är enkel för dina kunder
-              att använda.
-            </p>
-
-          </div>
-
-        </section>
-
-
-        {/* CTA */}
         <section className="v2-section v2-pricing">
 
           <div className="v2-section-header centered">
@@ -353,12 +327,12 @@ export default function TjansterPage() {
             </span>
 
             <h2>
-              Vad behöver ditt företag?
+              Osäker på vad du behöver?
             </h2>
 
             <p>
-              Berätta lite om ditt projekt så hjälper vi dig
-              att hitta rätt lösning.
+              Berätta kort om ditt företag och vad du vill
+              förbättra så hjälper vi dig hitta rätt lösning.
             </p>
 
 
@@ -368,15 +342,9 @@ export default function TjansterPage() {
                 href="/kontakt"
                 className="v2-button v2-button-primary"
               >
-                Starta ett projekt
-                <ArrowRight size={18} />
-              </Link>
+                Få kostnadsfri offert
 
-              <Link
-                href="/priser"
-                className="v2-button v2-button-light"
-              >
-                Se våra priser
+                <ArrowRight size={18} />
               </Link>
 
             </div>

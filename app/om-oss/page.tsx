@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+
 import {
   ArrowRight,
-  Check,
-  Code2,
   HeartHandshake,
   MapPin,
   MessageCircle,
@@ -15,6 +14,7 @@ import { StandaloneLayout } from "../components/SiteChrome";
 
 export const metadata: Metadata = {
   title: "Om oss",
+
   description:
     "Lär känna Staark Inc. – en webbyrå som hjälper företag i Jönköping, Värnamo och Småland med webbdesign, utveckling och digital synlighet.",
 
@@ -24,9 +24,12 @@ export const metadata: Metadata = {
 
   openGraph: {
     title: "Om Staark Inc.",
+
     description:
       "Vi hjälper företag att skapa moderna, snabba och professionella webbplatser.",
+
     url: "/om-oss",
+
     type: "website",
   },
 };
@@ -34,38 +37,42 @@ export const metadata: Metadata = {
 const values = [
   {
     icon: MessageCircle,
+
     title: "Personlig kontakt",
+
     description:
-      "Du pratar direkt med oss genom hela projektet. Inga onödiga mellanhänder eller komplicerade processer.",
+      "Du har direkt kontakt med oss genom hela projektet utan onödiga mellanhänder.",
   },
+
   {
     icon: Zap,
+
     title: "Enkelt & effektivt",
+
     description:
-      "Vi fokuserar på det som faktiskt behövs för att skapa en snabb, tydlig och professionell webbplats.",
+      "Vi fokuserar på det som faktiskt behövs för att skapa en modern och fungerande lösning.",
   },
+
   {
     icon: HeartHandshake,
-    title: "Långsiktigt samarbete",
-    description:
-      "Vårt arbete behöver inte sluta vid lanseringen. Vi kan fortsätta hjälpa till med support, underhåll och utveckling.",
-  },
-];
 
-const principles = [
-  "Modern och responsiv design",
-  "Snabba webbplatser",
-  "SEO-vänlig struktur",
-  "Tydlig kommunikation",
-  "Lösningar anpassade efter företaget",
+    title: "Långsiktigt samarbete",
+
+    description:
+      "Vi kan fortsätta hjälpa med support, underhåll och utveckling även efter lanseringen.",
+  },
 ];
 
 export default function OmOssPage() {
   return (
     <div className="v2-page">
+
       <StandaloneLayout>
 
-        {/* HERO */}
+        {/* =====================================================
+            HERO
+        ===================================================== */}
+
         <section className="v2-hero">
 
           <div className="v2-hero-copy">
@@ -75,13 +82,13 @@ export default function OmOssPage() {
             </span>
 
             <h1>
-              Vi gör webben enklare för företag.
+              Digitala lösningar utan onödig komplexitet.
             </h1>
 
             <p>
-              Staark Inc. hjälper företag att skapa moderna,
-              snabba och professionella webbplatser med fokus
-              på tydlighet, prestanda och resultat.
+              Vi hjälper företag att skapa moderna,
+              snabba och professionella webbplatser
+              med personlig kontakt genom hela processen.
             </p>
 
             <div className="v2-actions">
@@ -90,7 +97,8 @@ export default function OmOssPage() {
                 href="/kontakt"
                 className="v2-button v2-button-primary"
               >
-                Kontakta oss
+                Få kostnadsfri offert
+
                 <ArrowRight size={18} />
               </Link>
 
@@ -108,7 +116,10 @@ export default function OmOssPage() {
         </section>
 
 
-        {/* STORY */}
+        {/* =====================================================
+            STORY
+        ===================================================== */}
+
         <section className="v2-section about-story">
 
           <div className="about-story-image">
@@ -138,22 +149,23 @@ export default function OmOssPage() {
               </h2>
 
               <p>
-                Många mindre företag behöver en professionell
-                webbplats men inte en lång och komplicerad
-                utvecklingsprocess.
+                Många företag behöver en professionell
+                digital närvaro utan en lång och
+                komplicerad utvecklingsprocess.
               </p>
 
               <p>
-                Därför bygger vi lösningar med fokus på det
-                som betyder mest: tydlig design, snabb
-                laddning, bra användarupplevelse och en
-                webbplats som fungerar på alla enheter.
+                Därför bygger vi lösningar med fokus på
+                tydlig design, snabb prestanda och en
+                användarupplevelse som fungerar på alla
+                enheter.
               </p>
 
               <p>
-                Varje företag är olika. Därför anpassar vi
-                lösningen efter verksamheten istället för att
-                försöka pressa alla projekt in i samma mall.
+                Varje företag har olika behov. Vi anpassar
+                därför lösningen efter verksamheten istället
+                för att försöka passa alla projekt i samma
+                mall.
               </p>
 
             </div>
@@ -163,14 +175,75 @@ export default function OmOssPage() {
         </section>
 
 
-        {/* LOCAL */}
+        {/* =====================================================
+            VALUES
+        ===================================================== */}
+
+        <section className="v2-section">
+
+          <div className="v2-section-header centered">
+
+            <span>
+              SÅ ARBETAR VI
+            </span>
+
+            <h2>
+              En enklare väg till en bättre lösning.
+            </h2>
+
+          </div>
+
+
+          <div className="about-values">
+
+            {values.map((value) => {
+              const Icon = value.icon;
+
+              return (
+                <article
+                  key={value.title}
+                  className="about-value-card"
+                >
+
+                  <div className="about-value-icon">
+
+                    <Icon size={23} />
+
+                  </div>
+
+
+                  <h3>
+                    {value.title}
+                  </h3>
+
+
+                  <p>
+                    {value.description}
+                  </p>
+
+                </article>
+              );
+            })}
+
+          </div>
+
+        </section>
+
+
+        {/* =====================================================
+            LOCAL
+        ===================================================== */}
+
         <section className="v2-section v2-portfolio">
 
           <div className="about-local">
 
             <div className="about-local-icon">
+
               <MapPin size={26} />
+
             </div>
+
 
             <div>
 
@@ -187,6 +260,7 @@ export default function OmOssPage() {
                 Värnamo, Vaggeryd och andra delar av
                 Småland.
               </p>
+
 
               <div className="about-local-links">
 
@@ -214,156 +288,47 @@ export default function OmOssPage() {
         </section>
 
 
-        {/* VALUES */}
-        <section className="v2-section">
+        {/* =====================================================
+            CTA
+        ===================================================== */}
+
+        <section className="v2-section v2-pricing">
 
           <div className="v2-section-header centered">
 
             <span>
-              SÅ ARBETAR VI
+              NÄSTA STEG
             </span>
 
             <h2>
-              En enklare väg till en bättre webbplats.
+              Har du ett projekt i tankarna?
             </h2>
 
             <p>
-              Tydlig kommunikation, modern teknik och
-              lösningar byggda efter verkliga behov.
+              Berätta kort vad du behöver så hjälper vi dig
+              hitta rätt lösning.
             </p>
 
-          </div>
 
-
-          <div className="about-values">
-
-            {values.map((value) => {
-              const Icon = value.icon;
-
-              return (
-                <article
-                  key={value.title}
-                  className="about-value-card"
-                >
-
-                  <div className="about-value-icon">
-                    <Icon size={23} />
-                  </div>
-
-                  <h3>
-                    {value.title}
-                  </h3>
-
-                  <p>
-                    {value.description}
-                  </p>
-
-                </article>
-              );
-            })}
-
-          </div>
-
-        </section>
-
-
-        {/* WHAT WE CARE ABOUT */}
-        <section className="v2-section v2-portfolio">
-
-          <div className="about-principles">
-
-            <div>
-
-              <div className="v2-section-header">
-
-                <span>
-                  VAD VI FOKUSERAR PÅ
-                </span>
-
-                <h2>
-                  En webbplats ska göra sitt jobb.
-                </h2>
-
-                <p>
-                  Snygg design är viktigt, men webbplatsen
-                  behöver också vara snabb, enkel att använda
-                  och hjälpa besökaren att hitta rätt.
-                </p>
-
-              </div>
+            <div className="v2-actions">
 
               <Link
-                href="/tjanster"
-                className="v2-text-link"
+                href="/kontakt"
+                className="v2-button v2-button-primary"
               >
-                Se våra tjänster
-                <ArrowRight size={15} />
+                Få kostnadsfri offert
+
+                <ArrowRight size={18} />
               </Link>
 
             </div>
-
-
-            <div className="about-principles-list">
-
-              {principles.map((item) => (
-
-                <div key={item}>
-
-                  <span>
-                    <Check size={17} />
-                  </span>
-
-                  <strong>
-                    {item}
-                  </strong>
-
-                </div>
-
-              ))}
-
-            </div>
-
-          </div>
-
-        </section>
-
-
-        {/* CTA */}
-        <section className="v2-section">
-
-          <div className="about-cta">
-
-            <div className="about-cta-icon">
-              <Code2 size={26} />
-            </div>
-
-            <span>
-              HAR DU ETT PROJEKT?
-            </span>
-
-            <h2>
-              Låt oss bygga något bra tillsammans.
-            </h2>
-
-            <p>
-              Berätta om ditt företag och vad du vill
-              uppnå så hjälper vi dig att hitta rätt
-              lösning.
-            </p>
-
-            <Link
-              href="/kontakt"
-              className="v2-button v2-button-primary"
-            >
-              Berätta om ditt projekt
-              <ArrowRight size={18} />
-            </Link>
 
           </div>
 
         </section>
 
       </StandaloneLayout>
+
     </div>
   );
 }

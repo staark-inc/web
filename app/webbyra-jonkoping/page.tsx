@@ -1,21 +1,30 @@
 import type { Metadata } from "next";
+
 import LocalLandingPage from "../components/LocalLandingPage";
 
 export const metadata: Metadata = {
-  title: "Webbyrå Jönköping | Webbdesign & SEO",
+  title:
+    "Webbyrå Jönköping | Webbdesign & SEO",
+
   description:
-    "Webbyrå i Jönköping för företag som behöver moderna hemsidor, webbdesign och SEO. Få en kostnadsfri offert från Staark Inc.",
+    "Webbyrå för företag i Jönköping. Staark Inc. hjälper med webbdesign, webbutveckling, SEO och snabba moderna webbplatser.",
 
   alternates: {
     canonical: "/webbyra-jonkoping",
   },
 
   openGraph: {
-    title: "Webbyrå Jönköping | Staark Inc.",
+    title:
+      "Webbyrå Jönköping | Staark Inc.",
+
     description:
-      "Moderna, snabba och SEO-optimerade hemsidor för företag i Jönköping.",
-    url: "/webbyra-jonkoping",
-    type: "website",
+      "Webbdesign, utveckling och SEO för företag i Jönköping.",
+
+    url:
+      "/webbyra-jonkoping",
+
+    type:
+      "website",
   },
 };
 
@@ -23,8 +32,21 @@ export default function Page() {
   return (
     <LocalLandingPage
       city="Jönköping"
-      title="Hemsidor som hjälper företag i Jönköping att växa."
-      description="Vi bygger moderna, snabba och SEO-optimerade hemsidor för företag i Jönköping."
+
+      title="Webbdesign för företag i Jönköping."
+
+      description="Vi hjälper företag i Jönköping att skapa moderna, snabba och tydliga webbplatser som fungerar lika bra på mobil som på dator."
+
+      localTitle="En webbplats byggd för ditt företag – inte bara för att se bra ut."
+
+      localDescription="För företag i Jönköping kan webbplatsen vara en viktig del av både försäljning och första intryck. Vi bygger lösningar med tydlig struktur, bra prestanda och en teknisk grund som gör det enklare för både kunder och sökmotorer att hitta rätt."
+
+      localPoints={[
+        "Webbdesign anpassad efter verksamheten",
+        "Lokal SEO för bättre synlighet",
+        "Snabb och mobilanpassad webbplats",
+        "Personlig kontakt genom hela projektet",
+      ]}
     />
   );
 }

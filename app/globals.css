@@ -3589,3 +3589,13 @@ footer {
     padding: 28px;
   }
 }
+
+.v2-project-category {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--v2-blue);
+}
