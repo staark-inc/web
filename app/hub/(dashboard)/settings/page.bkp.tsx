@@ -10,10 +10,8 @@ import {
   Send,
   Server,
 } from "lucide-react";
-
 import { GitMerge } from "lucide-react";
 import { redirect } from "next/navigation";
-
 import { getGitHubOverview } from "@/lib/github";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -24,26 +22,20 @@ type SettingsSearchParams = Promise<{
   updated?: string;
   error?: string;
   smtp?: string;
-  gmail?: string;
 }>;
 
-function formatConnectedDate(
-  date: Date | null
-) {
+function formatConnectedDate(date: Date | null) {
   if (!date) {
     return null;
   }
 
-  return new Intl.DateTimeFormat(
-    "sv-SE",
-    {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }
-  ).format(date);
+  return new Intl.DateTimeFormat("sv-SE", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
 }
 
 export default async function HubSettingsPage({
@@ -51,34 +43,25 @@ export default async function HubSettingsPage({
 }: {
   searchParams: SettingsSearchParams;
 }) {
-  const session =
-    await getSession();
+  const session = await getSession();
 
   if (!session) {
     redirect("/hub/login");
   }
 
-  const params =
-    await searchParams;
+  const params = await searchParams;
 
-  const settings =
-    await prisma.settings.findUnique({
-      where: {
-        id: "default",
-      },
-    });
-
-  /*
-   * EMAIL SETTINGS
-   */
+  const settings = await prisma.settings.findUnique({
+    where: {
+      id: "default",
+    },
+  });
 
   const senderName =
-    settings?.senderName ??
-    "Staark Inc.";
+    settings?.senderName ?? "Staark Inc.";
 
   const senderEmail =
-    settings?.senderEmail ??
-    "contact@staarkinc.com";
+    settings?.senderEmail ?? "contact@staarkinc.com";
 
   const signature =
     settings?.signature ??
@@ -89,94 +72,37 @@ Staark Inc.
 staarkinc.com`;
 
   const defaultTemplate =
-    settings?.defaultTemplate ??
-    "staark-standard";
-
-  /*
-   * GOOGLE ANALYTICS
-   */
+    settings?.defaultTemplate ?? "staark-standard";
 
   const analyticsConnected =
-    Boolean(
-      settings?.ga4RefreshToken
-    );
+    Boolean(settings?.ga4RefreshToken);
 
   const analyticsConnectedAt =
     formatConnectedDate(
-      settings?.ga4ConnectedAt ??
-        null
+      settings?.ga4ConnectedAt ?? null
     );
 
-  /*
-   * GMAIL / GOOGLE WORKSPACE
-   */
+  const githubResult = await getGitHubOverview()
+    .then((data) => ({
+      connected: true as const,
+      data,
+    }))
+    .catch((error) => {
+      console.error(
+        "Failed to load GitHub integration:",
+        error
+      );
 
-  const gmailConnected =
-    Boolean(
-      settings?.gmailRefreshToken
-    );
+      return {
+        connected: false as const,
+        data: null,
+      };
+    });
 
-  const gmailConnectedAt =
-    formatConnectedDate(
-      settings?.gmailConnectedAt ??
-        null
-    );
-
-  const gmailWatchExpiresAtRaw =
-    settings?.gmailWatchExpiresAt ??
-    null;
-
-  const gmailWatchExpiresAt =
-    formatConnectedDate(
-      gmailWatchExpiresAtRaw
-    );
-
-  const gmailWatchActive =
-    Boolean(
-      gmailConnected &&
-        gmailWatchExpiresAtRaw &&
-        gmailWatchExpiresAtRaw.getTime() >
-          Date.now()
-    );
-
-  const gmailAccount =
-    process.env
-      .GOOGLE_GMAIL_ACCOUNT ??
-    process.env
-      .CONTACT_TO_EMAIL ??
-    "contact@staarkinc.com";
-
-  /*
-   * GITHUB
-   */
-
-  const githubResult =
-    await getGitHubOverview()
-      .then((data) => ({
-        connected:
-          true as const,
-        data,
-      }))
-      .catch((error) => {
-        console.error(
-          "Failed to load GitHub integration:",
-          error
-        );
-
-        return {
-          connected:
-            false as const,
-          data: null,
-        };
-      });
-
-  const github =
-    githubResult.data;
+  const github = githubResult.data;
 
   return (
     <div className="hub-page hub-settings-page">
-      {/* HEADER */}
-
       <header className="hub-page-header">
         <div>
           <span className="hub-eyebrow">
@@ -192,27 +118,18 @@ staarkinc.com`;
         </div>
       </header>
 
-      {/* SAVED */}
-
       {params.updated === "1" ? (
         <div className="hub-profile-alert hub-profile-alert-success">
-          <CheckCircle2
-            size={17}
-          />
+          <CheckCircle2 size={17} />
 
           <div>
-            <strong>
-              Settings saved
-            </strong>
-
+            <strong>Settings saved</strong>
             <span>
               Your Staark Hub settings have been updated.
             </span>
           </div>
         </div>
       ) : null}
-
-      {/* ERROR */}
 
       {params.error ? (
         <div className="hub-profile-alert hub-profile-alert-error">
@@ -224,40 +141,15 @@ staarkinc.com`;
             </strong>
 
             <span>
-              {params.error ===
-              "invalid_email"
+              {params.error === "invalid_email"
                 ? "Please enter a valid sender email address."
-                : params.error ===
-                    "invalid_name"
+                : params.error === "invalid_name"
                   ? "Please enter a valid sender name."
                   : "Something went wrong. Please try again."}
             </span>
           </div>
         </div>
       ) : null}
-
-      {/* GMAIL STATUS MESSAGE */}
-
-      {params.gmail ===
-      "connected" ? (
-        <div className="hub-profile-alert hub-profile-alert-success">
-          <CheckCircle2
-            size={17}
-          />
-
-          <div>
-            <strong>
-              Gmail connected
-            </strong>
-
-            <span>
-              Google Workspace is connected to Staark Hub.
-            </span>
-          </div>
-        </div>
-      ) : null}
-
-      {/* EMAIL FORM */}
 
       <form
         action="/api/hub/settings"
@@ -282,16 +174,12 @@ staarkinc.com`;
 
           <div className="hub-settings-grid">
             <label className="hub-settings-field">
-              <span>
-                Sender name
-              </span>
+              <span>Sender name</span>
 
               <input
                 type="text"
                 name="senderName"
-                defaultValue={
-                  senderName
-                }
+                defaultValue={senderName}
                 required
                 minLength={2}
                 maxLength={80}
@@ -299,32 +187,24 @@ staarkinc.com`;
             </label>
 
             <label className="hub-settings-field">
-              <span>
-                Sender email
-              </span>
+              <span>Sender email</span>
 
               <input
                 type="email"
                 name="senderEmail"
-                defaultValue={
-                  senderEmail
-                }
+                defaultValue={senderEmail}
                 required
                 maxLength={160}
               />
             </label>
 
             <label className="hub-settings-field hub-settings-full">
-              <span>
-                Email signature
-              </span>
+              <span>Email signature</span>
 
               <textarea
                 name="signature"
                 rows={6}
-                defaultValue={
-                  signature
-                }
+                defaultValue={signature}
                 maxLength={2000}
               />
             </label>
@@ -340,9 +220,7 @@ staarkinc.com`;
             </div>
 
             <div>
-              <h2>
-                Template
-              </h2>
+              <h2>Template</h2>
 
               <p>
                 Choose the default template for outgoing
@@ -352,15 +230,11 @@ staarkinc.com`;
           </div>
 
           <label className="hub-settings-field">
-            <span>
-              Default template
-            </span>
+            <span>Default template</span>
 
             <select
               name="defaultTemplate"
-              defaultValue={
-                defaultTemplate
-              }
+              defaultValue={defaultTemplate}
             >
               <option value="staark-standard">
                 Staark Standard
@@ -374,7 +248,6 @@ staarkinc.com`;
               type="submit"
             >
               Save settings
-
               <Save size={16} />
             </button>
           </div>
@@ -386,15 +259,11 @@ staarkinc.com`;
       <section className="hub-settings-card">
         <div className="hub-settings-heading">
           <div className="hub-settings-icon">
-            <BarChart3
-              size={19}
-            />
+            <BarChart3 size={19} />
           </div>
 
           <div>
-            <h2>
-              Integrations
-            </h2>
+            <h2>Integrations</h2>
 
             <p>
               External services connected to Staark Hub.
@@ -402,20 +271,14 @@ staarkinc.com`;
           </div>
         </div>
 
-        {/* GOOGLE ANALYTICS */}
-
         <div className="hub-integration-row">
           <div className="hub-integration-main">
             <div className="hub-integration-logo">
-              <BarChart3
-                size={18}
-              />
+              <BarChart3 size={18} />
             </div>
 
             <div className="hub-integration-info">
-              <strong>
-                Google Analytics
-              </strong>
+              <strong>Google Analytics</strong>
 
               <span>
                 Website traffic and visitor analytics
@@ -435,10 +298,7 @@ staarkinc.com`;
                   href="/api/hub/google/connect"
                   className="hub-secondary-button"
                 >
-                  <RefreshCw
-                    size={14}
-                  />
-
+                  <RefreshCw size={14} />
                   Reconnect
                 </a>
               </>
@@ -448,29 +308,20 @@ staarkinc.com`;
                 className="hub-send-button"
               >
                 Connect
-
-                <BarChart3
-                  size={15}
-                />
+                <BarChart3 size={15} />
               </a>
             )}
           </div>
         </div>
 
-        {/* SEARCH CONSOLE */}
-
         <div className="hub-integration-row">
           <div className="hub-integration-main">
             <div className="hub-integration-logo">
-              <Search
-                size={18}
-              />
+              <Search size={18} />
             </div>
 
             <div className="hub-integration-info">
-              <strong>
-                Google Search Console
-              </strong>
+              <strong>Google Search Console</strong>
 
               <span>
                 Search performance, clicks and Google rankings
@@ -492,137 +343,14 @@ staarkinc.com`;
           </div>
         </div>
 
-        {/* GMAIL / GOOGLE WORKSPACE */}
-
-        <div className="hub-integration-row hub-gmail-integration">
-          <div className="hub-integration-main">
-            <div className="hub-integration-logo">
-              <Mail
-                size={18}
-              />
-            </div>
-
-            <div className="hub-integration-info">
-              <strong>
-                Gmail / Google Workspace
-              </strong>
-
-              <span>
-                Receive customer replies directly in Staark Hub
-                conversations
-              </span>
-            </div>
-          </div>
-
-          <div className="hub-integration-actions">
-            {gmailConnected ? (
-              <>
-                <div className="hub-integration-status">
-                  <span className="hub-integration-dot" />
-                  Connected
-                </div>
-
-                <a
-                  href="/api/google/gmail/connect"
-                  className="hub-secondary-button"
-                >
-                  <RefreshCw
-                    size={14}
-                  />
-
-                  Reconnect
-                </a>
-              </>
-            ) : (
-              <a
-                href="/api/google/gmail/connect"
-                className="hub-send-button"
-              >
-                Connect Gmail
-
-                <Mail
-                  size={15}
-                />
-              </a>
-            )}
-          </div>
-        </div>
-
-        {/* GMAIL DETAILS */}
-
-        {gmailConnected ? (
-          <div className="hub-gmail-details">
-            <div className="hub-github-detail">
-              <span>
-                Account
-              </span>
-
-              <strong>
-                {gmailAccount}
-              </strong>
-            </div>
-
-            <div className="hub-github-detail">
-              <span>
-                Inbound sync
-              </span>
-
-              <strong
-                className={
-                  gmailWatchActive
-                    ? "hub-github-success"
-                    : "hub-github-failure"
-                }
-              >
-                {gmailWatchActive
-                  ? "Active"
-                  : "Watch inactive"}
-              </strong>
-            </div>
-
-            <div className="hub-github-detail">
-              <span>
-                Connected
-              </span>
-
-              <strong>
-                {gmailConnectedAt ??
-                  "Connected"}
-              </strong>
-            </div>
-
-            <div className="hub-github-detail">
-              <span>
-                Watch expires
-              </span>
-
-              <strong>
-                {gmailWatchExpiresAt ??
-                  "Unknown"}
-              </strong>
-            </div>
-          </div>
-        ) : (
-          <div className="hub-integration-meta">
-            Connect Google Workspace to receive Gmail replies
-            inside Staark Hub.
-          </div>
-        )}
-
-        {/* SMTP */}
-
         <div className="hub-integration-row">
           <div className="hub-integration-main">
             <div className="hub-integration-logo">
-              <Server
-                size={18}
-              />
+              <Server size={18} />
             </div>
 
             <div className="hub-integration-info">
-              <strong>
-                Email / SMTP
-              </strong>
+              <strong>Email / SMTP</strong>
 
               <span>
                 Outgoing email server and authentication
@@ -631,15 +359,12 @@ staarkinc.com`;
           </div>
 
           <div className="hub-integration-actions">
-            {params.smtp ===
-            "success" ? (
+            {params.smtp === "success" ? (
               <div className="hub-integration-status">
                 <span className="hub-integration-dot" />
-
                 Connected
               </div>
-            ) : params.smtp ===
-              "error" ? (
+            ) : params.smtp === "error" ? (
               <div className="hub-integration-status hub-integration-status-offline">
                 Connection failed
               </div>
@@ -657,30 +382,21 @@ staarkinc.com`;
                 type="submit"
                 className="hub-secondary-button"
               >
-                <RefreshCw
-                  size={14}
-                />
-
+                <RefreshCw size={14} />
                 Test connection
               </button>
             </form>
           </div>
         </div>
 
-        {/* GITHUB */}
-
         <div className="hub-integration-row hub-github-integration">
           <div className="hub-integration-main">
             <div className="hub-integration-logo">
-              <GitMerge
-                size={18}
-              />
+              <GitMerge size={18} />
             </div>
 
             <div className="hub-integration-info">
-              <strong>
-                GitHub
-              </strong>
+              <strong>GitHub</strong>
 
               <span>
                 Repository, commits and deployment workflows
@@ -689,11 +405,9 @@ staarkinc.com`;
           </div>
 
           <div className="hub-integration-actions">
-            {githubResult.connected &&
-            github ? (
+            {githubResult.connected && github ? (
               <div className="hub-integration-status">
                 <span className="hub-integration-dot" />
-
                 Connected
               </div>
             ) : (
@@ -704,161 +418,99 @@ staarkinc.com`;
           </div>
         </div>
 
-        {githubResult.connected &&
-        github ? (
+        {githubResult.connected && github ? (
           <div className="hub-github-details">
             <div className="hub-github-detail">
-              <span>
-                Repository
-              </span>
+              <span>Repository</span>
 
               <strong>
-                {
-                  github.repository
-                    .fullName
-                }
+                {github.repository.fullName}
               </strong>
             </div>
 
             <div className="hub-github-detail">
-              <span>
-                Branch
-              </span>
+              <span>Branch</span>
 
               <strong>
-                {
-                  github.branch
-                    .name
-                }
+                {github.branch.name}
               </strong>
             </div>
 
             <div className="hub-github-detail">
-              <span>
-                Latest commit
-              </span>
+              <span>Latest commit</span>
 
               <strong className="hub-github-sha">
-                <GitCommitHorizontal
-                  size={14}
-                />
-
-                {
-                  github.commit
-                    .shortSha
-                }
+                <GitCommitHorizontal size={14} />
+                {github.commit.shortSha}
               </strong>
             </div>
 
             <div className="hub-github-detail">
-              <span>
-                Workflow
-              </span>
+              <span>Workflow</span>
 
               <strong
                 className={
-                  github.workflow
-                    ?.conclusion ===
-                  "success"
+                  github.workflow?.conclusion === "success"
                     ? "hub-github-success"
-                    : github.workflow
-                          ?.conclusion ===
-                        "failure"
+                    : github.workflow?.conclusion === "failure"
                       ? "hub-github-failure"
                       : ""
                 }
               >
                 {github.workflow
-                  ? github.workflow
-                        .status ===
-                      "completed"
-                    ? github.workflow
-                        .conclusion ??
-                      "Completed"
-                    : github.workflow
-                        .status
+                  ? github.workflow.status === "completed"
+                    ? github.workflow.conclusion ?? "Completed"
+                    : github.workflow.status
                   : "No workflow"}
               </strong>
             </div>
 
             <div className="hub-github-commit">
               <div>
-                <span>
-                  Latest commit
-                </span>
+                <span>Latest commit</span>
 
                 <strong>
-                  {
-                    github.commit
-                      .message
-                  }
+                  {github.commit.message}
                 </strong>
 
                 <small>
-                  {
-                    github.commit
-                      .author
-                  }
+                  {github.commit.author}
                 </small>
               </div>
 
               <a
-                href={
-                  github.commit
-                    .url
-                }
+                href={github.commit.url}
                 target="_blank"
                 rel="noreferrer"
                 className="hub-secondary-button"
               >
                 View commit
-
-                <ExternalLink
-                  size={13}
-                />
+                <ExternalLink size={13} />
               </a>
             </div>
 
             <div className="hub-github-links">
               <a
-                href={
-                  github.repository
-                    .url
-                }
+                href={github.repository.url}
                 target="_blank"
                 rel="noreferrer"
                 className="hub-secondary-button"
               >
-                <GitMerge
-                  size={14}
-                />
-
+                <GitMerge size={14} />
                 Repository
-
-                <ExternalLink
-                  size={12}
-                />
+                <ExternalLink size={12} />
               </a>
 
               {github.workflow ? (
                 <a
-                  href={
-                    github.workflow
-                      .url
-                  }
+                  href={github.workflow.url}
                   target="_blank"
                   rel="noreferrer"
                   className="hub-secondary-button"
                 >
-                  <BarChart3
-                    size={14}
-                  />
-
+                  <BarChart3 size={14} />
                   Latest workflow
-
-                  <ExternalLink
-                    size={12}
-                  />
+                  <ExternalLink size={12} />
                 </a>
               ) : null}
             </div>
@@ -869,8 +521,6 @@ staarkinc.com`;
           </div>
         )}
 
-        {/* META */}
-
         <div className="hub-integration-meta">
           SMTP server configured
           {process.env.SMTP_HOST
@@ -880,8 +530,7 @@ staarkinc.com`;
 
         {analyticsConnectedAt ? (
           <div className="hub-integration-meta">
-            Google account connected on{" "}
-            {analyticsConnectedAt}
+            Google account connected on {analyticsConnectedAt}
           </div>
         ) : null}
       </section>
