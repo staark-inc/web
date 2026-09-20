@@ -4,6 +4,7 @@ import {
   ArrowLeft,
   Building2,
   Mail,
+  Pencil,
   Phone,
   Target,
 } from "lucide-react";
@@ -15,6 +16,10 @@ export const dynamic = "force-dynamic";
 type PageProps = {
   params: Promise<{
     id: string;
+  }>;
+
+  searchParams: Promise<{
+    updated?: string;
   }>;
 };
 
@@ -30,41 +35,47 @@ function formatDate(date: Date) {
 
 export default async function ContactDetailPage({
   params,
+  searchParams,
 }: PageProps) {
   const { id } = await params;
+  const query = await searchParams;
 
-  const contact = await prisma.contact.findUnique({
-    where: { id },
+  const contact =
+    await prisma.contact.findUnique({
+      where: {
+        id,
+      },
 
-    include: {
-      leads: {
-        orderBy: {
-          createdAt: "desc",
+      include: {
+        leads: {
+          orderBy: {
+            createdAt: "desc",
+          },
         },
       },
-    },
-  });
+    });
 
   if (!contact) {
     notFound();
   }
 
-  const messages = await prisma.message.findMany({
-    where: {
-      OR: [
-        {
-          fromEmail: contact.email,
-        },
-        {
-          toEmail: contact.email,
-        },
-      ],
-    },
+  const messages =
+    await prisma.message.findMany({
+      where: {
+        OR: [
+          {
+            fromEmail: contact.email,
+          },
+          {
+            toEmail: contact.email,
+          },
+        ],
+      },
 
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
 
   const initials = contact.name
     ? contact.name
@@ -73,10 +84,14 @@ export default async function ContactDetailPage({
         .map((part) => part[0])
         .join("")
         .toUpperCase()
-    : contact.email.slice(0, 2).toUpperCase();
+    : contact.email
+        .slice(0, 2)
+        .toUpperCase();
 
   return (
     <div className="hub-page">
+      {/* BACK */}
+
       <div className="hub-detail-back">
         <Link href="/hub/contacts">
           <ArrowLeft size={16} />
@@ -84,37 +99,90 @@ export default async function ContactDetailPage({
         </Link>
       </div>
 
+      {/* SUCCESS */}
+
+      {query.updated === "1" ? (
+        <div className="hub-profile-alert hub-profile-alert-success">
+          <div>
+            <strong>
+              Client updated
+            </strong>
+
+            <span>
+              The client information has been
+              saved successfully.
+            </span>
+          </div>
+        </div>
+      ) : null}
+
+      {/* PROFILE */}
+
       <div className="hub-contact-profile">
         <div className="hub-contact-profile-avatar">
           {initials}
         </div>
 
-        <div>
+        <div
+          style={{
+            flex: 1,
+            minWidth: 0,
+          }}
+        >
           <h1>
-            {contact.name || "Unknown contact"}
+            {contact.name ||
+              "Unknown contact"}
           </h1>
 
           <p>
             Contact since{" "}
-            {formatDate(contact.createdAt)}
+            {formatDate(
+              contact.createdAt
+            )}
           </p>
         </div>
+
+        <Link
+          href={`/hub/contacts/${contact.id}/edit`}
+          className="hub-secondary-button"
+        >
+          <Pencil size={15} />
+          Edit client
+        </Link>
       </div>
+
+      {/* MAIN GRID */}
 
       <div className="hub-detail-grid">
         {/* CONTACT INFORMATION */}
 
         <section className="hub-detail-card">
-          <h2>Contact information</h2>
+          <div className="hub-detail-card-header">
+            <h2>
+              Contact information
+            </h2>
+
+            <Link
+              href={`/hub/contacts/${contact.id}/edit`}
+              className="hub-secondary-button"
+            >
+              <Pencil size={14} />
+              Edit
+            </Link>
+          </div>
 
           <div className="hub-detail-info">
             <div>
               <Mail size={16} />
 
               <span>
-                <small>Email</small>
+                <small>
+                  Email
+                </small>
 
-                <a href={`mailto:${contact.email}`}>
+                <a
+                  href={`mailto:${contact.email}`}
+                >
                   {contact.email}
                 </a>
               </span>
@@ -124,10 +192,13 @@ export default async function ContactDetailPage({
               <Phone size={16} />
 
               <span>
-                <small>Phone</small>
+                <small>
+                  Phone
+                </small>
 
                 <strong>
-                  {contact.phone || "Not specified"}
+                  {contact.phone ||
+                    "Not specified"}
                 </strong>
               </span>
             </div>
@@ -136,10 +207,13 @@ export default async function ContactDetailPage({
               <Building2 size={16} />
 
               <span>
-                <small>Company</small>
+                <small>
+                  Company
+                </small>
 
                 <strong>
-                  {contact.company || "Not specified"}
+                  {contact.company ||
+                    "Not specified"}
                 </strong>
               </span>
             </div>
@@ -150,46 +224,54 @@ export default async function ContactDetailPage({
 
         <section className="hub-detail-card">
           <div className="hub-detail-card-header">
-            <h2>Leads</h2>
+            <h2>
+              Leads
+            </h2>
 
             <span>
               {contact.leads.length}
             </span>
           </div>
 
-          {contact.leads.length === 0 ? (
+          {contact.leads.length ===
+          0 ? (
             <p className="hub-detail-empty">
-              No leads for this contact yet.
+              No leads for this
+              contact yet.
             </p>
           ) : (
             <div className="hub-detail-list">
-              {contact.leads.map((lead) => (
-                <Link
-                  key={lead.id}
-                  href={`/hub/leads/${lead.id}`}
-                  className="hub-detail-list-item"
-                >
-                  <Target size={16} />
-
-                  <div>
-                    <strong>
-                      {lead.service ||
-                        "General enquiry"}
-                    </strong>
-
-                    <span>
-                      {lead.budget ||
-                        "No budget specified"}
-                    </span>
-                  </div>
-
-                  <span
-                    className={`hub-lead-status hub-lead-status-${lead.status.toLowerCase()}`}
+              {contact.leads.map(
+                (lead) => (
+                  <Link
+                    key={lead.id}
+                    href={`/hub/leads/${lead.id}`}
+                    className="hub-detail-list-item"
                   >
-                    {lead.status}
-                  </span>
-                </Link>
-              ))}
+                    <Target
+                      size={16}
+                    />
+
+                    <div>
+                      <strong>
+                        {lead.service ||
+                          "General enquiry"}
+                      </strong>
+
+                      <span>
+                        {lead.budget ||
+                          "No budget specified"}
+                      </span>
+                    </div>
+
+                    <span
+                      className={`hub-lead-status hub-lead-status-${lead.status.toLowerCase()}`}
+                    >
+                      {lead.status}
+                    </span>
+                  </Link>
+                )
+              )}
             </div>
           )}
         </section>
@@ -199,7 +281,9 @@ export default async function ContactDetailPage({
 
       <section className="hub-detail-card">
         <div className="hub-detail-card-header">
-          <h2>Message history</h2>
+          <h2>
+            Message history
+          </h2>
 
           <span>
             {messages.length}
@@ -208,50 +292,56 @@ export default async function ContactDetailPage({
 
         {messages.length === 0 ? (
           <p className="hub-detail-empty">
-            No messages with this contact.
+            No messages with this
+            contact.
           </p>
         ) : (
           <div className="hub-contact-message-list">
-            {messages.map((message) => (
-              <Link
-                key={message.id}
-                href={
-                  message.direction === "INBOUND"
-                    ? `/hub/message/${message.id}`
-                    : `/hub/sent/${message.id}`
-                }
-                className="hub-contact-message"
-              >
-                <div>
-                  <strong>
-                    {message.direction === "INBOUND"
-                      ? contact.name ||
-                        contact.email
-                      : "Staark Inc."}
-                  </strong>
+            {messages.map(
+              (message) => (
+                <Link
+                  key={message.id}
+                  href={
+                    message.direction ===
+                    "INBOUND"
+                      ? `/hub/message/${message.id}`
+                      : `/hub/sent/${message.id}`
+                  }
+                  className="hub-contact-message"
+                >
+                  <div>
+                    <strong>
+                      {message.direction ===
+                      "INBOUND"
+                        ? contact.name ||
+                          contact.email
+                        : "Staark Inc."}
+                    </strong>
 
-                  <span>
-                    {message.subject}
-                  </span>
-                </div>
+                    <span>
+                      {message.subject}
+                    </span>
+                  </div>
 
-                <div className="hub-contact-message-side">
-                  <span
-                    className={`hub-message-direction hub-message-direction-${message.direction.toLowerCase()}`}
-                  >
-                    {message.direction === "INBOUND"
-                      ? "Received"
-                      : "Sent"}
-                  </span>
+                  <div className="hub-contact-message-side">
+                    <span
+                      className={`hub-message-direction hub-message-direction-${message.direction.toLowerCase()}`}
+                    >
+                      {message.direction ===
+                      "INBOUND"
+                        ? "Received"
+                        : "Sent"}
+                    </span>
 
-                  <time>
-                    {formatDate(
-                      message.createdAt
-                    )}
-                  </time>
-                </div>
-              </Link>
-            ))}
+                    <time>
+                      {formatDate(
+                        message.createdAt
+                      )}
+                    </time>
+                  </div>
+                </Link>
+              )
+            )}
           </div>
         )}
       </section>
