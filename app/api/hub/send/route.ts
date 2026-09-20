@@ -9,18 +9,6 @@ export const runtime = "nodejs";
 const emailPattern =
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function requiredEnv(name: string) {
-  const value = process.env[name];
-
-  if (!value) {
-    throw new Error(
-      `Missing environment variable: ${name}`
-    );
-  }
-
-  return value;
-}
-
 function escapeHtml(value: string) {
   return value
     .replaceAll("&", "&amp;")
@@ -28,6 +16,13 @@ function escapeHtml(value: string) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+function textToHtml(value: string) {
+  return escapeHtml(value).replace(
+    /\r?\n/g,
+    "<br />"
+  );
 }
 
 export async function POST(
@@ -76,6 +71,10 @@ export async function POST(
       typeof body.threadId === "string"
         ? body.threadId.trim()
         : "";
+
+    /*
+     * VALIDATION
+     */
 
     if (
       !to ||
@@ -130,8 +129,9 @@ export async function POST(
     }
 
     /*
-     * REPLY:
-     * load existing conversation.
+     * LOAD EXISTING THREAD
+     *
+     * If threadId exists, this is a reply.
      */
 
     const existingThread =
@@ -140,7 +140,6 @@ export async function POST(
             where: {
               id: requestedThreadId,
             },
-
             include: {
               contact: true,
             },
@@ -163,8 +162,9 @@ export async function POST(
     }
 
     /*
-     * Prevent sending an existing
-     * customer thread to another email.
+     * Prevent an existing customer
+     * conversation from accidentally
+     * being sent to another recipient.
      */
 
     if (
@@ -183,40 +183,128 @@ export async function POST(
       );
     }
 
-    const fromEmail =
-      requiredEnv(
-        "CONTACT_FROM_EMAIL"
+    /*
+     * HUB EMAIL SETTINGS
+     *
+     * These values come from:
+     * Settings -> Email
+     */
+
+    const settings =
+      await prisma.settings.findUnique({
+        where: {
+          id: "default",
+        },
+      });
+
+    const senderName =
+      settings?.senderName?.trim() ||
+      "Staark Inc.";
+
+    const senderEmail =
+      settings?.senderEmail
+        ?.trim()
+        .toLowerCase() ||
+      process.env.HUB_FROM_EMAIL ||
+      "contact@staarkinc.com";
+
+    const signature =
+      settings?.signature?.trim() ||
+      "";
+
+    /*
+     * Safety check in case an invalid
+     * email was somehow stored in DB.
+     */
+
+    if (
+      !emailPattern.test(senderEmail)
+    ) {
+      console.error(
+        "[SMTP] Invalid Hub sender email:",
+        senderEmail
       );
+
+      return NextResponse.json(
+        {
+          error:
+            "Hub sender email is invalid. Check Settings.",
+        },
+        {
+          status: 500,
+        }
+      );
+    }
+
+    /*
+     * The signature is added only to
+     * the actual outgoing email.
+     *
+     * We keep Message.body in CRM clean,
+     * containing only what the user typed.
+     */
+
+    const finalText = signature
+      ? `${message}\n\n${signature}`
+      : message;
+
+    const messageHtml =
+      textToHtml(message);
+
+    const signatureHtml =
+      signature
+        ? textToHtml(signature)
+        : "";
 
     /*
      * SEND EMAIL
+     *
+     * Hub messages are conversational:
+     *
+     * From:     contact@
+     * Reply-To: contact@
+     *
+     * Never no-reply here.
      */
 
     const transporter =
       await getSmtpTransporter();
 
-    let rfcMessageId: string | null =
-      null;
+    let rfcMessageId:
+      | string
+      | null = null;
 
     try {
       const info =
         await transporter.sendMail({
-          from:
-            `"Staark Inc." <${fromEmail}>`,
+          from: {
+            name: senderName,
+            address: senderEmail,
+          },
+
+          replyTo: {
+            name: senderName,
+            address: senderEmail,
+          },
 
           to,
 
           subject,
 
-          replyTo:
-            fromEmail,
-
-          text:
-            message,
+          text: finalText,
 
           html: `
 <!doctype html>
-<html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>${escapeHtml(subject)}</title>
+  </head>
+
   <body
     style="
       margin:0;
@@ -230,10 +318,12 @@ export async function POST(
       width="100%"
       cellpadding="0"
       cellspacing="0"
+      border="0"
       role="presentation"
       style="
         width:100%;
         padding:40px 16px;
+        background:#f5f5f5;
       "
     >
       <tr>
@@ -243,15 +333,18 @@ export async function POST(
             width="600"
             cellpadding="0"
             cellspacing="0"
+            border="0"
             role="presentation"
             style="
-              max-width:600px;
               width:100%;
+              max-width:600px;
               background:#ffffff;
               border-radius:12px;
               overflow:hidden;
             "
           >
+
+            <!-- HEADER -->
 
             <tr>
               <td
@@ -263,9 +356,11 @@ export async function POST(
                   font-weight:700;
                 "
               >
-                Staark Inc.
+                ${escapeHtml(senderName)}
               </td>
             </tr>
+
+            <!-- MESSAGE -->
 
             <tr>
               <td
@@ -273,16 +368,31 @@ export async function POST(
                   padding:32px;
                   font-size:15px;
                   line-height:1.7;
+                  color:#202226;
                 "
               >
-                ${escapeHtml(
-                  message
-                ).replace(
-                  /\r?\n/g,
-                  "<br>"
-                )}
+                ${messageHtml}
+
+                ${
+                  signatureHtml
+                    ? `
+                      <div
+                        style="
+                          margin-top:28px;
+                          padding-top:22px;
+                          border-top:1px solid #eeeeee;
+                          color:#55585d;
+                        "
+                      >
+                        ${signatureHtml}
+                      </div>
+                    `
+                    : ""
+                }
               </td>
             </tr>
+
+            <!-- FOOTER -->
 
             <tr>
               <td
@@ -291,6 +401,7 @@ export async function POST(
                   border-top:1px solid #eeeeee;
                   color:#92959a;
                   font-size:12px;
+                  line-height:1.5;
                 "
               >
                 Staark Inc. · Sweden
@@ -308,8 +419,7 @@ export async function POST(
         });
 
       rfcMessageId =
-        info.messageId ||
-        null;
+        info.messageId || null;
 
       console.log(
         `[SMTP] Hub email sent successfully: ${rfcMessageId}`
@@ -326,7 +436,7 @@ export async function POST(
       await prisma.$transaction(
         async (tx) => {
           /*
-           * Find/create customer.
+           * FIND / CREATE CONTACT
            */
 
           let contact =
@@ -347,8 +457,11 @@ export async function POST(
           }
 
           /*
-           * Reply = reuse thread.
-           * Compose = create thread.
+           * REPLY:
+           * reuse existing thread.
+           *
+           * COMPOSE:
+           * create new thread.
            */
 
           const thread =
@@ -358,7 +471,6 @@ export async function POST(
                     id:
                       existingThread.id,
                   },
-
                   data: {
                     contactId:
                       existingThread
@@ -379,13 +491,17 @@ export async function POST(
                 });
 
           /*
-           * Save outbound message.
+           * SAVE OUTBOUND MESSAGE
            *
-           * rfcMessageId is the key that
-           * later lets us recognize:
+           * IMPORTANT:
+           *
+           * rfcMessageId allows Gmail
+           * inbound sync to later match:
            *
            * In-Reply-To:
-           * <this-message-id>
+           * <our-rfc-message-id>
+           *
+           * with this Hub conversation.
            */
 
           const savedMessage =
@@ -401,15 +517,23 @@ export async function POST(
                   thread.id,
 
                 fromName:
-                  "Staark Inc.",
+                  senderName,
 
-                fromEmail,
+                fromEmail:
+                  senderEmail,
 
                 toEmail:
                   to,
 
                 subject,
 
+                /*
+                 * Store only the actual
+                 * CRM message here.
+                 *
+                 * Do not store the automatic
+                 * signature in body.
+                 */
                 body:
                   message,
 
