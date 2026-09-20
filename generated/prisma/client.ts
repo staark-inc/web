@@ -47,11 +47,6 @@ export { Prisma }
  */
 export type User = Prisma.UserModel
 /**
- * Model Message
- * 
- */
-export type Message = Prisma.MessageModel
-/**
  * Model Settings
  * 
  */
@@ -66,3 +61,13 @@ export type Contact = Prisma.ContactModel
  * 
  */
 export type Lead = Prisma.LeadModel
+/**
+ * Model Thread
+ * 
+ */
+export type Thread = Prisma.ThreadModel
+/**
+ * Model Message
+ * 
+ */
+export type Message = Prisma.MessageModel

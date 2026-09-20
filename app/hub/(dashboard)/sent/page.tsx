@@ -25,7 +25,7 @@ export default async function HubSentPage() {
   });
 
   return (
-    <div className="hub-page">
+    <div className="hub-page hub-sent-page">
       <header className="hub-page-header">
         <div>
           <h1>Sent</h1>

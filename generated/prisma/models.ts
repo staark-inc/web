@@ -9,8 +9,9 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User'
-export type * from './models/Message'
 export type * from './models/Settings'
 export type * from './models/Contact'
 export type * from './models/Lead'
+export type * from './models/Thread'
+export type * from './models/Message'
 export type * from './commonInputTypes'

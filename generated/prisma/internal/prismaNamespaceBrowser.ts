@@ -52,10 +52,11 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
-  Message: 'Message',
   Settings: 'Settings',
   Contact: 'Contact',
-  Lead: 'Lead'
+  Lead: 'Lead',
+  Thread: 'Thread',
+  Message: 'Message'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -85,22 +86,6 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
-
-
-export const MessageScalarFieldEnum = {
-  id: 'id',
-  direction: 'direction',
-  fromName: 'fromName',
-  fromEmail: 'fromEmail',
-  toEmail: 'toEmail',
-  subject: 'subject',
-  body: 'body',
-  isRead: 'isRead',
-  createdAt: 'createdAt',
-  sentAt: 'sentAt'
-} as const
-
-export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
 
 
 export const SettingsScalarFieldEnum = {
@@ -142,6 +127,35 @@ export const LeadScalarFieldEnum = {
 } as const
 
 export type LeadScalarFieldEnum = (typeof LeadScalarFieldEnum)[keyof typeof LeadScalarFieldEnum]
+
+
+export const ThreadScalarFieldEnum = {
+  id: 'id',
+  contactId: 'contactId',
+  subject: 'subject',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ThreadScalarFieldEnum = (typeof ThreadScalarFieldEnum)[keyof typeof ThreadScalarFieldEnum]
+
+
+export const MessageScalarFieldEnum = {
+  id: 'id',
+  direction: 'direction',
+  contactId: 'contactId',
+  threadId: 'threadId',
+  fromName: 'fromName',
+  fromEmail: 'fromEmail',
+  toEmail: 'toEmail',
+  subject: 'subject',
+  body: 'body',
+  isRead: 'isRead',
+  createdAt: 'createdAt',
+  sentAt: 'sentAt'
+} as const
+
+export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
 
 
 export const SortOrder = {

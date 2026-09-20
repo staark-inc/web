@@ -7,13 +7,16 @@ import {
   publishCurrentBadges,
 } from "@/lib/realtime";
 
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const emailPattern =
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function requiredEnv(name: string) {
   const value = process.env[name];
 
   if (!value) {
-    throw new Error(`Missing environment variable: ${name}`);
+    throw new Error(
+      `Missing environment variable: ${name}`
+    );
   }
 
   return value;
@@ -28,10 +31,14 @@ function escapeHtml(value: string) {
     .replaceAll("'", "&#039;");
 }
 
-export async function POST(request: Request) {
+export async function POST(
+  request: Request
+) {
   try {
     const contentType =
-      request.headers.get("content-type") ?? "";
+      request.headers.get(
+        "content-type"
+      ) ?? "";
 
     let name = "";
     let email = "";
@@ -41,16 +48,25 @@ export async function POST(request: Request) {
     let budget = "";
     let message = "";
 
-    if (contentType.includes("application/json")) {
-      const body = (await request.json()) as {
-        name?: unknown;
-        email?: unknown;
-        phone?: unknown;
-        company?: unknown;
-        service?: unknown;
-        budget?: unknown;
-        message?: unknown;
-      };
+    /*
+     * Read JSON or standard HTML form.
+     */
+
+    if (
+      contentType.includes(
+        "application/json"
+      )
+    ) {
+      const body =
+        (await request.json()) as {
+          name?: unknown;
+          email?: unknown;
+          phone?: unknown;
+          company?: unknown;
+          service?: unknown;
+          budget?: unknown;
+          message?: unknown;
+        };
 
       name =
         typeof body.name === "string"
@@ -59,7 +75,9 @@ export async function POST(request: Request) {
 
       email =
         typeof body.email === "string"
-          ? body.email.trim().toLowerCase()
+          ? body.email
+              .trim()
+              .toLowerCase()
           : "";
 
       phone =
@@ -87,24 +105,44 @@ export async function POST(request: Request) {
           ? body.message.trim()
           : "";
     } else {
-      const formData = await request.formData();
+      const formData =
+        await request.formData();
 
-      name = String(formData.get("name") ?? "").trim();
+      name = String(
+        formData.get("name") ?? ""
+      ).trim();
 
-      email = String(formData.get("email") ?? "")
+      email = String(
+        formData.get("email") ?? ""
+      )
         .trim()
         .toLowerCase();
 
-      phone = String(formData.get("phone") ?? "").trim();
+      phone = String(
+        formData.get("phone") ?? ""
+      ).trim();
 
-      company = String(formData.get("company") ?? "").trim();
+      company = String(
+        formData.get("company") ?? ""
+      ).trim();
 
-      service = String(formData.get("service") ?? "").trim();
+      service = String(
+        formData.get("service") ?? ""
+      ).trim();
 
-      budget = String(formData.get("budget") ?? "").trim();
+      budget = String(
+        formData.get("budget") ?? ""
+      ).trim();
 
-      message = String(formData.get("message") ?? "").trim();
+      message = String(
+        formData.get("message") ?? ""
+      ).trim();
     }
+
+    /*
+     * Validation.
+     */
+
     if (
       !name ||
       name.length > 120 ||
@@ -115,7 +153,8 @@ export async function POST(request: Request) {
     ) {
       return NextResponse.json(
         {
-          error: "Kontrollera namn, e-post och meddelande.",
+          error:
+            "Kontrollera namn, e-post och meddelande.",
         },
         {
           status: 400,
@@ -123,53 +162,90 @@ export async function POST(request: Request) {
       );
     }
 
+    /*
+     * Shared values.
+     */
+
+    const to =
+      requiredEnv(
+        "CONTACT_TO_EMAIL"
+      );
+
+    const fromEmail =
+      requiredEnv(
+        "CONTACT_FROM_EMAIL"
+      );
+
+    /*
+     * Prevent accidental newlines
+     * inside the email subject.
+     */
+
+    const subjectName =
+      name
+        .replace(/[\r\n]+/g, " ")
+        .trim();
+
+    const subject =
+      `Ny förfrågan från ${subjectName} | Staark Inc`;
+
+    /*
+     * Escape user-controlled content
+     * before inserting into HTML.
+     */
+
+    const safeName =
+      escapeHtml(name);
+
+    const safeEmail =
+      escapeHtml(email);
+
+    const safeMessage =
+      escapeHtml(message).replace(
+        /\r?\n/g,
+        "<br />"
+      );
+
+    /*
+     * Send notification email.
+     */
+
     const transporter =
       await getSmtpTransporter();
 
-    const to =
-      requiredEnv("CONTACT_TO_EMAIL");
+    try {
+      const info =
+        await transporter.sendMail({
+          /*
+           * Sender displayed in inbox.
+           */
 
-    const fromEmail =
-      requiredEnv("CONTACT_FROM_EMAIL");
+          from:
+            `"Staark Inc - Kontakt" <${fromEmail}>`,
 
-    /*
-     * Escape user-controlled content before inserting it
-     * into the HTML email.
-     */
-    const safeName = escapeHtml(name);
-    const safeEmail = escapeHtml(email);
+          /*
+           * Staark contact inbox.
+           */
 
-    const safeMessage = escapeHtml(message).replace(
-      /\r?\n/g,
-      "<br />"
-    );
+          to,
 
-    const info = await transporter.sendMail({
-      /*
-       * What you will see as the sender in your inbox.
-       */
-      from: `"Staark Inc - Kontakt" <${fromEmail}>`,
+          /*
+           * Reply button replies
+           * directly to customer.
+           */
 
-      /*
-       * Where Staark receives the contact request.
-       */
-      to,
+          replyTo: {
+            name,
+            address: email,
+          },
 
-      /*
-       * Pressing Reply will reply directly to the customer.
-       */
-      replyTo: {
-        name,
-        address: email,
-      },
+          subject,
 
-      subject: `Ny förfrågan från ${name} | Staark Inc`,
+          /*
+           * Plain-text fallback.
+           */
 
-      /*
-       * Plain-text fallback for email clients
-       * that don't render HTML.
-       */
-      text: `
+          text: `
 NY KONTAKTFÖRFRÅGAN – STAARK INC
 
 Namn:
@@ -183,18 +259,26 @@ ${message}
 
 ---
 Skickat via kontaktformuläret på staarkinc.com
-      `.trim(),
+          `.trim(),
 
-      /*
-       * Branded HTML email.
-       */
-      html: `
+          /*
+           * Branded HTML email.
+           */
+
+          html: `
 <!doctype html>
 <html lang="sv">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ny kontaktförfrågan</title>
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+
+    <title>
+      Ny kontaktförfrågan
+    </title>
   </head>
 
   <body
@@ -206,7 +290,6 @@ Skickat via kontaktformuläret på staarkinc.com
       color:#111827;
     "
   >
-
     <table
       width="100%"
       cellpadding="0"
@@ -249,7 +332,6 @@ Skickat via kontaktformuläret på staarkinc.com
                   padding:30px 36px;
                 "
               >
-
                 <div
                   style="
                     color:#ffffff;
@@ -258,7 +340,9 @@ Skickat via kontaktformuläret på staarkinc.com
                     font-weight:700;
                   "
                 >
-                  Staark Inc<span style="color:#3b82f6;">.</span>
+                  Staark Inc<span
+                    style="color:#3b82f6;"
+                  >.</span>
                 </div>
 
                 <div
@@ -270,14 +354,17 @@ Skickat via kontaktformuläret på staarkinc.com
                 >
                   Ny kontaktförfrågan
                 </div>
-
               </td>
             </tr>
 
             <!-- CONTENT -->
 
             <tr>
-              <td style="padding:36px;">
+              <td
+                style="
+                  padding:36px;
+                "
+              >
 
                 <!-- LEAD BADGE -->
 
@@ -286,7 +373,9 @@ Skickat via kontaktformuläret på staarkinc.com
                   cellspacing="0"
                   border="0"
                   role="presentation"
-                  style="margin-bottom:22px;"
+                  style="
+                    margin-bottom:22px;
+                  "
                 >
                   <tr>
                     <td
@@ -347,10 +436,12 @@ Skickat via kontaktformuläret på staarkinc.com
                     margin-bottom:28px;
                   "
                 >
-
                   <tr>
-                    <td style="padding:20px 22px 10px;">
-
+                    <td
+                      style="
+                        padding:20px 22px 10px;
+                      "
+                    >
                       <div
                         style="
                           margin-bottom:5px;
@@ -372,13 +463,15 @@ Skickat via kontaktformuläret på staarkinc.com
                       >
                         ${safeName}
                       </div>
-
                     </td>
                   </tr>
 
                   <tr>
-                    <td style="padding:10px 22px 20px;">
-
+                    <td
+                      style="
+                        padding:10px 22px 20px;
+                      "
+                    >
                       <div
                         style="
                           margin-bottom:5px;
@@ -401,10 +494,8 @@ Skickat via kontaktformuläret på staarkinc.com
                       >
                         ${safeEmail}
                       </a>
-
                     </td>
                   </tr>
-
                 </table>
 
                 <!-- MESSAGE -->
@@ -451,7 +542,6 @@ Skickat via kontaktformuläret på staarkinc.com
                         border-radius:8px;
                       "
                     >
-
                       <a
                         href="mailto:${safeEmail}"
                         style="
@@ -465,7 +555,6 @@ Skickat via kontaktformuläret på staarkinc.com
                       >
                         Svara ${safeName} →
                       </a>
-
                     </td>
                   </tr>
                 </table>
@@ -488,7 +577,12 @@ Skickat via kontaktformuläret på staarkinc.com
               >
                 Detta meddelande skickades automatiskt via
                 kontaktformuläret på
-                <strong style="color:#6b7280;">
+
+                <strong
+                  style="
+                    color:#6b7280;
+                  "
+                >
                   staarkinc.com
                 </strong>.
               </td>
@@ -511,87 +605,180 @@ Skickat via kontaktformuläret på staarkinc.com
         </td>
       </tr>
     </table>
-
   </body>
 </html>
-      `,
-    });
+          `,
+        });
 
-    console.log(
-      `[SMTP] Contact email sent successfully: ${info.messageId}`
+      console.log(
+        `[SMTP] Contact email sent successfully: ${info.messageId}`
+      );
+    } finally {
+      transporter.close();
+    }
+
+    /*
+     * Save CRM data as one transaction.
+     *
+     * Either Contact + Thread + Message +
+     * Lead are all created successfully,
+     * or none of them are committed.
+     */
+
+    await prisma.$transaction(
+      async (tx) => {
+        /*
+         * Create/update customer.
+         */
+
+        const contact =
+          await tx.contact.upsert({
+            where: {
+              email,
+            },
+
+            update: {
+              name,
+
+              ...(phone
+                ? {
+                    phone,
+                  }
+                : {}),
+
+              ...(company
+                ? {
+                    company,
+                  }
+                : {}),
+            },
+
+            create: {
+              name,
+              email,
+
+              phone:
+                phone || null,
+
+              company:
+                company || null,
+            },
+          });
+
+        /*
+         * A contact-form enquiry starts
+         * a brand new conversation.
+         */
+
+        const thread =
+          await tx.thread.create({
+            data: {
+              contactId:
+                contact.id,
+
+              subject,
+            },
+          });
+
+        /*
+         * First inbound message
+         * inside the conversation.
+         */
+
+        await tx.message.create({
+          data: {
+            direction:
+              "INBOUND",
+
+            contactId:
+              contact.id,
+
+            threadId:
+              thread.id,
+
+            fromName:
+              name,
+
+            fromEmail:
+              email,
+
+            toEmail:
+              to,
+
+            subject,
+
+            body:
+              message,
+
+            isRead:
+              false,
+          },
+        });
+
+        /*
+         * Every contact-form enquiry
+         * also creates a new lead.
+         */
+
+        await tx.lead.create({
+          data: {
+            contactId:
+              contact.id,
+
+            service:
+              service || null,
+
+            budget:
+              budget || null,
+
+            message,
+
+            status:
+              "NEW",
+          },
+        });
+      }
     );
 
-    transporter.close();
-
-    await prisma.message.create({
-      data: {
-        direction: "INBOUND",
-        fromName: name,
-        fromEmail: email,
-        toEmail: to,
-        subject: `Ny förfrågan från ${name} | Staark Inc`,
-        body: message,
-        isRead: false,
-      },
-    });
-
-    const contact = await prisma.contact.upsert({
-      where: {
-        email,
-      },
-
-      update: {
-        name,
-
-        ...(phone
-          ? {
-              phone,
-            }
-          : {}),
-
-        ...(company
-          ? {
-              company,
-            }
-          : {}),
-      },
-
-      create: {
-        name,
-        email,
-        phone: phone || null,
-        company: company || null,
-      },
-    });
-
-    await prisma.lead.create({
-      data: {
-        contactId: contact.id,
-        service: service || null,
-        budget: budget || null,
-        message,
-        status: "NEW",
-      },
-    });
+    /*
+     * Push updated Inbox/Lead badges
+     * after the DB transaction succeeds.
+     */
 
     await publishCurrentBadges();
-    
+
+    /*
+     * Browser form:
+     * redirect back to contact page.
+     *
+     * JSON/API request:
+     * return JSON.
+     */
+
     const acceptsHtml =
-      !contentType.includes("application/json");
+      !contentType.includes(
+        "application/json"
+      );
 
     if (acceptsHtml) {
-      return redirectTo("/kontakt?sent=1");
+      return redirectTo(
+        "/kontakt?sent=1"
+      );
     }
 
     return NextResponse.json({
       ok: true,
     });
   } catch (error) {
-    console.error("Contact form delivery failed", error);
+    console.error(
+      "Contact form delivery failed:",
+      error
+    );
 
     return NextResponse.json(
       {
-        error: "Meddelandet kunde inte skickas just nu.",
+        error:
+          "Meddelandet kunde inte skickas just nu.",
       },
       {
         status: 500,

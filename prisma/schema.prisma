@@ -16,6 +16,14 @@ enum MessageDirection {
   OUTBOUND
 }
 
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  WON
+  LOST
+}
+
 model User {
   id           String   @id @default(cuid())
   name         String
@@ -24,28 +32,6 @@ model User {
   role         UserRole @default(ADMIN)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-}
-
-model Message {
-  id        String           @id @default(cuid())
-  direction MessageDirection
-
-  fromName  String?
-  fromEmail String
-  toEmail   String
-
-  subject   String
-  body      String
-
-  isRead    Boolean          @default(false)
-
-  createdAt DateTime         @default(now())
-  sentAt    DateTime?
-
-  @@index([createdAt])
-  @@index([direction])
-  @@index([isRead])
-  @@index([fromEmail])
 }
 
 model Settings {
@@ -59,15 +45,7 @@ model Settings {
   ga4RefreshToken String?
   ga4ConnectedAt  DateTime?
 
-  updatedAt       DateTime @updatedAt
-}
-
-enum LeadStatus {
-  NEW
-  CONTACTED
-  QUALIFIED
-  WON
-  LOST
+  updatedAt DateTime @updatedAt
 }
 
 model Contact {
@@ -79,27 +57,76 @@ model Contact {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  leads Lead[]
+  leads    Lead[]
+  messages Message[]
+  threads  Thread[]
 
   @@index([email])
   @@index([createdAt])
 }
 
 model Lead {
-  id        String     @id @default(cuid())
+  id        String  @id @default(cuid())
   contactId String
-  contact   Contact    @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
 
-  service   String?
-  budget    String?
-  message   String?
+  service String?
+  budget  String?
+  message String?
 
-  status    LeadStatus @default(NEW)
+  status LeadStatus @default(NEW)
 
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([contactId])
   @@index([status])
   @@index([createdAt])
+}
+
+model Thread {
+  id String @id @default(cuid())
+
+  contactId String?
+  contact   Contact? @relation(fields: [contactId], references: [id], onDelete: SetNull)
+
+  subject String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  messages Message[]
+
+  @@index([contactId])
+  @@index([updatedAt])
+}
+
+model Message {
+  id        String           @id @default(cuid())
+  direction MessageDirection
+
+  contactId String?
+  contact   Contact? @relation(fields: [contactId], references: [id], onDelete: SetNull)
+
+  threadId String?
+  thread   Thread? @relation(fields: [threadId], references: [id], onDelete: SetNull)
+
+  fromName  String?
+  fromEmail String
+  toEmail   String
+
+  subject String
+  body    String
+
+  isRead Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  sentAt    DateTime?
+
+  @@index([contactId])
+  @@index([threadId])
+  @@index([createdAt])
+  @@index([direction])
+  @@index([isRead])
+  @@index([fromEmail])
 }
