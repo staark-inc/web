@@ -12,12 +12,8 @@ export async function POST(
   const session = await getSession();
 
   if (!session) {
-    return NextResponse.redirect(
-      new URL(
-        "/hub/login",
-        request.url
-      ),
-      303
+    return redirectTo(
+      "/hub/login"
     );
   }
 

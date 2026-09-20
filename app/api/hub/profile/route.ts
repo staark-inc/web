@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { redirectTo } from "@/lib/redirect";
 
 function redirectToProfile(
   request: NextRequest,
@@ -14,9 +15,8 @@ function redirectToProfile(
     process.env.NEXT_PUBLIC_SITE_URL ||
     "https://staarkinc.com/";
 
-  return NextResponse.redirect(
-    `${baseUrl}/hub/profile?${params}`,
-    303
+  return redirectTo(
+    `${baseUrl}/hub/profile?${params}`
   );
 }
 

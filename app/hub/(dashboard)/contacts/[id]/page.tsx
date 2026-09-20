@@ -161,14 +161,6 @@ export default async function ContactDetailPage({
             <h2>
               Contact information
             </h2>
-
-            <Link
-              href={`/hub/contacts/${contact.id}/edit`}
-              className="hub-secondary-button"
-            >
-              <Pencil size={14} />
-              Edit
-            </Link>
           </div>
 
           <div className="hub-detail-info">

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { redirectTo } from "@/lib/redirect";
 
 const emailPattern =
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -19,9 +20,8 @@ export async function POST(
   const session = await getSession();
 
   if (!session) {
-    return NextResponse.redirect(
-      new URL("/hub/login", request.url),
-      303
+    return redirectTo(
+      "/hub/login"
     );
   }
 
@@ -55,12 +55,8 @@ export async function POST(
       !emailPattern.test(email) ||
       email.length > 320
     ) {
-      return NextResponse.redirect(
-        new URL(
-          `/hub/contacts/${id}/edit?error=invalid`,
-          request.url
-        ),
-        303
+      return redirectTo(
+        `/hub/contacts/${id}/edit?error=invalid`
       );
     }
 
@@ -75,12 +71,8 @@ export async function POST(
       });
 
     if (existingContact) {
-      return NextResponse.redirect(
-        new URL(
-          `/hub/contacts/${id}/edit?error=email_exists`,
-          request.url
-        ),
-        303
+      return redirectTo(
+        `/hub/contacts/${id}/edit?error=email_exists`
       );
     }
 
@@ -96,12 +88,8 @@ export async function POST(
       },
     });
 
-    return NextResponse.redirect(
-      new URL(
-        `/hub/contacts/${id}?updated=1`,
-        request.url
-      ),
-      303
+    return redirectTo(
+      `/hub/contacts/${id}?updated=1`
     );
   } catch (error) {
     console.error(
@@ -109,12 +97,8 @@ export async function POST(
       error
     );
 
-    return NextResponse.redirect(
-      new URL(
-        `/hub/contacts/${id}/edit?error=server`,
-        request.url
-      ),
-      303
+    return redirectTo(
+      `/hub/contacts/${id}/edit?error=server`
     );
   }
 }

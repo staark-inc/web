@@ -1,16 +1,14 @@
 import { NextResponse } from "next/server";
 import { google } from "googleapis";
 import { getSession } from "@/lib/auth";
+import { redirectTo } from "@/lib/redirect";
 
 export async function GET() {
   const session = await getSession();
 
   if (!session) {
-    return NextResponse.redirect(
-      new URL(
-        "/hub/login",
-        process.env.GOOGLE_OAUTH_REDIRECT_URI!
-      )
+    return redirectTo(
+      "/hub/login"
     );
   }
 
@@ -28,14 +26,8 @@ export async function GET() {
     !clientSecret ||
     !redirectUri
   ) {
-    return NextResponse.json(
-      {
-        error:
-          "Google OAuth configuration missing.",
-      },
-      {
-        status: 500,
-      }
+    return redirectTo(
+      "/hub/settings?error=google_oauth_config_missing"
     );
   }
 
@@ -64,5 +56,5 @@ export async function GET() {
       ],
     });
 
-  return NextResponse.redirect(url);
+  return redirectTo(url);
 }
