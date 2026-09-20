@@ -240,41 +240,48 @@ function cleanReplyBody(
       .trim();
 
   /*
-   * Gmail / Outlook / Apple Mail often
-   * append the previous conversation.
-   *
-   * Examples:
-   *
-   * On Sun, 20 Sep ... wrote:
-   * În dum., 20 sept. ... a scris:
-   * Den sön ... skrev:
+   * Detect quoted-reply headers even when
+   * Gmail wraps them across 2-3 lines.
    */
 
   const replySeparators = [
     /*
-     * English
+     * Romanian:
+     *
+     * În dum., 20 sept... a scris:
+     *
+     * or wrapped:
+     *
+     * În dum., 20 sept... a
+     * scris:
      */
-    /^On .+ wrote:\s*$/im,
+    /(?:^|\n)În [^\n]*(?:\n[^\n]*){0,2}?\ba\s+scris:\s*(?=\n|$)/i,
 
     /*
-     * Romanian
+     * Romanian alternative.
      */
-    /^În .+ a scris:\s*$/im,
-    /^La data de .+ a scris:\s*$/im,
+    /(?:^|\n)La data de [^\n]*(?:\n[^\n]*){0,2}?\ba\s+scris:\s*(?=\n|$)/i,
 
     /*
-     * Swedish
+     * English:
+     * On Sun, ... wrote:
      */
-    /^Den .+ skrev .+:\s*$/im,
-    /^Den .+ skrev:\s*$/im,
+    /(?:^|\n)On [^\n]*(?:\n[^\n]*){0,2}?\bwrote:\s*(?=\n|$)/i,
 
     /*
-     * Generic forwarded/original
-     * message separators.
+     * Swedish:
+     * Den ... skrev:
      */
-    /^-{2,}\s*Original Message\s*-{2,}\s*$/im,
-    /^-{2,}\s*Forwarded message\s*-{2,}\s*$/im,
-    /^-{2,}\s*Vidarebefordrat meddelande\s*-{2,}\s*$/im,
+    /(?:^|\n)Den [^\n]*(?:\n[^\n]*){0,2}?\bskrev:\s*(?=\n|$)/i,
+
+    /*
+     * Forwarded / original message.
+     */
+    /(?:^|\n)-{2,}\s*Original Message\s*-{2,}\s*(?=\n|$)/i,
+
+    /(?:^|\n)-{2,}\s*Forwarded message\s*-{2,}\s*(?=\n|$)/i,
+
+    /(?:^|\n)-{2,}\s*Vidarebefordrat meddelande\s*-{2,}\s*(?=\n|$)/i,
   ];
 
   let cutIndex =
@@ -310,9 +317,8 @@ function cleanReplyBody(
   }
 
   /*
-   * If quoted lines remain, remove
-   * them and everything following
-   * the first quoted block.
+   * Remove anything after the first
+   * classic quoted line.
    */
 
   const lines =
@@ -324,11 +330,8 @@ function cleanReplyBody(
   for (
     const line of lines
   ) {
-    const trimmed =
-      line.trim();
-
     if (
-      trimmed.startsWith(">")
+      line.trim().startsWith(">")
     ) {
       break;
     }
@@ -348,8 +351,7 @@ function cleanReplyBody(
       .trim();
 
   /*
-   * Remove common mobile/email
-   * signature separators at the end.
+   * Common signatures.
    */
 
   const signaturePatterns = [
