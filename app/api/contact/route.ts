@@ -3,6 +3,9 @@ import { redirectTo } from "@/lib/lib/redirect";
 // import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { prisma } from "@/lib/prisma";
+import {
+  publishCurrentBadges,
+} from "@/lib/realtime";
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -533,6 +536,8 @@ Skickat via kontaktformuläret på staarkinc.com
         isRead: false,
       },
     });
+
+    await publishCurrentBadges();
 
     const contact = await prisma.contact.upsert({
       where: {
