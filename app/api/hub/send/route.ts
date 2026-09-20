@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 import { NextResponse } from "next/server";
-
+import { getSmtpTransporter } from "@/lib/smtp";
 import { prisma } from "@/lib/prisma";
 
 export const runtime = "nodejs";
@@ -54,17 +54,9 @@ export async function POST(request: Request) {
     const fromEmail =
       process.env.CONTACT_FROM_EMAIL ?? smtpUser;
 
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT ?? 587),
-      secure: process.env.SMTP_SECURE === "true",
-      auth: {
-        user: smtpUser,
-        pass: smtpPassword,
-      },
-    });
+    const transporter = await getSmtpTransporter();
 
-    await transporter.sendMail({
+    const info = await transporter.sendMail({
       from: `"Staark Inc." <${fromEmail}>`,
       to,
       subject,
@@ -142,6 +134,11 @@ export async function POST(request: Request) {
         </html>
       `,
     });
+    
+    console.log(
+      `[SMTP] Hub send email successfully: ${info.messageId}`
+    );
+    transporter.close();
 
     await prisma.message.create({
       data: {
