@@ -4,39 +4,177 @@ import {
   Search,
   Star,
 } from "lucide-react";
+
 import Link from "next/link";
+
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
 function formatDate(date: Date) {
-  return new Intl.DateTimeFormat("sv-SE", {
-    day: "2-digit",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(date);
+  return new Intl.DateTimeFormat(
+    "sv-SE",
+    {
+      day: "2-digit",
+      month: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+    }
+  ).format(date);
+}
+
+function createPreview(
+  value: string,
+  maxLength = 120
+) {
+  const normalized =
+    value
+      .replace(/\s+/g, " ")
+      .trim();
+
+  if (
+    normalized.length <= maxLength
+  ) {
+    return normalized;
+  }
+
+  return `${normalized.slice(
+    0,
+    maxLength
+  )}...`;
 }
 
 export default async function HubInboxPage() {
-  const emails = await prisma.message.findMany({
-    where: {
-      direction: "INBOUND",
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+  /*
+   * Inbox now displays conversations
+   * instead of individual messages.
+   *
+   * Only threads containing at least
+   * one inbound customer message belong
+   * in Inbox.
+   */
 
-  const unreadCount = emails.filter((mail) => !mail.isRead).length;
+  const threads =
+    await prisma.thread.findMany({
+      where: {
+        messages: {
+          some: {
+            direction: "INBOUND",
+          },
+        },
+      },
+
+      include: {
+        contact: true,
+
+        /*
+         * We only need the latest message
+         * here to generate the preview.
+         */
+
+        messages: {
+          orderBy: {
+            createdAt: "desc",
+          },
+
+          take: 1,
+        },
+
+        /*
+         * Count unread inbound messages
+         * inside each conversation.
+         */
+
+        _count: {
+          select: {
+            messages: {
+              where: {
+                direction: "INBOUND",
+                isRead: false,
+              },
+            },
+          },
+        },
+      },
+
+      orderBy: {
+        updatedAt: "desc",
+      },
+    });
+
+  /*
+   * Count ALL messages per thread.
+   *
+   * This is intentionally separate from
+   * the filtered unread count above.
+   */
+
+  const threadIds =
+    threads.map(
+      (thread) => thread.id
+    );
+
+  const messageCounts =
+    threadIds.length > 0
+      ? await prisma.message.groupBy({
+          by: [
+            "threadId",
+          ],
+
+          where: {
+            threadId: {
+              in: threadIds,
+            },
+          },
+
+          _count: {
+            _all: true,
+          },
+        })
+      : [];
+
+  const messageCountMap =
+    new Map<string, number>();
+
+  for (
+    const item of messageCounts
+  ) {
+    if (item.threadId) {
+      messageCountMap.set(
+        item.threadId,
+        item._count._all
+      );
+    }
+  }
+
+  /*
+   * Total unread customer messages.
+   */
+
+  const unreadCount =
+    threads.reduce(
+      (total, thread) =>
+        total +
+        thread._count.messages,
+      0
+    );
 
   return (
     <div className="hub-page">
+      {/* HEADER */}
+
       <header className="hub-page-header">
         <div>
-          <span className="hub-eyebrow">STAARK HUB</span>
+          <span className="hub-eyebrow">
+            STAARK HUB
+          </span>
+
           <h1>Inbox</h1>
-          <p>Messages and enquiries from your customers.</p>
+
+          <p>
+            Conversations and enquiries
+            from your customers.
+          </p>
         </div>
 
         <Link
@@ -45,9 +183,12 @@ export default async function HubInboxPage() {
           aria-label="Refresh inbox"
         >
           <RefreshCw size={17} />
+
           Refresh
         </Link>
       </header>
+
+      {/* TOOLBAR */}
 
       <div className="hub-toolbar">
         <div className="hub-search">
@@ -55,8 +196,8 @@ export default async function HubInboxPage() {
 
           <input
             type="search"
-            placeholder="Search messages..."
-            aria-label="Search messages"
+            placeholder="Search conversations..."
+            aria-label="Search conversations"
           />
         </div>
 
@@ -64,68 +205,167 @@ export default async function HubInboxPage() {
           <Inbox size={16} />
 
           <span>
-            {emails.length} {emails.length === 1 ? "message" : "messages"}
+            {threads.length}{" "}
+            {threads.length === 1
+              ? "conversation"
+              : "conversations"}
           </span>
         </div>
       </div>
 
-      {emails.length === 0 ? (
+      {/* EMPTY INBOX */}
+
+      {threads.length === 0 ? (
         <section className="hub-empty-inbox">
           <Inbox size={28} />
 
-          <h2>Your inbox is empty</h2>
+          <h2>
+            Your inbox is empty
+          </h2>
 
           <p>
-            New contact requests will appear here automatically.
+            New customer conversations
+            will appear here
+            automatically.
           </p>
         </section>
       ) : (
+        /*
+         * THREAD LIST
+         */
+
         <section className="hub-mail-list">
-          {emails.map((mail) => (
-            <Link
-              href={`/hub/message/${mail.id}`}
-              className={`hub-mail-row ${
-                !mail.isRead ? "hub-mail-unread" : ""
-              }`}
-              key={mail.id}
-            >
-              <div className="hub-mail-status">
-                {!mail.isRead && (
-                  <span className="hub-unread-dot" />
-                )}
+          {threads.map(
+            (thread) => {
+              const latestMessage =
+                thread.messages[0];
 
-                <Star size={17} />
-              </div>
+              /*
+               * Because our query requires
+               * an inbound message, this
+               * should normally never happen.
+               */
+              if (!latestMessage) {
+                return null;
+              }
 
-              <div className="hub-mail-sender">
-                <strong>
-                  {mail.fromName || mail.fromEmail}
-                </strong>
+              const unreadInThread =
+                thread._count.messages;
 
-                <span>{mail.fromEmail}</span>
-              </div>
+              const hasUnread =
+                unreadInThread > 0;
 
-              <div className="hub-mail-body">
-                <strong>{mail.subject}</strong>
+              const messageCount =
+                messageCountMap.get(
+                  thread.id
+                ) ?? 1;
 
-                <span>
-                  {mail.body.length > 120
-                    ? `${mail.body.slice(0, 120)}...`
-                    : mail.body}
-                </span>
-              </div>
+              /*
+               * Prefer CRM contact data.
+               *
+               * Fallbacks are useful for
+               * legacy/imported threads.
+               */
 
-              <time dateTime={mail.createdAt.toISOString()}>
-                {formatDate(mail.createdAt)}
-              </time>
-            </Link>
-          ))}
+              const contactEmail =
+                thread.contact
+                  ?.email ??
+                (latestMessage.direction ===
+                "INBOUND"
+                  ? latestMessage.fromEmail
+                  : latestMessage.toEmail);
+
+              const contactName =
+                thread.contact
+                  ?.name ||
+                (latestMessage.direction ===
+                "INBOUND"
+                  ? latestMessage.fromName
+                  : null) ||
+                contactEmail;
+
+              return (
+                <Link
+                  href={`/hub/thread/${thread.id}`}
+                  className={`hub-mail-row ${
+                    hasUnread
+                      ? "hub-mail-unread"
+                      : ""
+                  }`}
+                  key={thread.id}
+                >
+                  {/* STATUS */}
+
+                  <div className="hub-mail-status">
+                    {hasUnread && (
+                      <span className="hub-unread-dot" />
+                    )}
+
+                    <Star size={17} />
+                  </div>
+
+                  {/* CUSTOMER */}
+
+                  <div className="hub-mail-sender">
+                    <strong>
+                      {contactName}
+                    </strong>
+
+                    <span>
+                      {contactEmail}
+                      {" · "}
+                      {messageCount}{" "}
+                      {messageCount === 1
+                        ? "message"
+                        : "messages"}
+                    </span>
+                  </div>
+
+                  {/* SUBJECT + PREVIEW */}
+
+                  <div className="hub-mail-body">
+                    <strong>
+                      {thread.subject}
+                    </strong>
+
+                    <span>
+                      {latestMessage.direction ===
+                      "OUTBOUND"
+                        ? "You: "
+                        : ""}
+
+                      {createPreview(
+                        latestMessage.body
+                      )}
+                    </span>
+                  </div>
+
+                  {/* LAST ACTIVITY */}
+
+                  <time
+                    dateTime={
+                      latestMessage.createdAt.toISOString()
+                    }
+                  >
+                    {formatDate(
+                      latestMessage.createdAt
+                    )}
+                  </time>
+                </Link>
+              );
+            }
+          )}
         </section>
       )}
 
+      {/* UNREAD SUMMARY */}
+
       {unreadCount > 0 && (
         <div className="hub-inbox-summary">
-          {unreadCount} unread
+          {unreadCount}{" "}
+          {unreadCount === 1
+            ? "unread message"
+            : "unread messages"}
         </div>
       )}
     </div>
