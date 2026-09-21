@@ -1,129 +1,262 @@
 import Link from "next/link";
 import {
-  ArrowRight,
+  Building2,
   CheckCircle2,
   Clock3,
   FolderKanban,
-  UsersRound,
+  Plus,
 } from "lucide-react";
 
-export default function ProjectsPage() {
+import { prisma } from "@/lib/prisma";
+import type { ProjectStatus } from "@/generated/prisma/client";
+
+export const dynamic = "force-dynamic";
+
+type PageProps = {
+  searchParams: Promise<{
+    status?: string;
+  }>;
+};
+
+const statuses = [
+  "PLANNING",
+  "IN_PROGRESS",
+  "WAITING_CLIENT",
+  "REVIEW",
+  "COMPLETED",
+  "MAINTENANCE",
+  "CANCELLED",
+] as const;
+
+type FilterStatus = "ALL" | (typeof statuses)[number];
+
+export const statusLabels: Record<ProjectStatus, string> = {
+  PLANNING: "Planning",
+  IN_PROGRESS: "In progress",
+  WAITING_CLIENT: "Waiting on client",
+  REVIEW: "Review",
+  COMPLETED: "Completed",
+  MAINTENANCE: "Maintenance",
+  CANCELLED: "Cancelled",
+};
+
+const filters: { value: FilterStatus; label: string }[] = [
+  { value: "ALL", label: "All" },
+  { value: "PLANNING", label: "Planning" },
+  { value: "IN_PROGRESS", label: "In progress" },
+  { value: "WAITING_CLIENT", label: "Waiting on client" },
+  { value: "REVIEW", label: "Review" },
+  { value: "COMPLETED", label: "Completed" },
+  { value: "MAINTENANCE", label: "Maintenance" },
+];
+
+function formatDate(date: Date) {
+  return new Intl.DateTimeFormat("sv-SE", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).format(date);
+}
+
+export default async function ProjectsPage({ searchParams }: PageProps) {
+  const { status } = await searchParams;
+
+  const activeStatus: FilterStatus = statuses.includes(
+    status as (typeof statuses)[number]
+  )
+    ? (status as FilterStatus)
+    : "ALL";
+
+  const [projects, counts, activeCount, waitingCount, completedCount] =
+    await Promise.all([
+      prisma.project.findMany({
+        where:
+          activeStatus === "ALL"
+            ? {}
+            : { status: activeStatus as ProjectStatus },
+        orderBy: { createdAt: "desc" },
+        select: {
+          id: true,
+          name: true,
+          status: true,
+          dueAt: true,
+          client: { select: { name: true } },
+          tasks: { select: { done: true } },
+        },
+      }),
+
+      prisma.project.groupBy({
+        by: ["status"],
+        _count: true,
+      }),
+
+      prisma.project.count({ where: { status: "IN_PROGRESS" } }),
+      prisma.project.count({ where: { status: "WAITING_CLIENT" } }),
+      prisma.project.count({ where: { status: "COMPLETED" } }),
+    ]);
+
+  const total = counts.reduce((sum, row) => sum + row._count, 0);
+
+  const countFor = (value: FilterStatus) =>
+    value === "ALL"
+      ? total
+      : counts.find((row) => row.status === value)?._count ?? 0;
+
   return (
-    <main className="mx-auto w-full max-w-[1180px] px-6 py-10 lg:px-10">
-      <div className="mb-9">
-        <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-          Staark Hub / Work
-        </p>
-        <h1 className="text-4xl font-semibold tracking-tight text-slate-950">
-          Projects
-        </h1>
-        <p className="mt-2 text-sm text-slate-500">
-          Follow delivery, client materials and launch readiness in one place.
-        </p>
-      </div>
+    <div className="hub-page">
+      <div className="hub-page-header">
+        <div>
+          <h1>Projects</h1>
 
-      <div className="mb-7 grid gap-4 sm:grid-cols-3">
-        <StatCard
-          icon={<FolderKanban size={19} />}
-          label="Active projects"
-          value="0"
-          detail="Currently in progress"
-        />
-        <StatCard
-          icon={<Clock3 size={19} />}
-          label="Waiting on client"
-          value="0"
-          detail="Materials or approval needed"
-        />
-        <StatCard
-          icon={<CheckCircle2 size={19} />}
-          label="Completed"
-          value="0"
-          detail="Delivered projects"
-        />
-      </div>
-
-      <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 px-6 py-5">
-          <div>
-            <h2 className="text-sm font-semibold text-slate-950">
-              All projects
-            </h2>
-            <p className="mt-1 text-xs text-slate-500">
-              Track each project from proposal to launch and support.
-            </p>
-          </div>
-
-          <span className="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-600">
-            0 projects
-          </span>
-        </div>
-
-        <div className="flex flex-col items-center px-6 py-20 text-center">
-          <div className="mb-5 flex size-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-600">
-            <FolderKanban size={25} strokeWidth={1.7} />
-          </div>
-
-          <h3 className="text-base font-semibold text-slate-950">
-            No projects yet
-          </h3>
-          <p className="mt-2 max-w-md text-sm leading-6 text-slate-500">
-            When a client accepts an offer, their project will appear here
-            with its status, tasks, required materials and launch date.
+          <p>
+            Follow delivery, client materials and launch
+            readiness in one place.
           </p>
-
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-        <Link
-            href="/hub/clients"
-            style={{ color: "white", fontSize: "13px" }}
-            className="inline-flex items-center gap-2 rounded-lg bg-slate-950 px-4 py-2.5 font-medium transition hover:bg-slate-800"
-        >
-            <UsersRound size={16} />
-            View clients
-            <ArrowRight size={16} />
-        </Link>
-
-        <Link
-            href="/hub/projects/alex-dackservice-demo"
-            className="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2.5 text-[13px] font-medium text-slate-700 transition hover:bg-slate-50"
-        >
-            Preview project concept
-            <ArrowRight size={16} />
-        </Link>
         </div>
+
+        <Link href="/hub/projects/new" className="hub-send-button">
+          <Plus size={15} />
+          New project
+        </Link>
+      </div>
+
+      <section className="hub-client-stats">
+        <div className="hub-client-stat">
+          <span className="hub-client-stat-label">
+            <FolderKanban size={16} />
+            Active projects
+          </span>
+
+          <strong>{activeCount}</strong>
+
+          <small>Currently in progress</small>
+        </div>
+
+        <div className="hub-client-stat">
+          <span className="hub-client-stat-label">
+            <Clock3 size={16} />
+            Waiting on client
+          </span>
+
+          <strong>{waitingCount}</strong>
+
+          <small>Materials or approval needed</small>
+        </div>
+
+        <div className="hub-client-stat">
+          <span className="hub-client-stat-label">
+            <CheckCircle2 size={16} />
+            Completed
+          </span>
+
+          <strong>{completedCount}</strong>
+
+          <small>Delivered projects</small>
         </div>
       </section>
 
-      <p className="mt-5 text-xs text-slate-500" style={{ marginTop: "10px" }}>
-        Next: connect projects to clients and build the individual project page.
-      </p>
-    </main>
-  );
-}
+      <nav className="hub-lead-filters" aria-label="Project filters">
+        {filters.map((filter) => {
+          const active = activeStatus === filter.value;
 
-function StatCard({
-  icon,
-  label,
-  value,
-  detail,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-  detail: string;
-}) {
-  return (
-    <div className="rounded-xl border border-slate-200 bg-white p-5">
-      <div className="flex items-start justify-between">
-        <span className="text-xs font-medium text-slate-600">{label}</span>
-        <span className="flex size-9 items-center justify-center rounded-lg bg-slate-100 text-slate-700">
-          {icon}
-        </span>
-      </div>
-      <strong className="mt-2 block text-3xl font-semibold tracking-tight text-slate-950">
-        {value}
-      </strong>
-      <span className="mt-1 block text-xs text-slate-500">{detail}</span>
+          return (
+            <Link
+              key={filter.value}
+              href={
+                filter.value === "ALL"
+                  ? "/hub/projects"
+                  : `/hub/projects?status=${filter.value}`
+              }
+              className={`hub-lead-filter ${
+                active ? "hub-lead-filter-active" : ""
+              }`}
+            >
+              <span>{filter.label}</span>
+              <strong>{countFor(filter.value)}</strong>
+            </Link>
+          );
+        })}
+      </nav>
+
+      {projects.length === 0 ? (
+        <div className="hub-empty-state">
+          <FolderKanban size={28} />
+
+          <h2>
+            {activeStatus === "ALL"
+              ? "No projects yet"
+              : "No projects with this status"}
+          </h2>
+
+          <p>
+            {activeStatus === "ALL"
+              ? "Create a project to track delivery for a client."
+              : "Try a different status filter."}
+          </p>
+
+          {activeStatus === "ALL" && (
+            <Link href="/hub/projects/new" className="hub-secondary-button">
+              New project
+            </Link>
+          )}
+        </div>
+      ) : (
+        <div className="hub-client-list">
+          {projects.map((project) => {
+            const done = project.tasks.filter((task) => task.done).length;
+            const totalTasks = project.tasks.length;
+
+            const overdue =
+              project.dueAt &&
+              project.dueAt < new Date() &&
+              project.status !== "COMPLETED";
+
+            return (
+              <Link
+                key={project.id}
+                href={`/hub/projects/${project.id}`}
+                className="hub-client-row"
+              >
+                <div className="hub-client-avatar">
+                  <FolderKanban size={17} />
+                </div>
+
+                <div className="hub-client-main">
+                  <strong>{project.name}</strong>
+
+                  <span className="hub-client-email">
+                    <Building2 size={13} />
+                    {project.client.name}
+                  </span>
+                </div>
+
+                <div className="hub-client-meta">
+                  <span
+                    className={`hub-project-status hub-project-status-${project.status.toLowerCase()}`}
+                  >
+                    {statusLabels[project.status]}
+                  </span>
+
+                  {totalTasks > 0 && (
+                    <span>
+                      {done}/{totalTasks} tasks
+                    </span>
+                  )}
+
+                  {project.dueAt && (
+                    <time
+                      dateTime={project.dueAt.toISOString()}
+                      className={overdue ? "hub-project-overdue" : undefined}
+                    >
+                      {formatDate(project.dueAt)}
+                    </time>
+                  )}
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

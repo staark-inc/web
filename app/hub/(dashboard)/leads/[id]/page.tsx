@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
+import { formatAmount } from "@/lib/format";
 import LeadStatusForm from "./LeadStatusForm";
 import ConvertLeadForm from "./ConvertLeadForm";
 
@@ -93,7 +94,7 @@ export default async function LeadPage({
             <div>
               <span>Budget</span>
               <strong>
-                {lead.budget || "Not specified"}
+                {formatAmount(lead.budget) || "Not specified"}
               </strong>
             </div>
 

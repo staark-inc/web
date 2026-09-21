@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
+import { formatAmount } from "@/lib/format";
 import type { LeadStatus } from "@/generated/prisma/client";
 
 export const dynamic = "force-dynamic";
@@ -300,7 +301,7 @@ export default async function LeadsPage({
 
                     {lead.budget && (
                       <span>
-                        {lead.budget}
+                        {formatAmount(lead.budget)}
                       </span>
                     )}
                   </div>

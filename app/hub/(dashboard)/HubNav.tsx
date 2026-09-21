@@ -29,7 +29,8 @@ export default function HubNav({
 
   const isInbox =
     pathname === "/hub/inbox" ||
-    pathname.startsWith("/hub/message/");
+    pathname.startsWith("/hub/message/") ||
+    pathname.startsWith("/hub/thread/");
 
   const isSent = pathname.startsWith("/hub/sent");
 

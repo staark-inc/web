@@ -52,6 +52,13 @@ export default async function ContactDetailPage({
             createdAt: "desc",
           },
         },
+
+        clients: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
       },
     });
 
@@ -142,16 +149,42 @@ export default async function ContactDetailPage({
           </p>
         </div>
 
-        <Link
-          href={`/hub/contacts/${contact.id}/edit`}
-          className="hub-secondary-button"
-        >
-          <Pencil size={15} />
-          Edit client
-        </Link>
+        <div className="hub-detail-actions">
+          {contact.clients.length === 0 && (
+            <Link
+              href={`/hub/clients/new?contactId=${contact.id}`}
+              className="hub-secondary-button"
+            >
+              <Building2 size={15} />
+              Create client
+            </Link>
+          )}
+
+          <Link
+            href={`/hub/contacts/${contact.id}/edit`}
+            className="hub-secondary-button"
+          >
+            <Pencil size={15} />
+            Edit contact
+          </Link>
+        </div>
       </div>
 
       {/* MAIN GRID */}
+
+      {contact.clients.length > 0 && (
+        <div className="hub-contact-clients">
+          <Building2 size={14} />
+
+          <span>Client:</span>
+
+          {contact.clients.map((client) => (
+            <Link key={client.id} href={`/hub/clients/${client.id}`}>
+              {client.name}
+            </Link>
+          ))}
+        </div>
+      )}
 
       <div className="hub-detail-grid">
         {/* CONTACT INFORMATION */}

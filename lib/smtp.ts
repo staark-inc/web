@@ -8,6 +8,12 @@ const SMTP_HOST =
 const SMTP_PORT =
   Number(process.env.SMTP_PORT ?? "587");
 
+const SMTP_USER = process.env.SMTP_USER;
+
+const SMTP_PASSWORD =
+  process.env.SMTP_PASSWORD ??
+  process.env.SMTP_PASS;
+
 async function createSmtpTransporter() {
   const ipv4Addresses =
     await dns.resolve4(SMTP_HOST);
@@ -51,6 +57,19 @@ async function createSmtpTransporter() {
     tls: {
       servername: SMTP_HOST,
     },
+
+    /*
+     * smtp-relay.gmail.com authorises by IP, while
+     * smtp.gmail.com requires an app password.
+     */
+    ...(SMTP_USER && SMTP_PASSWORD
+      ? {
+          auth: {
+            user: SMTP_USER,
+            pass: SMTP_PASSWORD,
+          },
+        }
+      : {}),
   });
 }
 

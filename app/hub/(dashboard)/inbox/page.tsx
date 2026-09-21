@@ -8,6 +8,7 @@ import {
 import Link from "next/link";
 
 import { prisma } from "@/lib/prisma";
+import InboxSearch from "./InboxSearch";
 
 export const dynamic = "force-dynamic";
 
@@ -44,7 +45,15 @@ function createPreview(
   )}...`;
 }
 
-export default async function HubInboxPage() {
+type PageProps = {
+  searchParams: Promise<{
+    q?: string;
+  }>;
+};
+
+export default async function HubInboxPage({
+  searchParams,
+}: PageProps) {
   /*
    * Inbox now displays conversations
    * instead of individual messages.
@@ -54,6 +63,9 @@ export default async function HubInboxPage() {
    * in Inbox.
    */
 
+  const { q } = await searchParams;
+  const query = q?.trim() ?? "";
+
   const threads =
     await prisma.thread.findMany({
       where: {
@@ -62,6 +74,47 @@ export default async function HubInboxPage() {
             direction: "INBOUND",
           },
         },
+
+        ...(query
+          ? {
+              OR: [
+                {
+                  subject: {
+                    contains: query,
+                    mode: "insensitive" as const,
+                  },
+                },
+                {
+                  contact: {
+                    OR: [
+                      {
+                        name: {
+                          contains: query,
+                          mode: "insensitive" as const,
+                        },
+                      },
+                      {
+                        email: {
+                          contains: query,
+                          mode: "insensitive" as const,
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  messages: {
+                    some: {
+                      body: {
+                        contains: query,
+                        mode: "insensitive" as const,
+                      },
+                    },
+                  },
+                },
+              ],
+            }
+          : {}),
       },
 
       include: {
@@ -191,15 +244,7 @@ export default async function HubInboxPage() {
       {/* TOOLBAR */}
 
       <div className="hub-toolbar">
-        <div className="hub-search">
-          <Search size={17} />
-
-          <input
-            type="search"
-            placeholder="Search conversations..."
-            aria-label="Search conversations"
-          />
-        </div>
+        <InboxSearch initialQuery={query} />
 
         <div className="hub-inbox-total">
           <Inbox size={16} />
@@ -209,6 +254,7 @@ export default async function HubInboxPage() {
             {threads.length === 1
               ? "conversation"
               : "conversations"}
+            {query && " found"}
           </span>
         </div>
       </div>
@@ -217,17 +263,41 @@ export default async function HubInboxPage() {
 
       {threads.length === 0 ? (
         <section className="hub-empty-inbox">
-          <Inbox size={28} />
+          {query ? (
+            <>
+              <Search size={28} />
 
-          <h2>
-            Your inbox is empty
-          </h2>
+              <h2>
+                No matches for &ldquo;{query}&rdquo;
+              </h2>
 
-          <p>
-            New customer conversations
-            will appear here
-            automatically.
-          </p>
+              <p>
+                Try a different name, email
+                address, subject or keyword.
+              </p>
+
+              <Link
+                href="/hub/inbox"
+                className="hub-secondary-button"
+              >
+                Clear search
+              </Link>
+            </>
+          ) : (
+            <>
+              <Inbox size={28} />
+
+              <h2>
+                Your inbox is empty
+              </h2>
+
+              <p>
+                New customer conversations
+                will appear here
+                automatically.
+              </p>
+            </>
+          )}
         </section>
       ) : (
         /*

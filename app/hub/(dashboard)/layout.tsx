@@ -11,6 +11,7 @@ import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 export const dynamic = "force-dynamic";
 import SignOutButton from "./SignOutButton";
+import LiveUpdates from "./LiveUpdates";
 
 export default async function HubDashboardLayout({
   children,
@@ -41,6 +42,8 @@ const [unreadCount, newLeadCount] =
 
   return (
     <div className="hub-dashboard">
+      <LiveUpdates />
+
       <aside className="hub-sidebar">
         <div className="hub-brand">
           <div className="hub-brand-icon">
