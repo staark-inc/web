@@ -1,11 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
+  AlertTriangle,
   ArrowLeft,
   Building2,
   CalendarDays,
   CheckCircle2,
+  Clock3,
   ExternalLink,
+  Gauge,
   MessageSquare,
   LifeBuoy,
   Package,
@@ -122,6 +125,50 @@ export default async function ProjectDetailPage({
     (material) => material.status === "RECEIVED"
   ).length;
 
+  const taskPercent = project.tasks.length
+    ? Math.round((done / project.tasks.length) * 100)
+    : 0;
+
+  const nextTask =
+    project.tasks.find((task) => !task.done) ?? null;
+
+  const awaitingMaterials =
+    project.materials.filter(
+      (material) => material.status === "AWAITING"
+    );
+
+  const openSupport =
+    project.supportRequests.filter(
+      (request) => request.status !== "RESOLVED"
+    ).length;
+
+  const now = new Date();
+
+  const dueDays = project.dueAt
+    ? Math.ceil(
+        (project.dueAt.getTime() - now.getTime()) /
+          (1000 * 60 * 60 * 24)
+      )
+    : null;
+
+  const dueLabel =
+    dueDays === null
+      ? "No deadline"
+      : dueDays < 0
+        ? `${Math.abs(dueDays)}d overdue`
+        : dueDays === 0
+          ? "Due today"
+          : `${dueDays}d remaining`;
+
+  const dueTone =
+    dueDays === null
+      ? "neutral"
+      : dueDays < 0
+        ? "danger"
+        : dueDays <= 7
+          ? "warning"
+          : "good";
+
   return (
     <div className="hub-page">
       <div className="hub-detail-back">
@@ -169,6 +216,78 @@ export default async function ProjectDetailPage({
         </div>
       </div>
 
+      <section className="hub-project-command">
+        <div className="hub-project-command-progress">
+          <div className="hub-project-command-heading">
+            <span>
+              <Gauge size={15} />
+              Project progress
+            </span>
+
+            <strong>{taskPercent}%</strong>
+          </div>
+
+          <div
+            className="hub-project-command-bar"
+            role="progressbar"
+            aria-valuenow={taskPercent}
+            aria-valuemin={0}
+            aria-valuemax={100}
+          >
+            <span style={{ width: `${taskPercent}%` }} />
+          </div>
+
+          <p>
+            {project.tasks.length
+              ? `${done} of ${project.tasks.length} tasks complete`
+              : "Add tasks to start tracking delivery progress"}
+          </p>
+        </div>
+
+        <div className="hub-project-command-signals">
+          <div className="hub-project-signal">
+            <span className="hub-project-signal-icon">
+              <CheckCircle2 size={15} />
+            </span>
+
+            <div>
+              <small>Next action</small>
+              <strong>{nextTask?.title ?? "No open tasks"}</strong>
+            </div>
+          </div>
+
+          <div className={`hub-project-signal hub-project-signal-${dueTone}`}>
+            <span className="hub-project-signal-icon">
+              {dueTone === "danger" || dueTone === "warning" ? (
+                <AlertTriangle size={15} />
+              ) : (
+                <Clock3 size={15} />
+              )}
+            </span>
+
+            <div>
+              <small>Timeline</small>
+              <strong>{dueLabel}</strong>
+            </div>
+          </div>
+
+          <div className={`hub-project-signal ${openSupport ? "hub-project-signal-warning" : "hub-project-signal-good"}`}>
+            <span className="hub-project-signal-icon">
+              <LifeBuoy size={15} />
+            </span>
+
+            <div>
+              <small>Support</small>
+              <strong>
+                {openSupport
+                  ? `${openSupport} open request${openSupport === 1 ? "" : "s"}`
+                  : "No open requests"}
+              </strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="hub-client-stats">
         <div className="hub-client-stat">
           <span className="hub-client-stat-label">
@@ -200,12 +319,11 @@ export default async function ProjectDetailPage({
           </strong>
 
           <small>
-            {project.materials.length
-              ? project.materials
-                  .filter((material) => material.status === "AWAITING")
-                  .map((material) => material.name)
-                  .join(", ") || "All materials received"
-              : "Nothing requested yet"}
+            {project.materials.length === 0
+              ? "Nothing requested yet"
+              : awaitingMaterials.length === 0
+                ? "Nothing waiting on the client"
+                : `${awaitingMaterials.length} item${awaitingMaterials.length === 1 ? "" : "s"} still awaiting`}
           </small>
         </div>
 
@@ -256,6 +374,18 @@ export default async function ProjectDetailPage({
             }`}
           >
             <span>{item.label}</span>
+
+            {item.value === "tasks" && project.tasks.length > 0 && (
+              <strong className="hub-project-tab-count">
+                {done}/{project.tasks.length}
+              </strong>
+            )}
+
+            {item.value === "billing" && openSupport > 0 && (
+              <strong className="hub-project-tab-count hub-project-tab-count-alert">
+                {openSupport}
+              </strong>
+            )}
           </Link>
         ))}
       </nav>
@@ -342,22 +472,37 @@ export default async function ProjectDetailPage({
 
       {activeTab === "overview" && (
         <section className="hub-client-panel hub-project-settings">
-          <h2>Project details</h2>
+          <details className="hub-project-settings-disclosure">
+            <summary>
+              <span>
+                <strong>Project details</strong>
+                <small>
+                  Client, budget, dates, description and live URL
+                </small>
+              </span>
 
-          <ProjectForm
-            clients={clients}
-            project={{
-              id: project.id,
-              name: project.name,
-              clientId: project.clientId,
-              description: project.description,
-              status: project.status,
-              budget: project.budget,
-              liveUrl: project.liveUrl,
-              startedAt: project.startedAt,
-              dueAt: project.dueAt,
-            }}
-          />
+              <span className="hub-project-settings-action">
+                Edit
+              </span>
+            </summary>
+
+            <div className="hub-project-settings-body">
+              <ProjectForm
+                clients={clients}
+                project={{
+                  id: project.id,
+                  name: project.name,
+                  clientId: project.clientId,
+                  description: project.description,
+                  status: project.status,
+                  budget: project.budget,
+                  liveUrl: project.liveUrl,
+                  startedAt: project.startedAt,
+                  dueAt: project.dueAt,
+                }}
+              />
+            </div>
+          </details>
         </section>
       )}
     </div>

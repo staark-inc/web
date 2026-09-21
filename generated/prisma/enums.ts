@@ -65,6 +65,26 @@ export const SupportCoverage = {
 export type SupportCoverage = (typeof SupportCoverage)[keyof typeof SupportCoverage]
 
 
+export const SupportCategory = {
+  WEBSITE: 'WEBSITE',
+  HOSTING: 'HOSTING',
+  EMAIL: 'EMAIL',
+  BUG: 'BUG',
+  CHANGE: 'CHANGE',
+  OTHER: 'OTHER'
+} as const
+
+export type SupportCategory = (typeof SupportCategory)[keyof typeof SupportCategory]
+
+
+export const SupportPriority = {
+  NORMAL: 'NORMAL',
+  URGENT: 'URGENT'
+} as const
+
+export type SupportPriority = (typeof SupportPriority)[keyof typeof SupportPriority]
+
+
 export const ProjectStatus = {
   PLANNING: 'PLANNING',
   IN_PROGRESS: 'IN_PROGRESS',

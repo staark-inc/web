@@ -45,6 +45,10 @@ const companyLinks = [
     label: "Kontakta oss",
     href: "/kontakt",
   },
+  {
+    label: "Kundsupport",
+    href: "/support",
+  },
 ];
 
 const localLinks = [

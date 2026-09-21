@@ -39,9 +39,16 @@ export type SupportRequestMinAggregateOutputType = {
   clientId: string | null
   projectId: string | null
   threadId: string | null
+  reference: string | null
+  requesterName: string | null
+  requesterEmail: string | null
+  requesterCompany: string | null
+  requesterWebsite: string | null
   title: string | null
   description: string | null
   internalNotes: string | null
+  category: $Enums.SupportCategory | null
+  priority: $Enums.SupportPriority | null
   status: $Enums.SupportStatus | null
   coverage: $Enums.SupportCoverage | null
   timeSpentMinutes: number | null
@@ -55,9 +62,16 @@ export type SupportRequestMaxAggregateOutputType = {
   clientId: string | null
   projectId: string | null
   threadId: string | null
+  reference: string | null
+  requesterName: string | null
+  requesterEmail: string | null
+  requesterCompany: string | null
+  requesterWebsite: string | null
   title: string | null
   description: string | null
   internalNotes: string | null
+  category: $Enums.SupportCategory | null
+  priority: $Enums.SupportPriority | null
   status: $Enums.SupportStatus | null
   coverage: $Enums.SupportCoverage | null
   timeSpentMinutes: number | null
@@ -71,9 +85,16 @@ export type SupportRequestCountAggregateOutputType = {
   clientId: number
   projectId: number
   threadId: number
+  reference: number
+  requesterName: number
+  requesterEmail: number
+  requesterCompany: number
+  requesterWebsite: number
   title: number
   description: number
   internalNotes: number
+  category: number
+  priority: number
   status: number
   coverage: number
   timeSpentMinutes: number
@@ -97,9 +118,16 @@ export type SupportRequestMinAggregateInputType = {
   clientId?: true
   projectId?: true
   threadId?: true
+  reference?: true
+  requesterName?: true
+  requesterEmail?: true
+  requesterCompany?: true
+  requesterWebsite?: true
   title?: true
   description?: true
   internalNotes?: true
+  category?: true
+  priority?: true
   status?: true
   coverage?: true
   timeSpentMinutes?: true
@@ -113,9 +141,16 @@ export type SupportRequestMaxAggregateInputType = {
   clientId?: true
   projectId?: true
   threadId?: true
+  reference?: true
+  requesterName?: true
+  requesterEmail?: true
+  requesterCompany?: true
+  requesterWebsite?: true
   title?: true
   description?: true
   internalNotes?: true
+  category?: true
+  priority?: true
   status?: true
   coverage?: true
   timeSpentMinutes?: true
@@ -129,9 +164,16 @@ export type SupportRequestCountAggregateInputType = {
   clientId?: true
   projectId?: true
   threadId?: true
+  reference?: true
+  requesterName?: true
+  requesterEmail?: true
+  requesterCompany?: true
+  requesterWebsite?: true
   title?: true
   description?: true
   internalNotes?: true
+  category?: true
+  priority?: true
   status?: true
   coverage?: true
   timeSpentMinutes?: true
@@ -229,12 +271,19 @@ export type SupportRequestGroupByArgs<ExtArgs extends runtime.Types.Extensions.I
 
 export type SupportRequestGroupByOutputType = {
   id: string
-  clientId: string
+  clientId: string | null
   projectId: string | null
   threadId: string | null
+  reference: string | null
+  requesterName: string | null
+  requesterEmail: string | null
+  requesterCompany: string | null
+  requesterWebsite: string | null
   title: string
   description: string | null
   internalNotes: string | null
+  category: $Enums.SupportCategory
+  priority: $Enums.SupportPriority
   status: $Enums.SupportStatus
   coverage: $Enums.SupportCoverage
   timeSpentMinutes: number
@@ -268,31 +317,45 @@ export type SupportRequestWhereInput = {
   OR?: Prisma.SupportRequestWhereInput[]
   NOT?: Prisma.SupportRequestWhereInput | Prisma.SupportRequestWhereInput[]
   id?: Prisma.StringFilter<"SupportRequest"> | string
-  clientId?: Prisma.StringFilter<"SupportRequest"> | string
+  clientId?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
   projectId?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
   threadId?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
+  reference?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
+  requesterName?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
+  requesterEmail?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
+  requesterCompany?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
+  requesterWebsite?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
   title?: Prisma.StringFilter<"SupportRequest"> | string
   description?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
   internalNotes?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
+  category?: Prisma.EnumSupportCategoryFilter<"SupportRequest"> | $Enums.SupportCategory
+  priority?: Prisma.EnumSupportPriorityFilter<"SupportRequest"> | $Enums.SupportPriority
   status?: Prisma.EnumSupportStatusFilter<"SupportRequest"> | $Enums.SupportStatus
   coverage?: Prisma.EnumSupportCoverageFilter<"SupportRequest"> | $Enums.SupportCoverage
   timeSpentMinutes?: Prisma.IntFilter<"SupportRequest"> | number
   createdAt?: Prisma.DateTimeFilter<"SupportRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SupportRequest"> | Date | string
   resolvedAt?: Prisma.DateTimeNullableFilter<"SupportRequest"> | Date | string | null
-  client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
+  client?: Prisma.XOR<Prisma.ClientNullableScalarRelationFilter, Prisma.ClientWhereInput> | null
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
   thread?: Prisma.XOR<Prisma.ThreadNullableScalarRelationFilter, Prisma.ThreadWhereInput> | null
 }
 
 export type SupportRequestOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  clientId?: Prisma.SortOrder
+  clientId?: Prisma.SortOrderInput | Prisma.SortOrder
   projectId?: Prisma.SortOrderInput | Prisma.SortOrder
   threadId?: Prisma.SortOrderInput | Prisma.SortOrder
+  reference?: Prisma.SortOrderInput | Prisma.SortOrder
+  requesterName?: Prisma.SortOrderInput | Prisma.SortOrder
+  requesterEmail?: Prisma.SortOrderInput | Prisma.SortOrder
+  requesterCompany?: Prisma.SortOrderInput | Prisma.SortOrder
+  requesterWebsite?: Prisma.SortOrderInput | Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   internalNotes?: Prisma.SortOrderInput | Prisma.SortOrder
+  category?: Prisma.SortOrder
+  priority?: Prisma.SortOrder
   status?: Prisma.SortOrder
   coverage?: Prisma.SortOrder
   timeSpentMinutes?: Prisma.SortOrder
@@ -306,34 +369,48 @@ export type SupportRequestOrderByWithRelationInput = {
 
 export type SupportRequestWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  reference?: string
   AND?: Prisma.SupportRequestWhereInput | Prisma.SupportRequestWhereInput[]
   OR?: Prisma.SupportRequestWhereInput[]
   NOT?: Prisma.SupportRequestWhereInput | Prisma.SupportRequestWhereInput[]
-  clientId?: Prisma.StringFilter<"SupportRequest"> | string
+  clientId?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
   projectId?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
   threadId?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
+  requesterName?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
+  requesterEmail?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
+  requesterCompany?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
+  requesterWebsite?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
   title?: Prisma.StringFilter<"SupportRequest"> | string
   description?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
   internalNotes?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
+  category?: Prisma.EnumSupportCategoryFilter<"SupportRequest"> | $Enums.SupportCategory
+  priority?: Prisma.EnumSupportPriorityFilter<"SupportRequest"> | $Enums.SupportPriority
   status?: Prisma.EnumSupportStatusFilter<"SupportRequest"> | $Enums.SupportStatus
   coverage?: Prisma.EnumSupportCoverageFilter<"SupportRequest"> | $Enums.SupportCoverage
   timeSpentMinutes?: Prisma.IntFilter<"SupportRequest"> | number
   createdAt?: Prisma.DateTimeFilter<"SupportRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"SupportRequest"> | Date | string
   resolvedAt?: Prisma.DateTimeNullableFilter<"SupportRequest"> | Date | string | null
-  client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
+  client?: Prisma.XOR<Prisma.ClientNullableScalarRelationFilter, Prisma.ClientWhereInput> | null
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
   thread?: Prisma.XOR<Prisma.ThreadNullableScalarRelationFilter, Prisma.ThreadWhereInput> | null
-}, "id">
+}, "id" | "reference">
 
 export type SupportRequestOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  clientId?: Prisma.SortOrder
+  clientId?: Prisma.SortOrderInput | Prisma.SortOrder
   projectId?: Prisma.SortOrderInput | Prisma.SortOrder
   threadId?: Prisma.SortOrderInput | Prisma.SortOrder
+  reference?: Prisma.SortOrderInput | Prisma.SortOrder
+  requesterName?: Prisma.SortOrderInput | Prisma.SortOrder
+  requesterEmail?: Prisma.SortOrderInput | Prisma.SortOrder
+  requesterCompany?: Prisma.SortOrderInput | Prisma.SortOrder
+  requesterWebsite?: Prisma.SortOrderInput | Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   internalNotes?: Prisma.SortOrderInput | Prisma.SortOrder
+  category?: Prisma.SortOrder
+  priority?: Prisma.SortOrder
   status?: Prisma.SortOrder
   coverage?: Prisma.SortOrder
   timeSpentMinutes?: Prisma.SortOrder
@@ -352,12 +429,19 @@ export type SupportRequestScalarWhereWithAggregatesInput = {
   OR?: Prisma.SupportRequestScalarWhereWithAggregatesInput[]
   NOT?: Prisma.SupportRequestScalarWhereWithAggregatesInput | Prisma.SupportRequestScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"SupportRequest"> | string
-  clientId?: Prisma.StringWithAggregatesFilter<"SupportRequest"> | string
+  clientId?: Prisma.StringNullableWithAggregatesFilter<"SupportRequest"> | string | null
   projectId?: Prisma.StringNullableWithAggregatesFilter<"SupportRequest"> | string | null
   threadId?: Prisma.StringNullableWithAggregatesFilter<"SupportRequest"> | string | null
+  reference?: Prisma.StringNullableWithAggregatesFilter<"SupportRequest"> | string | null
+  requesterName?: Prisma.StringNullableWithAggregatesFilter<"SupportRequest"> | string | null
+  requesterEmail?: Prisma.StringNullableWithAggregatesFilter<"SupportRequest"> | string | null
+  requesterCompany?: Prisma.StringNullableWithAggregatesFilter<"SupportRequest"> | string | null
+  requesterWebsite?: Prisma.StringNullableWithAggregatesFilter<"SupportRequest"> | string | null
   title?: Prisma.StringWithAggregatesFilter<"SupportRequest"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"SupportRequest"> | string | null
   internalNotes?: Prisma.StringNullableWithAggregatesFilter<"SupportRequest"> | string | null
+  category?: Prisma.EnumSupportCategoryWithAggregatesFilter<"SupportRequest"> | $Enums.SupportCategory
+  priority?: Prisma.EnumSupportPriorityWithAggregatesFilter<"SupportRequest"> | $Enums.SupportPriority
   status?: Prisma.EnumSupportStatusWithAggregatesFilter<"SupportRequest"> | $Enums.SupportStatus
   coverage?: Prisma.EnumSupportCoverageWithAggregatesFilter<"SupportRequest"> | $Enums.SupportCoverage
   timeSpentMinutes?: Prisma.IntWithAggregatesFilter<"SupportRequest"> | number
@@ -368,28 +452,42 @@ export type SupportRequestScalarWhereWithAggregatesInput = {
 
 export type SupportRequestCreateInput = {
   id?: string
+  reference?: string | null
+  requesterName?: string | null
+  requesterEmail?: string | null
+  requesterCompany?: string | null
+  requesterWebsite?: string | null
   title: string
   description?: string | null
   internalNotes?: string | null
+  category?: $Enums.SupportCategory
+  priority?: $Enums.SupportPriority
   status?: $Enums.SupportStatus
   coverage?: $Enums.SupportCoverage
   timeSpentMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   resolvedAt?: Date | string | null
-  client: Prisma.ClientCreateNestedOneWithoutSupportRequestsInput
+  client?: Prisma.ClientCreateNestedOneWithoutSupportRequestsInput
   project?: Prisma.ProjectCreateNestedOneWithoutSupportRequestsInput
   thread?: Prisma.ThreadCreateNestedOneWithoutSupportRequestsInput
 }
 
 export type SupportRequestUncheckedCreateInput = {
   id?: string
-  clientId: string
+  clientId?: string | null
   projectId?: string | null
   threadId?: string | null
+  reference?: string | null
+  requesterName?: string | null
+  requesterEmail?: string | null
+  requesterCompany?: string | null
+  requesterWebsite?: string | null
   title: string
   description?: string | null
   internalNotes?: string | null
+  category?: $Enums.SupportCategory
+  priority?: $Enums.SupportPriority
   status?: $Enums.SupportStatus
   coverage?: $Enums.SupportCoverage
   timeSpentMinutes?: number
@@ -400,28 +498,42 @@ export type SupportRequestUncheckedCreateInput = {
 
 export type SupportRequestUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterCompany?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.EnumSupportCategoryFieldUpdateOperationsInput | $Enums.SupportCategory
+  priority?: Prisma.EnumSupportPriorityFieldUpdateOperationsInput | $Enums.SupportPriority
   status?: Prisma.EnumSupportStatusFieldUpdateOperationsInput | $Enums.SupportStatus
   coverage?: Prisma.EnumSupportCoverageFieldUpdateOperationsInput | $Enums.SupportCoverage
   timeSpentMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  client?: Prisma.ClientUpdateOneRequiredWithoutSupportRequestsNestedInput
+  client?: Prisma.ClientUpdateOneWithoutSupportRequestsNestedInput
   project?: Prisma.ProjectUpdateOneWithoutSupportRequestsNestedInput
   thread?: Prisma.ThreadUpdateOneWithoutSupportRequestsNestedInput
 }
 
 export type SupportRequestUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   threadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterCompany?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.EnumSupportCategoryFieldUpdateOperationsInput | $Enums.SupportCategory
+  priority?: Prisma.EnumSupportPriorityFieldUpdateOperationsInput | $Enums.SupportPriority
   status?: Prisma.EnumSupportStatusFieldUpdateOperationsInput | $Enums.SupportStatus
   coverage?: Prisma.EnumSupportCoverageFieldUpdateOperationsInput | $Enums.SupportCoverage
   timeSpentMinutes?: Prisma.IntFieldUpdateOperationsInput | number
@@ -432,12 +544,19 @@ export type SupportRequestUncheckedUpdateInput = {
 
 export type SupportRequestCreateManyInput = {
   id?: string
-  clientId: string
+  clientId?: string | null
   projectId?: string | null
   threadId?: string | null
+  reference?: string | null
+  requesterName?: string | null
+  requesterEmail?: string | null
+  requesterCompany?: string | null
+  requesterWebsite?: string | null
   title: string
   description?: string | null
   internalNotes?: string | null
+  category?: $Enums.SupportCategory
+  priority?: $Enums.SupportPriority
   status?: $Enums.SupportStatus
   coverage?: $Enums.SupportCoverage
   timeSpentMinutes?: number
@@ -448,9 +567,16 @@ export type SupportRequestCreateManyInput = {
 
 export type SupportRequestUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterCompany?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.EnumSupportCategoryFieldUpdateOperationsInput | $Enums.SupportCategory
+  priority?: Prisma.EnumSupportPriorityFieldUpdateOperationsInput | $Enums.SupportPriority
   status?: Prisma.EnumSupportStatusFieldUpdateOperationsInput | $Enums.SupportStatus
   coverage?: Prisma.EnumSupportCoverageFieldUpdateOperationsInput | $Enums.SupportCoverage
   timeSpentMinutes?: Prisma.IntFieldUpdateOperationsInput | number
@@ -461,12 +587,19 @@ export type SupportRequestUpdateManyMutationInput = {
 
 export type SupportRequestUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   threadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterCompany?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.EnumSupportCategoryFieldUpdateOperationsInput | $Enums.SupportCategory
+  priority?: Prisma.EnumSupportPriorityFieldUpdateOperationsInput | $Enums.SupportPriority
   status?: Prisma.EnumSupportStatusFieldUpdateOperationsInput | $Enums.SupportStatus
   coverage?: Prisma.EnumSupportCoverageFieldUpdateOperationsInput | $Enums.SupportCoverage
   timeSpentMinutes?: Prisma.IntFieldUpdateOperationsInput | number
@@ -490,9 +623,16 @@ export type SupportRequestCountOrderByAggregateInput = {
   clientId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   threadId?: Prisma.SortOrder
+  reference?: Prisma.SortOrder
+  requesterName?: Prisma.SortOrder
+  requesterEmail?: Prisma.SortOrder
+  requesterCompany?: Prisma.SortOrder
+  requesterWebsite?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   internalNotes?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  priority?: Prisma.SortOrder
   status?: Prisma.SortOrder
   coverage?: Prisma.SortOrder
   timeSpentMinutes?: Prisma.SortOrder
@@ -510,9 +650,16 @@ export type SupportRequestMaxOrderByAggregateInput = {
   clientId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   threadId?: Prisma.SortOrder
+  reference?: Prisma.SortOrder
+  requesterName?: Prisma.SortOrder
+  requesterEmail?: Prisma.SortOrder
+  requesterCompany?: Prisma.SortOrder
+  requesterWebsite?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   internalNotes?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  priority?: Prisma.SortOrder
   status?: Prisma.SortOrder
   coverage?: Prisma.SortOrder
   timeSpentMinutes?: Prisma.SortOrder
@@ -526,9 +673,16 @@ export type SupportRequestMinOrderByAggregateInput = {
   clientId?: Prisma.SortOrder
   projectId?: Prisma.SortOrder
   threadId?: Prisma.SortOrder
+  reference?: Prisma.SortOrder
+  requesterName?: Prisma.SortOrder
+  requesterEmail?: Prisma.SortOrder
+  requesterCompany?: Prisma.SortOrder
+  requesterWebsite?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   internalNotes?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  priority?: Prisma.SortOrder
   status?: Prisma.SortOrder
   coverage?: Prisma.SortOrder
   timeSpentMinutes?: Prisma.SortOrder
@@ -667,6 +821,14 @@ export type SupportRequestUncheckedUpdateManyWithoutThreadNestedInput = {
   deleteMany?: Prisma.SupportRequestScalarWhereInput | Prisma.SupportRequestScalarWhereInput[]
 }
 
+export type EnumSupportCategoryFieldUpdateOperationsInput = {
+  set?: $Enums.SupportCategory
+}
+
+export type EnumSupportPriorityFieldUpdateOperationsInput = {
+  set?: $Enums.SupportPriority
+}
+
 export type EnumSupportStatusFieldUpdateOperationsInput = {
   set?: $Enums.SupportStatus
 }
@@ -677,9 +839,16 @@ export type EnumSupportCoverageFieldUpdateOperationsInput = {
 
 export type SupportRequestCreateWithoutClientInput = {
   id?: string
+  reference?: string | null
+  requesterName?: string | null
+  requesterEmail?: string | null
+  requesterCompany?: string | null
+  requesterWebsite?: string | null
   title: string
   description?: string | null
   internalNotes?: string | null
+  category?: $Enums.SupportCategory
+  priority?: $Enums.SupportPriority
   status?: $Enums.SupportStatus
   coverage?: $Enums.SupportCoverage
   timeSpentMinutes?: number
@@ -694,9 +863,16 @@ export type SupportRequestUncheckedCreateWithoutClientInput = {
   id?: string
   projectId?: string | null
   threadId?: string | null
+  reference?: string | null
+  requesterName?: string | null
+  requesterEmail?: string | null
+  requesterCompany?: string | null
+  requesterWebsite?: string | null
   title: string
   description?: string | null
   internalNotes?: string | null
+  category?: $Enums.SupportCategory
+  priority?: $Enums.SupportPriority
   status?: $Enums.SupportStatus
   coverage?: $Enums.SupportCoverage
   timeSpentMinutes?: number
@@ -736,12 +912,19 @@ export type SupportRequestScalarWhereInput = {
   OR?: Prisma.SupportRequestScalarWhereInput[]
   NOT?: Prisma.SupportRequestScalarWhereInput | Prisma.SupportRequestScalarWhereInput[]
   id?: Prisma.StringFilter<"SupportRequest"> | string
-  clientId?: Prisma.StringFilter<"SupportRequest"> | string
+  clientId?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
   projectId?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
   threadId?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
+  reference?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
+  requesterName?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
+  requesterEmail?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
+  requesterCompany?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
+  requesterWebsite?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
   title?: Prisma.StringFilter<"SupportRequest"> | string
   description?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
   internalNotes?: Prisma.StringNullableFilter<"SupportRequest"> | string | null
+  category?: Prisma.EnumSupportCategoryFilter<"SupportRequest"> | $Enums.SupportCategory
+  priority?: Prisma.EnumSupportPriorityFilter<"SupportRequest"> | $Enums.SupportPriority
   status?: Prisma.EnumSupportStatusFilter<"SupportRequest"> | $Enums.SupportStatus
   coverage?: Prisma.EnumSupportCoverageFilter<"SupportRequest"> | $Enums.SupportCoverage
   timeSpentMinutes?: Prisma.IntFilter<"SupportRequest"> | number
@@ -752,26 +935,40 @@ export type SupportRequestScalarWhereInput = {
 
 export type SupportRequestCreateWithoutProjectInput = {
   id?: string
+  reference?: string | null
+  requesterName?: string | null
+  requesterEmail?: string | null
+  requesterCompany?: string | null
+  requesterWebsite?: string | null
   title: string
   description?: string | null
   internalNotes?: string | null
+  category?: $Enums.SupportCategory
+  priority?: $Enums.SupportPriority
   status?: $Enums.SupportStatus
   coverage?: $Enums.SupportCoverage
   timeSpentMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   resolvedAt?: Date | string | null
-  client: Prisma.ClientCreateNestedOneWithoutSupportRequestsInput
+  client?: Prisma.ClientCreateNestedOneWithoutSupportRequestsInput
   thread?: Prisma.ThreadCreateNestedOneWithoutSupportRequestsInput
 }
 
 export type SupportRequestUncheckedCreateWithoutProjectInput = {
   id?: string
-  clientId: string
+  clientId?: string | null
   threadId?: string | null
+  reference?: string | null
+  requesterName?: string | null
+  requesterEmail?: string | null
+  requesterCompany?: string | null
+  requesterWebsite?: string | null
   title: string
   description?: string | null
   internalNotes?: string | null
+  category?: $Enums.SupportCategory
+  priority?: $Enums.SupportPriority
   status?: $Enums.SupportStatus
   coverage?: $Enums.SupportCoverage
   timeSpentMinutes?: number
@@ -808,26 +1005,40 @@ export type SupportRequestUpdateManyWithWhereWithoutProjectInput = {
 
 export type SupportRequestCreateWithoutThreadInput = {
   id?: string
+  reference?: string | null
+  requesterName?: string | null
+  requesterEmail?: string | null
+  requesterCompany?: string | null
+  requesterWebsite?: string | null
   title: string
   description?: string | null
   internalNotes?: string | null
+  category?: $Enums.SupportCategory
+  priority?: $Enums.SupportPriority
   status?: $Enums.SupportStatus
   coverage?: $Enums.SupportCoverage
   timeSpentMinutes?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   resolvedAt?: Date | string | null
-  client: Prisma.ClientCreateNestedOneWithoutSupportRequestsInput
+  client?: Prisma.ClientCreateNestedOneWithoutSupportRequestsInput
   project?: Prisma.ProjectCreateNestedOneWithoutSupportRequestsInput
 }
 
 export type SupportRequestUncheckedCreateWithoutThreadInput = {
   id?: string
-  clientId: string
+  clientId?: string | null
   projectId?: string | null
+  reference?: string | null
+  requesterName?: string | null
+  requesterEmail?: string | null
+  requesterCompany?: string | null
+  requesterWebsite?: string | null
   title: string
   description?: string | null
   internalNotes?: string | null
+  category?: $Enums.SupportCategory
+  priority?: $Enums.SupportPriority
   status?: $Enums.SupportStatus
   coverage?: $Enums.SupportCoverage
   timeSpentMinutes?: number
@@ -866,9 +1077,16 @@ export type SupportRequestCreateManyClientInput = {
   id?: string
   projectId?: string | null
   threadId?: string | null
+  reference?: string | null
+  requesterName?: string | null
+  requesterEmail?: string | null
+  requesterCompany?: string | null
+  requesterWebsite?: string | null
   title: string
   description?: string | null
   internalNotes?: string | null
+  category?: $Enums.SupportCategory
+  priority?: $Enums.SupportPriority
   status?: $Enums.SupportStatus
   coverage?: $Enums.SupportCoverage
   timeSpentMinutes?: number
@@ -879,9 +1097,16 @@ export type SupportRequestCreateManyClientInput = {
 
 export type SupportRequestUpdateWithoutClientInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterCompany?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.EnumSupportCategoryFieldUpdateOperationsInput | $Enums.SupportCategory
+  priority?: Prisma.EnumSupportPriorityFieldUpdateOperationsInput | $Enums.SupportPriority
   status?: Prisma.EnumSupportStatusFieldUpdateOperationsInput | $Enums.SupportStatus
   coverage?: Prisma.EnumSupportCoverageFieldUpdateOperationsInput | $Enums.SupportCoverage
   timeSpentMinutes?: Prisma.IntFieldUpdateOperationsInput | number
@@ -896,9 +1121,16 @@ export type SupportRequestUncheckedUpdateWithoutClientInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   threadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterCompany?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.EnumSupportCategoryFieldUpdateOperationsInput | $Enums.SupportCategory
+  priority?: Prisma.EnumSupportPriorityFieldUpdateOperationsInput | $Enums.SupportPriority
   status?: Prisma.EnumSupportStatusFieldUpdateOperationsInput | $Enums.SupportStatus
   coverage?: Prisma.EnumSupportCoverageFieldUpdateOperationsInput | $Enums.SupportCoverage
   timeSpentMinutes?: Prisma.IntFieldUpdateOperationsInput | number
@@ -911,9 +1143,16 @@ export type SupportRequestUncheckedUpdateManyWithoutClientInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   threadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterCompany?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.EnumSupportCategoryFieldUpdateOperationsInput | $Enums.SupportCategory
+  priority?: Prisma.EnumSupportPriorityFieldUpdateOperationsInput | $Enums.SupportPriority
   status?: Prisma.EnumSupportStatusFieldUpdateOperationsInput | $Enums.SupportStatus
   coverage?: Prisma.EnumSupportCoverageFieldUpdateOperationsInput | $Enums.SupportCoverage
   timeSpentMinutes?: Prisma.IntFieldUpdateOperationsInput | number
@@ -924,11 +1163,18 @@ export type SupportRequestUncheckedUpdateManyWithoutClientInput = {
 
 export type SupportRequestCreateManyProjectInput = {
   id?: string
-  clientId: string
+  clientId?: string | null
   threadId?: string | null
+  reference?: string | null
+  requesterName?: string | null
+  requesterEmail?: string | null
+  requesterCompany?: string | null
+  requesterWebsite?: string | null
   title: string
   description?: string | null
   internalNotes?: string | null
+  category?: $Enums.SupportCategory
+  priority?: $Enums.SupportPriority
   status?: $Enums.SupportStatus
   coverage?: $Enums.SupportCoverage
   timeSpentMinutes?: number
@@ -939,26 +1185,40 @@ export type SupportRequestCreateManyProjectInput = {
 
 export type SupportRequestUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterCompany?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.EnumSupportCategoryFieldUpdateOperationsInput | $Enums.SupportCategory
+  priority?: Prisma.EnumSupportPriorityFieldUpdateOperationsInput | $Enums.SupportPriority
   status?: Prisma.EnumSupportStatusFieldUpdateOperationsInput | $Enums.SupportStatus
   coverage?: Prisma.EnumSupportCoverageFieldUpdateOperationsInput | $Enums.SupportCoverage
   timeSpentMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  client?: Prisma.ClientUpdateOneRequiredWithoutSupportRequestsNestedInput
+  client?: Prisma.ClientUpdateOneWithoutSupportRequestsNestedInput
   thread?: Prisma.ThreadUpdateOneWithoutSupportRequestsNestedInput
 }
 
 export type SupportRequestUncheckedUpdateWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   threadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterCompany?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.EnumSupportCategoryFieldUpdateOperationsInput | $Enums.SupportCategory
+  priority?: Prisma.EnumSupportPriorityFieldUpdateOperationsInput | $Enums.SupportPriority
   status?: Prisma.EnumSupportStatusFieldUpdateOperationsInput | $Enums.SupportStatus
   coverage?: Prisma.EnumSupportCoverageFieldUpdateOperationsInput | $Enums.SupportCoverage
   timeSpentMinutes?: Prisma.IntFieldUpdateOperationsInput | number
@@ -969,11 +1229,18 @@ export type SupportRequestUncheckedUpdateWithoutProjectInput = {
 
 export type SupportRequestUncheckedUpdateManyWithoutProjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   threadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterCompany?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.EnumSupportCategoryFieldUpdateOperationsInput | $Enums.SupportCategory
+  priority?: Prisma.EnumSupportPriorityFieldUpdateOperationsInput | $Enums.SupportPriority
   status?: Prisma.EnumSupportStatusFieldUpdateOperationsInput | $Enums.SupportStatus
   coverage?: Prisma.EnumSupportCoverageFieldUpdateOperationsInput | $Enums.SupportCoverage
   timeSpentMinutes?: Prisma.IntFieldUpdateOperationsInput | number
@@ -984,11 +1251,18 @@ export type SupportRequestUncheckedUpdateManyWithoutProjectInput = {
 
 export type SupportRequestCreateManyThreadInput = {
   id?: string
-  clientId: string
+  clientId?: string | null
   projectId?: string | null
+  reference?: string | null
+  requesterName?: string | null
+  requesterEmail?: string | null
+  requesterCompany?: string | null
+  requesterWebsite?: string | null
   title: string
   description?: string | null
   internalNotes?: string | null
+  category?: $Enums.SupportCategory
+  priority?: $Enums.SupportPriority
   status?: $Enums.SupportStatus
   coverage?: $Enums.SupportCoverage
   timeSpentMinutes?: number
@@ -999,26 +1273,40 @@ export type SupportRequestCreateManyThreadInput = {
 
 export type SupportRequestUpdateWithoutThreadInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterCompany?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.EnumSupportCategoryFieldUpdateOperationsInput | $Enums.SupportCategory
+  priority?: Prisma.EnumSupportPriorityFieldUpdateOperationsInput | $Enums.SupportPriority
   status?: Prisma.EnumSupportStatusFieldUpdateOperationsInput | $Enums.SupportStatus
   coverage?: Prisma.EnumSupportCoverageFieldUpdateOperationsInput | $Enums.SupportCoverage
   timeSpentMinutes?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  client?: Prisma.ClientUpdateOneRequiredWithoutSupportRequestsNestedInput
+  client?: Prisma.ClientUpdateOneWithoutSupportRequestsNestedInput
   project?: Prisma.ProjectUpdateOneWithoutSupportRequestsNestedInput
 }
 
 export type SupportRequestUncheckedUpdateWithoutThreadInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterCompany?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.EnumSupportCategoryFieldUpdateOperationsInput | $Enums.SupportCategory
+  priority?: Prisma.EnumSupportPriorityFieldUpdateOperationsInput | $Enums.SupportPriority
   status?: Prisma.EnumSupportStatusFieldUpdateOperationsInput | $Enums.SupportStatus
   coverage?: Prisma.EnumSupportCoverageFieldUpdateOperationsInput | $Enums.SupportCoverage
   timeSpentMinutes?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1029,11 +1317,18 @@ export type SupportRequestUncheckedUpdateWithoutThreadInput = {
 
 export type SupportRequestUncheckedUpdateManyWithoutThreadInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterCompany?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.EnumSupportCategoryFieldUpdateOperationsInput | $Enums.SupportCategory
+  priority?: Prisma.EnumSupportPriorityFieldUpdateOperationsInput | $Enums.SupportPriority
   status?: Prisma.EnumSupportStatusFieldUpdateOperationsInput | $Enums.SupportStatus
   coverage?: Prisma.EnumSupportCoverageFieldUpdateOperationsInput | $Enums.SupportCoverage
   timeSpentMinutes?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1049,16 +1344,23 @@ export type SupportRequestSelect<ExtArgs extends runtime.Types.Extensions.Intern
   clientId?: boolean
   projectId?: boolean
   threadId?: boolean
+  reference?: boolean
+  requesterName?: boolean
+  requesterEmail?: boolean
+  requesterCompany?: boolean
+  requesterWebsite?: boolean
   title?: boolean
   description?: boolean
   internalNotes?: boolean
+  category?: boolean
+  priority?: boolean
   status?: boolean
   coverage?: boolean
   timeSpentMinutes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   resolvedAt?: boolean
-  client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  client?: boolean | Prisma.SupportRequest$clientArgs<ExtArgs>
   project?: boolean | Prisma.SupportRequest$projectArgs<ExtArgs>
   thread?: boolean | Prisma.SupportRequest$threadArgs<ExtArgs>
 }, ExtArgs["result"]["supportRequest"]>
@@ -1068,16 +1370,23 @@ export type SupportRequestSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   clientId?: boolean
   projectId?: boolean
   threadId?: boolean
+  reference?: boolean
+  requesterName?: boolean
+  requesterEmail?: boolean
+  requesterCompany?: boolean
+  requesterWebsite?: boolean
   title?: boolean
   description?: boolean
   internalNotes?: boolean
+  category?: boolean
+  priority?: boolean
   status?: boolean
   coverage?: boolean
   timeSpentMinutes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   resolvedAt?: boolean
-  client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  client?: boolean | Prisma.SupportRequest$clientArgs<ExtArgs>
   project?: boolean | Prisma.SupportRequest$projectArgs<ExtArgs>
   thread?: boolean | Prisma.SupportRequest$threadArgs<ExtArgs>
 }, ExtArgs["result"]["supportRequest"]>
@@ -1087,16 +1396,23 @@ export type SupportRequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   clientId?: boolean
   projectId?: boolean
   threadId?: boolean
+  reference?: boolean
+  requesterName?: boolean
+  requesterEmail?: boolean
+  requesterCompany?: boolean
+  requesterWebsite?: boolean
   title?: boolean
   description?: boolean
   internalNotes?: boolean
+  category?: boolean
+  priority?: boolean
   status?: boolean
   coverage?: boolean
   timeSpentMinutes?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   resolvedAt?: boolean
-  client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  client?: boolean | Prisma.SupportRequest$clientArgs<ExtArgs>
   project?: boolean | Prisma.SupportRequest$projectArgs<ExtArgs>
   thread?: boolean | Prisma.SupportRequest$threadArgs<ExtArgs>
 }, ExtArgs["result"]["supportRequest"]>
@@ -1106,9 +1422,16 @@ export type SupportRequestSelectScalar = {
   clientId?: boolean
   projectId?: boolean
   threadId?: boolean
+  reference?: boolean
+  requesterName?: boolean
+  requesterEmail?: boolean
+  requesterCompany?: boolean
+  requesterWebsite?: boolean
   title?: boolean
   description?: boolean
   internalNotes?: boolean
+  category?: boolean
+  priority?: boolean
   status?: boolean
   coverage?: boolean
   timeSpentMinutes?: boolean
@@ -1117,19 +1440,19 @@ export type SupportRequestSelectScalar = {
   resolvedAt?: boolean
 }
 
-export type SupportRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientId" | "projectId" | "threadId" | "title" | "description" | "internalNotes" | "status" | "coverage" | "timeSpentMinutes" | "createdAt" | "updatedAt" | "resolvedAt", ExtArgs["result"]["supportRequest"]>
+export type SupportRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientId" | "projectId" | "threadId" | "reference" | "requesterName" | "requesterEmail" | "requesterCompany" | "requesterWebsite" | "title" | "description" | "internalNotes" | "category" | "priority" | "status" | "coverage" | "timeSpentMinutes" | "createdAt" | "updatedAt" | "resolvedAt", ExtArgs["result"]["supportRequest"]>
 export type SupportRequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  client?: boolean | Prisma.SupportRequest$clientArgs<ExtArgs>
   project?: boolean | Prisma.SupportRequest$projectArgs<ExtArgs>
   thread?: boolean | Prisma.SupportRequest$threadArgs<ExtArgs>
 }
 export type SupportRequestIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  client?: boolean | Prisma.SupportRequest$clientArgs<ExtArgs>
   project?: boolean | Prisma.SupportRequest$projectArgs<ExtArgs>
   thread?: boolean | Prisma.SupportRequest$threadArgs<ExtArgs>
 }
 export type SupportRequestIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  client?: boolean | Prisma.SupportRequest$clientArgs<ExtArgs>
   project?: boolean | Prisma.SupportRequest$projectArgs<ExtArgs>
   thread?: boolean | Prisma.SupportRequest$threadArgs<ExtArgs>
 }
@@ -1137,18 +1460,25 @@ export type SupportRequestIncludeUpdateManyAndReturn<ExtArgs extends runtime.Typ
 export type $SupportRequestPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "SupportRequest"
   objects: {
-    client: Prisma.$ClientPayload<ExtArgs>
+    client: Prisma.$ClientPayload<ExtArgs> | null
     project: Prisma.$ProjectPayload<ExtArgs> | null
     thread: Prisma.$ThreadPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    clientId: string
+    clientId: string | null
     projectId: string | null
     threadId: string | null
+    reference: string | null
+    requesterName: string | null
+    requesterEmail: string | null
+    requesterCompany: string | null
+    requesterWebsite: string | null
     title: string
     description: string | null
     internalNotes: string | null
+    category: $Enums.SupportCategory
+    priority: $Enums.SupportPriority
     status: $Enums.SupportStatus
     coverage: $Enums.SupportCoverage
     timeSpentMinutes: number
@@ -1549,7 +1879,7 @@ readonly fields: SupportRequestFieldRefs;
  */
 export interface Prisma__SupportRequestClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  client<T extends Prisma.ClientDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientDefaultArgs<ExtArgs>>): Prisma.Prisma__ClientClient<runtime.Types.Result.GetResult<Prisma.$ClientPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  client<T extends Prisma.SupportRequest$clientArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SupportRequest$clientArgs<ExtArgs>>): Prisma.Prisma__ClientClient<runtime.Types.Result.GetResult<Prisma.$ClientPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   project<T extends Prisma.SupportRequest$projectArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SupportRequest$projectArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   thread<T extends Prisma.SupportRequest$threadArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SupportRequest$threadArgs<ExtArgs>>): Prisma.Prisma__ThreadClient<runtime.Types.Result.GetResult<Prisma.$ThreadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
@@ -1585,9 +1915,16 @@ export interface SupportRequestFieldRefs {
   readonly clientId: Prisma.FieldRef<"SupportRequest", 'String'>
   readonly projectId: Prisma.FieldRef<"SupportRequest", 'String'>
   readonly threadId: Prisma.FieldRef<"SupportRequest", 'String'>
+  readonly reference: Prisma.FieldRef<"SupportRequest", 'String'>
+  readonly requesterName: Prisma.FieldRef<"SupportRequest", 'String'>
+  readonly requesterEmail: Prisma.FieldRef<"SupportRequest", 'String'>
+  readonly requesterCompany: Prisma.FieldRef<"SupportRequest", 'String'>
+  readonly requesterWebsite: Prisma.FieldRef<"SupportRequest", 'String'>
   readonly title: Prisma.FieldRef<"SupportRequest", 'String'>
   readonly description: Prisma.FieldRef<"SupportRequest", 'String'>
   readonly internalNotes: Prisma.FieldRef<"SupportRequest", 'String'>
+  readonly category: Prisma.FieldRef<"SupportRequest", 'SupportCategory'>
+  readonly priority: Prisma.FieldRef<"SupportRequest", 'SupportPriority'>
   readonly status: Prisma.FieldRef<"SupportRequest", 'SupportStatus'>
   readonly coverage: Prisma.FieldRef<"SupportRequest", 'SupportCoverage'>
   readonly timeSpentMinutes: Prisma.FieldRef<"SupportRequest", 'Int'>
@@ -1992,6 +2329,25 @@ export type SupportRequestDeleteManyArgs<ExtArgs extends runtime.Types.Extension
    * Limit how many SupportRequests to delete.
    */
   limit?: number
+}
+
+/**
+ * SupportRequest.client
+ */
+export type SupportRequest$clientArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Client
+   */
+  select?: Prisma.ClientSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Client
+   */
+  omit?: Prisma.ClientOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ClientInclude<ExtArgs> | null
+  where?: Prisma.ClientWhereInput
 }
 
 /**

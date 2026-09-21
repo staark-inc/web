@@ -1,0 +1,39 @@
+.public-support-hero { padding-bottom: 54px; }
+.public-support-proof { margin-top: 0; }
+.public-support-section { padding-top: 92px; }
+.public-support-layout { display: grid; grid-template-columns: minmax(0, .85fr) minmax(420px, 1.15fr); gap: 72px; align-items: start; }
+.public-support-copy { position: sticky; top: 128px; }
+.public-support-help { display: flex; align-items: flex-start; gap: 13px; margin-top: 34px; padding-top: 26px; border-top: 1px solid rgba(255,255,255,.12); }
+.public-support-help div { display: grid; gap: 4px; }
+.public-support-help strong { font-size: 13px; }
+.public-support-help a { color: var(--v2-blue); font-size: 13px; text-decoration: none; }
+.public-support-form, .public-support-success { display: grid; gap: 20px; padding: 30px; border: 1px solid rgba(255,255,255,.12); border-radius: 18px; background: rgba(255,255,255,.035); box-shadow: 0 18px 50px rgba(0,0,0,.14); }
+.public-support-form-heading { display: flex; align-items: center; gap: 13px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,.1); }
+.public-support-form-heading > svg { color: var(--v2-blue); }
+.public-support-form-heading div { display: grid; gap: 4px; }
+.public-support-form-heading span, .public-support-success > span { color: var(--v2-blue); font-size: 10px; font-weight: 800; letter-spacing: .12em; }
+.public-support-form-heading h2, .public-support-success h2 { margin: 0; font-size: 20px; }
+.public-support-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.public-support-form label { display: grid; gap: 8px; color: rgba(255,255,255,.78); font-size: 12px; font-weight: 650; }
+.public-support-form input, .public-support-form select, .public-support-form textarea { width: 100%; border: 1px solid rgba(255,255,255,.13); border-radius: 9px; background: rgba(255,255,255,.045); color: #fff; font: inherit; font-size: 13px; outline: none; }
+.public-support-form input, .public-support-form select { min-height: 44px; padding: 0 13px; }
+.public-support-form textarea { min-height: 150px; padding: 13px; resize: vertical; }
+.public-support-form input:focus, .public-support-form select:focus, .public-support-form textarea:focus { border-color: var(--v2-blue); }
+.public-support-form select option { background: #141519; color: #fff; }
+.public-support-form input::placeholder, .public-support-form textarea::placeholder { color: rgba(255,255,255,.34); }
+.public-support-priority-note { margin: -3px 0 0; color: rgba(255,255,255,.48); font-size: 11px; line-height: 1.6; }
+.public-support-submit { justify-self: start; margin-top: 2px; }
+.public-support-submit:disabled { opacity: .62; cursor: wait; }
+.public-support-error { margin: 0; padding: 12px 14px; border: 1px solid rgba(231,98,98,.28); border-radius: 8px; background: rgba(231,98,98,.07); color: #efadad; font-size: 12px; }
+.public-support-honeypot { position: absolute !important; width: 1px !important; height: 1px !important; overflow: hidden !important; clip: rect(0,0,0,0) !important; white-space: nowrap !important; }
+.public-support-success { justify-items: start; }
+.public-support-success > svg { color: #75d292; }
+.public-support-success p { max-width: 520px; margin: 0; color: rgba(255,255,255,.65); font-size: 13px; line-height: 1.7; }
+.public-support-success p strong { color: #fff; font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace; }
+.hub-support-context-list { display: grid; gap: 0; }
+.hub-support-context-list p { display: flex; justify-content: space-between; gap: 18px; margin: 0; padding: 10px 0; border-bottom: 1px solid var(--hub-border); font-size: 11px; }
+.hub-support-context-list p:last-child { border-bottom: 0; }
+.hub-support-context-list strong { color: var(--hub-muted); font-weight: 600; }
+.hub-support-context-list span { color: var(--hub-text); text-align: right; word-break: break-word; }
+@media (max-width: 900px) { .public-support-layout { grid-template-columns: 1fr; gap: 38px; } .public-support-copy { position: static; } }
+@media (max-width: 620px) { .public-support-section { padding-top: 64px; } .public-support-form, .public-support-success { padding: 22px; border-radius: 14px; } .public-support-grid { grid-template-columns: 1fr; } .public-support-submit { width: 100%; justify-content: center; } }

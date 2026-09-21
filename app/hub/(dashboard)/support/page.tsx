@@ -3,7 +3,12 @@ import { CheckCircle2, Clock3, LifeBuoy, Plus } from "lucide-react";
 
 import type { SupportStatus } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
-import { supportCoverageLabels, supportStatusLabels } from "@/lib/support";
+import {
+  supportCategoryLabels,
+  supportCoverageLabels,
+  supportPriorityLabels,
+  supportStatusLabels,
+} from "@/lib/support";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +27,7 @@ export default async function SupportPage({ searchParams }: { searchParams: Prom
       where: active === "ALL" ? {} : { status: active as SupportStatus },
       orderBy: { updatedAt: "desc" },
       select: {
-        id: true, title: true, status: true, coverage: true, createdAt: true,
+        id: true, title: true, status: true, coverage: true, category: true, priority: true, reference: true, requesterCompany: true, requesterEmail: true, createdAt: true,
         client: { select: { name: true } },
         project: { select: { name: true } },
       },
@@ -63,8 +68,8 @@ export default async function SupportPage({ searchParams }: { searchParams: Prom
           <div className="hub-client-list hub-support-list">
             {requests.map((request) => <Link href={`/hub/support/${request.id}`} key={request.id} className="hub-client-row">
               <div className="hub-client-avatar"><LifeBuoy size={17} /></div>
-              <div className="hub-client-main"><strong>{request.title}</strong><span className="hub-client-email">{request.client.name}{request.project ? ` · ${request.project.name}` : ""}</span></div>
-              <div className="hub-client-meta"><span className={`hub-support-status hub-support-status-${request.status.toLowerCase()}`}>{supportStatusLabels[request.status]}</span><span>{supportCoverageLabels[request.coverage]}</span><time dateTime={request.createdAt.toISOString()}>{formatDate(request.createdAt)}</time></div>
+              <div className="hub-client-main"><strong>{request.title}</strong><span className="hub-client-email">{request.client?.name ?? request.requesterCompany ?? request.requesterEmail ?? "Unmatched requester"}{request.project ? ` · ${request.project.name}` : ""}{request.reference ? ` · ${request.reference}` : ""}</span></div>
+              <div className="hub-client-meta"><span className={`hub-support-status hub-support-status-${request.status.toLowerCase()}`}>{supportStatusLabels[request.status]}</span><span>{supportCategoryLabels[request.category]}</span><span>{supportPriorityLabels[request.priority]}</span><span>{supportCoverageLabels[request.coverage]}</span><time dateTime={request.createdAt.toISOString()}>{formatDate(request.createdAt)}</time></div>
             </Link>)}
           </div>
         )}

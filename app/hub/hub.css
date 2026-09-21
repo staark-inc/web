@@ -8175,3 +8175,26 @@
   border: 1px solid var(--hub-border);
   color: #022246 !important;
 }
+
+.hub-support-context-list p {
+    display: flex;
+    gap: 5px;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.hub-support-context-list p strong::after {
+    content: ": ";
+}
+
+.hub-support-context-list p strong {
+  font-size: 13px;
+  font-weight: 600;
+  color: #252f54dd;
+}
+
+.hub-support-context-list p span {
+    font-size: 13px;
+    font-weight: 500;
+    color: #252f54dd;
+}

@@ -7,6 +7,7 @@ import {
   ArrowRight,
   Code2,
   Menu,
+  LifeBuoy,
   X,
 } from "lucide-react";
 
@@ -101,14 +102,23 @@ export default function SiteHeader() {
 
 
       {/* DESKTOP CTA */}
-      <Link
-        href="/kontakt"
-        className="v2-button v2-button-primary v2-nav-button"
-      >
-        Få offert
-        <ArrowRight size={16} />
-      </Link>
+      <div className="v2-nav-actions">
+        <Link
+          href="/support"
+          className="v2-button v2-button-secondary v2-nav-support"
+        >
+          <LifeBuoy size={16} />
+          Support
+        </Link>
 
+        <Link
+          href="/kontakt"
+          className="v2-button v2-button-primary v2-nav-button"
+        >
+          Få offert
+          <ArrowRight size={16} />
+        </Link>
+      </div>
 
       {/* MOBILE MENU */}
       <button

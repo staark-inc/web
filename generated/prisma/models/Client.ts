@@ -536,10 +536,12 @@ export type ClientCreateNestedOneWithoutSupportRequestsInput = {
   connect?: Prisma.ClientWhereUniqueInput
 }
 
-export type ClientUpdateOneRequiredWithoutSupportRequestsNestedInput = {
+export type ClientUpdateOneWithoutSupportRequestsNestedInput = {
   create?: Prisma.XOR<Prisma.ClientCreateWithoutSupportRequestsInput, Prisma.ClientUncheckedCreateWithoutSupportRequestsInput>
   connectOrCreate?: Prisma.ClientCreateOrConnectWithoutSupportRequestsInput
   upsert?: Prisma.ClientUpsertWithoutSupportRequestsInput
+  disconnect?: Prisma.ClientWhereInput | boolean
+  delete?: Prisma.ClientWhereInput | boolean
   connect?: Prisma.ClientWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.ClientUpdateToOneWithWhereWithoutSupportRequestsInput, Prisma.ClientUpdateWithoutSupportRequestsInput>, Prisma.ClientUncheckedUpdateWithoutSupportRequestsInput>
 }

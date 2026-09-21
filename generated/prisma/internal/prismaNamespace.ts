@@ -1748,9 +1748,16 @@ export const SupportRequestScalarFieldEnum = {
   clientId: 'clientId',
   projectId: 'projectId',
   threadId: 'threadId',
+  reference: 'reference',
+  requesterName: 'requesterName',
+  requesterEmail: 'requesterEmail',
+  requesterCompany: 'requesterCompany',
+  requesterWebsite: 'requesterWebsite',
   title: 'title',
   description: 'description',
   internalNotes: 'internalNotes',
+  category: 'category',
+  priority: 'priority',
   status: 'status',
   coverage: 'coverage',
   timeSpentMinutes: 'timeSpentMinutes',
@@ -1971,6 +1978,34 @@ export type ListEnumActivityKindFieldRefInput<$PrismaModel> = FieldRefInputType<
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'SupportCategory'
+ */
+export type EnumSupportCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SupportCategory'>
+    
+
+
+/**
+ * Reference to a field of type 'SupportCategory[]'
+ */
+export type ListEnumSupportCategoryFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SupportCategory[]'>
+    
+
+
+/**
+ * Reference to a field of type 'SupportPriority'
+ */
+export type EnumSupportPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SupportPriority'>
+    
+
+
+/**
+ * Reference to a field of type 'SupportPriority[]'
+ */
+export type ListEnumSupportPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SupportPriority[]'>
     
 
 

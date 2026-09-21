@@ -3599,3 +3599,62 @@ footer {
   text-transform: uppercase;
   color: var(--v2-blue);
 }
+
+.public-support-form label {
+  color: var(--v2-ink) !important;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.public-support-form input, .public-support-form select, .public-support-form textarea {
+  color: var(--v2-ink) !important;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid color-mix(in srgb, var(--v2-ink) 20%, transparent) !important;
+}
+
+.public-support-form select option {
+  color: var(--v2-ink) !important;
+  font-size: 13px;
+  font-weight: 600;
+  background: #fff !important;
+}
+
+.public-support-form input::placeholder,
+.public-support-form textarea::placeholder {
+  color: #7a7e84 !important;
+  opacity: 1;
+}
+
+.public-support-form input,
+.public-support-form select,
+.public-support-form textarea {
+  color: #17181a !important;
+  background: #ffffff !important;
+}
+
+.public-support-form select option {
+  background: #ffffff !important;
+  color: #17181a !important;
+}
+
+.public-support-form input::placeholder,
+.public-support-form textarea::placeholder {
+  color: rgba(255, 255, 255, 0.34) !important;
+}
+
+.public-support-form input::placeholder,
+.public-support-form textarea::placeholder {
+  color: #7a7e84 !important;
+  opacity: 1;
+}
+
+.v2-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.v2-nav-support {
+  white-space: nowrap;
+}

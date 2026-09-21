@@ -3,7 +3,12 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-import type { SupportCoverage, SupportStatus } from "@/generated/prisma/client";
+import type {
+  SupportCategory,
+  SupportCoverage,
+  SupportPriority,
+  SupportStatus,
+} from "@/generated/prisma/client";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
@@ -11,6 +16,8 @@ export type SupportActionState = { error: string | null; success: boolean };
 
 const statuses: SupportStatus[] = ["OPEN", "IN_PROGRESS", "WAITING_CLIENT", "RESOLVED"];
 const coverages: SupportCoverage[] = ["UNASSESSED", "INCLUDED", "EXTRA"];
+const categories: SupportCategory[] = ["WEBSITE", "HOSTING", "EMAIL", "BUG", "CHANGE", "OTHER"];
+const priorities: SupportPriority[] = ["NORMAL", "URGENT"];
 
 async function requireAdmin() {
   const session = await getSession();
@@ -33,10 +40,13 @@ async function readRequest(data: FormData) {
   const timeSpentMinutes = Number(timeValue);
   const status = field(data, "status") as SupportStatus;
   const coverage = field(data, "coverage") as SupportCoverage;
+  const category = field(data, "category") as SupportCategory;
+  const priority = field(data, "priority") as SupportPriority;
 
   if (title.length < 2 || title.length > 160) return { error: "Title must be between 2 and 160 characters." } as const;
   if (description.length > 10000 || internalNotes.length > 10000) return { error: "Description or notes are too long." } as const;
   if (!statuses.includes(status) || !coverages.includes(coverage)) return { error: "Choose a valid status and coverage." } as const;
+  if (!categories.includes(category) || !priorities.includes(priority)) return { error: "Choose a valid category and priority." } as const;
   if (!/^\d+$/.test(timeValue) || !Number.isSafeInteger(timeSpentMinutes) || timeSpentMinutes > 600000) {
     return { error: "Time must be between 0 and 600000 minutes." } as const;
   }
@@ -74,6 +84,8 @@ async function readRequest(data: FormData) {
       timeSpentMinutes,
       status,
       coverage,
+      category,
+      priority,
     },
   } as const;
 }
@@ -112,7 +124,7 @@ export async function updateSupportRequest(_state: SupportActionState, formData:
 
   const result = await readRequest(formData);
   if ("error" in result) return { error: result.error ?? "Invalid request.", success: false };
-  if (existing.clientId !== result.data.clientId) return { error: "A support request cannot be moved to another client.", success: false };
+  if (existing.clientId && existing.clientId !== result.data.clientId) return { error: "A support request cannot be moved to another client.", success: false };
 
   try {
     await prisma.supportRequest.update({
@@ -131,7 +143,8 @@ export async function updateSupportRequest(_state: SupportActionState, formData:
 
   revalidatePath("/hub/support");
   revalidatePath(`/hub/support/${id}`);
-  revalidatePath(`/hub/clients/${existing.clientId}`);
+  if (existing.clientId) revalidatePath(`/hub/clients/${existing.clientId}`);
+  revalidatePath(`/hub/clients/${result.data.clientId}`);
   if (existing.projectId) revalidatePath(`/hub/projects/${existing.projectId}`);
   if (result.data.projectId) revalidatePath(`/hub/projects/${result.data.projectId}`);
   return { error: null, success: true };

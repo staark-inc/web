@@ -2,14 +2,19 @@
 
 import { useActionState, useState } from "react";
 
-import { supportCoverageLabels, supportStatusLabels } from "@/lib/support";
+import {
+  supportCategoryLabels,
+  supportCoverageLabels,
+  supportPriorityLabels,
+  supportStatusLabels,
+} from "@/lib/support";
 import { createSupportRequest, updateSupportRequest, type SupportActionState } from "./actions";
 
 const initial: SupportActionState = { error: null, success: false };
 
 type SupportRequest = {
   id: string;
-  clientId: string;
+  clientId: string | null;
   projectId: string | null;
   threadId: string | null;
   title: string;
@@ -17,6 +22,8 @@ type SupportRequest = {
   internalNotes: string | null;
   status: "OPEN" | "IN_PROGRESS" | "WAITING_CLIENT" | "RESOLVED";
   coverage: "UNASSESSED" | "INCLUDED" | "EXTRA";
+  category: "WEBSITE" | "HOSTING" | "EMAIL" | "BUG" | "CHANGE" | "OTHER";
+  priority: "NORMAL" | "URGENT";
   timeSpentMinutes: number;
 };
 
@@ -53,7 +60,7 @@ export default function SupportForm({
   return (
     <form action={action} className="hub-client-form">
       {request && <input type="hidden" name="requestId" value={request.id} />}
-      {request && <input type="hidden" name="clientId" value={request.clientId} />}
+      {request?.clientId && <input type="hidden" name="clientId" value={request.clientId} />}
       <div className="hub-client-form-grid">
         <div className="hub-client-form-field">
           <label htmlFor="support-title">Request title</label>
@@ -61,7 +68,7 @@ export default function SupportForm({
         </div>
         <div className="hub-client-form-field">
           <label htmlFor="support-client">Client</label>
-          <select id="support-client" name={request ? undefined : "clientId"} value={clientId} disabled={pending || Boolean(request)} required onChange={(event) => { setClientId(event.target.value); setProjectId(""); setThreadId(""); }}>
+          <select id="support-client" name={request?.clientId ? undefined : "clientId"} value={clientId} disabled={pending || Boolean(request?.clientId)} required onChange={(event) => { setClientId(event.target.value); setProjectId(""); setThreadId(""); }}>
             <option value="" disabled>Select a client</option>
             {options.clients.map((client) => <option key={client.id} value={client.id}>{client.name}</option>)}
           </select>
@@ -78,6 +85,18 @@ export default function SupportForm({
           <select id="support-thread" name="threadId" value={threadId} disabled={pending || !clientId} onChange={(event) => setThreadId(event.target.value)}>
             <option value="">No conversation linked</option>
             {visibleThreads.map((thread) => <option key={thread.id} value={thread.id}>{thread.subject}</option>)}
+          </select>
+        </div>
+        <div className="hub-client-form-field">
+          <label htmlFor="support-category">Category</label>
+          <select id="support-category" name="category" defaultValue={request?.category ?? "OTHER"} disabled={pending}>
+            {Object.entries(supportCategoryLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+          </select>
+        </div>
+        <div className="hub-client-form-field">
+          <label htmlFor="support-priority">Priority</label>
+          <select id="support-priority" name="priority" defaultValue={request?.priority ?? "NORMAL"} disabled={pending}>
+            {Object.entries(supportPriorityLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
           </select>
         </div>
         <div className="hub-client-form-field">

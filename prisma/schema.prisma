@@ -45,6 +45,20 @@ enum SupportCoverage {
   EXTRA
 }
 
+enum SupportCategory {
+  WEBSITE
+  HOSTING
+  EMAIL
+  BUG
+  CHANGE
+  OTHER
+}
+
+enum SupportPriority {
+  NORMAL
+  URGENT
+}
+
 enum ProjectStatus {
   PLANNING
   IN_PROGRESS
@@ -288,8 +302,8 @@ model Thread {
 model SupportRequest {
   id String @id @default(cuid())
 
-  clientId String
-  client Client @relation(fields: [clientId], references: [id], onDelete: Restrict)
+  clientId String?
+  client Client? @relation(fields: [clientId], references: [id], onDelete: Restrict)
 
   projectId String?
   project Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
@@ -297,9 +311,20 @@ model SupportRequest {
   threadId String?
   thread Thread? @relation(fields: [threadId], references: [id], onDelete: SetNull)
 
+  reference String? @unique
+
+  requesterName String?
+  requesterEmail String?
+  requesterCompany String?
+  requesterWebsite String?
+
   title String
   description String?
   internalNotes String?
+
+  category SupportCategory @default(OTHER)
+  priority SupportPriority @default(NORMAL)
+
   status SupportStatus @default(OPEN)
   coverage SupportCoverage @default(UNASSESSED)
   timeSpentMinutes Int @default(0)
@@ -311,6 +336,7 @@ model SupportRequest {
   @@index([clientId])
   @@index([projectId])
   @@index([threadId])
+  @@index([requesterEmail])
   @@index([status])
   @@index([createdAt])
 }
