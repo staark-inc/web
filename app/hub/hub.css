@@ -8428,3 +8428,20 @@
   }
 }
 /* === HUB MOBILE STABILITY V1 END === */
+
+@media (max-width: 720px) {
+  .hub-page-header {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 760px) {
+  .hub-overview-page .hub-command-clear {
+    min-height: 76px !important;
+    padding: 0 20px 0 !important;
+    text-align: left;
+    justify-content: flex-start !important;
+  }
+}
