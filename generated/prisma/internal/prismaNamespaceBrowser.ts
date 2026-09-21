@@ -56,8 +56,13 @@ export const ModelName = {
   Contact: 'Contact',
   Lead: 'Lead',
   Client: 'Client',
+  Project: 'Project',
+  ProjectMaterial: 'ProjectMaterial',
+  ProjectActivity: 'ProjectActivity',
+  ProjectTask: 'ProjectTask',
   Thread: 'Thread',
-  Message: 'Message'
+  Message: 'Message',
+  MessageAttachment: 'MessageAttachment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -150,6 +155,62 @@ export const ClientScalarFieldEnum = {
 export type ClientScalarFieldEnum = (typeof ClientScalarFieldEnum)[keyof typeof ClientScalarFieldEnum]
 
 
+export const ProjectScalarFieldEnum = {
+  id: 'id',
+  clientId: 'clientId',
+  threadId: 'threadId',
+  name: 'name',
+  description: 'description',
+  status: 'status',
+  budget: 'budget',
+  liveUrl: 'liveUrl',
+  startedAt: 'startedAt',
+  dueAt: 'dueAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
+
+
+export const ProjectMaterialScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  name: 'name',
+  status: 'status',
+  position: 'position',
+  createdAt: 'createdAt',
+  receivedAt: 'receivedAt'
+} as const
+
+export type ProjectMaterialScalarFieldEnum = (typeof ProjectMaterialScalarFieldEnum)[keyof typeof ProjectMaterialScalarFieldEnum]
+
+
+export const ProjectActivityScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  kind: 'kind',
+  title: 'title',
+  detail: 'detail',
+  createdAt: 'createdAt'
+} as const
+
+export type ProjectActivityScalarFieldEnum = (typeof ProjectActivityScalarFieldEnum)[keyof typeof ProjectActivityScalarFieldEnum]
+
+
+export const ProjectTaskScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  title: 'title',
+  done: 'done',
+  position: 'position',
+  createdAt: 'createdAt',
+  completedAt: 'completedAt'
+} as const
+
+export type ProjectTaskScalarFieldEnum = (typeof ProjectTaskScalarFieldEnum)[keyof typeof ProjectTaskScalarFieldEnum]
+
+
 export const ThreadScalarFieldEnum = {
   id: 'id',
   contactId: 'contactId',
@@ -182,6 +243,19 @@ export const MessageScalarFieldEnum = {
 } as const
 
 export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
+
+
+export const MessageAttachmentScalarFieldEnum = {
+  id: 'id',
+  messageId: 'messageId',
+  filename: 'filename',
+  mimeType: 'mimeType',
+  size: 'size',
+  data: 'data',
+  createdAt: 'createdAt'
+} as const
+
+export type MessageAttachmentScalarFieldEnum = (typeof MessageAttachmentScalarFieldEnum)[keyof typeof MessageAttachmentScalarFieldEnum]
 
 
 export const SortOrder = {

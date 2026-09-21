@@ -43,6 +43,26 @@ export type Lead = Prisma.LeadModel
  */
 export type Client = Prisma.ClientModel
 /**
+ * Model Project
+ * 
+ */
+export type Project = Prisma.ProjectModel
+/**
+ * Model ProjectMaterial
+ * 
+ */
+export type ProjectMaterial = Prisma.ProjectMaterialModel
+/**
+ * Model ProjectActivity
+ * 
+ */
+export type ProjectActivity = Prisma.ProjectActivityModel
+/**
+ * Model ProjectTask
+ * 
+ */
+export type ProjectTask = Prisma.ProjectTaskModel
+/**
  * Model Thread
  * 
  */
@@ -52,3 +72,8 @@ export type Thread = Prisma.ThreadModel
  * 
  */
 export type Message = Prisma.MessageModel
+/**
+ * Model MessageAttachment
+ * 
+ */
+export type MessageAttachment = Prisma.MessageAttachmentModel

@@ -41,7 +41,7 @@ export default function HubNav({
 
   const isLeads =
     pathname.startsWith("/hub/leads");
-  
+
   const isClients =
     pathname === "/hub/clients" ||
     pathname.startsWith("/hub/clients/");
@@ -49,16 +49,16 @@ export default function HubNav({
   const isProjects =
     pathname === "/hub/projects" ||
     pathname.startsWith("/hub/projects/");
-  
-  const isOffers = 
+
+  const isOffers =
     pathname === "/hub/offers" ||
     pathname.startsWith("/hub/offers/");
 
-  const isBilling = 
+  const isBilling =
     pathname === "/hub/billing" ||
     pathname.startsWith("/hub/billing/");
 
-  const isSupport = 
+  const isSupport =
     pathname === "/hub/support" ||
     pathname.startsWith("/hub/support/");
 

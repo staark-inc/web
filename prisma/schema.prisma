@@ -24,6 +24,29 @@ enum LeadStatus {
   LOST
 }
 
+enum ProjectStatus {
+  PLANNING
+  IN_PROGRESS
+  WAITING_CLIENT
+  REVIEW
+  COMPLETED
+  MAINTENANCE
+  CANCELLED
+}
+
+enum MaterialStatus {
+  AWAITING
+  RECEIVED
+  NOT_NEEDED
+}
+
+enum ActivityKind {
+  NOTE
+  STATUS_CHANGED
+  TASK_COMPLETED
+  MATERIAL_RECEIVED
+}
+
 model User {
   id           String   @id @default(cuid())
   name         String
@@ -106,9 +129,90 @@ model Client {
 
   contacts Contact[]
   leads    Lead[]
+  projects Project[]
 
   @@index([name])
   @@index([createdAt])
+}
+
+model Project {
+  id       String @id @default(cuid())
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  /* Optional link to the Inbox conversation with this client. */
+  threadId String?
+  thread   Thread? @relation(fields: [threadId], references: [id], onDelete: SetNull)
+
+  name        String
+  description String?
+
+  status ProjectStatus @default(PLANNING)
+
+  budget  String?
+  liveUrl String?
+
+  startedAt DateTime?
+  dueAt     DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tasks      ProjectTask[]
+  materials  ProjectMaterial[]
+  activities ProjectActivity[]
+
+  @@index([clientId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model ProjectMaterial {
+  id        String  @id @default(cuid())
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  name   String
+  status MaterialStatus @default(AWAITING)
+
+  position Int @default(0)
+
+  createdAt  DateTime  @default(now())
+  receivedAt DateTime?
+
+  @@index([projectId])
+}
+
+model ProjectActivity {
+  id        String  @id @default(cuid())
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  kind    ActivityKind @default(NOTE)
+  title   String
+  detail  String?
+
+  createdAt DateTime @default(now())
+
+  @@index([projectId])
+  @@index([createdAt])
+}
+
+model ProjectTask {
+  id        String  @id @default(cuid())
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  title String
+  done  Boolean @default(false)
+
+  /* Manual ordering inside a project. */
+  position Int @default(0)
+
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  @@index([projectId])
 }
 
 model Thread {
@@ -124,6 +228,7 @@ model Thread {
   updatedAt DateTime @updatedAt
 
   messages Message[]
+  projects Project[]
 
   @@index([contactId])
   @@index([updatedAt])
@@ -162,5 +267,20 @@ model Message {
   @@index([direction])
   @@index([isRead])
   @@index([fromEmail])
+  attachments MessageAttachment[]
+
   @@index([inReplyTo])
+}
+
+model MessageAttachment {
+  id        String   @id @default(cuid())
+  messageId String
+  message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  filename  String
+  mimeType  String
+  size      Int
+  data      Bytes
+  createdAt DateTime @default(now())
+
+  @@index([messageId])
 }

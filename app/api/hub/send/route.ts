@@ -42,35 +42,46 @@ export async function POST(
   }
 
   try {
-    const body =
-      (await request.json()) as {
-        to?: unknown;
-        subject?: unknown;
-        message?: unknown;
-        threadId?: unknown;
-      };
+    const contentLength = Number(request.headers.get("content-length") ?? 0);
+    if (contentLength > 20 * 1024 * 1024) {
+      return NextResponse.json({ error: "Attachments exceed the 15 MB limit." }, { status: 413 });
+    }
 
-    const to =
-      typeof body.to === "string"
-        ? body.to
-            .trim()
-            .toLowerCase()
-        : "";
+    const multipart = request.headers.get("content-type")?.includes("multipart/form-data");
+    const body = multipart
+      ? await request.formData()
+      : (await request.json()) as {
+          to?: unknown;
+          subject?: unknown;
+          message?: unknown;
+          threadId?: unknown;
+        };
+    const getField = (name: "to" | "subject" | "message" | "threadId") =>
+      body instanceof FormData ? body.get(name) : body[name];
+    const files = body instanceof FormData
+      ? body.getAll("attachments").filter((value): value is File => value instanceof File && value.size > 0)
+      : [];
+    if (files.length > 5 || files.some((file) => file.size > 5 * 1024 * 1024) ||
+        files.reduce((sum, file) => sum + file.size, 0) > 15 * 1024 * 1024) {
+      return NextResponse.json({ error: "Maximum 5 files, 5 MB each and 15 MB total." }, { status: 413 });
+    }
+    const outgoingFiles = await Promise.all(files.map(async (file) => ({
+      filename: file.name.replaceAll("/", "_").replaceAll(String.fromCharCode(92), "_").replaceAll(String.fromCharCode(10), "_").replaceAll(String.fromCharCode(13), "_").slice(0, 200) || "attachment",
+      contentType: file.type || "application/octet-stream",
+      content: Buffer.from(await file.arrayBuffer()),
+    })));
 
-    const subject =
-      typeof body.subject === "string"
-        ? body.subject.trim()
-        : "";
+    const rawTo = getField("to");
+    const to = typeof rawTo === "string" ? rawTo.trim().toLowerCase() : "";
 
-    const message =
-      typeof body.message === "string"
-        ? body.message.trim()
-        : "";
+    const rawSubject = getField("subject");
+    const subject = typeof rawSubject === "string" ? rawSubject.trim() : "";
 
-    const requestedThreadId =
-      typeof body.threadId === "string"
-        ? body.threadId.trim()
-        : "";
+    const rawMessage = getField("message");
+    const message = typeof rawMessage === "string" ? rawMessage.trim() : "";
+
+    const rawThreadId = getField("threadId");
+    const requestedThreadId = typeof rawThreadId === "string" ? rawThreadId.trim() : "";
 
     /*
      * VALIDATION
@@ -292,6 +303,7 @@ export async function POST(
           subject,
 
           text: finalText,
+          attachments: outgoingFiles,
 
           html: `
 <!doctype html>
@@ -546,6 +558,15 @@ export async function POST(
                 rfcMessageId,
               },
             });
+
+          for (const file of outgoingFiles) {
+            await tx.$executeRaw`
+              INSERT INTO "MessageAttachment"
+              ("id", "messageId", "filename", "mimeType", "size", "data")
+              VALUES (${crypto.randomUUID()}, ${savedMessage.id}, ${file.filename},
+                      ${file.contentType}, ${file.content.length}, ${file.content})
+            `;
+          }
 
           return {
             thread,

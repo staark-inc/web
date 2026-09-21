@@ -33,3 +33,35 @@ export const LeadStatus = {
 } as const
 
 export type LeadStatus = (typeof LeadStatus)[keyof typeof LeadStatus]
+
+
+export const ProjectStatus = {
+  PLANNING: 'PLANNING',
+  IN_PROGRESS: 'IN_PROGRESS',
+  WAITING_CLIENT: 'WAITING_CLIENT',
+  REVIEW: 'REVIEW',
+  COMPLETED: 'COMPLETED',
+  MAINTENANCE: 'MAINTENANCE',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type ProjectStatus = (typeof ProjectStatus)[keyof typeof ProjectStatus]
+
+
+export const MaterialStatus = {
+  AWAITING: 'AWAITING',
+  RECEIVED: 'RECEIVED',
+  NOT_NEEDED: 'NOT_NEEDED'
+} as const
+
+export type MaterialStatus = (typeof MaterialStatus)[keyof typeof MaterialStatus]
+
+
+export const ActivityKind = {
+  NOTE: 'NOTE',
+  STATUS_CHANGED: 'STATUS_CHANGED',
+  TASK_COMPLETED: 'TASK_COMPLETED',
+  MATERIAL_RECEIVED: 'MATERIAL_RECEIVED'
+} as const
+
+export type ActivityKind = (typeof ActivityKind)[keyof typeof ActivityKind]

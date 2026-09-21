@@ -3,14 +3,19 @@ import {
   Building2,
   Mail,
   MessageSquare,
+  Paperclip,
+  Download,
   UserRound,
 } from "lucide-react";
 
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { Suspense } from "react";
 
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@/generated/prisma/client";
+import GmailAttachments from "./GmailAttachments";
 import {
   publishCurrentBadges,
 } from "@/lib/realtime";
@@ -36,6 +41,61 @@ function formatDate(date: Date) {
       minute: "2-digit",
     }
   ).format(date);
+}
+
+/*
+ * Gmail's HTML-to-text conversion emits links as `label<https://...>`.
+ * Rendering the raw URL floods the thread, so the label becomes the anchor
+ * and the URL moves to the title attribute.
+ */
+function formatMessageBody(value: string) {
+  const pattern = /(\S[^\n<]*?)?<(https?:\/\/[^\s>]+)>|(https?:\/\/[^\s<>]+)/g;
+  const nodes: React.ReactNode[] = [];
+
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  let key = 0;
+
+  while ((match = pattern.exec(value)) !== null) {
+    const [full, label, wrappedUrl, bareUrl] = match;
+    const url = wrappedUrl ?? bareUrl;
+
+    let start = match.index;
+    if (wrappedUrl && label) {
+      start += full.indexOf(label);
+    }
+
+    if (start > lastIndex) {
+      nodes.push(value.slice(lastIndex, start));
+    }
+
+    let text = label?.trim() || url;
+    if (!label) {
+      try {
+        text = new URL(url).hostname.replace(/^www\./, "");
+      } catch {
+        text = url;
+      }
+    }
+
+    nodes.push(
+      <a
+        key={key++}
+        href={url}
+        title={url}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {text}
+      </a>
+    );
+
+    lastIndex = match.index + full.length;
+  }
+
+  nodes.push(value.slice(lastIndex));
+
+  return nodes;
 }
 
 function createReplySubject(
@@ -93,6 +153,21 @@ export default async function ThreadPage({
   if (!thread) {
     notFound();
   }
+
+  const attachmentsByMessage = new Map<string, { partId: string; filename: string; size: number; mimeType: string }[]>();
+
+  const sentAttachments = thread.messages.length ? await prisma.$queryRaw<Array<{ id: string; messageId: string; filename: string; mimeType: string; size: number }>>`
+    SELECT "id", "messageId", "filename", "mimeType", "size"
+    FROM "MessageAttachment"
+    WHERE "messageId" IN (${Prisma.join(thread.messages.map((message) => message.id))})
+  ` : [];
+
+  for (const attachment of sentAttachments) {
+    const list = attachmentsByMessage.get(attachment.messageId) ?? [];
+    list.push({ ...attachment, partId: attachment.id });
+    attachmentsByMessage.set(attachment.messageId, list);
+  }
+
 
   /*
    * Mark inbound messages as read
@@ -332,8 +407,37 @@ export default async function ThreadPage({
                 {/* MESSAGE BODY */}
 
                 <div className="hub-thread-message-body">
-                  {message.body}
+                  {formatMessageBody(message.body)}
                 </div>
+
+                {(attachmentsByMessage.get(message.id)?.length ?? 0) > 0 && (
+                  <div className="hub-thread-attachments">
+                    <span className="hub-thread-attachments-title"><Paperclip size={15} /> Attachments</span>
+                    {attachmentsByMessage.get(message.id)!.map((attachment) => (
+                      <div key={attachment.partId} className="hub-thread-attachment-row">
+                        <a
+                          href={`/api/hub/messages/${message.id}/attachments/${encodeURIComponent(attachment.partId)}`}
+                          className="hub-thread-attachment"
+                        >
+                          <span><strong>{attachment.filename}</strong><small>{Math.ceil(attachment.size / 1024)} KB</small></span>
+                          <Download size={16} aria-hidden="true" />
+                        </a>
+                        {(attachment.mimeType === "application/pdf" || /^image\/(png|jpeg|webp|gif)$/.test(attachment.mimeType)) && (
+                          <a className="hub-thread-attachment-preview" href={`/api/hub/messages/${message.id}/attachments/${encodeURIComponent(attachment.partId)}?preview=1`} target="_blank" rel="noopener noreferrer">Preview</a>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {message.gmailMessageId && (
+                  <Suspense fallback={null}>
+                    <GmailAttachments
+                      messageId={message.id}
+                      gmailMessageId={message.gmailMessageId}
+                    />
+                  </Suspense>
+                )}
               </article>
             );
           }
