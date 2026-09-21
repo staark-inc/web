@@ -7,6 +7,7 @@ import "./project-detail-polish.css";
 import "./projects-v2.css";
 import "./client-workspace-polish.css";
 import "./leads-workspace-polish.css";
+import "./mobile-tabs-polish.css";
 
 export const metadata: Metadata = {
   title: "Staark Hub",
