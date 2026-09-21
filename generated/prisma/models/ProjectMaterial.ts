@@ -451,14 +451,6 @@ export type EnumMaterialStatusFieldUpdateOperationsInput = {
   set?: $Enums.MaterialStatus
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type ProjectMaterialCreateWithoutProjectInput = {
   id?: string
   name: string

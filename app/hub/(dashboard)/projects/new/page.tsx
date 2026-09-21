@@ -7,7 +7,8 @@ import ProjectForm from "../ProjectForm";
 
 export const dynamic = "force-dynamic";
 
-export default async function NewProjectPage() {
+export default async function NewProjectPage({ searchParams }: { searchParams: Promise<{ clientId?: string }> }) {
+  const { clientId } = await searchParams;
   const clients = await prisma.client.findMany({
     orderBy: { name: "asc" },
     select: { id: true, name: true },
@@ -46,7 +47,7 @@ export default async function NewProjectPage() {
         </div>
       ) : (
         <section className="hub-client-panel">
-          <ProjectForm clients={clients} />
+          <ProjectForm clients={clients} defaultClientId={clients.some((client) => client.id === clientId) ? clientId : undefined} />
         </section>
       )}
     </div>

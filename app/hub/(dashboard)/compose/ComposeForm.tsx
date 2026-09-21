@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { FormEvent, useRef, useState } from "react";
 import { CheckCircle2, Paperclip, Send, X } from "lucide-react";
 
@@ -12,11 +13,17 @@ const MAX_TOTAL_SIZE = 15 * 1024 * 1024;
 type ComposeFormProps = {
   initialTo?: string;
   initialSubject?: string;
+  initialMessage?: string;
+  returnTo?: string;
+  confirmRecipient?: boolean;
 };
 
 export default function ComposeForm({
   initialTo = "",
   initialSubject = "",
+  initialMessage = "",
+  returnTo,
+  confirmRecipient = false,
 }: ComposeFormProps) {
   const [sending, setSending] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -110,14 +117,14 @@ export default function ComposeForm({
 
       setSuccess(true);
 
-      setTimeout(() => {
-        setSuccess(false);
-      }, 4000);
+      if (!returnTo) {
+        setTimeout(() => setSuccess(false), 4000);
+      }
 
       const messageField =
         form.elements.namedItem("message");
 
-      if (messageField instanceof HTMLTextAreaElement) {
+      if (!returnTo && messageField instanceof HTMLTextAreaElement) {
         messageField.value = "";
       }
 
@@ -174,9 +181,17 @@ export default function ComposeForm({
           name="message"
           rows={12}
           placeholder="Write your message..."
+          defaultValue={initialMessage}
           required
         />
       </div>
+
+      {confirmRecipient && (
+        <label className="hub-offer-recipient-confirm">
+          <input type="checkbox" required disabled={sending} />
+          I checked the recipient address and want to send this offer by email.
+        </label>
+      )}
 
       {files.length > 0 && (
         <ul className="hub-file-list">
@@ -237,6 +252,11 @@ export default function ComposeForm({
         <div className="hub-compose-success">
           <CheckCircle2 size={17} />
           Message sent successfully.
+          {returnTo && (
+            <Link href={returnTo} className="hub-offer-return-link">
+              Return to the offer and mark it as shared
+            </Link>
+          )}
         </div>
       )}
 
@@ -251,7 +271,7 @@ export default function ComposeForm({
         <button
           className="hub-send-button"
           type="submit"
-          disabled={sending}
+          disabled={sending || Boolean(returnTo && success)}
         >
           {sending ? "Sending..." : "Send message"}
           <Send size={17} />

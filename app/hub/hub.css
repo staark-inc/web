@@ -5804,6 +5804,78 @@
   overflow-wrap: anywhere;
 }
 
+.hub-thread-message-text a {
+  color: #345781;
+  text-decoration: underline;
+  text-decoration-color: #b8c9dc;
+  text-underline-offset: 2px;
+}
+
+.hub-thread-expand {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  padding: 7px 10px;
+  border: 1px solid #e2e5e9;
+  border-radius: 8px;
+  background: #f8f9fa;
+  color: #343b45;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.hub-thread-expand:hover {
+  background: #edf0f3;
+}
+
+.hub-inbox-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 14px;
+  border-bottom: 1px solid #e7e9ed;
+}
+
+.hub-inbox-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: -1px;
+  padding: 10px 12px;
+  border-bottom: 2px solid transparent;
+  color: #747b85;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.hub-inbox-tab:hover {
+  color: #242930;
+}
+
+.hub-inbox-tab-active {
+  border-bottom-color: #17191d;
+  color: #17191d;
+}
+
+.hub-inbox-tab span {
+  min-width: 20px;
+  padding: 2px 5px;
+  border-radius: 6px;
+  background: #f0f2f4;
+  color: #727984;
+  font-size: 10px;
+  text-align: center;
+}
+
+.hub-inbox-tab-active span {
+  background: #e7e9ec;
+  color: #17191d;
+}
+
 
 /* REPLY */
 
@@ -6371,7 +6443,7 @@
 
   padding: 14px 16px;
 
-  border: 1px solid #e3e7ec;
+  /*border: 1px solid #e3e7ec;*/
   border-radius: 12px;
 
   background: #ffffff;
@@ -7607,4 +7679,150 @@
   .hub-page .hub-client-stats:has(> :nth-child(4)) {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+.hub-offer-status {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 5px 9px;
+  border-radius: 7px;
+  background: #f1f2f4;
+  color: #525861;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.hub-offer-status-shared { background: #eff5ff; color: #355a91; }
+.hub-offer-status-accepted { background: #eaf8f0; color: #22704b; }
+.hub-offer-status-declined { background: #fdf0f0; color: #aa4646; }
+
+.hub-offer-amount {
+  font-size: clamp(18px, 2vw, 25px) !important;
+}
+
+.hub-offer-detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(250px, 1fr);
+  align-items: start;
+  gap: 18px;
+}
+
+.hub-offer-detail-grid > *,
+.hub-offer-list .hub-client-row > * { min-width: 0; }
+
+.hub-offer-terms { color: #4c5460; font-size: 13px; line-height: 1.7; }
+.hub-offer-terms h3 { margin: 20px 0 6px; color: #242930; font-size: 12px; }
+.hub-offer-terms p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.hub-offer-help, .hub-offer-timestamp { color: #858b95; font-size: 11px; line-height: 1.5; }
+.hub-offer-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.hub-offer-actions p { flex-basis: 100%; margin: 0; }
+.hub-offer-client-link { display: inline-flex; align-items: center; gap: 8px; color: #283849; font-size: 13px; }
+.hub-offer-project-link { margin-top: 14px; }
+.hub-offer-recipient-confirm { display: flex; align-items: flex-start; gap: 10px; padding: 10px 24px 20px; color: #485465; font-size: 12px; line-height: 1.5; cursor: pointer; }
+.hub-offer-recipient-confirm input { flex: none; margin-top: 2px; accent-color: #17191c; }
+.hub-offer-send-note { border: 1px solid #dce3eb; border-radius: 10px; background: #f7f9fc; padding: 14px 18px; color: #485465; font-size: 13px; line-height: 1.5; margin: 10px 0 20px; }
+.hub-offer-return-link { display: inline-flex; margin-left: 8px; color: #225b4b; text-decoration: underline; text-underline-offset: 3px; }
+
+@media (max-width: 900px) {
+  .hub-offer-detail-grid { grid-template-columns: 1fr; }
+  .hub-offer-list .hub-client-row { align-items: flex-start; flex-wrap: wrap; }
+  .hub-offer-list .hub-client-main { flex-basis: calc(100% - 54px); }
+  .hub-offer-list .hub-client-meta {
+    display: flex;
+    flex-wrap: wrap;
+    flex-basis: 100%;
+    padding-left: 54px;
+    gap: 8px 12px;
+  }
+}
+
+.hub-support-status {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 5px 9px;
+  border-radius: 7px;
+  background: #edf2fc;
+  color: #345883;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.hub-support-status-in_progress { background: #edf3ff; color: #315aa0; }
+.hub-support-status-waiting_client { background: #fff5e8; color: #96641c; }
+.hub-support-status-resolved { background: #eaf8f0; color: #22704b; }
+
+.hub-support-detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(260px, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.hub-support-detail-grid > *,
+.hub-support-list .hub-client-row > * { min-width: 0; }
+
+.hub-support-stat-value { font-size: clamp(17px, 2vw, 24px) !important; }
+.hub-support-stat-link { color: #253a55; font-size: 17px; font-weight: 650; overflow-wrap: anywhere; }
+.hub-support-context { display: flex; align-items: flex-start; gap: 9px; padding: 8px 0; color: #697386; font-size: 12px; }
+.hub-support-context svg { flex-shrink: 0; }
+.hub-support-context a { min-width: 0; color: #253a55; overflow-wrap: anywhere; }
+.hub-support-help { color: #858b95; font-size: 11px; line-height: 1.5; }
+.hub-support-offer-link, .hub-support-create-link { margin-top: 14px; }
+.hub-support-section-title { display: flex; align-items: center; gap: 8px; margin: 20px 0 12px; color: #252b34; font-size: 12px; }
+
+@media (max-width: 900px) {
+  .hub-support-detail-grid { grid-template-columns: 1fr; }
+  .hub-support-list .hub-client-row { align-items: flex-start; flex-wrap: wrap; }
+  .hub-support-list .hub-client-main { flex-basis: calc(100% - 54px); }
+  .hub-support-list .hub-client-meta {
+    display: flex;
+    flex-wrap: wrap;
+    flex-basis: 100%;
+    gap: 8px 12px;
+    padding-left: 54px;
+  }
+}
+
+/* Offer email spacing */
+.hub-compose-card:has(.hub-offer-recipient-confirm) .hub-compose-field {
+  min-height: 80px;
+  column-gap: 20px;
+  padding: 16px 28px;
+}
+.hub-compose-card:has(.hub-offer-recipient-confirm) .hub-compose-message {
+  display: block;
+  padding: 28px;
+}
+.hub-compose-card:has(.hub-offer-recipient-confirm) .hub-compose-message label {
+  display: block;
+  margin-bottom: 18px;
+}
+.hub-compose-card:has(.hub-offer-recipient-confirm) .hub-compose-message textarea {
+  display: block;
+  min-height: 380px;
+}
+.hub-offer-recipient-confirm {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 0;
+  padding: 22px 28px;
+  border-bottom: 1px solid #ededee;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.hub-offer-recipient-confirm input {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin: 2px 0 0;
+}
+.hub-compose-card:has(.hub-offer-recipient-confirm) .hub-file-input-inline {
+  padding: 16px 20px;
+}
+.hub-compose-card:has(.hub-offer-recipient-confirm) .hub-compose-footer {
+  padding: 22px 28px;
 }

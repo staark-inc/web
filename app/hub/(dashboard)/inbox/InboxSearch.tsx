@@ -6,10 +6,12 @@ import { useEffect, useRef, useState, useTransition } from "react";
 
 type InboxSearchProps = {
   initialQuery: string;
+  view: "inbox" | "unread" | "other" | "all";
 };
 
 export default function InboxSearch({
   initialQuery,
+  view,
 }: InboxSearchProps) {
   const router = useRouter();
   const [value, setValue] = useState(initialQuery);
@@ -28,17 +30,18 @@ export default function InboxSearch({
       latest.current = trimmed;
 
       startTransition(() => {
+        const params = new URLSearchParams();
+        if (view !== "inbox") params.set("view", view);
+        if (trimmed) params.set("q", trimmed);
         router.replace(
-          trimmed
-            ? `/hub/inbox?q=${encodeURIComponent(trimmed)}`
-            : "/hub/inbox",
+          `/hub/inbox${params.size ? `?${params}` : ""}`,
           { scroll: false }
         );
       });
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [value, router]);
+  }, [value, router, view]);
 
   function clear() {
     setValue("");

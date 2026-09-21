@@ -217,6 +217,8 @@ export type ClientWhereInput = {
   contacts?: Prisma.ContactListRelationFilter
   leads?: Prisma.LeadListRelationFilter
   projects?: Prisma.ProjectListRelationFilter
+  offers?: Prisma.OfferListRelationFilter
+  supportRequests?: Prisma.SupportRequestListRelationFilter
 }
 
 export type ClientOrderByWithRelationInput = {
@@ -232,6 +234,8 @@ export type ClientOrderByWithRelationInput = {
   contacts?: Prisma.ContactOrderByRelationAggregateInput
   leads?: Prisma.LeadOrderByRelationAggregateInput
   projects?: Prisma.ProjectOrderByRelationAggregateInput
+  offers?: Prisma.OfferOrderByRelationAggregateInput
+  supportRequests?: Prisma.SupportRequestOrderByRelationAggregateInput
 }
 
 export type ClientWhereUniqueInput = Prisma.AtLeast<{
@@ -250,6 +254,8 @@ export type ClientWhereUniqueInput = Prisma.AtLeast<{
   contacts?: Prisma.ContactListRelationFilter
   leads?: Prisma.LeadListRelationFilter
   projects?: Prisma.ProjectListRelationFilter
+  offers?: Prisma.OfferListRelationFilter
+  supportRequests?: Prisma.SupportRequestListRelationFilter
 }, "id">
 
 export type ClientOrderByWithAggregationInput = {
@@ -295,6 +301,8 @@ export type ClientCreateInput = {
   contacts?: Prisma.ContactCreateNestedManyWithoutClientsInput
   leads?: Prisma.LeadCreateNestedManyWithoutClientInput
   projects?: Prisma.ProjectCreateNestedManyWithoutClientInput
+  offers?: Prisma.OfferCreateNestedManyWithoutClientInput
+  supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutClientInput
 }
 
 export type ClientUncheckedCreateInput = {
@@ -310,6 +318,8 @@ export type ClientUncheckedCreateInput = {
   contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutClientsInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClientInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
+  offers?: Prisma.OfferUncheckedCreateNestedManyWithoutClientInput
+  supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientUpdateInput = {
@@ -325,6 +335,8 @@ export type ClientUpdateInput = {
   contacts?: Prisma.ContactUpdateManyWithoutClientsNestedInput
   leads?: Prisma.LeadUpdateManyWithoutClientNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
+  offers?: Prisma.OfferUpdateManyWithoutClientNestedInput
+  supportRequests?: Prisma.SupportRequestUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUncheckedUpdateInput = {
@@ -340,6 +352,8 @@ export type ClientUncheckedUpdateInput = {
   contacts?: Prisma.ContactUncheckedUpdateManyWithoutClientsNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutClientNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
+  offers?: Prisma.OfferUncheckedUpdateManyWithoutClientNestedInput
+  supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutClientNestedInput
 }
 
 export type ClientCreateManyInput = {
@@ -488,6 +502,20 @@ export type ClientUpdateOneWithoutLeadsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ClientUpdateToOneWithWhereWithoutLeadsInput, Prisma.ClientUpdateWithoutLeadsInput>, Prisma.ClientUncheckedUpdateWithoutLeadsInput>
 }
 
+export type ClientCreateNestedOneWithoutOffersInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutOffersInput, Prisma.ClientUncheckedCreateWithoutOffersInput>
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutOffersInput
+  connect?: Prisma.ClientWhereUniqueInput
+}
+
+export type ClientUpdateOneRequiredWithoutOffersNestedInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutOffersInput, Prisma.ClientUncheckedCreateWithoutOffersInput>
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutOffersInput
+  upsert?: Prisma.ClientUpsertWithoutOffersInput
+  connect?: Prisma.ClientWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ClientUpdateToOneWithWhereWithoutOffersInput, Prisma.ClientUpdateWithoutOffersInput>, Prisma.ClientUncheckedUpdateWithoutOffersInput>
+}
+
 export type ClientCreateNestedOneWithoutProjectsInput = {
   create?: Prisma.XOR<Prisma.ClientCreateWithoutProjectsInput, Prisma.ClientUncheckedCreateWithoutProjectsInput>
   connectOrCreate?: Prisma.ClientCreateOrConnectWithoutProjectsInput
@@ -502,6 +530,20 @@ export type ClientUpdateOneRequiredWithoutProjectsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ClientUpdateToOneWithWhereWithoutProjectsInput, Prisma.ClientUpdateWithoutProjectsInput>, Prisma.ClientUncheckedUpdateWithoutProjectsInput>
 }
 
+export type ClientCreateNestedOneWithoutSupportRequestsInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutSupportRequestsInput, Prisma.ClientUncheckedCreateWithoutSupportRequestsInput>
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutSupportRequestsInput
+  connect?: Prisma.ClientWhereUniqueInput
+}
+
+export type ClientUpdateOneRequiredWithoutSupportRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutSupportRequestsInput, Prisma.ClientUncheckedCreateWithoutSupportRequestsInput>
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutSupportRequestsInput
+  upsert?: Prisma.ClientUpsertWithoutSupportRequestsInput
+  connect?: Prisma.ClientWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ClientUpdateToOneWithWhereWithoutSupportRequestsInput, Prisma.ClientUpdateWithoutSupportRequestsInput>, Prisma.ClientUncheckedUpdateWithoutSupportRequestsInput>
+}
+
 export type ClientCreateWithoutContactsInput = {
   id?: string
   name: string
@@ -514,6 +556,8 @@ export type ClientCreateWithoutContactsInput = {
   updatedAt?: Date | string
   leads?: Prisma.LeadCreateNestedManyWithoutClientInput
   projects?: Prisma.ProjectCreateNestedManyWithoutClientInput
+  offers?: Prisma.OfferCreateNestedManyWithoutClientInput
+  supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutClientInput
 }
 
 export type ClientUncheckedCreateWithoutContactsInput = {
@@ -528,6 +572,8 @@ export type ClientUncheckedCreateWithoutContactsInput = {
   updatedAt?: Date | string
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClientInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
+  offers?: Prisma.OfferUncheckedCreateNestedManyWithoutClientInput
+  supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientCreateOrConnectWithoutContactsInput = {
@@ -578,6 +624,8 @@ export type ClientCreateWithoutLeadsInput = {
   updatedAt?: Date | string
   contacts?: Prisma.ContactCreateNestedManyWithoutClientsInput
   projects?: Prisma.ProjectCreateNestedManyWithoutClientInput
+  offers?: Prisma.OfferCreateNestedManyWithoutClientInput
+  supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutClientInput
 }
 
 export type ClientUncheckedCreateWithoutLeadsInput = {
@@ -592,6 +640,8 @@ export type ClientUncheckedCreateWithoutLeadsInput = {
   updatedAt?: Date | string
   contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutClientsInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
+  offers?: Prisma.OfferUncheckedCreateNestedManyWithoutClientInput
+  supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientCreateOrConnectWithoutLeadsInput = {
@@ -622,6 +672,8 @@ export type ClientUpdateWithoutLeadsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUpdateManyWithoutClientsNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
+  offers?: Prisma.OfferUpdateManyWithoutClientNestedInput
+  supportRequests?: Prisma.SupportRequestUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUncheckedUpdateWithoutLeadsInput = {
@@ -636,6 +688,88 @@ export type ClientUncheckedUpdateWithoutLeadsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUncheckedUpdateManyWithoutClientsNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
+  offers?: Prisma.OfferUncheckedUpdateManyWithoutClientNestedInput
+  supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutClientNestedInput
+}
+
+export type ClientCreateWithoutOffersInput = {
+  id?: string
+  name: string
+  billingEmail?: string | null
+  phone?: string | null
+  organizationNumber?: string | null
+  billingAddress?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  contacts?: Prisma.ContactCreateNestedManyWithoutClientsInput
+  leads?: Prisma.LeadCreateNestedManyWithoutClientInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutClientInput
+  supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutClientInput
+}
+
+export type ClientUncheckedCreateWithoutOffersInput = {
+  id?: string
+  name: string
+  billingEmail?: string | null
+  phone?: string | null
+  organizationNumber?: string | null
+  billingAddress?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutClientsInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClientInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
+  supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutClientInput
+}
+
+export type ClientCreateOrConnectWithoutOffersInput = {
+  where: Prisma.ClientWhereUniqueInput
+  create: Prisma.XOR<Prisma.ClientCreateWithoutOffersInput, Prisma.ClientUncheckedCreateWithoutOffersInput>
+}
+
+export type ClientUpsertWithoutOffersInput = {
+  update: Prisma.XOR<Prisma.ClientUpdateWithoutOffersInput, Prisma.ClientUncheckedUpdateWithoutOffersInput>
+  create: Prisma.XOR<Prisma.ClientCreateWithoutOffersInput, Prisma.ClientUncheckedCreateWithoutOffersInput>
+  where?: Prisma.ClientWhereInput
+}
+
+export type ClientUpdateToOneWithWhereWithoutOffersInput = {
+  where?: Prisma.ClientWhereInput
+  data: Prisma.XOR<Prisma.ClientUpdateWithoutOffersInput, Prisma.ClientUncheckedUpdateWithoutOffersInput>
+}
+
+export type ClientUpdateWithoutOffersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  billingEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contacts?: Prisma.ContactUpdateManyWithoutClientsNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutClientNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
+  supportRequests?: Prisma.SupportRequestUpdateManyWithoutClientNestedInput
+}
+
+export type ClientUncheckedUpdateWithoutOffersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  billingEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contacts?: Prisma.ContactUncheckedUpdateManyWithoutClientsNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutClientNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
+  supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutClientNestedInput
 }
 
 export type ClientCreateWithoutProjectsInput = {
@@ -650,6 +784,8 @@ export type ClientCreateWithoutProjectsInput = {
   updatedAt?: Date | string
   contacts?: Prisma.ContactCreateNestedManyWithoutClientsInput
   leads?: Prisma.LeadCreateNestedManyWithoutClientInput
+  offers?: Prisma.OfferCreateNestedManyWithoutClientInput
+  supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutClientInput
 }
 
 export type ClientUncheckedCreateWithoutProjectsInput = {
@@ -664,6 +800,8 @@ export type ClientUncheckedCreateWithoutProjectsInput = {
   updatedAt?: Date | string
   contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutClientsInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClientInput
+  offers?: Prisma.OfferUncheckedCreateNestedManyWithoutClientInput
+  supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientCreateOrConnectWithoutProjectsInput = {
@@ -694,6 +832,8 @@ export type ClientUpdateWithoutProjectsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUpdateManyWithoutClientsNestedInput
   leads?: Prisma.LeadUpdateManyWithoutClientNestedInput
+  offers?: Prisma.OfferUpdateManyWithoutClientNestedInput
+  supportRequests?: Prisma.SupportRequestUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUncheckedUpdateWithoutProjectsInput = {
@@ -708,6 +848,88 @@ export type ClientUncheckedUpdateWithoutProjectsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUncheckedUpdateManyWithoutClientsNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutClientNestedInput
+  offers?: Prisma.OfferUncheckedUpdateManyWithoutClientNestedInput
+  supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutClientNestedInput
+}
+
+export type ClientCreateWithoutSupportRequestsInput = {
+  id?: string
+  name: string
+  billingEmail?: string | null
+  phone?: string | null
+  organizationNumber?: string | null
+  billingAddress?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  contacts?: Prisma.ContactCreateNestedManyWithoutClientsInput
+  leads?: Prisma.LeadCreateNestedManyWithoutClientInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutClientInput
+  offers?: Prisma.OfferCreateNestedManyWithoutClientInput
+}
+
+export type ClientUncheckedCreateWithoutSupportRequestsInput = {
+  id?: string
+  name: string
+  billingEmail?: string | null
+  phone?: string | null
+  organizationNumber?: string | null
+  billingAddress?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutClientsInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClientInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
+  offers?: Prisma.OfferUncheckedCreateNestedManyWithoutClientInput
+}
+
+export type ClientCreateOrConnectWithoutSupportRequestsInput = {
+  where: Prisma.ClientWhereUniqueInput
+  create: Prisma.XOR<Prisma.ClientCreateWithoutSupportRequestsInput, Prisma.ClientUncheckedCreateWithoutSupportRequestsInput>
+}
+
+export type ClientUpsertWithoutSupportRequestsInput = {
+  update: Prisma.XOR<Prisma.ClientUpdateWithoutSupportRequestsInput, Prisma.ClientUncheckedUpdateWithoutSupportRequestsInput>
+  create: Prisma.XOR<Prisma.ClientCreateWithoutSupportRequestsInput, Prisma.ClientUncheckedCreateWithoutSupportRequestsInput>
+  where?: Prisma.ClientWhereInput
+}
+
+export type ClientUpdateToOneWithWhereWithoutSupportRequestsInput = {
+  where?: Prisma.ClientWhereInput
+  data: Prisma.XOR<Prisma.ClientUpdateWithoutSupportRequestsInput, Prisma.ClientUncheckedUpdateWithoutSupportRequestsInput>
+}
+
+export type ClientUpdateWithoutSupportRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  billingEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contacts?: Prisma.ContactUpdateManyWithoutClientsNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutClientNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
+  offers?: Prisma.OfferUpdateManyWithoutClientNestedInput
+}
+
+export type ClientUncheckedUpdateWithoutSupportRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  billingEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contacts?: Prisma.ContactUncheckedUpdateManyWithoutClientsNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutClientNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
+  offers?: Prisma.OfferUncheckedUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUpdateWithoutContactsInput = {
@@ -722,6 +944,8 @@ export type ClientUpdateWithoutContactsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leads?: Prisma.LeadUpdateManyWithoutClientNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
+  offers?: Prisma.OfferUpdateManyWithoutClientNestedInput
+  supportRequests?: Prisma.SupportRequestUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUncheckedUpdateWithoutContactsInput = {
@@ -736,6 +960,8 @@ export type ClientUncheckedUpdateWithoutContactsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leads?: Prisma.LeadUncheckedUpdateManyWithoutClientNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
+  offers?: Prisma.OfferUncheckedUpdateManyWithoutClientNestedInput
+  supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUncheckedUpdateManyWithoutContactsInput = {
@@ -759,12 +985,16 @@ export type ClientCountOutputType = {
   contacts: number
   leads: number
   projects: number
+  offers: number
+  supportRequests: number
 }
 
 export type ClientCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   contacts?: boolean | ClientCountOutputTypeCountContactsArgs
   leads?: boolean | ClientCountOutputTypeCountLeadsArgs
   projects?: boolean | ClientCountOutputTypeCountProjectsArgs
+  offers?: boolean | ClientCountOutputTypeCountOffersArgs
+  supportRequests?: boolean | ClientCountOutputTypeCountSupportRequestsArgs
 }
 
 /**
@@ -798,6 +1028,20 @@ export type ClientCountOutputTypeCountProjectsArgs<ExtArgs extends runtime.Types
   where?: Prisma.ProjectWhereInput
 }
 
+/**
+ * ClientCountOutputType without action
+ */
+export type ClientCountOutputTypeCountOffersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OfferWhereInput
+}
+
+/**
+ * ClientCountOutputType without action
+ */
+export type ClientCountOutputTypeCountSupportRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SupportRequestWhereInput
+}
+
 
 export type ClientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -812,6 +1056,8 @@ export type ClientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   contacts?: boolean | Prisma.Client$contactsArgs<ExtArgs>
   leads?: boolean | Prisma.Client$leadsArgs<ExtArgs>
   projects?: boolean | Prisma.Client$projectsArgs<ExtArgs>
+  offers?: boolean | Prisma.Client$offersArgs<ExtArgs>
+  supportRequests?: boolean | Prisma.Client$supportRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.ClientCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["client"]>
 
@@ -856,6 +1102,8 @@ export type ClientInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   contacts?: boolean | Prisma.Client$contactsArgs<ExtArgs>
   leads?: boolean | Prisma.Client$leadsArgs<ExtArgs>
   projects?: boolean | Prisma.Client$projectsArgs<ExtArgs>
+  offers?: boolean | Prisma.Client$offersArgs<ExtArgs>
+  supportRequests?: boolean | Prisma.Client$supportRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.ClientCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ClientIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -867,6 +1115,8 @@ export type $ClientPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     contacts: Prisma.$ContactPayload<ExtArgs>[]
     leads: Prisma.$LeadPayload<ExtArgs>[]
     projects: Prisma.$ProjectPayload<ExtArgs>[]
+    offers: Prisma.$OfferPayload<ExtArgs>[]
+    supportRequests: Prisma.$SupportRequestPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1275,6 +1525,8 @@ export interface Prisma__ClientClient<T, Null = never, ExtArgs extends runtime.T
   contacts<T extends Prisma.Client$contactsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$contactsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   leads<T extends Prisma.Client$leadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$leadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   projects<T extends Prisma.Client$projectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  offers<T extends Prisma.Client$offersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$offersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  supportRequests<T extends Prisma.Client$supportRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$supportRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupportRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1775,6 +2027,54 @@ export type Client$projectsArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.ProjectScalarFieldEnum | Prisma.ProjectScalarFieldEnum[]
+}
+
+/**
+ * Client.offers
+ */
+export type Client$offersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Offer
+   */
+  select?: Prisma.OfferSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Offer
+   */
+  omit?: Prisma.OfferOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OfferInclude<ExtArgs> | null
+  where?: Prisma.OfferWhereInput
+  orderBy?: Prisma.OfferOrderByWithRelationInput | Prisma.OfferOrderByWithRelationInput[]
+  cursor?: Prisma.OfferWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OfferScalarFieldEnum | Prisma.OfferScalarFieldEnum[]
+}
+
+/**
+ * Client.supportRequests
+ */
+export type Client$supportRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SupportRequest
+   */
+  select?: Prisma.SupportRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SupportRequest
+   */
+  omit?: Prisma.SupportRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SupportRequestInclude<ExtArgs> | null
+  where?: Prisma.SupportRequestWhereInput
+  orderBy?: Prisma.SupportRequestOrderByWithRelationInput | Prisma.SupportRequestOrderByWithRelationInput[]
+  cursor?: Prisma.SupportRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SupportRequestScalarFieldEnum | Prisma.SupportRequestScalarFieldEnum[]
 }
 
 /**

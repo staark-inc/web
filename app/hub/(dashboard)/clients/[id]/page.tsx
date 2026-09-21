@@ -2,7 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   ArrowLeft,
-  Building2,
+  FileText,
+  LifeBuoy,
   Mail,
   Target,
   UserRound,
@@ -10,6 +11,8 @@ import {
 
 import { prisma } from "@/lib/prisma";
 import { formatAmount } from "@/lib/format";
+import { formatOfferAmount, offerStatusLabels } from "@/lib/offers";
+import { supportStatusLabels } from "@/lib/support";
 
 import ClientForm from "../ClientForm";
 
@@ -62,6 +65,16 @@ export default async function ClientDetailPage({ params }: PageProps) {
           status: true,
           createdAt: true,
         },
+      },
+
+      offers: {
+        orderBy: { createdAt: "desc" },
+        select: { id: true, title: true, status: true, oneTimePriceOre: true },
+      },
+      supportRequests: {
+        orderBy: { updatedAt: "desc" },
+        select: { id: true, title: true, status: true },
+        take: 20,
       },
     },
   });
@@ -169,6 +182,32 @@ export default async function ClientDetailPage({ params }: PageProps) {
                 ))}
               </ul>
             )}
+          </div>
+          <div className="hub-client-panel">
+            <h2><FileText size={16} />Offers ({client.offers.length})</h2>
+            {client.offers.length === 0 ? (
+              <p className="hub-client-empty"><Link href={`/hub/offers/new?clientId=${encodeURIComponent(client.id)}`}>Create an offer for this client</Link></p>
+            ) : (
+              <ul className="hub-client-related">
+                {client.offers.map((offer) => (
+                  <li key={offer.id}>
+                    <Link href={`/hub/offers/${offer.id}`}><strong>{offer.title}</strong></Link>
+                    <span>{offerStatusLabels[offer.status]} · {formatOfferAmount(offer.oneTimePriceOre)}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <div className="hub-client-panel">
+            <h2><LifeBuoy size={16} />Support requests</h2>
+            {client.supportRequests.length === 0 ? (
+              <p className="hub-client-empty">No requests yet.</p>
+            ) : (
+              <ul className="hub-client-related">
+                {client.supportRequests.map((request) => <li key={request.id}><Link href={`/hub/support/${request.id}`}><strong>{request.title}</strong></Link><span>{supportStatusLabels[request.status]}</span></li>)}
+              </ul>
+            )}
+            <Link className="hub-secondary-button hub-support-create-link" href={`/hub/support/new?clientId=${encodeURIComponent(client.id)}`}>New support request</Link>
           </div>
         </div>
       </section>

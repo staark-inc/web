@@ -2,12 +2,13 @@ import {
   Inbox,
   RefreshCw,
   Search,
-  Star,
+  Mail,
 } from "lucide-react";
 
 import Link from "next/link";
 
 import { prisma } from "@/lib/prisma";
+import { isAutomatedSender } from "@/lib/crm-mail";
 import InboxSearch from "./InboxSearch";
 
 export const dynamic = "force-dynamic";
@@ -48,8 +49,19 @@ function createPreview(
 type PageProps = {
   searchParams: Promise<{
     q?: string;
+    view?: string;
   }>;
 };
+
+type InboxView = "inbox" | "unread" | "other" | "all";
+
+function inboxHref(view: InboxView, query: string) {
+  const params = new URLSearchParams();
+  if (view !== "inbox") params.set("view", view);
+  if (query) params.set("q", query);
+  const suffix = params.toString();
+  return `/hub/inbox${suffix ? `?${suffix}` : ""}`;
+}
 
 export default async function HubInboxPage({
   searchParams,
@@ -63,8 +75,12 @@ export default async function HubInboxPage({
    * in Inbox.
    */
 
-  const { q } = await searchParams;
+  const { q, view } = await searchParams;
   const query = q?.trim() ?? "";
+  const activeView: InboxView =
+    view === "unread" || view === "other" || view === "all"
+      ? view
+      : "inbox";
 
   const threads =
     await prisma.thread.findMany({
@@ -189,6 +205,49 @@ export default async function HubInboxPage({
   const messageCountMap =
     new Map<string, number>();
 
+  // Classify older automated conversations that were imported before
+  // the Gmail webhook began skipping automated senders.
+  const inboundSenders = threadIds.length
+    ? await prisma.message.findMany({
+        where: {
+          threadId: { in: threadIds },
+          direction: "INBOUND",
+        },
+        select: { threadId: true, fromEmail: true },
+        orderBy: { createdAt: "asc" },
+      })
+    : [];
+  const senderByThread = new Map<string, string>();
+  for (const message of inboundSenders) {
+    if (message.threadId && !senderByThread.has(message.threadId)) {
+      senderByThread.set(message.threadId, message.fromEmail);
+    }
+  }
+
+  const otherThreads = new Set(
+    threads
+      .filter((thread) =>
+        isAutomatedSender(
+          senderByThread.get(thread.id) ?? "",
+          process.env.CRM_BLOCKED_SENDERS
+        )
+      )
+      .map((thread) => thread.id)
+  );
+  const customerThreads = threads.filter((thread) => !otherThreads.has(thread.id));
+  const counts: Record<InboxView, number> = {
+    inbox: customerThreads.length,
+    unread: customerThreads.filter((thread) => thread._count.messages > 0).length,
+    other: otherThreads.size,
+    all: threads.length,
+  };
+  const visibleThreads = threads.filter((thread) => {
+    if (activeView === "all") return true;
+    if (activeView === "other") return otherThreads.has(thread.id);
+    return !otherThreads.has(thread.id) &&
+      (activeView !== "unread" || thread._count.messages > 0);
+  });
+
   for (
     const item of messageCounts
   ) {
@@ -205,7 +264,7 @@ export default async function HubInboxPage({
    */
 
   const unreadCount =
-    threads.reduce(
+    visibleThreads.reduce(
       (total, thread) =>
         total +
         thread._count.messages,
@@ -231,7 +290,7 @@ export default async function HubInboxPage({
         </div>
 
         <Link
-          href="/hub/inbox"
+          href={inboxHref(activeView, query)}
           className="hub-secondary-button"
           aria-label="Refresh inbox"
         >
@@ -244,14 +303,14 @@ export default async function HubInboxPage({
       {/* TOOLBAR */}
 
       <div className="hub-toolbar">
-        <InboxSearch initialQuery={query} />
+        <InboxSearch initialQuery={query} view={activeView} />
 
         <div className="hub-inbox-total">
           <Inbox size={16} />
 
           <span>
-            {threads.length}{" "}
-            {threads.length === 1
+            {visibleThreads.length}{" "}
+            {visibleThreads.length === 1
               ? "conversation"
               : "conversations"}
             {query && " found"}
@@ -259,9 +318,27 @@ export default async function HubInboxPage({
         </div>
       </div>
 
+      <nav className="hub-inbox-tabs" aria-label="Inbox views">
+        {([
+          ["inbox", "Inbox"],
+          ["unread", "Unread"],
+          ["other", "Other"],
+          ["all", "All mail"],
+        ] as const).map(([key, label]) => (
+          <Link
+            key={key}
+            href={inboxHref(key, query)}
+            className={`hub-inbox-tab ${activeView === key ? "hub-inbox-tab-active" : ""}`}
+            aria-current={activeView === key ? "page" : undefined}
+          >
+            {label} <span>{counts[key]}</span>
+          </Link>
+        ))}
+      </nav>
+
       {/* EMPTY INBOX */}
 
-      {threads.length === 0 ? (
+      {visibleThreads.length === 0 ? (
         <section className="hub-empty-inbox">
           {query ? (
             <>
@@ -277,7 +354,7 @@ export default async function HubInboxPage({
               </p>
 
               <Link
-                href="/hub/inbox"
+                href={inboxHref(activeView, "")}
                 className="hub-secondary-button"
               >
                 Clear search
@@ -288,13 +365,19 @@ export default async function HubInboxPage({
               <Inbox size={28} />
 
               <h2>
-                Your inbox is empty
+                {activeView === "unread"
+                  ? "All caught up"
+                  : activeView === "other"
+                    ? "No other messages"
+                    : "Your inbox is empty"}
               </h2>
 
               <p>
-                New customer conversations
-                will appear here
-                automatically.
+                {activeView === "other"
+                  ? "Previously imported automated messages appear here. Nothing is deleted."
+                  : activeView === "unread"
+                    ? "You have no unread customer conversations."
+                    : "New customer conversations will appear here automatically."}
               </p>
             </>
           )}
@@ -305,7 +388,7 @@ export default async function HubInboxPage({
          */
 
         <section className="hub-mail-list">
-          {threads.map(
+          {visibleThreads.map(
             (thread) => {
               const latestMessage =
                 thread.messages[0];
@@ -371,7 +454,7 @@ export default async function HubInboxPage({
                       <span className="hub-unread-dot" />
                     )}
 
-                    <Star size={17} />
+                    <Mail size={16} aria-hidden="true" />
                   </div>
 
                   {/* CUSTOMER */}

@@ -16,6 +16,7 @@ import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@/generated/prisma/client";
 import GmailAttachments from "./GmailAttachments";
+import ThreadMessageBody from "./ThreadMessageBody";
 import {
   publishCurrentBadges,
 } from "@/lib/realtime";
@@ -41,61 +42,6 @@ function formatDate(date: Date) {
       minute: "2-digit",
     }
   ).format(date);
-}
-
-/*
- * Gmail's HTML-to-text conversion emits links as `label<https://...>`.
- * Rendering the raw URL floods the thread, so the label becomes the anchor
- * and the URL moves to the title attribute.
- */
-function formatMessageBody(value: string) {
-  const pattern = /(\S[^\n<]*?)?<(https?:\/\/[^\s>]+)>|(https?:\/\/[^\s<>]+)/g;
-  const nodes: React.ReactNode[] = [];
-
-  let lastIndex = 0;
-  let match: RegExpExecArray | null;
-  let key = 0;
-
-  while ((match = pattern.exec(value)) !== null) {
-    const [full, label, wrappedUrl, bareUrl] = match;
-    const url = wrappedUrl ?? bareUrl;
-
-    let start = match.index;
-    if (wrappedUrl && label) {
-      start += full.indexOf(label);
-    }
-
-    if (start > lastIndex) {
-      nodes.push(value.slice(lastIndex, start));
-    }
-
-    let text = label?.trim() || url;
-    if (!label) {
-      try {
-        text = new URL(url).hostname.replace(/^www\./, "");
-      } catch {
-        text = url;
-      }
-    }
-
-    nodes.push(
-      <a
-        key={key++}
-        href={url}
-        title={url}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {text}
-      </a>
-    );
-
-    lastIndex = match.index + full.length;
-  }
-
-  nodes.push(value.slice(lastIndex));
-
-  return nodes;
 }
 
 function createReplySubject(
@@ -406,9 +352,7 @@ export default async function ThreadPage({
 
                 {/* MESSAGE BODY */}
 
-                <div className="hub-thread-message-body">
-                  {formatMessageBody(message.body)}
-                </div>
+                <ThreadMessageBody body={message.body} />
 
                 {(attachmentsByMessage.get(message.id)?.length ?? 0) > 0 && (
                   <div className="hub-thread-attachments">

@@ -23,6 +23,7 @@ import {
   type SearchConsoleOverview,
 } from "@/lib/search-console";
 import { prisma } from "@/lib/prisma";
+import { getCustomerUnreadCount } from "@/lib/crm-unread";
 import {
   getGa4Overview,
   type Ga4Overview,
@@ -222,12 +223,7 @@ const githubPromise = getGitHubOverview()
         },
       }),
 
-      prisma.message.count({
-        where: {
-          direction: "INBOUND",
-          isRead: false,
-        },
-      }),
+      getCustomerUnreadCount(),
 
       prisma.contact.count(),
 

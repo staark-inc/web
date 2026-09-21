@@ -29,6 +29,7 @@ function toDateValue(date: Date | null) {
 
 type ProjectFormProps = {
   clients: { id: string; name: string }[];
+  defaultClientId?: string;
   project?: {
     id: string;
     name: string;
@@ -45,6 +46,7 @@ type ProjectFormProps = {
 export default function ProjectForm({
   clients,
   project,
+  defaultClientId,
 }: ProjectFormProps) {
   const [state, formAction, pending] = useActionState(
     project ? updateProject : createProject,
@@ -75,7 +77,7 @@ export default function ProjectForm({
           <select
             id="project-client"
             name="clientId"
-            defaultValue={project?.clientId ?? ""}
+            defaultValue={project?.clientId ?? defaultClientId ?? ""}
             required
             disabled={pending}
           >

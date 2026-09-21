@@ -35,6 +35,35 @@ export const LeadStatus = {
 export type LeadStatus = (typeof LeadStatus)[keyof typeof LeadStatus]
 
 
+export const OfferStatus = {
+  DRAFT: 'DRAFT',
+  SHARED: 'SHARED',
+  ACCEPTED: 'ACCEPTED',
+  DECLINED: 'DECLINED'
+} as const
+
+export type OfferStatus = (typeof OfferStatus)[keyof typeof OfferStatus]
+
+
+export const SupportStatus = {
+  OPEN: 'OPEN',
+  IN_PROGRESS: 'IN_PROGRESS',
+  WAITING_CLIENT: 'WAITING_CLIENT',
+  RESOLVED: 'RESOLVED'
+} as const
+
+export type SupportStatus = (typeof SupportStatus)[keyof typeof SupportStatus]
+
+
+export const SupportCoverage = {
+  UNASSESSED: 'UNASSESSED',
+  INCLUDED: 'INCLUDED',
+  EXTRA: 'EXTRA'
+} as const
+
+export type SupportCoverage = (typeof SupportCoverage)[keyof typeof SupportCoverage]
+
+
 export const ProjectStatus = {
   PLANNING: 'PLANNING',
   IN_PROGRESS: 'IN_PROGRESS',

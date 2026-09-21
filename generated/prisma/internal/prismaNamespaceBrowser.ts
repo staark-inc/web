@@ -56,11 +56,13 @@ export const ModelName = {
   Contact: 'Contact',
   Lead: 'Lead',
   Client: 'Client',
+  Offer: 'Offer',
   Project: 'Project',
   ProjectMaterial: 'ProjectMaterial',
   ProjectActivity: 'ProjectActivity',
   ProjectTask: 'ProjectTask',
   Thread: 'Thread',
+  SupportRequest: 'SupportRequest',
   Message: 'Message',
   MessageAttachment: 'MessageAttachment'
 } as const
@@ -155,6 +157,25 @@ export const ClientScalarFieldEnum = {
 export type ClientScalarFieldEnum = (typeof ClientScalarFieldEnum)[keyof typeof ClientScalarFieldEnum]
 
 
+export const OfferScalarFieldEnum = {
+  id: 'id',
+  clientId: 'clientId',
+  title: 'title',
+  scope: 'scope',
+  terms: 'terms',
+  oneTimePriceOre: 'oneTimePriceOre',
+  monthlyPriceOre: 'monthlyPriceOre',
+  includedMonths: 'includedMonths',
+  status: 'status',
+  sharedAt: 'sharedAt',
+  decidedAt: 'decidedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OfferScalarFieldEnum = (typeof OfferScalarFieldEnum)[keyof typeof OfferScalarFieldEnum]
+
+
 export const ProjectScalarFieldEnum = {
   id: 'id',
   clientId: 'clientId',
@@ -221,6 +242,25 @@ export const ThreadScalarFieldEnum = {
 } as const
 
 export type ThreadScalarFieldEnum = (typeof ThreadScalarFieldEnum)[keyof typeof ThreadScalarFieldEnum]
+
+
+export const SupportRequestScalarFieldEnum = {
+  id: 'id',
+  clientId: 'clientId',
+  projectId: 'projectId',
+  threadId: 'threadId',
+  title: 'title',
+  description: 'description',
+  internalNotes: 'internalNotes',
+  status: 'status',
+  coverage: 'coverage',
+  timeSpentMinutes: 'timeSpentMinutes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  resolvedAt: 'resolvedAt'
+} as const
+
+export type SupportRequestScalarFieldEnum = (typeof SupportRequestScalarFieldEnum)[keyof typeof SupportRequestScalarFieldEnum]
 
 
 export const MessageScalarFieldEnum = {

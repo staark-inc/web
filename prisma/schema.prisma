@@ -24,6 +24,26 @@ enum LeadStatus {
   LOST
 }
 
+enum OfferStatus {
+  DRAFT
+  SHARED
+  ACCEPTED
+  DECLINED
+}
+
+enum SupportStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING_CLIENT
+  RESOLVED
+}
+
+enum SupportCoverage {
+  UNASSESSED
+  INCLUDED
+  EXTRA
+}
+
 enum ProjectStatus {
   PLANNING
   IN_PROGRESS
@@ -130,8 +150,33 @@ model Client {
   contacts Contact[]
   leads    Lead[]
   projects Project[]
+  offers   Offer[]
+  supportRequests SupportRequest[]
 
   @@index([name])
+  @@index([createdAt])
+}
+
+model Offer {
+  id       String @id @default(cuid())
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Restrict)
+
+  title           String
+  scope           String?
+  terms           String?
+  oneTimePriceOre Int?
+  monthlyPriceOre Int?
+  includedMonths  Int @default(6)
+  status          OfferStatus @default(DRAFT)
+  sharedAt        DateTime?
+  decidedAt       DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([clientId])
+  @@index([status])
   @@index([createdAt])
 }
 
@@ -161,6 +206,7 @@ model Project {
   tasks      ProjectTask[]
   materials  ProjectMaterial[]
   activities ProjectActivity[]
+  supportRequests SupportRequest[]
 
   @@index([clientId])
   @@index([status])
@@ -229,9 +275,40 @@ model Thread {
 
   messages Message[]
   projects Project[]
+  supportRequests SupportRequest[]
 
   @@index([contactId])
   @@index([updatedAt])
+}
+
+model SupportRequest {
+  id String @id @default(cuid())
+
+  clientId String
+  client Client @relation(fields: [clientId], references: [id], onDelete: Restrict)
+
+  projectId String?
+  project Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  threadId String?
+  thread Thread? @relation(fields: [threadId], references: [id], onDelete: SetNull)
+
+  title String
+  description String?
+  internalNotes String?
+  status SupportStatus @default(OPEN)
+  coverage SupportCoverage @default(UNASSESSED)
+  timeSpentMinutes Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  resolvedAt DateTime?
+
+  @@index([clientId])
+  @@index([projectId])
+  @@index([threadId])
+  @@index([status])
+  @@index([createdAt])
 }
 
 model Message {

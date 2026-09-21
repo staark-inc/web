@@ -7,6 +7,7 @@ import {
 } from "@/lib/gmail";
 
 import { prisma } from "@/lib/prisma";
+import { isAutomatedSender } from "@/lib/crm-mail";
 
 import {
   publishCurrentBadges,
@@ -685,25 +686,15 @@ async function importGmailMessage(
 
   const autoSubmitted = getHeader(headers, "Auto-Submitted").toLowerCase();
   const precedence = getHeader(headers, "Precedence").toLowerCase();
-  const localPart = from.email.split("@")[0] ?? "";
-  const blockedSenders = (process.env.CRM_BLOCKED_SENDERS ?? "")
-    .split(",")
-    .map((value) => value.trim().toLowerCase())
-    .filter(Boolean);
 
   if (
     (autoSubmitted && autoSubmitted !== "no") ||
     /^(bulk|list|junk)$/.test(precedence) ||
     Boolean(getHeader(headers, "List-Unsubscribe")) ||
     Boolean(getHeader(headers, "List-Id")) ||
-    /^(no[._-]?reply|do[._-]?not[._-]?reply|mailer-daemon)([._+-].*)?$/.test(localPart) ||
+    isAutomatedSender(from.email, process.env.CRM_BLOCKED_SENDERS) ||
     gmailMessage.labelIds?.some((label) =>
       ["CATEGORY_PROMOTIONS", "CATEGORY_SOCIAL", "CATEGORY_FORUMS"].includes(label)
-    ) ||
-    blockedSenders.some((entry) =>
-      entry.startsWith("@")
-        ? from.email.endsWith(entry)
-        : from.email === entry
     )
   ) {
     console.log(`[GMAIL] Skipped automated message ${gmailMessage.id} from ${from.email}`);

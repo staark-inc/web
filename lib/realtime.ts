@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { getCustomerUnreadCount } from "@/lib/crm-unread";
 
 const REALTIME_URL =
   process.env.REALTIME_URL ??
@@ -74,12 +75,7 @@ export async function publishCurrentBadges() {
     inbox,
     leads,
   ] = await Promise.all([
-    prisma.message.count({
-      where: {
-        direction: "INBOUND",
-        isRead: false,
-      },
-    }),
+    getCustomerUnreadCount(),
 
     prisma.lead.count({
       where: {

@@ -67,6 +67,11 @@ export type Lead = Prisma.LeadModel
  */
 export type Client = Prisma.ClientModel
 /**
+ * Model Offer
+ * 
+ */
+export type Offer = Prisma.OfferModel
+/**
  * Model Project
  * 
  */
@@ -91,6 +96,11 @@ export type ProjectTask = Prisma.ProjectTaskModel
  * 
  */
 export type Thread = Prisma.ThreadModel
+/**
+ * Model SupportRequest
+ * 
+ */
+export type SupportRequest = Prisma.SupportRequestModel
 /**
  * Model Message
  * 

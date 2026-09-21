@@ -6,11 +6,11 @@ import {
 } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
+import { getCustomerUnreadCount } from "@/lib/crm-unread";
 import HubNav from "./HubNav";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 export const dynamic = "force-dynamic";
-import SignOutButton from "./SignOutButton";
 import LiveUpdates from "./LiveUpdates";
 
 export default async function HubDashboardLayout({
@@ -26,12 +26,7 @@ export default async function HubDashboardLayout({
   
 const [unreadCount, newLeadCount] =
   await Promise.all([
-    prisma.message.count({
-      where: {
-        direction: "INBOUND",
-        isRead: false,
-      },
-    }),
+    getCustomerUnreadCount(),
 
     prisma.lead.count({
       where: {

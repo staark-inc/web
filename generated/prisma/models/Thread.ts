@@ -193,6 +193,7 @@ export type ThreadWhereInput = {
   contact?: Prisma.XOR<Prisma.ContactNullableScalarRelationFilter, Prisma.ContactWhereInput> | null
   messages?: Prisma.MessageListRelationFilter
   projects?: Prisma.ProjectListRelationFilter
+  supportRequests?: Prisma.SupportRequestListRelationFilter
 }
 
 export type ThreadOrderByWithRelationInput = {
@@ -205,6 +206,7 @@ export type ThreadOrderByWithRelationInput = {
   contact?: Prisma.ContactOrderByWithRelationInput
   messages?: Prisma.MessageOrderByRelationAggregateInput
   projects?: Prisma.ProjectOrderByRelationAggregateInput
+  supportRequests?: Prisma.SupportRequestOrderByRelationAggregateInput
 }
 
 export type ThreadWhereUniqueInput = Prisma.AtLeast<{
@@ -220,6 +222,7 @@ export type ThreadWhereUniqueInput = Prisma.AtLeast<{
   contact?: Prisma.XOR<Prisma.ContactNullableScalarRelationFilter, Prisma.ContactWhereInput> | null
   messages?: Prisma.MessageListRelationFilter
   projects?: Prisma.ProjectListRelationFilter
+  supportRequests?: Prisma.SupportRequestListRelationFilter
 }, "id" | "gmailThreadId">
 
 export type ThreadOrderByWithAggregationInput = {
@@ -255,6 +258,7 @@ export type ThreadCreateInput = {
   contact?: Prisma.ContactCreateNestedOneWithoutThreadsInput
   messages?: Prisma.MessageCreateNestedManyWithoutThreadInput
   projects?: Prisma.ProjectCreateNestedManyWithoutThreadInput
+  supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutThreadInput
 }
 
 export type ThreadUncheckedCreateInput = {
@@ -266,6 +270,7 @@ export type ThreadUncheckedCreateInput = {
   updatedAt?: Date | string
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutThreadInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutThreadInput
+  supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutThreadInput
 }
 
 export type ThreadUpdateInput = {
@@ -277,6 +282,7 @@ export type ThreadUpdateInput = {
   contact?: Prisma.ContactUpdateOneWithoutThreadsNestedInput
   messages?: Prisma.MessageUpdateManyWithoutThreadNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutThreadNestedInput
+  supportRequests?: Prisma.SupportRequestUpdateManyWithoutThreadNestedInput
 }
 
 export type ThreadUncheckedUpdateInput = {
@@ -288,6 +294,7 @@ export type ThreadUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   messages?: Prisma.MessageUncheckedUpdateManyWithoutThreadNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutThreadNestedInput
+  supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutThreadNestedInput
 }
 
 export type ThreadCreateManyInput = {
@@ -416,6 +423,22 @@ export type ThreadUpdateOneWithoutProjectsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ThreadUpdateToOneWithWhereWithoutProjectsInput, Prisma.ThreadUpdateWithoutProjectsInput>, Prisma.ThreadUncheckedUpdateWithoutProjectsInput>
 }
 
+export type ThreadCreateNestedOneWithoutSupportRequestsInput = {
+  create?: Prisma.XOR<Prisma.ThreadCreateWithoutSupportRequestsInput, Prisma.ThreadUncheckedCreateWithoutSupportRequestsInput>
+  connectOrCreate?: Prisma.ThreadCreateOrConnectWithoutSupportRequestsInput
+  connect?: Prisma.ThreadWhereUniqueInput
+}
+
+export type ThreadUpdateOneWithoutSupportRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.ThreadCreateWithoutSupportRequestsInput, Prisma.ThreadUncheckedCreateWithoutSupportRequestsInput>
+  connectOrCreate?: Prisma.ThreadCreateOrConnectWithoutSupportRequestsInput
+  upsert?: Prisma.ThreadUpsertWithoutSupportRequestsInput
+  disconnect?: Prisma.ThreadWhereInput | boolean
+  delete?: Prisma.ThreadWhereInput | boolean
+  connect?: Prisma.ThreadWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ThreadUpdateToOneWithWhereWithoutSupportRequestsInput, Prisma.ThreadUpdateWithoutSupportRequestsInput>, Prisma.ThreadUncheckedUpdateWithoutSupportRequestsInput>
+}
+
 export type ThreadCreateNestedOneWithoutMessagesInput = {
   create?: Prisma.XOR<Prisma.ThreadCreateWithoutMessagesInput, Prisma.ThreadUncheckedCreateWithoutMessagesInput>
   connectOrCreate?: Prisma.ThreadCreateOrConnectWithoutMessagesInput
@@ -440,6 +463,7 @@ export type ThreadCreateWithoutContactInput = {
   updatedAt?: Date | string
   messages?: Prisma.MessageCreateNestedManyWithoutThreadInput
   projects?: Prisma.ProjectCreateNestedManyWithoutThreadInput
+  supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutThreadInput
 }
 
 export type ThreadUncheckedCreateWithoutContactInput = {
@@ -450,6 +474,7 @@ export type ThreadUncheckedCreateWithoutContactInput = {
   updatedAt?: Date | string
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutThreadInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutThreadInput
+  supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutThreadInput
 }
 
 export type ThreadCreateOrConnectWithoutContactInput = {
@@ -498,6 +523,7 @@ export type ThreadCreateWithoutProjectsInput = {
   updatedAt?: Date | string
   contact?: Prisma.ContactCreateNestedOneWithoutThreadsInput
   messages?: Prisma.MessageCreateNestedManyWithoutThreadInput
+  supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutThreadInput
 }
 
 export type ThreadUncheckedCreateWithoutProjectsInput = {
@@ -508,6 +534,7 @@ export type ThreadUncheckedCreateWithoutProjectsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutThreadInput
+  supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutThreadInput
 }
 
 export type ThreadCreateOrConnectWithoutProjectsInput = {
@@ -534,6 +561,7 @@ export type ThreadUpdateWithoutProjectsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contact?: Prisma.ContactUpdateOneWithoutThreadsNestedInput
   messages?: Prisma.MessageUpdateManyWithoutThreadNestedInput
+  supportRequests?: Prisma.SupportRequestUpdateManyWithoutThreadNestedInput
 }
 
 export type ThreadUncheckedUpdateWithoutProjectsInput = {
@@ -544,6 +572,67 @@ export type ThreadUncheckedUpdateWithoutProjectsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   messages?: Prisma.MessageUncheckedUpdateManyWithoutThreadNestedInput
+  supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutThreadNestedInput
+}
+
+export type ThreadCreateWithoutSupportRequestsInput = {
+  id?: string
+  subject: string
+  gmailThreadId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  contact?: Prisma.ContactCreateNestedOneWithoutThreadsInput
+  messages?: Prisma.MessageCreateNestedManyWithoutThreadInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutThreadInput
+}
+
+export type ThreadUncheckedCreateWithoutSupportRequestsInput = {
+  id?: string
+  contactId?: string | null
+  subject: string
+  gmailThreadId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutThreadInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutThreadInput
+}
+
+export type ThreadCreateOrConnectWithoutSupportRequestsInput = {
+  where: Prisma.ThreadWhereUniqueInput
+  create: Prisma.XOR<Prisma.ThreadCreateWithoutSupportRequestsInput, Prisma.ThreadUncheckedCreateWithoutSupportRequestsInput>
+}
+
+export type ThreadUpsertWithoutSupportRequestsInput = {
+  update: Prisma.XOR<Prisma.ThreadUpdateWithoutSupportRequestsInput, Prisma.ThreadUncheckedUpdateWithoutSupportRequestsInput>
+  create: Prisma.XOR<Prisma.ThreadCreateWithoutSupportRequestsInput, Prisma.ThreadUncheckedCreateWithoutSupportRequestsInput>
+  where?: Prisma.ThreadWhereInput
+}
+
+export type ThreadUpdateToOneWithWhereWithoutSupportRequestsInput = {
+  where?: Prisma.ThreadWhereInput
+  data: Prisma.XOR<Prisma.ThreadUpdateWithoutSupportRequestsInput, Prisma.ThreadUncheckedUpdateWithoutSupportRequestsInput>
+}
+
+export type ThreadUpdateWithoutSupportRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  subject?: Prisma.StringFieldUpdateOperationsInput | string
+  gmailThreadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contact?: Prisma.ContactUpdateOneWithoutThreadsNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutThreadNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutThreadNestedInput
+}
+
+export type ThreadUncheckedUpdateWithoutSupportRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  contactId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subject?: Prisma.StringFieldUpdateOperationsInput | string
+  gmailThreadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutThreadNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutThreadNestedInput
 }
 
 export type ThreadCreateWithoutMessagesInput = {
@@ -554,6 +643,7 @@ export type ThreadCreateWithoutMessagesInput = {
   updatedAt?: Date | string
   contact?: Prisma.ContactCreateNestedOneWithoutThreadsInput
   projects?: Prisma.ProjectCreateNestedManyWithoutThreadInput
+  supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutThreadInput
 }
 
 export type ThreadUncheckedCreateWithoutMessagesInput = {
@@ -564,6 +654,7 @@ export type ThreadUncheckedCreateWithoutMessagesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutThreadInput
+  supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutThreadInput
 }
 
 export type ThreadCreateOrConnectWithoutMessagesInput = {
@@ -590,6 +681,7 @@ export type ThreadUpdateWithoutMessagesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contact?: Prisma.ContactUpdateOneWithoutThreadsNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutThreadNestedInput
+  supportRequests?: Prisma.SupportRequestUpdateManyWithoutThreadNestedInput
 }
 
 export type ThreadUncheckedUpdateWithoutMessagesInput = {
@@ -600,6 +692,7 @@ export type ThreadUncheckedUpdateWithoutMessagesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutThreadNestedInput
+  supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutThreadNestedInput
 }
 
 export type ThreadCreateManyContactInput = {
@@ -618,6 +711,7 @@ export type ThreadUpdateWithoutContactInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   messages?: Prisma.MessageUpdateManyWithoutThreadNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutThreadNestedInput
+  supportRequests?: Prisma.SupportRequestUpdateManyWithoutThreadNestedInput
 }
 
 export type ThreadUncheckedUpdateWithoutContactInput = {
@@ -628,6 +722,7 @@ export type ThreadUncheckedUpdateWithoutContactInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   messages?: Prisma.MessageUncheckedUpdateManyWithoutThreadNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutThreadNestedInput
+  supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutThreadNestedInput
 }
 
 export type ThreadUncheckedUpdateManyWithoutContactInput = {
@@ -646,11 +741,13 @@ export type ThreadUncheckedUpdateManyWithoutContactInput = {
 export type ThreadCountOutputType = {
   messages: number
   projects: number
+  supportRequests: number
 }
 
 export type ThreadCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   messages?: boolean | ThreadCountOutputTypeCountMessagesArgs
   projects?: boolean | ThreadCountOutputTypeCountProjectsArgs
+  supportRequests?: boolean | ThreadCountOutputTypeCountSupportRequestsArgs
 }
 
 /**
@@ -677,6 +774,13 @@ export type ThreadCountOutputTypeCountProjectsArgs<ExtArgs extends runtime.Types
   where?: Prisma.ProjectWhereInput
 }
 
+/**
+ * ThreadCountOutputType without action
+ */
+export type ThreadCountOutputTypeCountSupportRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SupportRequestWhereInput
+}
+
 
 export type ThreadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -688,6 +792,7 @@ export type ThreadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   contact?: boolean | Prisma.Thread$contactArgs<ExtArgs>
   messages?: boolean | Prisma.Thread$messagesArgs<ExtArgs>
   projects?: boolean | Prisma.Thread$projectsArgs<ExtArgs>
+  supportRequests?: boolean | Prisma.Thread$supportRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.ThreadCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["thread"]>
 
@@ -725,6 +830,7 @@ export type ThreadInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   contact?: boolean | Prisma.Thread$contactArgs<ExtArgs>
   messages?: boolean | Prisma.Thread$messagesArgs<ExtArgs>
   projects?: boolean | Prisma.Thread$projectsArgs<ExtArgs>
+  supportRequests?: boolean | Prisma.Thread$supportRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.ThreadCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ThreadIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -740,6 +846,7 @@ export type $ThreadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     contact: Prisma.$ContactPayload<ExtArgs> | null
     messages: Prisma.$MessagePayload<ExtArgs>[]
     projects: Prisma.$ProjectPayload<ExtArgs>[]
+    supportRequests: Prisma.$SupportRequestPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1145,6 +1252,7 @@ export interface Prisma__ThreadClient<T, Null = never, ExtArgs extends runtime.T
   contact<T extends Prisma.Thread$contactArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Thread$contactArgs<ExtArgs>>): Prisma.Prisma__ContactClient<runtime.Types.Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   messages<T extends Prisma.Thread$messagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Thread$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   projects<T extends Prisma.Thread$projectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Thread$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  supportRequests<T extends Prisma.Thread$supportRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Thread$supportRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupportRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1645,6 +1753,30 @@ export type Thread$projectsArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.ProjectScalarFieldEnum | Prisma.ProjectScalarFieldEnum[]
+}
+
+/**
+ * Thread.supportRequests
+ */
+export type Thread$supportRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SupportRequest
+   */
+  select?: Prisma.SupportRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SupportRequest
+   */
+  omit?: Prisma.SupportRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SupportRequestInclude<ExtArgs> | null
+  where?: Prisma.SupportRequestWhereInput
+  orderBy?: Prisma.SupportRequestOrderByWithRelationInput | Prisma.SupportRequestOrderByWithRelationInput[]
+  cursor?: Prisma.SupportRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SupportRequestScalarFieldEnum | Prisma.SupportRequestScalarFieldEnum[]
 }
 
 /**

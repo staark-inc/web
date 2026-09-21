@@ -7,12 +7,14 @@ import {
   CheckCircle2,
   ExternalLink,
   MessageSquare,
+  LifeBuoy,
   Package,
   Wallet,
 } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
 import { formatAmount } from "@/lib/format";
+import { supportStatusLabels } from "@/lib/support";
 
 import ProjectForm from "../ProjectForm";
 import ProjectTasks from "./ProjectTasks";
@@ -82,6 +84,10 @@ export default async function ProjectDetailPage({
           detail: true,
           createdAt: true,
         },
+      },
+      supportRequests: {
+        orderBy: { updatedAt: "desc" },
+        select: { id: true, title: true, status: true },
       },
     },
   });
@@ -308,11 +314,16 @@ export default async function ProjectDetailPage({
       {activeTab === "billing" && (
         <section className="hub-client-panel">
           <h2>Billing &amp; support</h2>
-
-          <p className="hub-client-empty">
-            Subscription, commercial items and support requests
-            are not set up yet.
-          </p>
+          <p className="hub-client-empty">Billing agreements will appear here once recorded. Support requests for this project are listed below.</p>
+          <h3 className="hub-support-section-title"><LifeBuoy size={15} /> Support requests</h3>
+          {project.supportRequests.length === 0 ? (
+            <p className="hub-client-empty">No support requests linked to this project yet.</p>
+          ) : (
+            <ul className="hub-client-related">
+              {project.supportRequests.map((request) => <li key={request.id}><Link href={`/hub/support/${request.id}`}><strong>{request.title}</strong></Link><span>{supportStatusLabels[request.status]}</span></li>)}
+            </ul>
+          )}
+          <Link className="hub-secondary-button hub-support-create-link" href={`/hub/support/new?clientId=${encodeURIComponent(project.clientId)}&projectId=${encodeURIComponent(project.id)}${project.threadId ? `&threadId=${encodeURIComponent(project.threadId)}` : ""}`}>New support request</Link>
         </section>
       )}
 
