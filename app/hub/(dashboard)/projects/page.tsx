@@ -152,78 +152,75 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
       : counts.find((row) => row.status === value)?._count ?? 0;
 
   const deliverySummary = overdueCount
-    ? `${overdueCount} project${overdueCount === 1 ? " is" : "s are"} past deadline and need attention.`
+    ? `${overdueCount} project${overdueCount === 1 ? " needs" : "s need"} attention.`
     : waitingCount
-      ? `${waitingCount} project${waitingCount === 1 ? " is" : "s are"} waiting on client input.`
+      ? `${waitingCount} project${waitingCount === 1 ? " is" : "s are"} waiting on the client.`
       : dueSoonCount
-        ? `${dueSoonCount} project${dueSoonCount === 1 ? " is" : "s are"} due within the next 7 days.`
-        : "Delivery looks clear. No overdue or near-term deadline signals right now.";
+        ? `${dueSoonCount} project${dueSoonCount === 1 ? " is" : "s are"} due within 7 days.`
+        : "Delivery is clear. No overdue or near-term deadlines.";
 
   return (
-    <div className="hub-page hub-projects-page">
-      <section className="hub-projects-command">
-        <div className="hub-projects-command-copy">
-          <span className="hub-projects-kicker">DELIVERY CONTROL</span>
+    <div className="hub-page hub-projects-v2-page">
+      <header className="hub-projects-v2-head">
+        <div className="hub-projects-v2-title">
+          <span>WORK / DELIVERY</span>
           <h1>Projects</h1>
           <p>{deliverySummary}</p>
         </div>
 
-        <Link href="/hub/projects/new" className="hub-projects-new-button">
+        <Link href="/hub/projects/new" className="hub-projects-v2-new">
           <Plus size={15} />
           New project
         </Link>
+      </header>
 
-        <div className="hub-projects-command-metrics">
-          <div className="hub-projects-command-metric">
-            <span className="hub-projects-command-icon">
-              <FolderKanban size={17} />
-            </span>
-            <div>
-              <small>Active delivery</small>
-              <strong>{activeCount}</strong>
-              <span>In progress or review</span>
-            </div>
+      <section className="hub-projects-v2-stats" aria-label="Delivery overview">
+        <div className="hub-projects-v2-stat">
+          <span className="hub-projects-v2-stat-icon">
+            <FolderKanban size={16} />
+          </span>
+          <div>
+            <small>Active</small>
+            <strong>{activeCount}</strong>
+            <span>In progress or review</span>
           </div>
+        </div>
 
-          <div className="hub-projects-command-metric">
-            <span className="hub-projects-command-icon hub-projects-command-icon-warning">
-              <Clock3 size={17} />
-            </span>
-            <div>
-              <small>Waiting on client</small>
-              <strong>{waitingCount}</strong>
-              <span>Approval or materials</span>
-            </div>
+        <div className="hub-projects-v2-stat">
+          <span className="hub-projects-v2-stat-icon hub-projects-v2-stat-icon-warning">
+            <Clock3 size={16} />
+          </span>
+          <div>
+            <small>Waiting</small>
+            <strong>{waitingCount}</strong>
+            <span>Client input needed</span>
           </div>
+        </div>
 
-          <div className="hub-projects-command-metric">
-            <span className="hub-projects-command-icon">
-              <CheckCircle2 size={17} />
-            </span>
-            <div>
-              <small>Due in 7 days</small>
-              <strong>{dueSoonCount}</strong>
-              <span>Upcoming deadlines</span>
-            </div>
+        <div className="hub-projects-v2-stat">
+          <span className="hub-projects-v2-stat-icon">
+            <CheckCircle2 size={16} />
+          </span>
+          <div>
+            <small>Due soon</small>
+            <strong>{dueSoonCount}</strong>
+            <span>Next 7 days</span>
           </div>
+        </div>
 
-          <div className={`hub-projects-command-metric ${overdueCount ? "hub-projects-command-metric-danger" : ""}`}>
-            <span className="hub-projects-command-icon">
-              <AlertTriangle size={17} />
-            </span>
-            <div>
-              <small>Overdue</small>
-              <strong>{overdueCount}</strong>
-              <span>{overdueCount ? "Needs attention" : "All clear"}</span>
-            </div>
+        <div className={`hub-projects-v2-stat ${overdueCount ? "hub-projects-v2-stat-danger" : ""}`}>
+          <span className="hub-projects-v2-stat-icon">
+            <AlertTriangle size={16} />
+          </span>
+          <div>
+            <small>Overdue</small>
+            <strong>{overdueCount}</strong>
+            <span>{overdueCount ? "Needs attention" : "All clear"}</span>
           </div>
         </div>
       </section>
 
-      <nav
-        className="hub-lead-filters hub-projects-filters"
-        aria-label="Project filters"
-      >
+      <nav className="hub-projects-v2-filters" aria-label="Project filters">
         {filters.map((filter) => {
           const active = activeStatus === filter.value;
 
@@ -235,9 +232,7 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
                   ? "/hub/projects"
                   : `/hub/projects?status=${filter.value}`
               }
-              className={`hub-lead-filter ${
-                active ? "hub-lead-filter-active" : ""
-              }`}
+              className={active ? "hub-projects-v2-filter-active" : undefined}
             >
               <span>{filter.label}</span>
               <strong>{countFor(filter.value)}</strong>
@@ -249,19 +244,16 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
       {projects.length === 0 ? (
         <div className="hub-empty-state">
           <FolderKanban size={28} />
-
           <h2>
             {activeStatus === "ALL"
               ? "No projects yet"
               : "No projects with this status"}
           </h2>
-
           <p>
             {activeStatus === "ALL"
               ? "Create a project to track delivery for a client."
               : "Try a different status filter."}
           </p>
-
           {activeStatus === "ALL" && (
             <Link href="/hub/projects/new" className="hub-secondary-button">
               New project
@@ -269,7 +261,7 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
           )}
         </div>
       ) : (
-        <section className="hub-project-board" aria-label="Project delivery board">
+        <section className="hub-projects-v2-list" aria-label="Projects">
           {projects.map((project) => {
             const done = project.tasks.filter((task) => task.done).length;
             const totalTasks = project.tasks.length;
@@ -304,143 +296,92 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
                     ? `${dueDays}d remaining`
                     : formatDate(project.dueAt);
 
-            const deadlineTone = overdue
-              ? "danger"
-              : dueDays !== null && dueDays <= 7
-                ? "warning"
-                : "neutral";
-
-            const environmentLabel = project.liveUrl
+            const deploymentLabel = project.liveUrl
               ? "Live"
               : project.demo
                 ? "Demo ready"
-                : "No deployment";
+                : "Not deployed";
 
             return (
-              <article key={project.id} className="hub-project-card">
-                <header className="hub-project-card-header">
-                  <div className="hub-project-card-identity">
-                    <span className="hub-project-card-avatar">
-                      <FolderKanban size={17} />
-                    </span>
+              <article key={project.id} className="hub-projects-v2-item">
+                <div className="hub-projects-v2-item-main">
+                  <span className="hub-projects-v2-avatar">
+                    <FolderKanban size={17} />
+                  </span>
 
-                    <div>
+                  <div className="hub-projects-v2-identity">
+                    <div className="hub-projects-v2-name-line">
                       <Link href={`/hub/projects/${project.id}`}>
                         {project.name}
                       </Link>
-
-                      <span>
-                        <Building2 size={12} />
-                        {project.client.name}
+                      <span
+                        className={`hub-project-status hub-project-status-${project.status.toLowerCase()}`}
+                      >
+                        {statusLabels[project.status]}
                       </span>
                     </div>
+
+                    <span className="hub-projects-v2-client">
+                      <Building2 size={12} />
+                      {project.client.name}
+                    </span>
+
+                    {project.description && (
+                      <p>{project.description}</p>
+                    )}
                   </div>
+                </div>
 
-                  <span
-                    className={`hub-project-status hub-project-status-${project.status.toLowerCase()}`}
-                  >
-                    {statusLabels[project.status]}
-                  </span>
-                </header>
-
-                {project.description && (
-                  <p className="hub-project-card-description">
-                    {project.description}
-                  </p>
-                )}
-
-                <div className="hub-project-card-progress">
-                  <div>
+                <div className="hub-projects-v2-progress">
+                  <div className="hub-projects-v2-progress-top">
                     <span>
                       <Gauge size={13} />
-                      Delivery progress
+                      Progress
                     </span>
                     <strong>{progress}%</strong>
                   </div>
 
-                  <div
-                    className="hub-project-card-progress-bar"
-                    role="progressbar"
-                    aria-valuenow={progress}
-                    aria-valuemin={0}
-                    aria-valuemax={100}
-                  >
+                  <div className="hub-projects-v2-progress-bar">
                     <span style={{ width: `${progress}%` }} />
                   </div>
 
-                  <small>
+                  <span className="hub-projects-v2-progress-sub">
                     {totalTasks
-                      ? `${done} of ${totalTasks} tasks complete`
-                      : "No delivery tasks added yet"}
-                  </small>
+                      ? `${done}/${totalTasks} tasks · `
+                      : "No tasks · "}
+                    {nextTask ? `Next: ${nextTask.title}` : "No open task"}
+                  </span>
                 </div>
 
-                <div className="hub-project-card-signals">
-                  <div className={`hub-project-card-signal hub-project-card-signal-${deadlineTone}`}>
-                    <Clock3 size={14} />
-                    <div>
-                      <small>Deadline</small>
-                      <strong>{deadlineLabel}</strong>
-                    </div>
-                  </div>
+                <div className="hub-projects-v2-meta">
+                  <span className={overdue ? "hub-projects-v2-chip hub-projects-v2-chip-danger" : dueDays !== null && dueDays <= 7 ? "hub-projects-v2-chip hub-projects-v2-chip-warning" : "hub-projects-v2-chip"}>
+                    <Clock3 size={13} />
+                    {deadlineLabel}
+                  </span>
 
-                  <div className="hub-project-card-signal">
-                    <CheckCircle2 size={14} />
-                    <div>
-                      <small>Next task</small>
-                      <strong>{nextTask?.title ?? "No open tasks"}</strong>
-                    </div>
-                  </div>
+                  <span className={awaitingMaterials ? "hub-projects-v2-chip hub-projects-v2-chip-warning" : "hub-projects-v2-chip hub-projects-v2-chip-good"}>
+                    <Package size={13} />
+                    {awaitingMaterials ? `${awaitingMaterials} materials` : "Materials clear"}
+                  </span>
 
-                  <div className={
-                    `hub-project-card-signal ${awaitingMaterials ? "hub-project-card-signal-warning" : "hub-project-card-signal-good"}`
-                  }>
-                    <Package size={14} />
-                    <div>
-                      <small>Materials</small>
-                      <strong>
-                        {awaitingMaterials
-                          ? `${awaitingMaterials} awaiting`
-                          : "Clear"}
-                      </strong>
-                    </div>
-                  </div>
+                  <span className={openSupport ? "hub-projects-v2-chip hub-projects-v2-chip-warning" : "hub-projects-v2-chip hub-projects-v2-chip-good"}>
+                    <LifeBuoy size={13} />
+                    {openSupport ? `${openSupport} support` : "Support clear"}
+                  </span>
 
-                  <div className={
-                    `hub-project-card-signal ${openSupport ? "hub-project-card-signal-warning" : "hub-project-card-signal-good"}`
-                  }>
-                    <LifeBuoy size={14} />
-                    <div>
-                      <small>Support</small>
-                      <strong>
-                        {openSupport
-                          ? `${openSupport} open`
-                          : "Clear"}
-                      </strong>
-                    </div>
-                  </div>
+                  <span className={project.liveUrl || project.demo ? "hub-projects-v2-chip hub-projects-v2-chip-good" : "hub-projects-v2-chip"}>
+                    <Rocket size={13} />
+                    {deploymentLabel}
+                  </span>
                 </div>
 
-                <footer className="hub-project-card-footer">
-                  <div className="hub-project-card-badges">
-                    <span className={project.liveUrl || project.demo ? "hub-project-card-badge hub-project-card-badge-good" : "hub-project-card-badge"}>
-                      <Rocket size={12} />
-                      {environmentLabel}
-                    </span>
-
-                    <span className="hub-project-card-updated">
-                      Updated {formatDate(project.updatedAt)}
-                    </span>
-                  </div>
-
-                  <Link
-                    href={`/hub/projects/${project.id}`}
-                    className="hub-project-card-open"
-                  >
-                    Open workspace
+                <div className="hub-projects-v2-item-footer">
+                  <span>Updated {formatDate(project.updatedAt)}</span>
+                  <Link href={`/hub/projects/${project.id}`}>
+                    Open
                     <ArrowRight size={13} />
                   </Link>
-                </footer>
+                </div>
               </article>
             );
           })}
