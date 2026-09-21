@@ -87,7 +87,7 @@
 .hub-workspace-stat-icon {
   width: 32px;
   height: 32px;
-  display: grid;
+  display: grid !important;
   flex: 0 0 32px;
   place-items: center;
   border-radius: 9px;
@@ -369,9 +369,9 @@
 
 @media (max-width: 720px) {
   .hub-workspace-head {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 14px;
+    align-items: center;
+    flex-direction: row;
+    gap: 6px;
   }
 
   .hub-workspace-primary-action {
