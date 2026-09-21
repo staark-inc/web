@@ -396,7 +396,9 @@
   }
 
   .hub-offers-v2-activity {
-    grid-column: 1 / -1;
+    grid-column: auto;
+    border-left: 0 !important;
+    border-top: 1px solid #edf0f2;
   }
 
   .hub-offers-v2-tail {
@@ -459,9 +461,18 @@
     padding: 13px;
   }
 
+  .hub-offers-v2-value,
+  .hub-offers-v2-activity {
+    min-height: 92px;
+  }
+
   .hub-offers-v2-title-line {
     align-items: flex-start;
     flex-direction: column;
     gap: 5px;
+  }
+
+  .hub-offers-v2-activity small {
+    padding-left: 0;
   }
 }
