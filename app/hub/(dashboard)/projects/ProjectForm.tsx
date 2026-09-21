@@ -30,6 +30,13 @@ function toDateValue(date: Date | null) {
 type ProjectFormProps = {
   clients: { id: string; name: string }[];
   defaultClientId?: string;
+  defaultName?: string;
+  defaultDescription?: string;
+  defaultBudget?: string;
+  sourceOffer?: {
+    id: string;
+    title: string;
+  };
   project?: {
     id: string;
     name: string;
@@ -47,6 +54,10 @@ export default function ProjectForm({
   clients,
   project,
   defaultClientId,
+  defaultName,
+  defaultDescription,
+  defaultBudget,
+  sourceOffer,
 }: ProjectFormProps) {
   const [state, formAction, pending] = useActionState(
     project ? updateProject : createProject,
@@ -59,13 +70,32 @@ export default function ProjectForm({
         <input type="hidden" name="projectId" value={project.id} />
       )}
 
+      {sourceOffer && !project && (
+        <>
+          <input type="hidden" name="offerId" value={sourceOffer.id} />
+          <input
+            type="hidden"
+            name="clientId"
+            value={defaultClientId ?? ""}
+          />
+
+          <div className="hub-project-source-offer">
+            <span>ACCEPTED OFFER</span>
+            <strong>{sourceOffer.title}</strong>
+            <small>
+              Client, scope and project budget are prefilled from this offer.
+            </small>
+          </div>
+        </>
+      )}
+
       <div className="hub-client-form-grid">
         <div className="hub-client-form-field">
           <label htmlFor="project-name">Project name</label>
           <input
             id="project-name"
             name="name"
-            defaultValue={project?.name ?? ""}
+            defaultValue={project?.name ?? defaultName ?? ""}
             maxLength={160}
             required
             disabled={pending}
@@ -76,10 +106,10 @@ export default function ProjectForm({
           <label htmlFor="project-client">Client</label>
           <select
             id="project-client"
-            name="clientId"
+            name={sourceOffer && !project ? undefined : "clientId"}
             defaultValue={project?.clientId ?? defaultClientId ?? ""}
             required
-            disabled={pending}
+            disabled={pending || Boolean(sourceOffer && !project)}
           >
             <option value="" disabled>
               Select a client
@@ -114,7 +144,7 @@ export default function ProjectForm({
           <input
             id="project-budget"
             name="budget"
-            defaultValue={project?.budget ?? ""}
+            defaultValue={project?.budget ?? defaultBudget ?? ""}
             placeholder="24 900 SEK"
             disabled={pending}
           />
@@ -161,7 +191,7 @@ export default function ProjectForm({
           id="project-description"
           name="description"
           rows={4}
-          defaultValue={project?.description ?? ""}
+          defaultValue={project?.description ?? defaultDescription ?? ""}
           placeholder="Scope, deliverables and notes..."
           disabled={pending}
         />

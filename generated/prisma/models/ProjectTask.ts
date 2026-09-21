@@ -611,7 +611,8 @@ export type $ProjectTaskPayload<ExtArgs extends runtime.Types.Extensions.Interna
     title: string
     done: boolean
     /**
-     * Manual ordering inside a project.
+     * *
+     *    * Manual ordering inside a project.
      */
     position: number
     createdAt: Date

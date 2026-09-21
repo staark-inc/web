@@ -305,6 +305,7 @@ export type OfferWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
+  project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
 }
 
 export type OfferOrderByWithRelationInput = {
@@ -324,6 +325,7 @@ export type OfferOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   client?: Prisma.ClientOrderByWithRelationInput
+  project?: Prisma.ProjectOrderByWithRelationInput
 }
 
 export type OfferWhereUniqueInput = Prisma.AtLeast<{
@@ -346,6 +348,7 @@ export type OfferWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
+  project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
 }, "id" | "shareToken">
 
 export type OfferOrderByWithAggregationInput = {
@@ -408,6 +411,7 @@ export type OfferCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   client: Prisma.ClientCreateNestedOneWithoutOffersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOfferInput
 }
 
 export type OfferUncheckedCreateInput = {
@@ -426,6 +430,7 @@ export type OfferUncheckedCreateInput = {
   decidedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  project?: Prisma.ProjectUncheckedCreateNestedOneWithoutOfferInput
 }
 
 export type OfferUpdateInput = {
@@ -444,6 +449,7 @@ export type OfferUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   client?: Prisma.ClientUpdateOneRequiredWithoutOffersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOfferNestedInput
 }
 
 export type OfferUncheckedUpdateInput = {
@@ -462,6 +468,7 @@ export type OfferUncheckedUpdateInput = {
   decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.ProjectUncheckedUpdateOneWithoutOfferNestedInput
 }
 
 export type OfferCreateManyInput = {
@@ -593,6 +600,11 @@ export type OfferSumOrderByAggregateInput = {
   includedMonths?: Prisma.SortOrder
 }
 
+export type OfferNullableScalarRelationFilter = {
+  is?: Prisma.OfferWhereInput | null
+  isNot?: Prisma.OfferWhereInput | null
+}
+
 export type OfferCreateNestedManyWithoutClientInput = {
   create?: Prisma.XOR<Prisma.OfferCreateWithoutClientInput, Prisma.OfferUncheckedCreateWithoutClientInput> | Prisma.OfferCreateWithoutClientInput[] | Prisma.OfferUncheckedCreateWithoutClientInput[]
   connectOrCreate?: Prisma.OfferCreateOrConnectWithoutClientInput | Prisma.OfferCreateOrConnectWithoutClientInput[]
@@ -655,6 +667,22 @@ export type EnumOfferStatusFieldUpdateOperationsInput = {
   set?: $Enums.OfferStatus
 }
 
+export type OfferCreateNestedOneWithoutProjectInput = {
+  create?: Prisma.XOR<Prisma.OfferCreateWithoutProjectInput, Prisma.OfferUncheckedCreateWithoutProjectInput>
+  connectOrCreate?: Prisma.OfferCreateOrConnectWithoutProjectInput
+  connect?: Prisma.OfferWhereUniqueInput
+}
+
+export type OfferUpdateOneWithoutProjectNestedInput = {
+  create?: Prisma.XOR<Prisma.OfferCreateWithoutProjectInput, Prisma.OfferUncheckedCreateWithoutProjectInput>
+  connectOrCreate?: Prisma.OfferCreateOrConnectWithoutProjectInput
+  upsert?: Prisma.OfferUpsertWithoutProjectInput
+  disconnect?: Prisma.OfferWhereInput | boolean
+  delete?: Prisma.OfferWhereInput | boolean
+  connect?: Prisma.OfferWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OfferUpdateToOneWithWhereWithoutProjectInput, Prisma.OfferUpdateWithoutProjectInput>, Prisma.OfferUncheckedUpdateWithoutProjectInput>
+}
+
 export type OfferCreateWithoutClientInput = {
   id?: string
   title: string
@@ -670,6 +698,7 @@ export type OfferCreateWithoutClientInput = {
   decidedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  project?: Prisma.ProjectCreateNestedOneWithoutOfferInput
 }
 
 export type OfferUncheckedCreateWithoutClientInput = {
@@ -687,6 +716,7 @@ export type OfferUncheckedCreateWithoutClientInput = {
   decidedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  project?: Prisma.ProjectUncheckedCreateNestedOneWithoutOfferInput
 }
 
 export type OfferCreateOrConnectWithoutClientInput = {
@@ -736,6 +766,94 @@ export type OfferScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
 }
 
+export type OfferCreateWithoutProjectInput = {
+  id?: string
+  title: string
+  scope?: string | null
+  terms?: string | null
+  oneTimePriceOre?: number | null
+  monthlyPriceOre?: number | null
+  includedMonths?: number
+  status?: $Enums.OfferStatus
+  shareToken?: string | null
+  sharedAt?: Date | string | null
+  viewedAt?: Date | string | null
+  decidedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  client: Prisma.ClientCreateNestedOneWithoutOffersInput
+}
+
+export type OfferUncheckedCreateWithoutProjectInput = {
+  id?: string
+  clientId: string
+  title: string
+  scope?: string | null
+  terms?: string | null
+  oneTimePriceOre?: number | null
+  monthlyPriceOre?: number | null
+  includedMonths?: number
+  status?: $Enums.OfferStatus
+  shareToken?: string | null
+  sharedAt?: Date | string | null
+  viewedAt?: Date | string | null
+  decidedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type OfferCreateOrConnectWithoutProjectInput = {
+  where: Prisma.OfferWhereUniqueInput
+  create: Prisma.XOR<Prisma.OfferCreateWithoutProjectInput, Prisma.OfferUncheckedCreateWithoutProjectInput>
+}
+
+export type OfferUpsertWithoutProjectInput = {
+  update: Prisma.XOR<Prisma.OfferUpdateWithoutProjectInput, Prisma.OfferUncheckedUpdateWithoutProjectInput>
+  create: Prisma.XOR<Prisma.OfferCreateWithoutProjectInput, Prisma.OfferUncheckedCreateWithoutProjectInput>
+  where?: Prisma.OfferWhereInput
+}
+
+export type OfferUpdateToOneWithWhereWithoutProjectInput = {
+  where?: Prisma.OfferWhereInput
+  data: Prisma.XOR<Prisma.OfferUpdateWithoutProjectInput, Prisma.OfferUncheckedUpdateWithoutProjectInput>
+}
+
+export type OfferUpdateWithoutProjectInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  terms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  oneTimePriceOre?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  monthlyPriceOre?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  includedMonths?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  viewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  client?: Prisma.ClientUpdateOneRequiredWithoutOffersNestedInput
+}
+
+export type OfferUncheckedUpdateWithoutProjectInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  terms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  oneTimePriceOre?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  monthlyPriceOre?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  includedMonths?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  viewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type OfferCreateManyClientInput = {
   id?: string
   title: string
@@ -768,6 +886,7 @@ export type OfferUpdateWithoutClientInput = {
   decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.ProjectUpdateOneWithoutOfferNestedInput
 }
 
 export type OfferUncheckedUpdateWithoutClientInput = {
@@ -785,6 +904,7 @@ export type OfferUncheckedUpdateWithoutClientInput = {
   decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.ProjectUncheckedUpdateOneWithoutOfferNestedInput
 }
 
 export type OfferUncheckedUpdateManyWithoutClientInput = {
@@ -823,6 +943,7 @@ export type OfferSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   createdAt?: boolean
   updatedAt?: boolean
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  project?: boolean | Prisma.Offer$projectArgs<ExtArgs>
 }, ExtArgs["result"]["offer"]>
 
 export type OfferSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -884,6 +1005,7 @@ export type OfferSelectScalar = {
 export type OfferOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientId" | "title" | "scope" | "terms" | "oneTimePriceOre" | "monthlyPriceOre" | "includedMonths" | "status" | "shareToken" | "sharedAt" | "viewedAt" | "decidedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["offer"]>
 export type OfferInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  project?: boolean | Prisma.Offer$projectArgs<ExtArgs>
 }
 export type OfferIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
@@ -896,6 +1018,7 @@ export type $OfferPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   name: "Offer"
   objects: {
     client: Prisma.$ClientPayload<ExtArgs>
+    project: Prisma.$ProjectPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1308,6 +1431,7 @@ readonly fields: OfferFieldRefs;
 export interface Prisma__OfferClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   client<T extends Prisma.ClientDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientDefaultArgs<ExtArgs>>): Prisma.Prisma__ClientClient<runtime.Types.Result.GetResult<Prisma.$ClientPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  project<T extends Prisma.Offer$projectArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Offer$projectArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1750,6 +1874,25 @@ export type OfferDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Limit how many Offers to delete.
    */
   limit?: number
+}
+
+/**
+ * Offer.project
+ */
+export type Offer$projectArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Project
+   */
+  select?: Prisma.ProjectSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Project
+   */
+  omit?: Prisma.ProjectOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProjectInclude<ExtArgs> | null
+  where?: Prisma.ProjectWhereInput
 }
 
 /**

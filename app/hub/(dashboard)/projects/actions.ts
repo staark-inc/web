@@ -69,6 +69,7 @@ export async function createProject(
 
   const name = readField(formData, "name");
   const clientId = readField(formData, "clientId");
+  const offerId = readField(formData, "offerId") || null;
 
   if (name.length < 2 || name.length > 160) {
     return {
@@ -90,6 +91,44 @@ export async function createProject(
     return { error: "That client no longer exists.", success: false };
   }
 
+  let sourceOfferTitle: string | null = null;
+
+  if (offerId) {
+    const sourceOffer = await prisma.offer.findUnique({
+      where: { id: offerId },
+      select: {
+        id: true,
+        title: true,
+        clientId: true,
+        status: true,
+        project: { select: { id: true } },
+      },
+    });
+
+    if (!sourceOffer || sourceOffer.status !== "ACCEPTED") {
+      return {
+        error: "The source offer is missing or has not been accepted.",
+        success: false,
+      };
+    }
+
+    if (sourceOffer.clientId !== clientId) {
+      return {
+        error: "The accepted offer belongs to another client.",
+        success: false,
+      };
+    }
+
+    if (sourceOffer.project) {
+      return {
+        error: "A project has already been created from this offer.",
+        success: false,
+      };
+    }
+
+    sourceOfferTitle = sourceOffer.title;
+  }
+
   let projectId: string;
 
   try {
@@ -97,12 +136,22 @@ export async function createProject(
       data: {
         name,
         clientId,
+        offerId,
         description: readField(formData, "description") || null,
         status: readStatus(formData) ?? "PLANNING",
         budget: readField(formData, "budget") || null,
         liveUrl: readField(formData, "liveUrl") || null,
         startedAt: readDate(formData, "startedAt"),
         dueAt: readDate(formData, "dueAt"),
+        activities: sourceOfferTitle
+          ? {
+              create: {
+                kind: "NOTE",
+                title: "Project created from accepted offer",
+                detail: sourceOfferTitle,
+              },
+            }
+          : undefined,
       },
       select: { id: true },
     });
@@ -114,6 +163,12 @@ export async function createProject(
   }
 
   revalidatePath("/hub/projects");
+  revalidatePath(`/hub/clients/${clientId}`);
+
+  if (offerId) {
+    revalidatePath(`/hub/offers/${offerId}`);
+  }
+
   redirect(`/hub/projects/${projectId}`);
 }
 

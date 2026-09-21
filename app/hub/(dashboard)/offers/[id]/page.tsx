@@ -15,7 +15,13 @@ function formatDate(date: Date) {
 
 export default async function OfferDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const offer = await prisma.offer.findUnique({ where: { id }, include: { client: { select: { id: true, name: true } } } });
+  const offer = await prisma.offer.findUnique({
+    where: { id },
+    include: {
+      client: { select: { id: true, name: true } },
+      project: { select: { id: true, name: true } },
+    },
+  });
   if (!offer) notFound();
 
   return (
@@ -49,7 +55,25 @@ export default async function OfferDetailPage({ params }: { params: Promise<{ id
             {offer.status === "DRAFT" && <Link className="hub-secondary-button hub-offer-project-link" href={`/hub/offers/${offer.id}/send`}><Mail size={15} />Review and send offer</Link>}
             {offer.shareToken && offer.status !== "DRAFT" && <Link className="hub-secondary-button hub-offer-project-link" href={`/offert/${offer.shareToken}`} target="_blank" rel="noopener noreferrer"><ExternalLink size={15} />Open client offer</Link>}
             <OfferStatusActions offerId={offer.id} status={offer.status} />
-            {offer.status === "ACCEPTED" && <Link className="hub-secondary-button hub-offer-project-link" href={`/hub/projects/new?clientId=${encodeURIComponent(offer.clientId)}`}><FolderKanban size={15} />Start a project</Link>}
+            {offer.status === "ACCEPTED" && (
+              offer.project ? (
+                <Link
+                  className="hub-secondary-button hub-offer-project-link"
+                  href={`/hub/projects/${offer.project.id}`}
+                >
+                  <FolderKanban size={15} />
+                  Open project
+                </Link>
+              ) : (
+                <Link
+                  className="hub-secondary-button hub-offer-project-link"
+                  href={`/hub/projects/new?clientId=${encodeURIComponent(offer.clientId)}&offerId=${encodeURIComponent(offer.id)}`}
+                >
+                  <FolderKanban size={15} />
+                  Start a project
+                </Link>
+              )
+            )}
           </div>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { notFound, redirect } from "next/navigation";
 import { ArrowLeft, Building2 } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
@@ -7,12 +8,47 @@ import ProjectForm from "../ProjectForm";
 
 export const dynamic = "force-dynamic";
 
-export default async function NewProjectPage({ searchParams }: { searchParams: Promise<{ clientId?: string }> }) {
-  const { clientId } = await searchParams;
-  const clients = await prisma.client.findMany({
-    orderBy: { name: "asc" },
-    select: { id: true, name: true },
-  });
+export default async function NewProjectPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ clientId?: string; offerId?: string }>;
+}) {
+  const { clientId, offerId } = await searchParams;
+
+  const [clients, sourceOffer] = await Promise.all([
+    prisma.client.findMany({
+      orderBy: { name: "asc" },
+      select: { id: true, name: true },
+    }),
+    offerId
+      ? prisma.offer.findUnique({
+          where: { id: offerId },
+          select: {
+            id: true,
+            title: true,
+            scope: true,
+            oneTimePriceOre: true,
+            status: true,
+            clientId: true,
+            project: { select: { id: true } },
+          },
+        })
+      : Promise.resolve(null),
+  ]);
+
+  if (offerId && (!sourceOffer || sourceOffer.status !== "ACCEPTED")) {
+    notFound();
+  }
+
+  if (sourceOffer?.project) {
+    redirect(`/hub/projects/${sourceOffer.project.id}`);
+  }
+
+  const resolvedClientId =
+    sourceOffer?.clientId ??
+    (clients.some((client) => client.id === clientId)
+      ? clientId
+      : undefined);
 
   return (
     <div className="hub-page">
@@ -25,9 +61,13 @@ export default async function NewProjectPage({ searchParams }: { searchParams: P
 
       <div className="hub-page-header">
         <div>
-          <h1>New project</h1>
+          <h1>{sourceOffer ? "Start project" : "New project"}</h1>
 
-          <p>Track delivery for one of your clients.</p>
+          <p>
+            {sourceOffer
+              ? `Creating delivery from accepted offer: ${sourceOffer.title}`
+              : "Track delivery for one of your clients."}
+          </p>
         </div>
       </div>
 
@@ -47,7 +87,26 @@ export default async function NewProjectPage({ searchParams }: { searchParams: P
         </div>
       ) : (
         <section className="hub-client-panel">
-          <ProjectForm clients={clients} defaultClientId={clients.some((client) => client.id === clientId) ? clientId : undefined} />
+          <ProjectForm
+            clients={clients}
+            defaultClientId={resolvedClientId}
+            defaultName={sourceOffer?.title}
+            defaultDescription={sourceOffer?.scope ?? undefined}
+            defaultBudget={
+              sourceOffer?.oneTimePriceOre !== null &&
+              sourceOffer?.oneTimePriceOre !== undefined
+                ? String(sourceOffer.oneTimePriceOre / 100)
+                : undefined
+            }
+            sourceOffer={
+              sourceOffer
+                ? {
+                    id: sourceOffer.id,
+                    title: sourceOffer.title,
+                  }
+                : undefined
+            }
+          />
         </section>
       )}
     </div>

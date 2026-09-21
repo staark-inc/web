@@ -1678,6 +1678,7 @@ export type OfferScalarFieldEnum = (typeof OfferScalarFieldEnum)[keyof typeof Of
 export const ProjectScalarFieldEnum = {
   id: 'id',
   clientId: 'clientId',
+  offerId: 'offerId',
   threadId: 'threadId',
   name: 'name',
   description: 'description',
