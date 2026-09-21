@@ -436,9 +436,13 @@
     border-top: 1px solid #edf0f2;
   }
 
-  .hub-billing-v2-amounts,
-  .hub-support-v2-context {
+  .hub-billing-v2-amounts {
     border-right: 1px solid #edf0f2;
+  }
+
+  .hub-support-v2-context {
+    grid-column: 1 / -1;
+    border-right: 0;
   }
 
   .hub-billing-v2-project,
@@ -471,7 +475,20 @@
   .hub-support-v2-context,
   .hub-support-v2-signals,
   .hub-support-v2-tail {
-    padding: 13px;
+    padding: 12px 13px;
+  }
+
+  .hub-support-v2-context {
+    min-height: auto;
+  }
+
+  .hub-support-v2-signals {
+    gap: 5px;
+  }
+
+  .hub-support-v2-chip {
+    min-height: 22px;
+    padding: 0 7px;
   }
 
   .hub-support-v2-title-line {
