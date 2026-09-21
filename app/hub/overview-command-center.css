@@ -1399,3 +1399,182 @@
     display: none;
   }
 }
+
+/* === OVERVIEW MOBILE POLISH V1 START === */
+/*
+ * Final mobile pass for Overview.
+ * Keeps the command center intact and makes Deployment / section headers
+ * feel closer to the native Hub mobile UI.
+ */
+
+@media (max-width: 760px) {
+  .hub-overview-page .hub-overview-section-heading {
+    margin-top: 26px;
+    margin-bottom: 11px;
+  }
+
+  .hub-overview-page .hub-deployment-heading {
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .hub-overview-page .hub-deployment-heading .hub-deployment-status {
+    align-self: center;
+    flex: 0 0 auto;
+  }
+
+  .hub-overview-page .hub-deployment-card {
+    border-radius: 15px;
+  }
+
+  .hub-overview-page .hub-deployment-main {
+    grid-template-columns: 38px minmax(0, 1fr);
+    align-items: start;
+    gap: 12px;
+    padding: 15px;
+  }
+
+  .hub-overview-page .hub-deployment-icon {
+    width: 38px;
+    height: 38px;
+    margin: 0;
+    border-radius: 10px;
+  }
+
+  .hub-overview-page .hub-deployment-info {
+    gap: 10px;
+  }
+
+  .hub-overview-page .hub-deployment-title strong,
+  .hub-overview-page .hub-deployment-commit > strong {
+    white-space: normal;
+    line-height: 1.35;
+  }
+
+  .hub-overview-page .hub-deployment-title span,
+  .hub-overview-page .hub-deployment-commit small {
+    line-height: 1.45;
+  }
+
+  .hub-overview-page .hub-deployment-commit {
+    padding-top: 10px;
+    border-top: 1px solid #edf0f2;
+  }
+
+  .hub-overview-page .hub-deployment-commit-meta {
+    margin-bottom: 6px;
+  }
+
+  .hub-overview-page .hub-deployment-actions {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    gap: 8px;
+    padding-left: 0;
+    margin-top: 1px;
+  }
+
+  .hub-overview-page .hub-deployment-actions .hub-secondary-button {
+    width: 100%;
+    min-height: 38px;
+    display: inline-flex;
+    justify-content: center;
+    padding: 0 10px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+
+  .hub-overview-page .hub-deployment-footer {
+    min-height: 45px;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 9px 15px;
+  }
+
+  .hub-overview-page .hub-deployment-footer > div {
+    min-width: 0;
+  }
+
+  .hub-overview-page .hub-deployment-footer > div:last-child {
+    margin-left: auto;
+    text-align: right;
+  }
+
+  .hub-overview-page .hub-deployment-footer span {
+    line-height: 1.35;
+  }
+
+  .hub-overview-page .hub-analytics-heading {
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .hub-overview-page .hub-analytics-heading .hub-analytics-period {
+    align-self: center;
+    flex: 0 0 auto;
+  }
+}
+
+@media (max-width: 520px) {
+  .hub-overview-page .hub-deployment-heading,
+  .hub-overview-page .hub-analytics-heading {
+    align-items: center;
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  .hub-overview-page .hub-deployment-status,
+  .hub-overview-page .hub-analytics-period {
+    min-height: 28px;
+    padding-inline: 9px;
+  }
+
+  .hub-overview-page .hub-deployment-main {
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 11px;
+    padding: 14px;
+  }
+
+  .hub-overview-page .hub-deployment-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .hub-overview-page .hub-deployment-info {
+    gap: 9px;
+  }
+
+  .hub-overview-page .hub-deployment-actions {
+    gap: 7px;
+  }
+
+  .hub-overview-page .hub-deployment-footer {
+    padding: 9px 14px;
+    font-size: 8px;
+  }
+}
+
+@media (max-width: 390px) {
+  .hub-overview-page .hub-deployment-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .hub-overview-page .hub-deployment-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .hub-overview-page .hub-deployment-footer > div:last-child {
+    margin-left: 0;
+    text-align: left;
+  }
+}
+/* === OVERVIEW MOBILE POLISH V1 END === */
