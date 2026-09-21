@@ -560,7 +560,7 @@
 
 .hub-overview-page .hub-deployment-main {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(1fr, 1fr) auto;
   align-items: center;
   gap: 16px;
   padding: 18px;
@@ -1180,7 +1180,7 @@
   }
 
   .hub-overview-page .hub-deployment-main {
-    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-columns: auto;
     gap: 13px;
   }
 
@@ -1575,7 +1575,7 @@
   }
 
   .hub-overview-page .hub-deployment-main {
-    grid-template-columns: 36px minmax(0, 1fr);
+    grid-template-columns: auto;
     gap: 11px;
     padding: 14px;
   }

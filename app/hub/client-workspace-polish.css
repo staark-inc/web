@@ -622,13 +622,13 @@
 @media (max-width: 620px) {
   .hub-clients-v2-head,
   .hub-client-v2-detail-head {
-    align-items: stretch;
-    flex-direction: column;
+    align-items: center;
+    flex-direction: row;
   }
 
   .hub-clients-v2-new,
   .hub-client-v2-detail-actions a {
-    width: 100%;
+    width: 50%;
   }
 
   .hub-client-v2-detail-actions {
@@ -638,7 +638,7 @@
 
   .hub-clients-v2-stats,
   .hub-client-v2-detail-stats {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
   }
 
   .hub-clients-v2-stat + .hub-clients-v2-stat,

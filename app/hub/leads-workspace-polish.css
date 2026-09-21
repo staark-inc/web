@@ -564,6 +564,7 @@
   .hub-leads-v2-stats,
   .hub-lead-v2-detail-stats {
     grid-template-columns: 1fr;
+    display: grid;
   }
 
   .hub-leads-v2-stat + .hub-leads-v2-stat,

@@ -40,7 +40,7 @@
 .hub-support-v2-icon {
   width: 34px;
   height: 34px;
-  display: grid;
+  display: grid !important;
   flex: 0 0 34px;
   place-items: center;
   border-radius: 10px;
