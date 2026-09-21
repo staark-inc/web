@@ -1,5 +1,6 @@
 "use server";
 
+import { randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -113,7 +114,8 @@ export async function changeOfferStatus(_state: OfferActionState, formData: Form
 
   const allowed: Record<OfferStatus, OfferStatus[]> = {
     DRAFT: ["SHARED"],
-    SHARED: ["DRAFT", "ACCEPTED", "DECLINED"],
+    SHARED: ["DRAFT"],
+    VIEWED: ["DRAFT"],
     ACCEPTED: [],
     DECLINED: [],
   };
@@ -127,8 +129,21 @@ export async function changeOfferStatus(_state: OfferActionState, formData: Form
     where: { id: offerId, status: offer.status },
     data: {
       status: next,
-      sharedAt: next === "DRAFT" ? null : next === "SHARED" ? new Date() : offer.sharedAt,
-      decidedAt: next === "ACCEPTED" || next === "DECLINED" ? new Date() : null,
+      shareToken:
+        next === "SHARED"
+          ? offer.shareToken ?? randomUUID()
+          : offer.shareToken,
+      sharedAt:
+        next === "DRAFT"
+          ? null
+          : next === "SHARED"
+            ? new Date()
+            : offer.sharedAt,
+      viewedAt:
+        next === "DRAFT"
+          ? null
+          : offer.viewedAt,
+      decidedAt: null,
     },
   });
   if (updated.count !== 1) return { error: "The offer changed while you were editing. Reload the page.", success: false };

@@ -1664,7 +1664,9 @@ export const OfferScalarFieldEnum = {
   monthlyPriceOre: 'monthlyPriceOre',
   includedMonths: 'includedMonths',
   status: 'status',
+  shareToken: 'shareToken',
   sharedAt: 'sharedAt',
+  viewedAt: 'viewedAt',
   decidedAt: 'decidedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

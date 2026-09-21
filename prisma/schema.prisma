@@ -27,6 +27,7 @@ enum LeadStatus {
 enum OfferStatus {
   DRAFT
   SHARED
+  VIEWED
   ACCEPTED
   DECLINED
 }
@@ -169,7 +170,9 @@ model Offer {
   monthlyPriceOre Int?
   includedMonths  Int @default(6)
   status          OfferStatus @default(DRAFT)
+  shareToken      String? @unique
   sharedAt        DateTime?
+  viewedAt        DateTime?
   decidedAt       DateTime?
 
   createdAt DateTime @default(now())

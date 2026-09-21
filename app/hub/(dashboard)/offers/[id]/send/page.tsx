@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
@@ -25,6 +26,25 @@ export default async function SendOfferPage({ params }: { params: Promise<{ id: 
 
   if (!offer) notFound();
 
+  let shareToken = offer.shareToken;
+
+  if (!shareToken) {
+    shareToken = randomUUID();
+
+    await prisma.offer.update({
+      where: { id: offer.id },
+      data: { shareToken },
+    });
+  }
+
+  const siteUrl = (
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    "https://staarkinc.com"
+  ).replace(/\/$/, "");
+
+  const publicOfferUrl =
+    `${siteUrl}/offert/${shareToken}`;
+
   const backToOffer = `/hub/offers/${id}`;
   const ready = Boolean(offer.scope && (offer.oneTimePriceOre !== null || offer.monthlyPriceOre !== null));
   const clientEmail = offer.client.contacts[0]?.email ?? offer.client.billingEmail ?? "";
@@ -46,6 +66,9 @@ export default async function SendOfferPage({ params }: { params: Promise<{ id: 
       : []),
     `Support ingår i ${offer.includedMonths} månader enligt förslaget.`,
     ...(offer.terms ? ["", "Villkor", offer.terms] : []),
+    "",
+    "Se hela offerten och svara direkt här:",
+    publicOfferUrl,
     "",
     "Återkom gärna om ni vill gå igenom förslaget tillsammans eller har några frågor.",
     "",
@@ -75,6 +98,7 @@ export default async function SendOfferPage({ params }: { params: Promise<{ id: 
             initialMessage={body}
             returnTo={backToOffer}
             confirmRecipient
+            offerId={offer.id}
           />
         </>
       )}

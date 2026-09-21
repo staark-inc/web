@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Building2, CalendarDays, FolderKanban, Mail } from "lucide-react";
+import { ArrowLeft, Building2, CalendarDays, ExternalLink, FolderKanban, Mail } from "lucide-react";
 
 import { formatOfferAmount, offerStatusLabels } from "@/lib/offers";
 import { prisma } from "@/lib/prisma";
@@ -42,10 +42,12 @@ export default async function OfferDetailPage({ params }: { params: Promise<{ id
         <div className="hub-client-side">
           <div className="hub-client-panel"><h2>Client</h2><Link className="hub-offer-client-link" href={`/hub/clients/${offer.clientId}`}><Building2 size={16} />{offer.client.name}</Link></div>
           <div className="hub-client-panel"><h2>Decision</h2>
-            <p className="hub-client-empty">Send the proposal by email, then record its status here. The client decision is recorded manually.</p>
+            <p className="hub-client-empty">The client can accept or decline from the secure offer link. The status updates automatically.</p>
             {offer.sharedAt && <p className="hub-offer-timestamp">Shared {formatDate(offer.sharedAt)}</p>}
+            {offer.viewedAt && <p className="hub-offer-timestamp">Viewed {formatDate(offer.viewedAt)}</p>}
             {offer.decidedAt && <p className="hub-offer-timestamp">Decision {formatDate(offer.decidedAt)}</p>}
             {offer.status === "DRAFT" && <Link className="hub-secondary-button hub-offer-project-link" href={`/hub/offers/${offer.id}/send`}><Mail size={15} />Review and send offer</Link>}
+            {offer.shareToken && offer.status !== "DRAFT" && <Link className="hub-secondary-button hub-offer-project-link" href={`/offert/${offer.shareToken}`} target="_blank" rel="noopener noreferrer"><ExternalLink size={15} />Open client offer</Link>}
             <OfferStatusActions offerId={offer.id} status={offer.status} />
             {offer.status === "ACCEPTED" && <Link className="hub-secondary-button hub-offer-project-link" href={`/hub/projects/new?clientId=${encodeURIComponent(offer.clientId)}`}><FolderKanban size={15} />Start a project</Link>}
           </div>

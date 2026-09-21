@@ -16,6 +16,7 @@ type ComposeFormProps = {
   initialMessage?: string;
   returnTo?: string;
   confirmRecipient?: boolean;
+  offerId?: string;
 };
 
 export default function ComposeForm({
@@ -24,6 +25,7 @@ export default function ComposeForm({
   initialMessage = "",
   returnTo,
   confirmRecipient = false,
+  offerId,
 }: ComposeFormProps) {
   const [sending, setSending] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -113,6 +115,25 @@ export default function ComposeForm({
         throw new Error(
           data?.error || "Could not send the message."
         );
+      }
+
+      if (offerId) {
+        const sharedResponse = await fetch(
+          `/api/hub/offers/${encodeURIComponent(offerId)}/shared`,
+          {
+            method: "POST",
+          }
+        );
+
+        const sharedData =
+          await sharedResponse.json().catch(() => null);
+
+        if (!sharedResponse.ok) {
+          throw new Error(
+            sharedData?.error ||
+              "Email was sent, but the offer status could not be updated."
+          );
+        }
       }
 
       setSuccess(true);
@@ -254,7 +275,7 @@ export default function ComposeForm({
           Message sent successfully.
           {returnTo && (
             <Link href={returnTo} className="hub-offer-return-link">
-              Return to the offer and mark it as shared
+              Return to the offer
             </Link>
           )}
         </div>

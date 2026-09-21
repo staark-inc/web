@@ -48,7 +48,9 @@ export type OfferMinAggregateOutputType = {
   monthlyPriceOre: number | null
   includedMonths: number | null
   status: $Enums.OfferStatus | null
+  shareToken: string | null
   sharedAt: Date | null
+  viewedAt: Date | null
   decidedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -64,7 +66,9 @@ export type OfferMaxAggregateOutputType = {
   monthlyPriceOre: number | null
   includedMonths: number | null
   status: $Enums.OfferStatus | null
+  shareToken: string | null
   sharedAt: Date | null
+  viewedAt: Date | null
   decidedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -80,7 +84,9 @@ export type OfferCountAggregateOutputType = {
   monthlyPriceOre: number
   includedMonths: number
   status: number
+  shareToken: number
   sharedAt: number
+  viewedAt: number
   decidedAt: number
   createdAt: number
   updatedAt: number
@@ -110,7 +116,9 @@ export type OfferMinAggregateInputType = {
   monthlyPriceOre?: true
   includedMonths?: true
   status?: true
+  shareToken?: true
   sharedAt?: true
+  viewedAt?: true
   decidedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -126,7 +134,9 @@ export type OfferMaxAggregateInputType = {
   monthlyPriceOre?: true
   includedMonths?: true
   status?: true
+  shareToken?: true
   sharedAt?: true
+  viewedAt?: true
   decidedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -142,7 +152,9 @@ export type OfferCountAggregateInputType = {
   monthlyPriceOre?: true
   includedMonths?: true
   status?: true
+  shareToken?: true
   sharedAt?: true
+  viewedAt?: true
   decidedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -245,7 +257,9 @@ export type OfferGroupByOutputType = {
   monthlyPriceOre: number | null
   includedMonths: number
   status: $Enums.OfferStatus
+  shareToken: string | null
   sharedAt: Date | null
+  viewedAt: Date | null
   decidedAt: Date | null
   createdAt: Date
   updatedAt: Date
@@ -284,7 +298,9 @@ export type OfferWhereInput = {
   monthlyPriceOre?: Prisma.IntNullableFilter<"Offer"> | number | null
   includedMonths?: Prisma.IntFilter<"Offer"> | number
   status?: Prisma.EnumOfferStatusFilter<"Offer"> | $Enums.OfferStatus
+  shareToken?: Prisma.StringNullableFilter<"Offer"> | string | null
   sharedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
+  viewedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
   decidedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
@@ -301,7 +317,9 @@ export type OfferOrderByWithRelationInput = {
   monthlyPriceOre?: Prisma.SortOrderInput | Prisma.SortOrder
   includedMonths?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  shareToken?: Prisma.SortOrderInput | Prisma.SortOrder
   sharedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  viewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   decidedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -310,6 +328,7 @@ export type OfferOrderByWithRelationInput = {
 
 export type OfferWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  shareToken?: string
   AND?: Prisma.OfferWhereInput | Prisma.OfferWhereInput[]
   OR?: Prisma.OfferWhereInput[]
   NOT?: Prisma.OfferWhereInput | Prisma.OfferWhereInput[]
@@ -322,11 +341,12 @@ export type OfferWhereUniqueInput = Prisma.AtLeast<{
   includedMonths?: Prisma.IntFilter<"Offer"> | number
   status?: Prisma.EnumOfferStatusFilter<"Offer"> | $Enums.OfferStatus
   sharedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
+  viewedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
   decidedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
-}, "id">
+}, "id" | "shareToken">
 
 export type OfferOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -338,7 +358,9 @@ export type OfferOrderByWithAggregationInput = {
   monthlyPriceOre?: Prisma.SortOrderInput | Prisma.SortOrder
   includedMonths?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  shareToken?: Prisma.SortOrderInput | Prisma.SortOrder
   sharedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  viewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   decidedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -362,7 +384,9 @@ export type OfferScalarWhereWithAggregatesInput = {
   monthlyPriceOre?: Prisma.IntNullableWithAggregatesFilter<"Offer"> | number | null
   includedMonths?: Prisma.IntWithAggregatesFilter<"Offer"> | number
   status?: Prisma.EnumOfferStatusWithAggregatesFilter<"Offer"> | $Enums.OfferStatus
+  shareToken?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
   sharedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Offer"> | Date | string | null
+  viewedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Offer"> | Date | string | null
   decidedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Offer"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Offer"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Offer"> | Date | string
@@ -377,7 +401,9 @@ export type OfferCreateInput = {
   monthlyPriceOre?: number | null
   includedMonths?: number
   status?: $Enums.OfferStatus
+  shareToken?: string | null
   sharedAt?: Date | string | null
+  viewedAt?: Date | string | null
   decidedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -394,7 +420,9 @@ export type OfferUncheckedCreateInput = {
   monthlyPriceOre?: number | null
   includedMonths?: number
   status?: $Enums.OfferStatus
+  shareToken?: string | null
   sharedAt?: Date | string | null
+  viewedAt?: Date | string | null
   decidedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -409,7 +437,9 @@ export type OfferUpdateInput = {
   monthlyPriceOre?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   includedMonths?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  viewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -426,7 +456,9 @@ export type OfferUncheckedUpdateInput = {
   monthlyPriceOre?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   includedMonths?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  viewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -442,7 +474,9 @@ export type OfferCreateManyInput = {
   monthlyPriceOre?: number | null
   includedMonths?: number
   status?: $Enums.OfferStatus
+  shareToken?: string | null
   sharedAt?: Date | string | null
+  viewedAt?: Date | string | null
   decidedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -457,7 +491,9 @@ export type OfferUpdateManyMutationInput = {
   monthlyPriceOre?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   includedMonths?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  viewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -473,7 +509,9 @@ export type OfferUncheckedUpdateManyInput = {
   monthlyPriceOre?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   includedMonths?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  viewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -499,7 +537,9 @@ export type OfferCountOrderByAggregateInput = {
   monthlyPriceOre?: Prisma.SortOrder
   includedMonths?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  shareToken?: Prisma.SortOrder
   sharedAt?: Prisma.SortOrder
+  viewedAt?: Prisma.SortOrder
   decidedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -521,7 +561,9 @@ export type OfferMaxOrderByAggregateInput = {
   monthlyPriceOre?: Prisma.SortOrder
   includedMonths?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  shareToken?: Prisma.SortOrder
   sharedAt?: Prisma.SortOrder
+  viewedAt?: Prisma.SortOrder
   decidedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -537,7 +579,9 @@ export type OfferMinOrderByAggregateInput = {
   monthlyPriceOre?: Prisma.SortOrder
   includedMonths?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  shareToken?: Prisma.SortOrder
   sharedAt?: Prisma.SortOrder
+  viewedAt?: Prisma.SortOrder
   decidedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -620,7 +664,9 @@ export type OfferCreateWithoutClientInput = {
   monthlyPriceOre?: number | null
   includedMonths?: number
   status?: $Enums.OfferStatus
+  shareToken?: string | null
   sharedAt?: Date | string | null
+  viewedAt?: Date | string | null
   decidedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -635,7 +681,9 @@ export type OfferUncheckedCreateWithoutClientInput = {
   monthlyPriceOre?: number | null
   includedMonths?: number
   status?: $Enums.OfferStatus
+  shareToken?: string | null
   sharedAt?: Date | string | null
+  viewedAt?: Date | string | null
   decidedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -680,7 +728,9 @@ export type OfferScalarWhereInput = {
   monthlyPriceOre?: Prisma.IntNullableFilter<"Offer"> | number | null
   includedMonths?: Prisma.IntFilter<"Offer"> | number
   status?: Prisma.EnumOfferStatusFilter<"Offer"> | $Enums.OfferStatus
+  shareToken?: Prisma.StringNullableFilter<"Offer"> | string | null
   sharedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
+  viewedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
   decidedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
@@ -695,7 +745,9 @@ export type OfferCreateManyClientInput = {
   monthlyPriceOre?: number | null
   includedMonths?: number
   status?: $Enums.OfferStatus
+  shareToken?: string | null
   sharedAt?: Date | string | null
+  viewedAt?: Date | string | null
   decidedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -710,7 +762,9 @@ export type OfferUpdateWithoutClientInput = {
   monthlyPriceOre?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   includedMonths?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  viewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -725,7 +779,9 @@ export type OfferUncheckedUpdateWithoutClientInput = {
   monthlyPriceOre?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   includedMonths?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  viewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -740,7 +796,9 @@ export type OfferUncheckedUpdateManyWithoutClientInput = {
   monthlyPriceOre?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   includedMonths?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  viewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -758,7 +816,9 @@ export type OfferSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   monthlyPriceOre?: boolean
   includedMonths?: boolean
   status?: boolean
+  shareToken?: boolean
   sharedAt?: boolean
+  viewedAt?: boolean
   decidedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -775,7 +835,9 @@ export type OfferSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   monthlyPriceOre?: boolean
   includedMonths?: boolean
   status?: boolean
+  shareToken?: boolean
   sharedAt?: boolean
+  viewedAt?: boolean
   decidedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -792,7 +854,9 @@ export type OfferSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   monthlyPriceOre?: boolean
   includedMonths?: boolean
   status?: boolean
+  shareToken?: boolean
   sharedAt?: boolean
+  viewedAt?: boolean
   decidedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -809,13 +873,15 @@ export type OfferSelectScalar = {
   monthlyPriceOre?: boolean
   includedMonths?: boolean
   status?: boolean
+  shareToken?: boolean
   sharedAt?: boolean
+  viewedAt?: boolean
   decidedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type OfferOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientId" | "title" | "scope" | "terms" | "oneTimePriceOre" | "monthlyPriceOre" | "includedMonths" | "status" | "sharedAt" | "decidedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["offer"]>
+export type OfferOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientId" | "title" | "scope" | "terms" | "oneTimePriceOre" | "monthlyPriceOre" | "includedMonths" | "status" | "shareToken" | "sharedAt" | "viewedAt" | "decidedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["offer"]>
 export type OfferInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
 }
@@ -841,7 +907,9 @@ export type $OfferPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     monthlyPriceOre: number | null
     includedMonths: number
     status: $Enums.OfferStatus
+    shareToken: string | null
     sharedAt: Date | null
+    viewedAt: Date | null
     decidedAt: Date | null
     createdAt: Date
     updatedAt: Date
@@ -1278,7 +1346,9 @@ export interface OfferFieldRefs {
   readonly monthlyPriceOre: Prisma.FieldRef<"Offer", 'Int'>
   readonly includedMonths: Prisma.FieldRef<"Offer", 'Int'>
   readonly status: Prisma.FieldRef<"Offer", 'OfferStatus'>
+  readonly shareToken: Prisma.FieldRef<"Offer", 'String'>
   readonly sharedAt: Prisma.FieldRef<"Offer", 'DateTime'>
+  readonly viewedAt: Prisma.FieldRef<"Offer", 'DateTime'>
   readonly decidedAt: Prisma.FieldRef<"Offer", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Offer", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Offer", 'DateTime'>

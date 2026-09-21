@@ -1,0 +1,269 @@
+.public-offer-page {
+  min-height: 100vh;
+  padding: 56px 20px;
+  background: #f3f3f1;
+  color: #17181a;
+}
+
+.public-offer-shell {
+  width: min(920px, 100%);
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid #deded9;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06);
+}
+
+.public-offer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 24px 30px;
+  background: #17181a;
+  color: #fff;
+}
+
+.public-offer-brand {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.public-offer-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  color: #d7d9dc;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.public-offer-state-accepted {
+  color: #9ee1b0;
+}
+
+.public-offer-state-declined {
+  color: #efaaaa;
+}
+
+.public-offer-intro {
+  padding: 54px 54px 34px;
+}
+
+.public-offer-intro > span {
+  display: block;
+  margin-bottom: 12px;
+  color: #81858b;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+}
+
+.public-offer-intro h1 {
+  max-width: 720px;
+  margin: 0;
+  font-size: clamp(30px, 5vw, 52px);
+  line-height: 1.06;
+  letter-spacing: -0.04em;
+}
+
+.public-offer-intro p {
+  margin: 14px 0 0;
+  color: #686c72;
+  font-size: 15px;
+}
+
+.public-offer-prices {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid #ecece8;
+  border-bottom: 1px solid #ecece8;
+}
+
+.public-offer-prices > div {
+  min-width: 0;
+  padding: 28px 30px;
+}
+
+.public-offer-prices > div + div {
+  border-left: 1px solid #ecece8;
+}
+
+.public-offer-prices span,
+.public-offer-prices small {
+  display: block;
+  color: #7a7e84;
+  font-size: 11px;
+}
+
+.public-offer-prices strong {
+  display: block;
+  margin: 8px 0 5px;
+  font-size: 21px;
+}
+
+.public-offer-content {
+  display: grid;
+  gap: 34px;
+  padding: 44px 54px;
+}
+
+.public-offer-content section {
+  max-width: 720px;
+}
+
+.public-offer-content h2,
+.public-offer-decision h2 {
+  margin: 0 0 10px;
+  font-size: 17px;
+}
+
+.public-offer-content p {
+  margin: 0;
+  color: #52565c;
+  font-size: 14px;
+  line-height: 1.75;
+  white-space: pre-wrap;
+}
+
+.public-offer-message {
+  margin: 0 54px 24px;
+  padding: 14px 16px;
+  border: 1px solid #e2e2dd;
+  border-radius: 10px;
+  background: #f8f8f6;
+  color: #55595f;
+  font-size: 13px;
+}
+
+.public-offer-message.success {
+  border-color: #bcdcc3;
+  background: #f0f8f2;
+  color: #245f33;
+}
+
+.public-offer-decision {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  margin: 0 54px 44px;
+  padding: 24px;
+  border: 1px solid #deded9;
+  border-radius: 12px;
+  background: #fafaf8;
+}
+
+.public-offer-decision p {
+  margin: 0;
+  color: #70747a;
+  font-size: 12px;
+}
+
+.public-offer-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.public-offer-buttons form {
+  margin: 0;
+}
+
+.public-offer-buttons button {
+  min-height: 42px;
+  padding: 0 17px;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.public-offer-accept {
+  border: 1px solid #17181a;
+  background: #17181a;
+  color: #fff;
+}
+
+.public-offer-accept:hover {
+  background: #292b2e;
+}
+
+.public-offer-decline {
+  border: 1px solid #d6d6d1;
+  background: #fff;
+  color: #55595f;
+}
+
+.public-offer-decline:hover {
+  border-color: #b8b8b3;
+  color: #17181a;
+}
+
+.public-offer-footer {
+  padding: 22px 54px;
+  border-top: 1px solid #ecece8;
+  color: #888c91;
+  font-size: 11px;
+}
+
+@media (max-width: 720px) {
+  .public-offer-page {
+    padding: 18px 10px;
+  }
+
+  .public-offer-shell {
+    border-radius: 12px;
+  }
+
+  .public-offer-header {
+    padding: 20px;
+  }
+
+  .public-offer-intro,
+  .public-offer-content {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .public-offer-prices {
+    grid-template-columns: 1fr;
+  }
+
+  .public-offer-prices > div + div {
+    border-left: 0;
+    border-top: 1px solid #ecece8;
+  }
+
+  .public-offer-message,
+  .public-offer-decision {
+    margin-left: 24px;
+    margin-right: 24px;
+  }
+
+  .public-offer-decision {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .public-offer-buttons {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .public-offer-buttons button {
+    width: 100%;
+  }
+
+  .public-offer-footer {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}

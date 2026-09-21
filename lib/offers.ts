@@ -3,6 +3,7 @@ import type { OfferStatus } from "@/generated/prisma/client";
 export const offerStatusLabels: Record<OfferStatus, string> = {
   DRAFT: "Draft",
   SHARED: "Shared",
+  VIEWED: "Viewed",
   ACCEPTED: "Accepted",
   DECLINED: "Declined",
 };

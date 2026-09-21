@@ -38,6 +38,7 @@ export type LeadStatus = (typeof LeadStatus)[keyof typeof LeadStatus]
 export const OfferStatus = {
   DRAFT: 'DRAFT',
   SHARED: 'SHARED',
+  VIEWED: 'VIEWED',
   ACCEPTED: 'ACCEPTED',
   DECLINED: 'DECLINED'
 } as const
