@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./hub.css";
+import "./overview-command-center.css";
 import "./offer-project-link.css";
 import "./project-demo-management.css";
 import "./project-detail-polish.css";

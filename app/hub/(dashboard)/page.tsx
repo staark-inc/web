@@ -4,19 +4,26 @@ import {
   Activity,
   ArrowRight,
   BarChart3,
+  CheckCircle2,
+  CircleDollarSign,
+  Clock3,
+  ExternalLink,
   Eye,
+  FileText,
+  FolderKanban,
+  GitCommitHorizontal,
+  GitMerge,
   Inbox,
+  LifeBuoy,
+  LoaderCircle,
+  MailPlus,
   MousePointerClick,
+  Plus,
+  Rocket,
   Target,
   Trophy,
   Users,
-  GitMerge,
-  GitCommitHorizontal,
-  ExternalLink,
-  CheckCircle2,
-  LoaderCircle,
   XCircle,
-  Rocket,
 } from "lucide-react";
 import {
   getSearchConsoleOverview,
@@ -102,6 +109,27 @@ function formatSearchDate(date: string) {
 
 function formatPercent(value: number) {
   return `${(value * 100).toFixed(1)}%`;
+}
+
+function formatMoneyOre(value: number | null | undefined) {
+  if (!value) {
+    return "0 kr";
+  }
+
+  return new Intl.NumberFormat("sv-SE", {
+    style: "currency",
+    currency: "SEK",
+    maximumFractionDigits: 0,
+  }).format(value / 100);
+}
+
+function formatDashboardDate(date: Date) {
+  return new Intl.DateTimeFormat("sv-SE", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    timeZone: "Europe/Stockholm",
+  }).format(date);
 }
 
 function formatPosition(value: number) {
@@ -211,6 +239,14 @@ const githubPromise = getGitHubOverview()
       unreadCount,
       contactCount,
       wonThisMonth,
+      activeProjectCount,
+      overdueProjectCount,
+      openSupportCount,
+      urgentSupportCount,
+      liveOfferCount,
+      viewedOfferCount,
+      liveOfferValue,
+      acceptedThisMonth,
       recentLeads,
       recentMessages,
       analyticsResult,
@@ -233,6 +269,92 @@ const githubPromise = getGitHubOverview()
           updatedAt: {
             gte: startOfMonth,
           },
+        },
+      }),
+
+      prisma.project.count({
+        where: {
+          status: {
+            in: [
+              "PLANNING",
+              "IN_PROGRESS",
+              "WAITING_CLIENT",
+              "REVIEW",
+            ],
+          },
+        },
+      }),
+
+      prisma.project.count({
+        where: {
+          dueAt: {
+            lt: new Date(),
+          },
+          status: {
+            in: [
+              "PLANNING",
+              "IN_PROGRESS",
+              "WAITING_CLIENT",
+              "REVIEW",
+            ],
+          },
+        },
+      }),
+
+      prisma.supportRequest.count({
+        where: {
+          status: {
+            not: "RESOLVED",
+          },
+        },
+      }),
+
+      prisma.supportRequest.count({
+        where: {
+          priority: "URGENT",
+          status: {
+            not: "RESOLVED",
+          },
+        },
+      }),
+
+      prisma.offer.count({
+        where: {
+          status: {
+            in: ["SHARED", "VIEWED"],
+          },
+        },
+      }),
+
+      prisma.offer.count({
+        where: {
+          status: "VIEWED",
+        },
+      }),
+
+      prisma.offer.aggregate({
+        where: {
+          status: {
+            in: ["SHARED", "VIEWED"],
+          },
+        },
+        _sum: {
+          oneTimePriceOre: true,
+        },
+      }),
+
+      prisma.offer.aggregate({
+        where: {
+          status: "ACCEPTED",
+          decidedAt: {
+            gte: startOfMonth,
+          },
+        },
+        _count: {
+          _all: true,
+        },
+        _sum: {
+          oneTimePriceOre: true,
         },
       }),
 
@@ -264,6 +386,78 @@ const githubPromise = getGitHubOverview()
       searchConsolePromise,
       githubPromise,
     ]);
+
+  const now = new Date();
+
+  const liveOfferValueOre =
+    liveOfferValue._sum.oneTimePriceOre ?? 0;
+
+  const acceptedThisMonthCount =
+    acceptedThisMonth._count._all;
+
+  const acceptedThisMonthValueOre =
+    acceptedThisMonth._sum.oneTimePriceOre ?? 0;
+
+  const attentionCount =
+    newLeadCount +
+    unreadCount +
+    urgentSupportCount +
+    overdueProjectCount +
+    viewedOfferCount;
+
+  const attentionItems = [
+    newLeadCount > 0
+      ? {
+          label: "New leads",
+          detail: `${newLeadCount} waiting for first contact`,
+          href: "/hub/leads?status=NEW",
+          tone: "attention",
+          icon: "lead",
+        }
+      : null,
+    unreadCount > 0
+      ? {
+          label: "Unread messages",
+          detail: `${unreadCount} customer message${unreadCount === 1 ? "" : "s"} waiting`,
+          href: "/hub/inbox",
+          tone: "attention",
+          icon: "inbox",
+        }
+      : null,
+    urgentSupportCount > 0
+      ? {
+          label: "Urgent support",
+          detail: `${urgentSupportCount} urgent request${urgentSupportCount === 1 ? "" : "s"} open`,
+          href: "/hub/support",
+          tone: "danger",
+          icon: "support",
+        }
+      : null,
+    overdueProjectCount > 0
+      ? {
+          label: "Project deadlines",
+          detail: `${overdueProjectCount} project${overdueProjectCount === 1 ? "" : "s"} overdue`,
+          href: "/hub/projects",
+          tone: "danger",
+          icon: "project",
+        }
+      : null,
+    viewedOfferCount > 0
+      ? {
+          label: "Viewed offers",
+          detail: `${viewedOfferCount} viewed offer${viewedOfferCount === 1 ? "" : "s"} awaiting decision`,
+          href: "/hub/offers",
+          tone: "info",
+          icon: "offer",
+        }
+      : null,
+  ].filter(Boolean) as Array<{
+    label: string;
+    detail: string;
+    href: string;
+    tone: "attention" | "danger" | "info";
+    icon: "lead" | "inbox" | "support" | "project" | "offer";
+  }>;
 
   const analytics = analyticsResult.data;
   const searchConsole = searchConsoleResult.data;
@@ -337,112 +531,254 @@ const githubPromise = getGitHubOverview()
   );
 
   return (
-    <div className="hub-page">
-      {/* HEADER */}
+    <div className="hub-page hub-overview-page">
+      {/* COMMAND CENTER */}
 
-      <header className="hub-page-header">
-        <div>
-          <span className="hub-eyebrow">
-            STAARK HUB
-          </span>
+      <section className="hub-command-center">
+        <div className="hub-command-hero">
+          <div className="hub-command-copy">
+            <span className="hub-command-kicker">
+              STAARK COMMAND CENTER
+            </span>
 
-          <h1>Overview</h1>
+            <h1>Overview</h1>
 
-          <p>
-            A quick look at what&apos;s happening
-            with your business.
-          </p>
+            <p className="hub-command-date">
+              {formatDashboardDate(now)}
+            </p>
+
+            <p className="hub-command-summary">
+              {attentionCount > 0
+                ? `${attentionCount} item${attentionCount === 1 ? "" : "s"} need attention across sales, delivery and support.`
+                : "Everything looks clear. No urgent customer or delivery signals right now."}
+            </p>
+          </div>
+
+          <div className="hub-command-actions">
+            <Link
+              href="/hub/offers/new"
+              className="hub-command-action hub-command-action-primary"
+            >
+              <FileText size={15} />
+              New offer
+            </Link>
+
+            <Link
+              href="/hub/compose"
+              className="hub-command-action"
+            >
+              <MailPlus size={15} />
+              Compose
+            </Link>
+
+            <Link
+              href="/hub/projects/new"
+              className="hub-command-action"
+            >
+              <Plus size={15} />
+              New project
+            </Link>
+          </div>
         </div>
-      </header>
 
-      {/* CRM STATS */}
+        <div className="hub-command-metrics">
+          <Link
+            href="/hub/offers"
+            className="hub-command-metric"
+          >
+            <span className="hub-command-metric-icon">
+              <CircleDollarSign size={17} />
+            </span>
 
-      <div className="hub-overview-section-heading">
-        <div>
-          <span className="hub-overview-section-label">
-            CRM
-          </span>
+            <div>
+              <small>Live proposal value</small>
+              <strong>{formatMoneyOre(liveOfferValueOre)}</strong>
+              <span>
+                {liveOfferCount} live offer{liveOfferCount === 1 ? "" : "s"}
+              </span>
+            </div>
+          </Link>
 
-          <h2>Business overview</h2>
+          <Link
+            href="/hub/projects"
+            className={`hub-command-metric ${
+              overdueProjectCount
+                ? "hub-command-metric-alert"
+                : ""
+            }`}
+          >
+            <span className="hub-command-metric-icon">
+              <FolderKanban size={17} />
+            </span>
+
+            <div>
+              <small>Delivery</small>
+              <strong>{activeProjectCount} active</strong>
+              <span>
+                {overdueProjectCount
+                  ? `${overdueProjectCount} overdue`
+                  : "No overdue projects"}
+              </span>
+            </div>
+          </Link>
+
+          <Link
+            href="/hub/support"
+            className={`hub-command-metric ${
+              urgentSupportCount
+                ? "hub-command-metric-danger"
+                : ""
+            }`}
+          >
+            <span className="hub-command-metric-icon">
+              <LifeBuoy size={17} />
+            </span>
+
+            <div>
+              <small>Support</small>
+              <strong>{openSupportCount} open</strong>
+              <span>
+                {urgentSupportCount
+                  ? `${urgentSupportCount} urgent`
+                  : "No urgent tickets"}
+              </span>
+            </div>
+          </Link>
+
+          <Link
+            href="/hub/inbox"
+            className={`hub-command-metric ${
+              unreadCount
+                ? "hub-command-metric-alert"
+                : ""
+            }`}
+          >
+            <span className="hub-command-metric-icon">
+              <Inbox size={17} />
+            </span>
+
+            <div>
+              <small>Inbox</small>
+              <strong>{unreadCount} unread</strong>
+              <span>
+                {newLeadCount} new lead{newLeadCount === 1 ? "" : "s"}
+              </span>
+            </div>
+          </Link>
         </div>
-      </div>
+      </section>
 
-      <section className="hub-overview-stats">
-        <Link
-          href="/hub/leads?status=NEW"
-          className="hub-stat-card"
-        >
-          <div className="hub-stat-icon">
-            <Target size={18} />
+      <section className="hub-command-grid">
+        <div className="hub-command-panel">
+          <div className="hub-command-panel-header">
+            <div>
+              <span>PRIORITY QUEUE</span>
+              <h2>Needs attention</h2>
+            </div>
+
+            <strong
+              className={
+                attentionCount
+                  ? "hub-command-count hub-command-count-hot"
+                  : "hub-command-count"
+              }
+            >
+              {attentionCount}
+            </strong>
           </div>
 
-          <div className="hub-stat-content">
-            <span>New leads</span>
+          {attentionItems.length === 0 ? (
+            <div className="hub-command-clear">
+              <CheckCircle2 size={20} />
 
-            <strong>{newLeadCount}</strong>
+              <div>
+                <strong>All clear</strong>
+                <span>
+                  No urgent customer or delivery signals.
+                </span>
+              </div>
+            </div>
+          ) : (
+            <div className="hub-command-attention-list">
+              {attentionItems.map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className={`hub-command-attention hub-command-attention-${item.tone}`}
+                >
+                  <span className="hub-command-attention-icon">
+                    {item.icon === "lead" ? (
+                      <Target size={15} />
+                    ) : item.icon === "inbox" ? (
+                      <Inbox size={15} />
+                    ) : item.icon === "support" ? (
+                      <LifeBuoy size={15} />
+                    ) : item.icon === "project" ? (
+                      <Clock3 size={15} />
+                    ) : (
+                      <Eye size={15} />
+                    )}
+                  </span>
 
-            <small>
-              Waiting for attention
-            </small>
-          </div>
-        </Link>
+                  <div>
+                    <strong>{item.label}</strong>
+                    <span>{item.detail}</span>
+                  </div>
 
-        <Link
-          href="/hub/inbox"
-          className="hub-stat-card"
-        >
-          <div className="hub-stat-icon">
-            <Inbox size={18} />
-          </div>
+                  <ArrowRight size={14} />
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
 
-          <div className="hub-stat-content">
-            <span>Unread messages</span>
+        <div className="hub-command-panel hub-command-sales">
+          <div className="hub-command-panel-header">
+            <div>
+              <span>SALES</span>
+              <h2>This month</h2>
+            </div>
 
-            <strong>{unreadCount}</strong>
-
-            <small>
-              Customer enquiries
-            </small>
-          </div>
-        </Link>
-
-        <Link
-          href="/hub/contacts"
-          className="hub-stat-card"
-        >
-          <div className="hub-stat-icon">
-            <Users size={18} />
-          </div>
-
-          <div className="hub-stat-content">
-            <span>Contacts</span>
-
-            <strong>{contactCount}</strong>
-
-            <small>
-              Total contacts
-            </small>
-          </div>
-        </Link>
-
-        <Link
-          href="/hub/leads?status=WON"
-          className="hub-stat-card"
-        >
-          <div className="hub-stat-icon">
-            <Trophy size={18} />
+            <CircleDollarSign size={19} />
           </div>
 
-          <div className="hub-stat-content">
-            <span>Won leads</span>
+          <div className="hub-command-sales-value">
+            <small>Accepted offer value</small>
 
-            <strong>{wonThisMonth}</strong>
+            <strong>
+              {formatMoneyOre(acceptedThisMonthValueOre)}
+            </strong>
 
-            <small>
-              Updated this month
-            </small>
+            <span>
+              {acceptedThisMonthCount} accepted offer{acceptedThisMonthCount === 1 ? "" : "s"}
+            </span>
           </div>
-        </Link>
+
+          <div className="hub-command-sales-footer">
+            <div>
+              <small>New leads</small>
+              <strong>{newLeadCount}</strong>
+            </div>
+
+            <div>
+              <small>Won leads</small>
+              <strong>{wonThisMonth}</strong>
+            </div>
+
+            <div>
+              <small>Contacts</small>
+              <strong>{contactCount}</strong>
+            </div>
+          </div>
+
+          <Link
+            href="/hub/offers"
+            className="hub-command-panel-link"
+          >
+            Open sales pipeline
+            <ArrowRight size={13} />
+          </Link>
+        </div>
       </section>
 
         {/* DEPLOYMENT */}
