@@ -1,14 +1,11 @@
-import { NextResponse } from "next/server";
+import { redirectTo } from "../../../../lib/redirect";
 
 export const runtime = "nodejs";
 
 const SESSION_COOKIE = "staark_hub_session";
 
 export async function POST(request: Request) {
-  const response = NextResponse.redirect(
-    new URL("/hub/login", request.url),
-    303
-  );
+  const response = redirectTo("/hub/login");
 
   response.cookies.set({
     name: SESSION_COOKIE,

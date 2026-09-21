@@ -31,6 +31,7 @@ export type LeadMinAggregateOutputType = {
   budget: string | null
   message: string | null
   status: $Enums.LeadStatus | null
+  clientId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -42,6 +43,7 @@ export type LeadMaxAggregateOutputType = {
   budget: string | null
   message: string | null
   status: $Enums.LeadStatus | null
+  clientId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -53,6 +55,7 @@ export type LeadCountAggregateOutputType = {
   budget: number
   message: number
   status: number
+  clientId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -66,6 +69,7 @@ export type LeadMinAggregateInputType = {
   budget?: true
   message?: true
   status?: true
+  clientId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -77,6 +81,7 @@ export type LeadMaxAggregateInputType = {
   budget?: true
   message?: true
   status?: true
+  clientId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -88,6 +93,7 @@ export type LeadCountAggregateInputType = {
   budget?: true
   message?: true
   status?: true
+  clientId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -172,6 +178,7 @@ export type LeadGroupByOutputType = {
   budget: string | null
   message: string | null
   status: $Enums.LeadStatus
+  clientId: string | null
   createdAt: Date
   updatedAt: Date
   _count: LeadCountAggregateOutputType | null
@@ -204,9 +211,11 @@ export type LeadWhereInput = {
   budget?: Prisma.StringNullableFilter<"Lead"> | string | null
   message?: Prisma.StringNullableFilter<"Lead"> | string | null
   status?: Prisma.EnumLeadStatusFilter<"Lead"> | $Enums.LeadStatus
+  clientId?: Prisma.StringNullableFilter<"Lead"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
   contact?: Prisma.XOR<Prisma.ContactScalarRelationFilter, Prisma.ContactWhereInput>
+  client?: Prisma.XOR<Prisma.ClientNullableScalarRelationFilter, Prisma.ClientWhereInput> | null
 }
 
 export type LeadOrderByWithRelationInput = {
@@ -216,9 +225,11 @@ export type LeadOrderByWithRelationInput = {
   budget?: Prisma.SortOrderInput | Prisma.SortOrder
   message?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  clientId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   contact?: Prisma.ContactOrderByWithRelationInput
+  client?: Prisma.ClientOrderByWithRelationInput
 }
 
 export type LeadWhereUniqueInput = Prisma.AtLeast<{
@@ -231,9 +242,11 @@ export type LeadWhereUniqueInput = Prisma.AtLeast<{
   budget?: Prisma.StringNullableFilter<"Lead"> | string | null
   message?: Prisma.StringNullableFilter<"Lead"> | string | null
   status?: Prisma.EnumLeadStatusFilter<"Lead"> | $Enums.LeadStatus
+  clientId?: Prisma.StringNullableFilter<"Lead"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
   contact?: Prisma.XOR<Prisma.ContactScalarRelationFilter, Prisma.ContactWhereInput>
+  client?: Prisma.XOR<Prisma.ClientNullableScalarRelationFilter, Prisma.ClientWhereInput> | null
 }, "id">
 
 export type LeadOrderByWithAggregationInput = {
@@ -243,6 +256,7 @@ export type LeadOrderByWithAggregationInput = {
   budget?: Prisma.SortOrderInput | Prisma.SortOrder
   message?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  clientId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.LeadCountOrderByAggregateInput
@@ -260,6 +274,7 @@ export type LeadScalarWhereWithAggregatesInput = {
   budget?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
   message?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
   status?: Prisma.EnumLeadStatusWithAggregatesFilter<"Lead"> | $Enums.LeadStatus
+  clientId?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Lead"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Lead"> | Date | string
 }
@@ -273,6 +288,7 @@ export type LeadCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   contact: Prisma.ContactCreateNestedOneWithoutLeadsInput
+  client?: Prisma.ClientCreateNestedOneWithoutLeadsInput
 }
 
 export type LeadUncheckedCreateInput = {
@@ -282,6 +298,7 @@ export type LeadUncheckedCreateInput = {
   budget?: string | null
   message?: string | null
   status?: $Enums.LeadStatus
+  clientId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -295,6 +312,7 @@ export type LeadUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contact?: Prisma.ContactUpdateOneRequiredWithoutLeadsNestedInput
+  client?: Prisma.ClientUpdateOneWithoutLeadsNestedInput
 }
 
 export type LeadUncheckedUpdateInput = {
@@ -304,6 +322,7 @@ export type LeadUncheckedUpdateInput = {
   budget?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -315,6 +334,7 @@ export type LeadCreateManyInput = {
   budget?: string | null
   message?: string | null
   status?: $Enums.LeadStatus
+  clientId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -336,6 +356,7 @@ export type LeadUncheckedUpdateManyInput = {
   budget?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -357,6 +378,7 @@ export type LeadCountOrderByAggregateInput = {
   budget?: Prisma.SortOrder
   message?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  clientId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -368,6 +390,7 @@ export type LeadMaxOrderByAggregateInput = {
   budget?: Prisma.SortOrder
   message?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  clientId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -379,6 +402,7 @@ export type LeadMinOrderByAggregateInput = {
   budget?: Prisma.SortOrder
   message?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  clientId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -429,6 +453,48 @@ export type EnumLeadStatusFieldUpdateOperationsInput = {
   set?: $Enums.LeadStatus
 }
 
+export type LeadCreateNestedManyWithoutClientInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutClientInput, Prisma.LeadUncheckedCreateWithoutClientInput> | Prisma.LeadCreateWithoutClientInput[] | Prisma.LeadUncheckedCreateWithoutClientInput[]
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutClientInput | Prisma.LeadCreateOrConnectWithoutClientInput[]
+  createMany?: Prisma.LeadCreateManyClientInputEnvelope
+  connect?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+}
+
+export type LeadUncheckedCreateNestedManyWithoutClientInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutClientInput, Prisma.LeadUncheckedCreateWithoutClientInput> | Prisma.LeadCreateWithoutClientInput[] | Prisma.LeadUncheckedCreateWithoutClientInput[]
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutClientInput | Prisma.LeadCreateOrConnectWithoutClientInput[]
+  createMany?: Prisma.LeadCreateManyClientInputEnvelope
+  connect?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+}
+
+export type LeadUpdateManyWithoutClientNestedInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutClientInput, Prisma.LeadUncheckedCreateWithoutClientInput> | Prisma.LeadCreateWithoutClientInput[] | Prisma.LeadUncheckedCreateWithoutClientInput[]
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutClientInput | Prisma.LeadCreateOrConnectWithoutClientInput[]
+  upsert?: Prisma.LeadUpsertWithWhereUniqueWithoutClientInput | Prisma.LeadUpsertWithWhereUniqueWithoutClientInput[]
+  createMany?: Prisma.LeadCreateManyClientInputEnvelope
+  set?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+  disconnect?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+  delete?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+  connect?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+  update?: Prisma.LeadUpdateWithWhereUniqueWithoutClientInput | Prisma.LeadUpdateWithWhereUniqueWithoutClientInput[]
+  updateMany?: Prisma.LeadUpdateManyWithWhereWithoutClientInput | Prisma.LeadUpdateManyWithWhereWithoutClientInput[]
+  deleteMany?: Prisma.LeadScalarWhereInput | Prisma.LeadScalarWhereInput[]
+}
+
+export type LeadUncheckedUpdateManyWithoutClientNestedInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutClientInput, Prisma.LeadUncheckedCreateWithoutClientInput> | Prisma.LeadCreateWithoutClientInput[] | Prisma.LeadUncheckedCreateWithoutClientInput[]
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutClientInput | Prisma.LeadCreateOrConnectWithoutClientInput[]
+  upsert?: Prisma.LeadUpsertWithWhereUniqueWithoutClientInput | Prisma.LeadUpsertWithWhereUniqueWithoutClientInput[]
+  createMany?: Prisma.LeadCreateManyClientInputEnvelope
+  set?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+  disconnect?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+  delete?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+  connect?: Prisma.LeadWhereUniqueInput | Prisma.LeadWhereUniqueInput[]
+  update?: Prisma.LeadUpdateWithWhereUniqueWithoutClientInput | Prisma.LeadUpdateWithWhereUniqueWithoutClientInput[]
+  updateMany?: Prisma.LeadUpdateManyWithWhereWithoutClientInput | Prisma.LeadUpdateManyWithWhereWithoutClientInput[]
+  deleteMany?: Prisma.LeadScalarWhereInput | Prisma.LeadScalarWhereInput[]
+}
+
 export type LeadCreateWithoutContactInput = {
   id?: string
   service?: string | null
@@ -437,6 +503,7 @@ export type LeadCreateWithoutContactInput = {
   status?: $Enums.LeadStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  client?: Prisma.ClientCreateNestedOneWithoutLeadsInput
 }
 
 export type LeadUncheckedCreateWithoutContactInput = {
@@ -445,6 +512,7 @@ export type LeadUncheckedCreateWithoutContactInput = {
   budget?: string | null
   message?: string | null
   status?: $Enums.LeadStatus
+  clientId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -485,8 +553,57 @@ export type LeadScalarWhereInput = {
   budget?: Prisma.StringNullableFilter<"Lead"> | string | null
   message?: Prisma.StringNullableFilter<"Lead"> | string | null
   status?: Prisma.EnumLeadStatusFilter<"Lead"> | $Enums.LeadStatus
+  clientId?: Prisma.StringNullableFilter<"Lead"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
+}
+
+export type LeadCreateWithoutClientInput = {
+  id?: string
+  service?: string | null
+  budget?: string | null
+  message?: string | null
+  status?: $Enums.LeadStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  contact: Prisma.ContactCreateNestedOneWithoutLeadsInput
+}
+
+export type LeadUncheckedCreateWithoutClientInput = {
+  id?: string
+  contactId: string
+  service?: string | null
+  budget?: string | null
+  message?: string | null
+  status?: $Enums.LeadStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type LeadCreateOrConnectWithoutClientInput = {
+  where: Prisma.LeadWhereUniqueInput
+  create: Prisma.XOR<Prisma.LeadCreateWithoutClientInput, Prisma.LeadUncheckedCreateWithoutClientInput>
+}
+
+export type LeadCreateManyClientInputEnvelope = {
+  data: Prisma.LeadCreateManyClientInput | Prisma.LeadCreateManyClientInput[]
+  skipDuplicates?: boolean
+}
+
+export type LeadUpsertWithWhereUniqueWithoutClientInput = {
+  where: Prisma.LeadWhereUniqueInput
+  update: Prisma.XOR<Prisma.LeadUpdateWithoutClientInput, Prisma.LeadUncheckedUpdateWithoutClientInput>
+  create: Prisma.XOR<Prisma.LeadCreateWithoutClientInput, Prisma.LeadUncheckedCreateWithoutClientInput>
+}
+
+export type LeadUpdateWithWhereUniqueWithoutClientInput = {
+  where: Prisma.LeadWhereUniqueInput
+  data: Prisma.XOR<Prisma.LeadUpdateWithoutClientInput, Prisma.LeadUncheckedUpdateWithoutClientInput>
+}
+
+export type LeadUpdateManyWithWhereWithoutClientInput = {
+  where: Prisma.LeadScalarWhereInput
+  data: Prisma.XOR<Prisma.LeadUpdateManyMutationInput, Prisma.LeadUncheckedUpdateManyWithoutClientInput>
 }
 
 export type LeadCreateManyContactInput = {
@@ -495,6 +612,7 @@ export type LeadCreateManyContactInput = {
   budget?: string | null
   message?: string | null
   status?: $Enums.LeadStatus
+  clientId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -507,6 +625,7 @@ export type LeadUpdateWithoutContactInput = {
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  client?: Prisma.ClientUpdateOneWithoutLeadsNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutContactInput = {
@@ -515,12 +634,58 @@ export type LeadUncheckedUpdateWithoutContactInput = {
   budget?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type LeadUncheckedUpdateManyWithoutContactInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  service?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  budget?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type LeadCreateManyClientInput = {
+  id?: string
+  contactId: string
+  service?: string | null
+  budget?: string | null
+  message?: string | null
+  status?: $Enums.LeadStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type LeadUpdateWithoutClientInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  service?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  budget?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contact?: Prisma.ContactUpdateOneRequiredWithoutLeadsNestedInput
+}
+
+export type LeadUncheckedUpdateWithoutClientInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  contactId?: Prisma.StringFieldUpdateOperationsInput | string
+  service?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  budget?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type LeadUncheckedUpdateManyWithoutClientInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  contactId?: Prisma.StringFieldUpdateOperationsInput | string
   service?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   budget?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -538,9 +703,11 @@ export type LeadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   budget?: boolean
   message?: boolean
   status?: boolean
+  clientId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
+  client?: boolean | Prisma.Lead$clientArgs<ExtArgs>
 }, ExtArgs["result"]["lead"]>
 
 export type LeadSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -550,9 +717,11 @@ export type LeadSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   budget?: boolean
   message?: boolean
   status?: boolean
+  clientId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
+  client?: boolean | Prisma.Lead$clientArgs<ExtArgs>
 }, ExtArgs["result"]["lead"]>
 
 export type LeadSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -562,9 +731,11 @@ export type LeadSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   budget?: boolean
   message?: boolean
   status?: boolean
+  clientId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
+  client?: boolean | Prisma.Lead$clientArgs<ExtArgs>
 }, ExtArgs["result"]["lead"]>
 
 export type LeadSelectScalar = {
@@ -574,25 +745,30 @@ export type LeadSelectScalar = {
   budget?: boolean
   message?: boolean
   status?: boolean
+  clientId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type LeadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "contactId" | "service" | "budget" | "message" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["lead"]>
+export type LeadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "contactId" | "service" | "budget" | "message" | "status" | "clientId" | "createdAt" | "updatedAt", ExtArgs["result"]["lead"]>
 export type LeadInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
+  client?: boolean | Prisma.Lead$clientArgs<ExtArgs>
 }
 export type LeadIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
+  client?: boolean | Prisma.Lead$clientArgs<ExtArgs>
 }
 export type LeadIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
+  client?: boolean | Prisma.Lead$clientArgs<ExtArgs>
 }
 
 export type $LeadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Lead"
   objects: {
     contact: Prisma.$ContactPayload<ExtArgs>
+    client: Prisma.$ClientPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -601,6 +777,7 @@ export type $LeadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     budget: string | null
     message: string | null
     status: $Enums.LeadStatus
+    clientId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["lead"]>
@@ -998,6 +1175,7 @@ readonly fields: LeadFieldRefs;
 export interface Prisma__LeadClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   contact<T extends Prisma.ContactDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ContactDefaultArgs<ExtArgs>>): Prisma.Prisma__ContactClient<runtime.Types.Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  client<T extends Prisma.Lead$clientArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$clientArgs<ExtArgs>>): Prisma.Prisma__ClientClient<runtime.Types.Result.GetResult<Prisma.$ClientPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1033,6 +1211,7 @@ export interface LeadFieldRefs {
   readonly budget: Prisma.FieldRef<"Lead", 'String'>
   readonly message: Prisma.FieldRef<"Lead", 'String'>
   readonly status: Prisma.FieldRef<"Lead", 'LeadStatus'>
+  readonly clientId: Prisma.FieldRef<"Lead", 'String'>
   readonly createdAt: Prisma.FieldRef<"Lead", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Lead", 'DateTime'>
 }
@@ -1433,6 +1612,25 @@ export type LeadDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Limit how many Leads to delete.
    */
   limit?: number
+}
+
+/**
+ * Lead.client
+ */
+export type Lead$clientArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Client
+   */
+  select?: Prisma.ClientSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Client
+   */
+  omit?: Prisma.ClientOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ClientInclude<ExtArgs> | null
+  where?: Prisma.ClientWhereInput
 }
 
 /**

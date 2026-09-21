@@ -9,6 +9,7 @@ import {
 
 import { prisma } from "@/lib/prisma";
 import LeadStatusForm from "./LeadStatusForm";
+import ConvertLeadForm from "./ConvertLeadForm";
 
 export const dynamic = "force-dynamic";
 
@@ -34,12 +35,15 @@ export default async function LeadPage({
   const { id } = await params;
 
   const lead = await prisma.lead.findUnique({
-    where: {
-      id,
-    },
-
+    where: { id },
     include: {
       contact: true,
+      client: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
     },
   });
 
@@ -96,10 +100,14 @@ export default async function LeadPage({
             <div>
               <span>Status</span>
 
-              <LeadStatusForm
-                leadId={lead.id}
-                currentStatus={lead.status}
-              />
+              {lead.client ? (
+                <strong>WON · Converted to client</strong>
+              ) : (
+                <LeadStatusForm
+                  leadId={lead.id}
+                  currentStatus={lead.status}
+                />
+              )}
             </div>
           </div>
         </section>
@@ -133,6 +141,17 @@ export default async function LeadPage({
             </div>
           </Link>
         </section>
+
+        {lead.status !== "WON" && !lead.client && (
+          <section className="hub-detail-card">
+            <h2>Convert to client</h2>
+
+            <ConvertLeadForm
+              leadId={lead.id}
+              defaultName={lead.contact.company || ""}
+            />
+          </section>
+        )}
       </div>
 
       <section className="hub-detail-card hub-lead-message-card">

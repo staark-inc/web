@@ -10,6 +10,10 @@ import {
   UserRound,
   UsersRound,
   Target,
+  FolderKanban,
+  FileText,
+  CreditCard,
+  LifeBuoy,
 } from "lucide-react";
 
 type HubNavProps = {
@@ -37,8 +41,27 @@ export default function HubNav({
 
   const isLeads =
     pathname.startsWith("/hub/leads");
-
   
+  const isClients =
+    pathname === "/hub/clients" ||
+    pathname.startsWith("/hub/clients/");
+
+  const isProjects =
+    pathname === "/hub/projects" ||
+    pathname.startsWith("/hub/projects/");
+  
+  const isOffers = 
+    pathname === "/hub/offers" ||
+    pathname.startsWith("/hub/offers/");
+
+  const isBilling = 
+    pathname === "/hub/billing" ||
+    pathname.startsWith("/hub/billing/");
+
+  const isSupport = 
+    pathname === "/hub/support" ||
+    pathname.startsWith("/hub/support/");
+
   return (
     <nav className="hub-nav">
     <Link
@@ -112,6 +135,59 @@ export default function HubNav({
               : newLeadCount}
           </span>
         )}
+      </Link>
+
+      <Link
+        href="/hub/clients"
+        className={`hub-nav-item ${
+          isClients ? "hub-nav-item-active" : ""
+        }`}
+      >
+        <FolderKanban size={17} />
+        <span>Clients</span>
+      </Link>
+
+      <div className="hub-nav-section-label">Work</div>
+      <Link
+        href="/hub/projects"
+        className={`hub-nav-item ${
+          isProjects ? "hub-nav-item-active" : ""
+        }`}
+      >
+        <FolderKanban size={17} />
+        <span>Projects</span>
+      </Link>
+
+      <Link
+        href="/hub/offers"
+        className={`hub-nav-item ${
+          isOffers ? "hub-nav-item-active" : ""
+        }`}
+      >
+        <FileText size={17} />
+        <span>Offers</span>
+      </Link>
+
+      <div className="hub-nav-section-label">Operations</div>
+
+      <Link
+        href="/hub/billing"
+        className={`hub-nav-item ${
+          isBilling ? "hub-nav-item-active" : ""
+        }`}
+      >
+        <CreditCard size={17} />
+        <span>Billing</span>
+      </Link>
+
+      <Link
+        href="/hub/support"
+        className={`hub-nav-item ${
+          isSupport ? "hub-nav-item-active" : ""
+        }`}
+      >
+        <LifeBuoy size={17} />
+        <span>Support</span>
       </Link>
 
       <div className="hub-nav-section-label">

@@ -65,6 +65,7 @@ model Contact {
   leads    Lead[]
   messages Message[]
   threads  Thread[]
+  clients  Client[]
 
   @@index([email])
   @@index([createdAt])
@@ -79,13 +80,34 @@ model Lead {
   budget  String?
   message String?
 
-  status LeadStatus @default(NEW)
+  status   LeadStatus @default(NEW)
+  clientId String?
+  client   Client?    @relation(fields: [clientId], references: [id], onDelete: SetNull)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([contactId])
   @@index([status])
+  @@index([createdAt])
+}
+
+model Client {
+  id                 String  @id @default(cuid())
+  name               String
+  billingEmail       String?
+  phone              String?
+  organizationNumber String?
+  billingAddress     String?
+  notes              String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  contacts Contact[]
+  leads    Lead[]
+
+  @@index([name])
   @@index([createdAt])
 }
 

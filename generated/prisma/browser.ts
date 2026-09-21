@@ -38,6 +38,11 @@ export type Contact = Prisma.ContactModel
  */
 export type Lead = Prisma.LeadModel
 /**
+ * Model Client
+ * 
+ */
+export type Client = Prisma.ClientModel
+/**
  * Model Thread
  * 
  */

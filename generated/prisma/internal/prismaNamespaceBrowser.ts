@@ -55,6 +55,7 @@ export const ModelName = {
   Settings: 'Settings',
   Contact: 'Contact',
   Lead: 'Lead',
+  Client: 'Client',
   Thread: 'Thread',
   Message: 'Message'
 } as const
@@ -126,11 +127,27 @@ export const LeadScalarFieldEnum = {
   budget: 'budget',
   message: 'message',
   status: 'status',
+  clientId: 'clientId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type LeadScalarFieldEnum = (typeof LeadScalarFieldEnum)[keyof typeof LeadScalarFieldEnum]
+
+
+export const ClientScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  billingEmail: 'billingEmail',
+  phone: 'phone',
+  organizationNumber: 'organizationNumber',
+  billingAddress: 'billingAddress',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ClientScalarFieldEnum = (typeof ClientScalarFieldEnum)[keyof typeof ClientScalarFieldEnum]
 
 
 export const ThreadScalarFieldEnum = {
