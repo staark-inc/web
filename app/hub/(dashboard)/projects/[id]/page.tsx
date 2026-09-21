@@ -12,6 +12,7 @@ import {
   MessageSquare,
   LifeBuoy,
   Package,
+  Rocket,
   Wallet,
 } from "lucide-react";
 
@@ -38,10 +39,7 @@ const tabs = [
   { value: "overview", label: "Overview" },
   { value: "tasks", label: "Tasks" },
   { value: "demo", label: "Demo" },
-  {
-    value: "billing",
-    label: "Billing & support",
-  },
+  { value: "billing", label: "Billing & support" },
 ];
 
 function formatDate(date: Date) {
@@ -52,16 +50,11 @@ function formatDate(date: Date) {
   }).format(date);
 }
 
-export default async function ProjectDetailPage({
-  params,
-  searchParams,
-}: PageProps) {
+export default async function ProjectDetailPage({ params, searchParams }: PageProps) {
   const { id } = await params;
   const { tab } = await searchParams;
 
-  const activeTab = tabs.some((item) => item.value === tab)
-    ? tab
-    : "overview";
+  const activeTab = tabs.some((item) => item.value === tab) ? tab : "overview";
 
   const project = await prisma.project.findUnique({
     where: { id },
@@ -101,16 +94,13 @@ export default async function ProjectDetailPage({
     },
   });
 
-  if (!project) {
-    notFound();
-  }
+  if (!project) notFound();
 
   const [clients, threads] = await Promise.all([
     prisma.client.findMany({
       orderBy: { name: "asc" },
       select: { id: true, name: true },
     }),
-
     prisma.thread.findMany({
       where: { contact: { clients: { some: { id: project.clientId } } } },
       orderBy: { updatedAt: "desc" },
@@ -120,35 +110,17 @@ export default async function ProjectDetailPage({
   ]);
 
   const done = project.tasks.filter((task) => task.done).length;
-
-  const receivedMaterials = project.materials.filter(
-    (material) => material.status === "RECEIVED"
-  ).length;
-
+  const receivedMaterials = project.materials.filter((material) => material.status === "RECEIVED").length;
   const taskPercent = project.tasks.length
     ? Math.round((done / project.tasks.length) * 100)
     : 0;
-
-  const nextTask =
-    project.tasks.find((task) => !task.done) ?? null;
-
-  const awaitingMaterials =
-    project.materials.filter(
-      (material) => material.status === "AWAITING"
-    );
-
-  const openSupport =
-    project.supportRequests.filter(
-      (request) => request.status !== "RESOLVED"
-    ).length;
+  const nextTask = project.tasks.find((task) => !task.done) ?? null;
+  const awaitingMaterials = project.materials.filter((material) => material.status === "AWAITING");
+  const openSupport = project.supportRequests.filter((request) => request.status !== "RESOLVED").length;
 
   const now = new Date();
-
   const dueDays = project.dueAt
-    ? Math.ceil(
-        (project.dueAt.getTime() - now.getTime()) /
-          (1000 * 60 * 60 * 24)
-      )
+    ? Math.ceil((project.dueAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
     : null;
 
   const dueLabel =
@@ -169,8 +141,16 @@ export default async function ProjectDetailPage({
           ? "warning"
           : "good";
 
+  const deploymentLabel = project.liveUrl
+    ? "Live site"
+    : project.demo
+      ? "Demo ready"
+      : "No deployment";
+
+  const deploymentTone = project.liveUrl || project.demo ? "good" : "neutral";
+
   return (
-    <div className="hub-page">
+    <div className="hub-page hub-project-detail-page">
       <div className="hub-detail-back">
         <Link href="/hub/projects">
           <ArrowLeft size={16} />
@@ -178,15 +158,13 @@ export default async function ProjectDetailPage({
         </Link>
       </div>
 
-      <div className="hub-page-header">
+      <div className="hub-page-header hub-project-detail-header">
         <div>
           <p className="hub-project-eyebrow hub-eyebrow">
             <Building2 size={12} />
             <span>Project</span>
             <span aria-hidden="true">·</span>
-            <Link href={`/hub/clients/${project.client.id}`}>
-              {project.client.name}
-            </Link>
+            <Link href={`/hub/clients/${project.client.id}`}>{project.client.name}</Link>
           </p>
 
           <h1>{project.name}</h1>
@@ -209,10 +187,7 @@ export default async function ProjectDetailPage({
             </a>
           )}
 
-          <ProjectStatusMenu
-            projectId={project.id}
-            status={project.status}
-          />
+          <ProjectStatusMenu projectId={project.id} status={project.status} />
         </div>
       </div>
 
@@ -223,7 +198,6 @@ export default async function ProjectDetailPage({
               <Gauge size={15} />
               Project progress
             </span>
-
             <strong>{taskPercent}%</strong>
           </div>
 
@@ -244,12 +218,11 @@ export default async function ProjectDetailPage({
           </p>
         </div>
 
-        <div className="hub-project-command-signals">
+        <div className="hub-project-command-signals hub-project-command-signals-four">
           <div className="hub-project-signal">
             <span className="hub-project-signal-icon">
               <CheckCircle2 size={15} />
             </span>
-
             <div>
               <small>Next action</small>
               <strong>{nextTask?.title ?? "No open tasks"}</strong>
@@ -264,7 +237,6 @@ export default async function ProjectDetailPage({
                 <Clock3 size={15} />
               )}
             </span>
-
             <div>
               <small>Timeline</small>
               <strong>{dueLabel}</strong>
@@ -275,7 +247,6 @@ export default async function ProjectDetailPage({
             <span className="hub-project-signal-icon">
               <LifeBuoy size={15} />
             </span>
-
             <div>
               <small>Support</small>
               <strong>
@@ -283,6 +254,16 @@ export default async function ProjectDetailPage({
                   ? `${openSupport} open request${openSupport === 1 ? "" : "s"}`
                   : "No open requests"}
               </strong>
+            </div>
+          </div>
+
+          <div className={`hub-project-signal hub-project-signal-${deploymentTone}`}>
+            <span className="hub-project-signal-icon">
+              <Rocket size={15} />
+            </span>
+            <div>
+              <small>Deployment</small>
+              <strong>{deploymentLabel}</strong>
             </div>
           </div>
         </div>
@@ -294,11 +275,7 @@ export default async function ProjectDetailPage({
             <CheckCircle2 size={16} />
             Tasks complete
           </span>
-
-          <strong>
-            {done} of {project.tasks.length}
-          </strong>
-
+          <strong>{done} of {project.tasks.length}</strong>
           <small>
             {project.tasks.find((task) => !task.done)
               ? `Next: ${project.tasks.find((task) => !task.done)!.title}`
@@ -313,11 +290,7 @@ export default async function ProjectDetailPage({
             <Package size={16} />
             Client materials
           </span>
-
-          <strong>
-            {receivedMaterials} of {project.materials.length} received
-          </strong>
-
+          <strong>{receivedMaterials} of {project.materials.length} received</strong>
           <small>
             {project.materials.length === 0
               ? "Nothing requested yet"
@@ -332,11 +305,7 @@ export default async function ProjectDetailPage({
             <CalendarDays size={16} />
             Launch date
           </span>
-
-          <strong>
-            {project.dueAt ? formatDate(project.dueAt) : "Not scheduled"}
-          </strong>
-
+          <strong>{project.dueAt ? formatDate(project.dueAt) : "Not scheduled"}</strong>
           <small>
             {project.startedAt
               ? `Started ${formatDate(project.startedAt)}`
@@ -349,14 +318,8 @@ export default async function ProjectDetailPage({
             <Wallet size={16} />
             Budget
           </span>
-
-          <strong>
-            {formatAmount(project.budget) ?? "Not set"}
-          </strong>
-
-          <small>
-            {project.liveUrl ? "Live site published" : "Not live yet"}
-          </small>
+          <strong>{formatAmount(project.budget) ?? "Not set"}</strong>
+          <small>{project.liveUrl ? "Live site published" : "Not live yet"}</small>
         </div>
       </section>
 
@@ -369,9 +332,7 @@ export default async function ProjectDetailPage({
                 ? `/hub/projects/${project.id}`
                 : `/hub/projects/${project.id}?tab=${item.value}`
             }
-            className={`hub-lead-filter ${
-              activeTab === item.value ? "hub-lead-filter-active" : ""
-            }`}
+            className={`hub-lead-filter ${activeTab === item.value ? "hub-lead-filter-active" : ""}`}
           >
             <span>{item.label}</span>
 
@@ -382,9 +343,7 @@ export default async function ProjectDetailPage({
             )}
 
             {item.value === "billing" && openSupport > 0 && (
-              <strong className="hub-project-tab-count hub-project-tab-count-alert">
-                {openSupport}
-              </strong>
+              <strong className="hub-project-tab-count hub-project-tab-count-alert">{openSupport}</strong>
             )}
           </Link>
         ))}
@@ -393,23 +352,12 @@ export default async function ProjectDetailPage({
       {activeTab === "overview" && (
         <section className="hub-client-detail-grid">
           <div className="hub-client-side">
-            <ProjectTasks
-              projectId={project.id}
-              tasks={project.tasks}
-              summary
-            />
-
-            <ProjectActivity
-              projectId={project.id}
-              activities={project.activities}
-            />
+            <ProjectTasks projectId={project.id} tasks={project.tasks} summary />
+            <ProjectActivity projectId={project.id} activities={project.activities} />
           </div>
 
           <div className="hub-client-side">
-            <ProjectMaterials
-              projectId={project.id}
-              materials={project.materials}
-            />
+            <ProjectMaterials projectId={project.id} materials={project.materials} />
 
             <div className="hub-client-panel">
               <h2>
@@ -422,15 +370,10 @@ export default async function ProjectDetailPage({
                   <Link href={`/hub/thread/${project.thread.id}`}>
                     <strong>{project.thread.subject}</strong>
                   </Link>
-
-                  <span>
-                    {project.thread._count.messages} messages
-                  </span>
+                  <span>{project.thread._count.messages} messages</span>
                 </div>
               ) : (
-                <p className="hub-client-empty">
-                  Client messages will appear here once linked.
-                </p>
+                <p className="hub-client-empty">Client messages will appear here once linked.</p>
               )}
 
               <LinkThreadForm
@@ -448,25 +391,38 @@ export default async function ProjectDetailPage({
       )}
 
       {activeTab === "demo" && (
-        <ProjectDemo
-          projectId={project.id}
-          demo={project.demo}
-        />
+        <ProjectDemo projectId={project.id} demo={project.demo} />
       )}
 
       {activeTab === "billing" && (
         <section className="hub-client-panel">
           <h2>Billing &amp; support</h2>
-          <p className="hub-client-empty">Billing agreements will appear here once recorded. Support requests for this project are listed below.</p>
-          <h3 className="hub-support-section-title"><LifeBuoy size={15} /> Support requests</h3>
+          <p className="hub-client-empty">
+            Billing agreements will appear here once recorded. Support requests for this project are listed below.
+          </p>
+          <h3 className="hub-support-section-title">
+            <LifeBuoy size={15} /> Support requests
+          </h3>
           {project.supportRequests.length === 0 ? (
             <p className="hub-client-empty">No support requests linked to this project yet.</p>
           ) : (
             <ul className="hub-client-related">
-              {project.supportRequests.map((request) => <li key={request.id}><Link href={`/hub/support/${request.id}`}><strong>{request.title}</strong></Link><span>{supportStatusLabels[request.status]}</span></li>)}
+              {project.supportRequests.map((request) => (
+                <li key={request.id}>
+                  <Link href={`/hub/support/${request.id}`}>
+                    <strong>{request.title}</strong>
+                  </Link>
+                  <span>{supportStatusLabels[request.status]}</span>
+                </li>
+              ))}
             </ul>
           )}
-          <Link className="hub-secondary-button hub-support-create-link" href={`/hub/support/new?clientId=${encodeURIComponent(project.clientId)}&projectId=${encodeURIComponent(project.id)}${project.threadId ? `&threadId=${encodeURIComponent(project.threadId)}` : ""}`}>New support request</Link>
+          <Link
+            className="hub-secondary-button hub-support-create-link"
+            href={`/hub/support/new?clientId=${encodeURIComponent(project.clientId)}&projectId=${encodeURIComponent(project.id)}${project.threadId ? `&threadId=${encodeURIComponent(project.threadId)}` : ""}`}
+          >
+            New support request
+          </Link>
         </section>
       )}
 
@@ -476,14 +432,9 @@ export default async function ProjectDetailPage({
             <summary>
               <span>
                 <strong>Project details</strong>
-                <small>
-                  Client, budget, dates, description and live URL
-                </small>
+                <small>Client, budget, dates, description and live URL</small>
               </span>
-
-              <span className="hub-project-settings-action">
-                Edit
-              </span>
+              <span className="hub-project-settings-action">Edit</span>
             </summary>
 
             <div className="hub-project-settings-body">
