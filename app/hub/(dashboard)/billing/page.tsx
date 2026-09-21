@@ -1,140 +1,225 @@
 import Link from "next/link";
 import {
-  AlertCircle,
+  ArrowRight,
   CalendarClock,
+  CircleDollarSign,
   CreditCard,
   FileText,
-  Rocket,
   RefreshCw,
+  Rocket,
 } from "lucide-react";
+
+import { formatOfferAmount } from "@/lib/offers";
+import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
-const workflow = [
-  {
-    number: "01",
-    title: "Offer accepted",
-    description:
-      "Confirm the scope, one-time price and monthly terms.",
-    icon: <FileText size={17} />,
-  },
-  {
-    number: "02",
-    title: "Website launched",
-    description:
-      "Set the launch date and calculate the included period.",
-    icon: <Rocket size={17} />,
-  },
-  {
-    number: "03",
-    title: "Recurring billing",
-    description:
-      "Follow payments after the included period ends.",
-    icon: <RefreshCw size={17} />,
-  },
-];
+function formatDate(date: Date) {
+  return new Intl.DateTimeFormat("sv-SE", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).format(date);
+}
 
-export default function BillingPage() {
+function formatProjectStatus(status: string) {
+  return status
+    .toLowerCase()
+    .split("_")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
+export default async function BillingPage() {
+  const acceptedOffers = await prisma.offer.findMany({
+    where: { status: "ACCEPTED" },
+    orderBy: [{ decidedAt: "desc" }, { updatedAt: "desc" }],
+    select: {
+      id: true,
+      title: true,
+      oneTimePriceOre: true,
+      monthlyPriceOre: true,
+      includedMonths: true,
+      decidedAt: true,
+      updatedAt: true,
+      client: {
+        select: {
+          id: true,
+          name: true,
+          billingEmail: true,
+        },
+      },
+      project: {
+        select: {
+          id: true,
+          name: true,
+          status: true,
+          liveUrl: true,
+          startedAt: true,
+        },
+      },
+    },
+  });
+
+  const acceptedOneTimeOre = acceptedOffers.reduce(
+    (sum, offer) => sum + (offer.oneTimePriceOre ?? 0),
+    0
+  );
+
+  const contractedMonthlyOre = acceptedOffers.reduce(
+    (sum, offer) => sum + (offer.monthlyPriceOre ?? 0),
+    0
+  );
+
+  const monthlyContracts = acceptedOffers.filter(
+    (offer) => (offer.monthlyPriceOre ?? 0) > 0
+  ).length;
+
+  const launchedProjects = acceptedOffers.filter(
+    (offer) => Boolean(offer.project?.liveUrl)
+  ).length;
+
   return (
-    <div className="hub-page">
-      <div className="hub-page-header">
+    <div className="hub-page hub-billing-v2-page">
+      <header className="hub-workspace-head">
         <div>
+          <span className="hub-workspace-kicker">FINANCE / CONTRACTS</span>
           <h1>Billing</h1>
-
           <p>
-            Track website payments, hosting plans and
-            upcoming renewals.
+            Follow accepted commercial terms and identify what is ready for recurring billing.
+            Payment status itself is not tracked yet.
           </p>
         </div>
-      </div>
 
-      <section className="hub-client-stats">
-        <div className="hub-client-stat">
-          <span className="hub-client-stat-label">
-            <CreditCard size={16} />
-            Active subscriptions
+        <Link href="/hub/offers" className="hub-workspace-primary-action">
+          <FileText size={15} />
+          View offers
+        </Link>
+      </header>
+
+      <section className="hub-workspace-stats" aria-label="Billing overview">
+        <div className="hub-workspace-stat">
+          <span className="hub-workspace-stat-icon hub-workspace-stat-icon-good">
+            <CircleDollarSign size={16} />
           </span>
-
-          <strong>0</strong>
-
-          <small>Recurring hosting and support</small>
+          <div>
+            <small>Accepted value</small>
+            <strong>{formatOfferAmount(acceptedOneTimeOre)}</strong>
+            <span>{acceptedOffers.length} accepted contract{acceptedOffers.length === 1 ? "" : "s"}</span>
+          </div>
         </div>
 
-        <div className="hub-client-stat">
-          <span className="hub-client-stat-label">
+        <div className="hub-workspace-stat">
+          <span className="hub-workspace-stat-icon hub-workspace-stat-icon-info">
+            <RefreshCw size={16} />
+          </span>
+          <div>
+            <small>Contracted monthly</small>
+            <strong>{formatOfferAmount(contractedMonthlyOre)}</strong>
+            <span>{monthlyContracts} monthly plan{monthlyContracts === 1 ? "" : "s"}</span>
+          </div>
+        </div>
+
+        <div className="hub-workspace-stat">
+          <span className="hub-workspace-stat-icon">
             <CalendarClock size={16} />
-            Included periods
           </span>
-
-          <strong>0</strong>
-
-          <small>Awaiting first billing date</small>
+          <div>
+            <small>Included periods</small>
+            <strong>{acceptedOffers.length}</strong>
+            <span>Billing start date still manual</span>
+          </div>
         </div>
 
-        <div className="hub-client-stat">
-          <span className="hub-client-stat-label">
-            <AlertCircle size={16} />
-            Payments needing attention
+        <div className="hub-workspace-stat">
+          <span className="hub-workspace-stat-icon hub-workspace-stat-icon-good">
+            <Rocket size={16} />
           </span>
-
-          <strong>0</strong>
-
-          <small>Failed or overdue payments</small>
+          <div>
+            <small>Launched projects</small>
+            <strong>{launchedProjects}</strong>
+            <span>Live URL recorded</span>
+          </div>
         </div>
       </section>
 
-      <section className="hub-list-section">
-        <div className="hub-list-section-header">
-          <div>
-            <h2>Client billing</h2>
-
-            <p>
-              One-time payments and recurring plans by client.
-            </p>
-          </div>
-
-          <span className="hub-list-count">0 billing records</span>
-        </div>
-
+      {acceptedOffers.length === 0 ? (
         <div className="hub-empty-state">
           <CreditCard size={28} />
-
-          <h2>No billing records yet</h2>
-
+          <h2>No accepted contracts yet</h2>
           <p>
-            Once an offer is accepted, you will be able to follow
-            its website payment and hosting subscription here.
+            Accepted offers will appear here with their one-time and recurring commercial terms.
           </p>
-
           <Link href="/hub/offers" className="hub-secondary-button">
-            <FileText size={15} />
             View offers
           </Link>
         </div>
-      </section>
+      ) : (
+        <section className="hub-billing-v2-list" aria-label="Accepted billing contracts">
+          {acceptedOffers.map((offer) => (
+            <article key={offer.id} className="hub-billing-v2-row">
+              <div className="hub-billing-v2-main">
+                <span className="hub-billing-v2-icon">
+                  <CreditCard size={16} />
+                </span>
 
-      <section className="hub-client-panel">
-        <h2>Planned billing flow</h2>
+                <div>
+                  <Link href={`/hub/offers/${offer.id}`}>{offer.client.name}</Link>
+                  <span>{offer.title}</span>
+                  {offer.client.billingEmail && <small>{offer.client.billingEmail}</small>}
+                </div>
+              </div>
 
-        <p className="hub-client-empty">
-          The subscription starts only under the terms agreed
-          with the client.
-        </p>
+              <div className="hub-billing-v2-amounts">
+                <div>
+                  <small>One-time</small>
+                  <strong>{formatOfferAmount(offer.oneTimePriceOre)}</strong>
+                </div>
+                <div>
+                  <small>Monthly</small>
+                  <strong>{formatOfferAmount(offer.monthlyPriceOre)}</strong>
+                </div>
+              </div>
 
-        <div className="hub-workflow-steps">
-          {workflow.map((step) => (
-            <div key={step.number} className="hub-workflow-step">
-              <span className="hub-workflow-icon">{step.icon}</span>
+              <div className="hub-billing-v2-terms">
+                <small>Contract terms</small>
+                <strong>{offer.includedMonths} months included</strong>
+                <span>
+                  {offer.decidedAt
+                    ? `Accepted ${formatDate(offer.decidedAt)}`
+                    : `Updated ${formatDate(offer.updatedAt)}`}
+                </span>
+              </div>
 
-              <span className="hub-workflow-number">{step.number}</span>
+              <div className="hub-billing-v2-project">
+                <small>Delivery</small>
+                {offer.project ? (
+                  <>
+                    <Link href={`/hub/projects/${offer.project.id}`}>{offer.project.name}</Link>
+                    <span>
+                      {offer.project.liveUrl
+                        ? "Live"
+                        : formatProjectStatus(offer.project.status)}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <strong>No project yet</strong>
+                    <span>Accepted offer not linked to delivery</span>
+                  </>
+                )}
+              </div>
 
-              <strong>{step.title}</strong>
-
-              <small>{step.description}</small>
-            </div>
+              <div className="hub-billing-v2-tail">
+                <Link href={`/hub/offers/${offer.id}`}>
+                  Open
+                  <ArrowRight size={13} />
+                </Link>
+              </div>
+            </article>
           ))}
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   );
 }

@@ -1,0 +1,456 @@
+.hub-projects-v2-page {
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding-bottom: 56px;
+}
+
+.hub-projects-v2-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 18px;
+}
+
+.hub-projects-v2-title > span {
+  display: block;
+  margin-bottom: 6px;
+  color: #9aa0a8;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+
+.hub-projects-v2-title h1 {
+  margin: 0;
+  color: #17191d;
+  font-size: 34px;
+  line-height: 1;
+  letter-spacing: -.04em;
+}
+
+.hub-projects-v2-title p {
+  margin: 8px 0 0;
+  color: #8a9099;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.hub-projects-v2-new {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 13px;
+  border-radius: 9px;
+  background: #17191d;
+  color: #fff;
+  font-size: 9.5px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.hub-projects-v2-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 16px;
+  overflow: hidden;
+  border: 1px solid #e1e4e8;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.hub-projects-v2-stat {
+  min-width: 0;
+  min-height: 88px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 16px 18px;
+}
+
+.hub-projects-v2-stat + .hub-projects-v2-stat {
+  border-left: 1px solid #edf0f2;
+}
+
+.hub-projects-v2-stat-icon {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: #f2f3f5;
+  color: #747b84;
+}
+
+.hub-projects-v2-stat-icon-warning {
+  background: #fff7e8;
+  color: #b56a05;
+}
+
+.hub-projects-v2-stat-danger .hub-projects-v2-stat-icon {
+  background: #fff0f0;
+  color: #c53c3c;
+}
+
+.hub-projects-v2-stat > div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.hub-projects-v2-stat small {
+  color: #9aa0a9;
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .055em;
+}
+
+.hub-projects-v2-stat strong {
+  margin-top: 2px;
+  color: #202328;
+  font-size: 18px;
+  line-height: 1;
+  letter-spacing: -.03em;
+}
+
+.hub-projects-v2-stat span:not(.hub-projects-v2-stat-icon) {
+  margin-top: 4px;
+  color: #969ca5;
+  font-size: 8.5px;
+}
+
+.hub-projects-v2-filters {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 14px;
+  padding: 4px;
+  overflow-x: auto;
+  border: 1px solid #e4e7ea;
+  border-radius: 11px;
+  background: #f6f7f8;
+}
+
+.hub-projects-v2-filters a {
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 10px;
+  border-radius: 8px;
+  color: #747b84;
+  font-size: 9px;
+  font-weight: 650;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.hub-projects-v2-filters a strong {
+  min-width: 18px;
+  height: 18px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #e8ebee;
+  color: #8a9099;
+  font-size: 8px;
+}
+
+.hub-projects-v2-filters .hub-projects-v2-filter-active {
+  background: #fff;
+  color: #17191d;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .08);
+}
+
+.hub-projects-v2-filters .hub-projects-v2-filter-active strong {
+  background: #17191d;
+  color: #fff;
+}
+
+.hub-projects-v2-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hub-projects-v2-item {
+  display: grid;
+  grid-template-columns: minmax(290px, 1.15fr) minmax(240px, .85fr) minmax(310px, 1fr) auto;
+  align-items: stretch;
+  overflow: hidden;
+  border: 1px solid #e0e3e7;
+  border-radius: 14px;
+  background: #fff;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.hub-projects-v2-item:hover {
+  border-color: #ccd1d7;
+  box-shadow: 0 8px 24px rgba(17, 24, 39, .04);
+}
+
+.hub-projects-v2-item-main {
+  min-width: 0;
+  display: flex;
+  gap: 11px;
+  padding: 16px 18px;
+}
+
+.hub-projects-v2-avatar {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: #f2f3f5;
+  color: #6f7680;
+}
+
+.hub-projects-v2-identity {
+  min-width: 0;
+}
+
+.hub-projects-v2-name-line {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hub-projects-v2-name-line > a {
+  min-width: 0;
+  overflow: hidden;
+  color: #202328;
+  font-size: 12px;
+  font-weight: 730;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hub-projects-v2-client {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
+  color: #989ea7;
+  font-size: 9px;
+}
+
+.hub-projects-v2-identity p {
+  display: -webkit-box;
+  max-width: 520px;
+  overflow: hidden;
+  margin: 7px 0 0;
+  color: #8a9099;
+  font-size: 9px;
+  line-height: 1.45;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.hub-projects-v2-progress {
+  min-width: 0;
+  padding: 16px 18px;
+  border-left: 1px solid #edf0f2;
+  background: #fbfcfd;
+}
+
+.hub-projects-v2-progress-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.hub-projects-v2-progress-top span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #777e87;
+  font-size: 9px;
+  font-weight: 650;
+}
+
+.hub-projects-v2-progress-top strong {
+  color: #202328;
+  font-size: 11px;
+}
+
+.hub-projects-v2-progress-bar {
+  height: 6px;
+  margin-top: 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e8ebee;
+}
+
+.hub-projects-v2-progress-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #17191d;
+}
+
+.hub-projects-v2-progress-sub {
+  display: block;
+  margin-top: 7px;
+  overflow: hidden;
+  color: #999fa7;
+  font-size: 8.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hub-projects-v2-meta {
+  min-width: 0;
+  display: flex;
+  align-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 14px 16px;
+  border-left: 1px solid #edf0f2;
+}
+
+.hub-projects-v2-chip {
+  min-height: 27px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: #f3f4f6;
+  color: #747b84;
+  font-size: 8.5px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.hub-projects-v2-chip-good {
+  background: #edf8f0;
+  color: #2b8049;
+}
+
+.hub-projects-v2-chip-warning {
+  background: #fff7e8;
+  color: #a96a10;
+}
+
+.hub-projects-v2-chip-danger {
+  background: #fff0f0;
+  color: #c53c3c;
+}
+
+.hub-projects-v2-item-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 7px;
+  min-width: 92px;
+  padding: 14px 16px;
+  border-left: 1px solid #edf0f2;
+}
+
+.hub-projects-v2-item-footer > span {
+  color: #a0a5ad;
+  font-size: 8px;
+  white-space: nowrap;
+}
+
+.hub-projects-v2-item-footer > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #33373d;
+  font-size: 9px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+@media (max-width: 1180px) {
+  .hub-projects-v2-item {
+    grid-template-columns: minmax(280px, 1.2fr) minmax(220px, .8fr) minmax(260px, 1fr);
+  }
+
+  .hub-projects-v2-item-footer {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    min-width: 0;
+    padding: 10px 16px;
+    border-top: 1px solid #edf0f2;
+    border-left: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .hub-projects-v2-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hub-projects-v2-stat:nth-child(3) {
+    border-left: 0;
+    border-top: 1px solid #edf0f2;
+  }
+
+  .hub-projects-v2-stat:nth-child(4) {
+    border-top: 1px solid #edf0f2;
+  }
+
+  .hub-projects-v2-item {
+    grid-template-columns: 1fr;
+  }
+
+  .hub-projects-v2-progress,
+  .hub-projects-v2-meta,
+  .hub-projects-v2-item-footer {
+    border-left: 0;
+    border-top: 1px solid #edf0f2;
+  }
+}
+
+@media (max-width: 620px) {
+  .hub-projects-v2-head {
+    align-items: flex-start;
+  }
+
+  .hub-projects-v2-title h1 {
+    font-size: 30px;
+  }
+
+  .hub-projects-v2-new {
+    min-height: 36px;
+    padding: 0 11px;
+  }
+
+  .hub-projects-v2-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .hub-projects-v2-stat + .hub-projects-v2-stat {
+    border-left: 0;
+    border-top: 1px solid #edf0f2;
+  }
+
+  .hub-projects-v2-item-main,
+  .hub-projects-v2-progress,
+  .hub-projects-v2-meta {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .hub-projects-v2-name-line {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

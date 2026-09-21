@@ -1,6 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Building2, FolderKanban, MessageSquare, Timer } from "lucide-react";
+import {
+  ArrowLeft,
+  Building2,
+  FileText,
+  FolderKanban,
+  MessageSquare,
+  Timer,
+} from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
 import {
@@ -15,43 +22,200 @@ import SupportForm from "../SupportForm";
 export const dynamic = "force-dynamic";
 
 function formatDate(date: Date) {
-  return new Intl.DateTimeFormat("sv-SE", { day: "2-digit", month: "long", year: "numeric" }).format(date);
+  return new Intl.DateTimeFormat("sv-SE", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  }).format(date);
 }
 
-export default async function SupportRequestPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function SupportRequestPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
+
   const [request, options] = await Promise.all([
-    prisma.supportRequest.findUnique({ where: { id }, include: { client: { select: { name: true } }, project: { select: { name: true } }, thread: { select: { subject: true } } } }),
+    prisma.supportRequest.findUnique({
+      where: { id },
+      include: {
+        client: { select: { name: true } },
+        project: { select: { name: true } },
+        thread: { select: { subject: true } },
+      },
+    }),
     getSupportOptions(),
   ]);
+
   if (!request) notFound();
 
-  if (request.threadId && request.thread && request.clientId && !options.threads.some((thread) => thread.id === request.threadId)) {
-    options.threads.push({ id: request.threadId, subject: request.thread.subject, clientIds: [request.clientId] });
+  if (
+    request.threadId &&
+    request.thread &&
+    request.clientId &&
+    !options.threads.some((thread) => thread.id === request.threadId)
+  ) {
+    options.threads.push({
+      id: request.threadId,
+      subject: request.thread.subject,
+      clientIds: [request.clientId],
+    });
   }
 
   return (
-    <div className="hub-page">
-      <div className="hub-detail-back"><Link href="/hub/support"><ArrowLeft size={16} />Support</Link></div>
-      <div className="hub-page-header"><div><span className="hub-eyebrow">SUPPORT REQUEST</span><h1>{request.title}</h1><p>Opened {formatDate(request.createdAt)}{request.resolvedAt ? ` · Resolved ${formatDate(request.resolvedAt)}` : ""}</p></div><span className={`hub-support-status hub-support-status-${request.status.toLowerCase()}`}>{supportStatusLabels[request.status]}</span></div>
+    <div className="hub-page hub-support-v2-detail-page">
+      <div className="hub-detail-back">
+        <Link href="/hub/support">
+          <ArrowLeft size={16} />
+          Support
+        </Link>
+      </div>
 
-      <section className="hub-client-stats">
-        <div className="hub-client-stat"><span className="hub-client-stat-label">Plan coverage</span><strong className="hub-support-stat-value">{supportCoverageLabels[request.coverage]}</strong><small>Checked manually against agreement</small></div>
-        <div className="hub-client-stat"><span className="hub-client-stat-label"><Timer size={16} />Time spent</span><strong>{request.timeSpentMinutes}</strong><small>Total minutes recorded</small></div>
-        <div className="hub-client-stat"><span className="hub-client-stat-label"><Building2 size={16} />Client</span>{request.clientId && request.client ? <Link href={`/hub/clients/${request.clientId}`} className="hub-support-stat-link">{request.client.name}</Link> : <strong className="hub-support-stat-value">Unmatched</strong>}<small>{request.clientId ? "Linked client record" : request.requesterEmail ?? "Public support request"}</small></div>
+      <header className="hub-support-v2-detail-head">
+        <div>
+          <span className="hub-support-v2-detail-kicker">SUPPORT / REQUEST</span>
+          <h1>{request.title}</h1>
+          <p>
+            Opened {formatDate(request.createdAt)}
+            {request.resolvedAt ? ` · Resolved ${formatDate(request.resolvedAt)}` : ""}
+          </p>
+        </div>
+
+        <span className={`hub-support-status hub-support-status-${request.status.toLowerCase()}`}>
+          {supportStatusLabels[request.status]}
+        </span>
+      </header>
+
+      <section className="hub-support-v2-detail-stats">
+        <div>
+          <span>Coverage</span>
+          <strong>{supportCoverageLabels[request.coverage]}</strong>
+          <small>{supportPriorityLabels[request.priority]} priority</small>
+        </div>
+
+        <div>
+          <span>Time spent</span>
+          <strong>{request.timeSpentMinutes} min</strong>
+          <small>Recorded work time</small>
+        </div>
+
+        <div>
+          <span>Client</span>
+          {request.clientId && request.client ? (
+            <Link href={`/hub/clients/${request.clientId}`}>{request.client.name}</Link>
+          ) : (
+            <strong>Unmatched</strong>
+          )}
+          <small>{request.requesterEmail ?? "No requester email"}</small>
+        </div>
+
+        <div>
+          <span>Category</span>
+          <strong>{supportCategoryLabels[request.category]}</strong>
+          <small>{request.reference ?? "No public reference"}</small>
+        </div>
       </section>
 
-      <div className="hub-support-detail-grid">
-        <section className="hub-client-panel"><h2>Request and work notes</h2><SupportForm request={request} options={options} /></section>
-        <div className="hub-client-side">
-          <div className="hub-client-panel"><h2>Context</h2>
-            {request.clientId && request.client ? <div className="hub-support-context"><Building2 size={15} /><Link href={`/hub/clients/${request.clientId}`}>{request.client.name}</Link></div> : <p className="hub-client-empty">This public request is not linked to a client yet. Choose the correct client in the form to link it.</p>}
-            {request.projectId && request.project && <div className="hub-support-context"><FolderKanban size={15} /><Link href={`/hub/projects/${request.projectId}`}>{request.project.name}</Link></div>}
-            {request.threadId && request.thread && <div className="hub-support-context"><MessageSquare size={15} /><Link href={`/hub/thread/${request.threadId}`}>{request.thread.subject}</Link></div>}
+      <div className="hub-support-v2-detail-grid">
+        <section className="hub-support-v2-panel">
+          <div className="hub-support-v2-panel-head">
+            <span>WORKSPACE</span>
+            <h2>Request and work notes</h2>
           </div>
-          {(request.requesterEmail || request.reference) && <div className="hub-client-panel"><h2>Public intake</h2><div className="hub-support-context-list">{request.reference && <p><strong>Ticket</strong><span>{request.reference}</span></p>}{request.requesterName && <p><strong>Name</strong><span>{request.requesterName}</span></p>}{request.requesterEmail && <p><strong>Email</strong><span>{request.requesterEmail}</span></p>}{request.requesterCompany && <p><strong>Company</strong><span>{request.requesterCompany}</span></p>}{request.requesterWebsite && <p><strong>Website</strong><span>{request.requesterWebsite}</span></p>}<p><strong>Category</strong><span>{supportCategoryLabels[request.category]}</span></p><p><strong>Priority</strong><span>{supportPriorityLabels[request.priority]}</span></p></div></div>}
-          {request.coverage === "EXTRA" && request.clientId && <div className="hub-client-panel"><h2>Separate offer</h2><p className="hub-client-empty">Check the scope with the client before billing additional work.</p><Link className="hub-secondary-button hub-support-offer-link" href={`/hub/offers/new?clientId=${encodeURIComponent(request.clientId)}`}>Prepare an offer</Link></div>}
-        </div>
+
+          <div className="hub-support-v2-panel-body">
+            <SupportForm request={request} options={options} />
+          </div>
+        </section>
+
+        <aside>
+          <section className="hub-support-v2-panel">
+            <div className="hub-support-v2-panel-head">
+              <span>LINKED CONTEXT</span>
+              <h2>Client and delivery</h2>
+            </div>
+
+            <div className="hub-support-v2-panel-body">
+              {request.clientId && request.client ? (
+                <div className="hub-support-v2-context-row">
+                  <Building2 size={15} />
+                  <Link href={`/hub/clients/${request.clientId}`}>{request.client.name}</Link>
+                </div>
+              ) : (
+                <div className="hub-support-v2-context-row">
+                  <Building2 size={15} />
+                  <span>Not linked to a client yet</span>
+                </div>
+              )}
+
+              {request.projectId && request.project && (
+                <div className="hub-support-v2-context-row">
+                  <FolderKanban size={15} />
+                  <Link href={`/hub/projects/${request.projectId}`}>{request.project.name}</Link>
+                </div>
+              )}
+
+              {request.threadId && request.thread && (
+                <div className="hub-support-v2-context-row">
+                  <MessageSquare size={15} />
+                  <Link href={`/hub/thread/${request.threadId}`}>{request.thread.subject}</Link>
+                </div>
+              )}
+            </div>
+          </section>
+
+          {(request.requesterEmail || request.reference) && (
+            <section className="hub-support-v2-panel">
+              <div className="hub-support-v2-panel-head">
+                <span>PUBLIC INTAKE</span>
+                <h2>Requester details</h2>
+              </div>
+
+              <div className="hub-support-v2-panel-body hub-support-v2-context-list">
+                {request.reference && (
+                  <p><strong>Ticket</strong><span>{request.reference}</span></p>
+                )}
+                {request.requesterName && (
+                  <p><strong>Name</strong><span>{request.requesterName}</span></p>
+                )}
+                {request.requesterEmail && (
+                  <p><strong>Email</strong><span>{request.requesterEmail}</span></p>
+                )}
+                {request.requesterCompany && (
+                  <p><strong>Company</strong><span>{request.requesterCompany}</span></p>
+                )}
+                {request.requesterWebsite && (
+                  <p><strong>Website</strong><span>{request.requesterWebsite}</span></p>
+                )}
+                <p><strong>Category</strong><span>{supportCategoryLabels[request.category]}</span></p>
+                <p><strong>Priority</strong><span>{supportPriorityLabels[request.priority]}</span></p>
+              </div>
+            </section>
+          )}
+
+          {request.coverage === "EXTRA" && request.clientId && (
+            <section className="hub-support-v2-panel">
+              <div className="hub-support-v2-panel-head">
+                <span>COMMERCIAL</span>
+                <h2>Separate offer</h2>
+              </div>
+
+              <div className="hub-support-v2-panel-body">
+                <p className="hub-client-empty">
+                  Check the scope with the client before billing additional work.
+                </p>
+                <Link
+                  className="hub-secondary-button hub-support-offer-link"
+                  href={`/hub/offers/new?clientId=${encodeURIComponent(request.clientId)}`}
+                >
+                  <FileText size={14} />
+                  Prepare an offer
+                </Link>
+              </div>
+            </section>
+          )}
+        </aside>
       </div>
     </div>
   );
