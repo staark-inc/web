@@ -1,0 +1,78 @@
+@media (max-width: 720px) {
+  .hub-lead-filters,
+  .hub-projects-v2-filters,
+  .hub-leads-v2-filters,
+  .hub-workspace-filters {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 2px 2px 8px;
+    scroll-padding-inline: 2px;
+    overscroll-behavior-inline: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .hub-lead-filters::-webkit-scrollbar,
+  .hub-projects-v2-filters::-webkit-scrollbar,
+  .hub-leads-v2-filters::-webkit-scrollbar,
+  .hub-workspace-filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hub-lead-filters > a,
+  .hub-projects-v2-filters > a,
+  .hub-leads-v2-filters > a,
+  .hub-workspace-filters > a {
+    min-width: max-content !important;
+    width: auto !important;
+    flex: 0 0 auto !important;
+    white-space: nowrap;
+    justify-content: center;
+    gap: 8px;
+    min-height: 38px;
+    padding: 0 13px !important;
+    border: 1px solid #e1e4e8;
+    border-radius: 999px !important;
+    background: #fff;
+    box-shadow: none;
+  }
+
+  .hub-lead-filters > a strong,
+  .hub-projects-v2-filters > a strong,
+  .hub-leads-v2-filters > a strong,
+  .hub-workspace-filters > a strong {
+    min-width: 20px;
+    height: 20px;
+    display: inline-grid;
+    place-items: center;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: #f0f2f4;
+    font-size: 9px;
+    line-height: 1;
+  }
+
+  .hub-lead-filters > a.hub-lead-filter-active,
+  .hub-projects-v2-filters > a.hub-projects-v2-filter-active,
+  .hub-leads-v2-filters > a.hub-leads-v2-filter-active,
+  .hub-workspace-filters > a.hub-workspace-filter-active {
+    border-color: #17191d;
+    background: #17191d;
+    color: #fff;
+  }
+
+  .hub-lead-filters > a.hub-lead-filter-active strong,
+  .hub-projects-v2-filters > a.hub-projects-v2-filter-active strong,
+  .hub-leads-v2-filters > a.hub-leads-v2-filter-active strong,
+  .hub-workspace-filters > a.hub-workspace-filter-active strong {
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+  }
+}
