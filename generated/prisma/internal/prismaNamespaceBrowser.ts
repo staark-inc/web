@@ -64,7 +64,8 @@ export const ModelName = {
   Thread: 'Thread',
   SupportRequest: 'SupportRequest',
   Message: 'Message',
-  MessageAttachment: 'MessageAttachment'
+  MessageAttachment: 'MessageAttachment',
+  DemoDeployment: 'DemoDeployment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -296,6 +297,20 @@ export const MessageAttachmentScalarFieldEnum = {
 } as const
 
 export type MessageAttachmentScalarFieldEnum = (typeof MessageAttachmentScalarFieldEnum)[keyof typeof MessageAttachmentScalarFieldEnum]
+
+
+export const DemoDeploymentScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  slug: 'slug',
+  image: 'image',
+  port: 'port',
+  lastDeployedAt: 'lastDeployedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DemoDeploymentScalarFieldEnum = (typeof DemoDeploymentScalarFieldEnum)[keyof typeof DemoDeploymentScalarFieldEnum]
 
 
 export const SortOrder = {

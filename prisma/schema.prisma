@@ -207,6 +207,7 @@ model Project {
   materials  ProjectMaterial[]
   activities ProjectActivity[]
   supportRequests SupportRequest[]
+  demo DemoDeployment?
 
   @@index([clientId])
   @@index([status])
@@ -360,4 +361,20 @@ model MessageAttachment {
   createdAt DateTime @default(now())
 
   @@index([messageId])
+}
+
+model DemoDeployment {
+  id        String  @id @default(cuid())
+
+  projectId String  @unique
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  slug      String  @unique
+  image     String
+  port      Int     @default(3000)
+
+  lastDeployedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

@@ -410,7 +410,8 @@ export const ModelName = {
   Thread: 'Thread',
   SupportRequest: 'SupportRequest',
   Message: 'Message',
-  MessageAttachment: 'MessageAttachment'
+  MessageAttachment: 'MessageAttachment',
+  DemoDeployment: 'DemoDeployment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -426,7 +427,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "settings" | "contact" | "lead" | "client" | "offer" | "project" | "projectMaterial" | "projectActivity" | "projectTask" | "thread" | "supportRequest" | "message" | "messageAttachment"
+    modelProps: "user" | "settings" | "contact" | "lead" | "client" | "offer" | "project" | "projectMaterial" | "projectActivity" | "projectTask" | "thread" | "supportRequest" | "message" | "messageAttachment" | "demoDeployment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1466,6 +1467,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    DemoDeployment: {
+      payload: Prisma.$DemoDeploymentPayload<ExtArgs>
+      fields: Prisma.DemoDeploymentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DemoDeploymentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DemoDeploymentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DemoDeploymentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DemoDeploymentPayload>
+        }
+        findFirst: {
+          args: Prisma.DemoDeploymentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DemoDeploymentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DemoDeploymentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DemoDeploymentPayload>
+        }
+        findMany: {
+          args: Prisma.DemoDeploymentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DemoDeploymentPayload>[]
+        }
+        create: {
+          args: Prisma.DemoDeploymentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DemoDeploymentPayload>
+        }
+        createMany: {
+          args: Prisma.DemoDeploymentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DemoDeploymentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DemoDeploymentPayload>[]
+        }
+        delete: {
+          args: Prisma.DemoDeploymentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DemoDeploymentPayload>
+        }
+        update: {
+          args: Prisma.DemoDeploymentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DemoDeploymentPayload>
+        }
+        deleteMany: {
+          args: Prisma.DemoDeploymentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DemoDeploymentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DemoDeploymentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DemoDeploymentPayload>[]
+        }
+        upsert: {
+          args: Prisma.DemoDeploymentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DemoDeploymentPayload>
+        }
+        aggregate: {
+          args: Prisma.DemoDeploymentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDemoDeployment>
+        }
+        groupBy: {
+          args: Prisma.DemoDeploymentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DemoDeploymentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DemoDeploymentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DemoDeploymentCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1718,6 +1793,20 @@ export const MessageAttachmentScalarFieldEnum = {
 } as const
 
 export type MessageAttachmentScalarFieldEnum = (typeof MessageAttachmentScalarFieldEnum)[keyof typeof MessageAttachmentScalarFieldEnum]
+
+
+export const DemoDeploymentScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  slug: 'slug',
+  image: 'image',
+  port: 'port',
+  lastDeployedAt: 'lastDeployedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DemoDeploymentScalarFieldEnum = (typeof DemoDeploymentScalarFieldEnum)[keyof typeof DemoDeploymentScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2117,6 +2206,7 @@ export type GlobalOmitConfig = {
   supportRequest?: Prisma.SupportRequestOmit
   message?: Prisma.MessageOmit
   messageAttachment?: Prisma.MessageAttachmentOmit
+  demoDeployment?: Prisma.DemoDeploymentOmit
 }
 
 /* Types for Logging */

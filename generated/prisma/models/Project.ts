@@ -244,6 +244,7 @@ export type ProjectWhereInput = {
   materials?: Prisma.ProjectMaterialListRelationFilter
   activities?: Prisma.ProjectActivityListRelationFilter
   supportRequests?: Prisma.SupportRequestListRelationFilter
+  demo?: Prisma.XOR<Prisma.DemoDeploymentNullableScalarRelationFilter, Prisma.DemoDeploymentWhereInput> | null
 }
 
 export type ProjectOrderByWithRelationInput = {
@@ -265,6 +266,7 @@ export type ProjectOrderByWithRelationInput = {
   materials?: Prisma.ProjectMaterialOrderByRelationAggregateInput
   activities?: Prisma.ProjectActivityOrderByRelationAggregateInput
   supportRequests?: Prisma.SupportRequestOrderByRelationAggregateInput
+  demo?: Prisma.DemoDeploymentOrderByWithRelationInput
 }
 
 export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -289,6 +291,7 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   materials?: Prisma.ProjectMaterialListRelationFilter
   activities?: Prisma.ProjectActivityListRelationFilter
   supportRequests?: Prisma.SupportRequestListRelationFilter
+  demo?: Prisma.XOR<Prisma.DemoDeploymentNullableScalarRelationFilter, Prisma.DemoDeploymentWhereInput> | null
 }, "id">
 
 export type ProjectOrderByWithAggregationInput = {
@@ -344,6 +347,7 @@ export type ProjectCreateInput = {
   materials?: Prisma.ProjectMaterialCreateNestedManyWithoutProjectInput
   activities?: Prisma.ProjectActivityCreateNestedManyWithoutProjectInput
   supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutProjectInput
+  demo?: Prisma.DemoDeploymentCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateInput = {
@@ -363,6 +367,7 @@ export type ProjectUncheckedCreateInput = {
   materials?: Prisma.ProjectMaterialUncheckedCreateNestedManyWithoutProjectInput
   activities?: Prisma.ProjectActivityUncheckedCreateNestedManyWithoutProjectInput
   supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutProjectInput
+  demo?: Prisma.DemoDeploymentUncheckedCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectUpdateInput = {
@@ -382,6 +387,7 @@ export type ProjectUpdateInput = {
   materials?: Prisma.ProjectMaterialUpdateManyWithoutProjectNestedInput
   activities?: Prisma.ProjectActivityUpdateManyWithoutProjectNestedInput
   supportRequests?: Prisma.SupportRequestUpdateManyWithoutProjectNestedInput
+  demo?: Prisma.DemoDeploymentUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateInput = {
@@ -401,6 +407,7 @@ export type ProjectUncheckedUpdateInput = {
   materials?: Prisma.ProjectMaterialUncheckedUpdateManyWithoutProjectNestedInput
   activities?: Prisma.ProjectActivityUncheckedUpdateManyWithoutProjectNestedInput
   supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutProjectNestedInput
+  demo?: Prisma.DemoDeploymentUncheckedUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectCreateManyInput = {
@@ -657,6 +664,20 @@ export type ProjectUpdateOneWithoutSupportRequestsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutSupportRequestsInput, Prisma.ProjectUpdateWithoutSupportRequestsInput>, Prisma.ProjectUncheckedUpdateWithoutSupportRequestsInput>
 }
 
+export type ProjectCreateNestedOneWithoutDemoInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutDemoInput, Prisma.ProjectUncheckedCreateWithoutDemoInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutDemoInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneRequiredWithoutDemoNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutDemoInput, Prisma.ProjectUncheckedCreateWithoutDemoInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutDemoInput
+  upsert?: Prisma.ProjectUpsertWithoutDemoInput
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutDemoInput, Prisma.ProjectUpdateWithoutDemoInput>, Prisma.ProjectUncheckedUpdateWithoutDemoInput>
+}
+
 export type ProjectCreateWithoutClientInput = {
   id?: string
   name: string
@@ -673,6 +694,7 @@ export type ProjectCreateWithoutClientInput = {
   materials?: Prisma.ProjectMaterialCreateNestedManyWithoutProjectInput
   activities?: Prisma.ProjectActivityCreateNestedManyWithoutProjectInput
   supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutProjectInput
+  demo?: Prisma.DemoDeploymentCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutClientInput = {
@@ -691,6 +713,7 @@ export type ProjectUncheckedCreateWithoutClientInput = {
   materials?: Prisma.ProjectMaterialUncheckedCreateNestedManyWithoutProjectInput
   activities?: Prisma.ProjectActivityUncheckedCreateNestedManyWithoutProjectInput
   supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutProjectInput
+  demo?: Prisma.DemoDeploymentUncheckedCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutClientInput = {
@@ -753,6 +776,7 @@ export type ProjectCreateWithoutMaterialsInput = {
   tasks?: Prisma.ProjectTaskCreateNestedManyWithoutProjectInput
   activities?: Prisma.ProjectActivityCreateNestedManyWithoutProjectInput
   supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutProjectInput
+  demo?: Prisma.DemoDeploymentCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutMaterialsInput = {
@@ -771,6 +795,7 @@ export type ProjectUncheckedCreateWithoutMaterialsInput = {
   tasks?: Prisma.ProjectTaskUncheckedCreateNestedManyWithoutProjectInput
   activities?: Prisma.ProjectActivityUncheckedCreateNestedManyWithoutProjectInput
   supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutProjectInput
+  demo?: Prisma.DemoDeploymentUncheckedCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutMaterialsInput = {
@@ -805,6 +830,7 @@ export type ProjectUpdateWithoutMaterialsInput = {
   tasks?: Prisma.ProjectTaskUpdateManyWithoutProjectNestedInput
   activities?: Prisma.ProjectActivityUpdateManyWithoutProjectNestedInput
   supportRequests?: Prisma.SupportRequestUpdateManyWithoutProjectNestedInput
+  demo?: Prisma.DemoDeploymentUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutMaterialsInput = {
@@ -823,6 +849,7 @@ export type ProjectUncheckedUpdateWithoutMaterialsInput = {
   tasks?: Prisma.ProjectTaskUncheckedUpdateManyWithoutProjectNestedInput
   activities?: Prisma.ProjectActivityUncheckedUpdateManyWithoutProjectNestedInput
   supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutProjectNestedInput
+  demo?: Prisma.DemoDeploymentUncheckedUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutActivitiesInput = {
@@ -841,6 +868,7 @@ export type ProjectCreateWithoutActivitiesInput = {
   tasks?: Prisma.ProjectTaskCreateNestedManyWithoutProjectInput
   materials?: Prisma.ProjectMaterialCreateNestedManyWithoutProjectInput
   supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutProjectInput
+  demo?: Prisma.DemoDeploymentCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutActivitiesInput = {
@@ -859,6 +887,7 @@ export type ProjectUncheckedCreateWithoutActivitiesInput = {
   tasks?: Prisma.ProjectTaskUncheckedCreateNestedManyWithoutProjectInput
   materials?: Prisma.ProjectMaterialUncheckedCreateNestedManyWithoutProjectInput
   supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutProjectInput
+  demo?: Prisma.DemoDeploymentUncheckedCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutActivitiesInput = {
@@ -893,6 +922,7 @@ export type ProjectUpdateWithoutActivitiesInput = {
   tasks?: Prisma.ProjectTaskUpdateManyWithoutProjectNestedInput
   materials?: Prisma.ProjectMaterialUpdateManyWithoutProjectNestedInput
   supportRequests?: Prisma.SupportRequestUpdateManyWithoutProjectNestedInput
+  demo?: Prisma.DemoDeploymentUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutActivitiesInput = {
@@ -911,6 +941,7 @@ export type ProjectUncheckedUpdateWithoutActivitiesInput = {
   tasks?: Prisma.ProjectTaskUncheckedUpdateManyWithoutProjectNestedInput
   materials?: Prisma.ProjectMaterialUncheckedUpdateManyWithoutProjectNestedInput
   supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutProjectNestedInput
+  demo?: Prisma.DemoDeploymentUncheckedUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutTasksInput = {
@@ -929,6 +960,7 @@ export type ProjectCreateWithoutTasksInput = {
   materials?: Prisma.ProjectMaterialCreateNestedManyWithoutProjectInput
   activities?: Prisma.ProjectActivityCreateNestedManyWithoutProjectInput
   supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutProjectInput
+  demo?: Prisma.DemoDeploymentCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutTasksInput = {
@@ -947,6 +979,7 @@ export type ProjectUncheckedCreateWithoutTasksInput = {
   materials?: Prisma.ProjectMaterialUncheckedCreateNestedManyWithoutProjectInput
   activities?: Prisma.ProjectActivityUncheckedCreateNestedManyWithoutProjectInput
   supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutProjectInput
+  demo?: Prisma.DemoDeploymentUncheckedCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutTasksInput = {
@@ -981,6 +1014,7 @@ export type ProjectUpdateWithoutTasksInput = {
   materials?: Prisma.ProjectMaterialUpdateManyWithoutProjectNestedInput
   activities?: Prisma.ProjectActivityUpdateManyWithoutProjectNestedInput
   supportRequests?: Prisma.SupportRequestUpdateManyWithoutProjectNestedInput
+  demo?: Prisma.DemoDeploymentUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutTasksInput = {
@@ -999,6 +1033,7 @@ export type ProjectUncheckedUpdateWithoutTasksInput = {
   materials?: Prisma.ProjectMaterialUncheckedUpdateManyWithoutProjectNestedInput
   activities?: Prisma.ProjectActivityUncheckedUpdateManyWithoutProjectNestedInput
   supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutProjectNestedInput
+  demo?: Prisma.DemoDeploymentUncheckedUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectCreateWithoutThreadInput = {
@@ -1017,6 +1052,7 @@ export type ProjectCreateWithoutThreadInput = {
   materials?: Prisma.ProjectMaterialCreateNestedManyWithoutProjectInput
   activities?: Prisma.ProjectActivityCreateNestedManyWithoutProjectInput
   supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutProjectInput
+  demo?: Prisma.DemoDeploymentCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutThreadInput = {
@@ -1035,6 +1071,7 @@ export type ProjectUncheckedCreateWithoutThreadInput = {
   materials?: Prisma.ProjectMaterialUncheckedCreateNestedManyWithoutProjectInput
   activities?: Prisma.ProjectActivityUncheckedCreateNestedManyWithoutProjectInput
   supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutProjectInput
+  demo?: Prisma.DemoDeploymentUncheckedCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutThreadInput = {
@@ -1079,6 +1116,7 @@ export type ProjectCreateWithoutSupportRequestsInput = {
   tasks?: Prisma.ProjectTaskCreateNestedManyWithoutProjectInput
   materials?: Prisma.ProjectMaterialCreateNestedManyWithoutProjectInput
   activities?: Prisma.ProjectActivityCreateNestedManyWithoutProjectInput
+  demo?: Prisma.DemoDeploymentCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutSupportRequestsInput = {
@@ -1097,6 +1135,7 @@ export type ProjectUncheckedCreateWithoutSupportRequestsInput = {
   tasks?: Prisma.ProjectTaskUncheckedCreateNestedManyWithoutProjectInput
   materials?: Prisma.ProjectMaterialUncheckedCreateNestedManyWithoutProjectInput
   activities?: Prisma.ProjectActivityUncheckedCreateNestedManyWithoutProjectInput
+  demo?: Prisma.DemoDeploymentUncheckedCreateNestedOneWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutSupportRequestsInput = {
@@ -1131,6 +1170,7 @@ export type ProjectUpdateWithoutSupportRequestsInput = {
   tasks?: Prisma.ProjectTaskUpdateManyWithoutProjectNestedInput
   materials?: Prisma.ProjectMaterialUpdateManyWithoutProjectNestedInput
   activities?: Prisma.ProjectActivityUpdateManyWithoutProjectNestedInput
+  demo?: Prisma.DemoDeploymentUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutSupportRequestsInput = {
@@ -1149,6 +1189,99 @@ export type ProjectUncheckedUpdateWithoutSupportRequestsInput = {
   tasks?: Prisma.ProjectTaskUncheckedUpdateManyWithoutProjectNestedInput
   materials?: Prisma.ProjectMaterialUncheckedUpdateManyWithoutProjectNestedInput
   activities?: Prisma.ProjectActivityUncheckedUpdateManyWithoutProjectNestedInput
+  demo?: Prisma.DemoDeploymentUncheckedUpdateOneWithoutProjectNestedInput
+}
+
+export type ProjectCreateWithoutDemoInput = {
+  id?: string
+  name: string
+  description?: string | null
+  status?: $Enums.ProjectStatus
+  budget?: string | null
+  liveUrl?: string | null
+  startedAt?: Date | string | null
+  dueAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  client: Prisma.ClientCreateNestedOneWithoutProjectsInput
+  thread?: Prisma.ThreadCreateNestedOneWithoutProjectsInput
+  tasks?: Prisma.ProjectTaskCreateNestedManyWithoutProjectInput
+  materials?: Prisma.ProjectMaterialCreateNestedManyWithoutProjectInput
+  activities?: Prisma.ProjectActivityCreateNestedManyWithoutProjectInput
+  supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutDemoInput = {
+  id?: string
+  clientId: string
+  threadId?: string | null
+  name: string
+  description?: string | null
+  status?: $Enums.ProjectStatus
+  budget?: string | null
+  liveUrl?: string | null
+  startedAt?: Date | string | null
+  dueAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tasks?: Prisma.ProjectTaskUncheckedCreateNestedManyWithoutProjectInput
+  materials?: Prisma.ProjectMaterialUncheckedCreateNestedManyWithoutProjectInput
+  activities?: Prisma.ProjectActivityUncheckedCreateNestedManyWithoutProjectInput
+  supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutDemoInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutDemoInput, Prisma.ProjectUncheckedCreateWithoutDemoInput>
+}
+
+export type ProjectUpsertWithoutDemoInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutDemoInput, Prisma.ProjectUncheckedUpdateWithoutDemoInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutDemoInput, Prisma.ProjectUncheckedCreateWithoutDemoInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutDemoInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutDemoInput, Prisma.ProjectUncheckedUpdateWithoutDemoInput>
+}
+
+export type ProjectUpdateWithoutDemoInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+  budget?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  liveUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  client?: Prisma.ClientUpdateOneRequiredWithoutProjectsNestedInput
+  thread?: Prisma.ThreadUpdateOneWithoutProjectsNestedInput
+  tasks?: Prisma.ProjectTaskUpdateManyWithoutProjectNestedInput
+  materials?: Prisma.ProjectMaterialUpdateManyWithoutProjectNestedInput
+  activities?: Prisma.ProjectActivityUpdateManyWithoutProjectNestedInput
+  supportRequests?: Prisma.SupportRequestUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutDemoInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  threadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+  budget?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  liveUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tasks?: Prisma.ProjectTaskUncheckedUpdateManyWithoutProjectNestedInput
+  materials?: Prisma.ProjectMaterialUncheckedUpdateManyWithoutProjectNestedInput
+  activities?: Prisma.ProjectActivityUncheckedUpdateManyWithoutProjectNestedInput
+  supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectCreateManyClientInput = {
@@ -1181,6 +1314,7 @@ export type ProjectUpdateWithoutClientInput = {
   materials?: Prisma.ProjectMaterialUpdateManyWithoutProjectNestedInput
   activities?: Prisma.ProjectActivityUpdateManyWithoutProjectNestedInput
   supportRequests?: Prisma.SupportRequestUpdateManyWithoutProjectNestedInput
+  demo?: Prisma.DemoDeploymentUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutClientInput = {
@@ -1199,6 +1333,7 @@ export type ProjectUncheckedUpdateWithoutClientInput = {
   materials?: Prisma.ProjectMaterialUncheckedUpdateManyWithoutProjectNestedInput
   activities?: Prisma.ProjectActivityUncheckedUpdateManyWithoutProjectNestedInput
   supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutProjectNestedInput
+  demo?: Prisma.DemoDeploymentUncheckedUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateManyWithoutClientInput = {
@@ -1245,6 +1380,7 @@ export type ProjectUpdateWithoutThreadInput = {
   materials?: Prisma.ProjectMaterialUpdateManyWithoutProjectNestedInput
   activities?: Prisma.ProjectActivityUpdateManyWithoutProjectNestedInput
   supportRequests?: Prisma.SupportRequestUpdateManyWithoutProjectNestedInput
+  demo?: Prisma.DemoDeploymentUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutThreadInput = {
@@ -1263,6 +1399,7 @@ export type ProjectUncheckedUpdateWithoutThreadInput = {
   materials?: Prisma.ProjectMaterialUncheckedUpdateManyWithoutProjectNestedInput
   activities?: Prisma.ProjectActivityUncheckedUpdateManyWithoutProjectNestedInput
   supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutProjectNestedInput
+  demo?: Prisma.DemoDeploymentUncheckedUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateManyWithoutThreadInput = {
@@ -1356,6 +1493,7 @@ export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   materials?: boolean | Prisma.Project$materialsArgs<ExtArgs>
   activities?: boolean | Prisma.Project$activitiesArgs<ExtArgs>
   supportRequests?: boolean | Prisma.Project$supportRequestsArgs<ExtArgs>
+  demo?: boolean | Prisma.Project$demoArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["project"]>
 
@@ -1416,6 +1554,7 @@ export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   materials?: boolean | Prisma.Project$materialsArgs<ExtArgs>
   activities?: boolean | Prisma.Project$activitiesArgs<ExtArgs>
   supportRequests?: boolean | Prisma.Project$supportRequestsArgs<ExtArgs>
+  demo?: boolean | Prisma.Project$demoArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProjectIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1436,6 +1575,7 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     materials: Prisma.$ProjectMaterialPayload<ExtArgs>[]
     activities: Prisma.$ProjectActivityPayload<ExtArgs>[]
     supportRequests: Prisma.$SupportRequestPayload<ExtArgs>[]
+    demo: Prisma.$DemoDeploymentPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1853,6 +1993,7 @@ export interface Prisma__ProjectClient<T, Null = never, ExtArgs extends runtime.
   materials<T extends Prisma.Project$materialsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$materialsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectMaterialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   activities<T extends Prisma.Project$activitiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$activitiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectActivityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   supportRequests<T extends Prisma.Project$supportRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$supportRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupportRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  demo<T extends Prisma.Project$demoArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$demoArgs<ExtArgs>>): Prisma.Prisma__DemoDeploymentClient<runtime.Types.Result.GetResult<Prisma.$DemoDeploymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2407,6 +2548,25 @@ export type Project$supportRequestsArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.SupportRequestScalarFieldEnum | Prisma.SupportRequestScalarFieldEnum[]
+}
+
+/**
+ * Project.demo
+ */
+export type Project$demoArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DemoDeployment
+   */
+  select?: Prisma.DemoDeploymentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DemoDeployment
+   */
+  omit?: Prisma.DemoDeploymentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DemoDeploymentInclude<ExtArgs> | null
+  where?: Prisma.DemoDeploymentWhereInput
 }
 
 /**

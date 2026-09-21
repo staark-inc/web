@@ -1,0 +1,126 @@
+/* Project demo management */
+
+.hub-demo-config-details > summary,
+.hub-demo-logs > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  cursor: pointer;
+  list-style: none;
+  color: var(--hub-text);
+  font-weight: 650;
+}
+
+.hub-demo-config-details > summary::-webkit-details-marker,
+.hub-demo-logs > summary::-webkit-details-marker {
+  display: none;
+}
+
+.hub-demo-config-details > summary::after,
+.hub-demo-logs > summary::after {
+  content: "+";
+  margin-left: auto;
+  color: var(--hub-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.hub-demo-config-details[open] > summary::after,
+.hub-demo-logs[open] > summary::after {
+  content: "−";
+}
+
+.hub-demo-config-form-edit {
+  padding-top: 6px;
+}
+
+.hub-demo-config-note {
+  margin: -4px 0 0;
+  color: var(--hub-muted);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.hub-demo-logs > summary > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hub-demo-logs > summary small {
+  margin-left: auto;
+  color: var(--hub-muted);
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.hub-demo-logs > summary::after {
+  margin-left: 0;
+}
+
+.hub-demo-logs pre {
+  max-height: 420px;
+  margin: 18px 0 0;
+  padding: 16px;
+  overflow: auto;
+  border: 1px solid var(--hub-border);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.22);
+  color: #b8c0c9;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.hub-demo-danger-zone {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  border-color: rgba(220, 70, 70, 0.2);
+}
+
+.hub-demo-danger-zone h2 {
+  margin: 0;
+}
+
+.hub-demo-delete-button {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  gap: 7px;
+  padding: 0 14px;
+  border: 1px solid rgba(220, 70, 70, 0.35);
+  border-radius: 8px;
+  background: transparent;
+  color: #dc6565;
+  font: inherit;
+  cursor: pointer;
+}
+
+.hub-demo-delete-button:hover:not(:disabled) {
+  border-color: rgba(220, 70, 70, 0.65);
+  background: rgba(220, 70, 70, 0.05);
+}
+
+.hub-demo-delete-button:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+@media (max-width: 720px) {
+  .hub-demo-danger-zone {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .hub-demo-delete-button {
+    width: 100%;
+  }
+}

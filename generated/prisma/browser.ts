@@ -87,3 +87,8 @@ export type Message = Prisma.MessageModel
  * 
  */
 export type MessageAttachment = Prisma.MessageAttachmentModel
+/**
+ * Model DemoDeployment
+ * 
+ */
+export type DemoDeployment = Prisma.DemoDeploymentModel

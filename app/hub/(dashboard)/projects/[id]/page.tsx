@@ -22,6 +22,7 @@ import ProjectMaterials from "./ProjectMaterials";
 import ProjectActivity from "./ProjectActivity";
 import ProjectStatusMenu from "./ProjectStatusMenu";
 import LinkThreadForm from "./LinkThreadForm";
+import ProjectDemo from "./ProjectDemo";
 
 export const dynamic = "force-dynamic";
 
@@ -33,7 +34,11 @@ type PageProps = {
 const tabs = [
   { value: "overview", label: "Overview" },
   { value: "tasks", label: "Tasks" },
-  { value: "billing", label: "Billing & support" },
+  { value: "demo", label: "Demo" },
+  {
+    value: "billing",
+    label: "Billing & support",
+  },
 ];
 
 function formatDate(date: Date) {
@@ -89,6 +94,7 @@ export default async function ProjectDetailPage({
         orderBy: { updatedAt: "desc" },
         select: { id: true, title: true, status: true },
       },
+      demo: true,
     },
   });
 
@@ -309,6 +315,13 @@ export default async function ProjectDetailPage({
 
       {activeTab === "tasks" && (
         <ProjectTasks projectId={project.id} tasks={project.tasks} />
+      )}
+
+      {activeTab === "demo" && (
+        <ProjectDemo
+          projectId={project.id}
+          demo={project.demo}
+        />
       )}
 
       {activeTab === "billing" && (

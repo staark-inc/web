@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./hub.css";
+import "./project-demo-management.css";
 
 export const metadata: Metadata = {
   title: "Staark Hub",
