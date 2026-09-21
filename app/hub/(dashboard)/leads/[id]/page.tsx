@@ -3,7 +3,10 @@ import { notFound } from "next/navigation";
 import {
   ArrowLeft,
   Building2,
+  CircleDollarSign,
   Mail,
+  MessageSquareText,
+  Target,
   UserRound,
 } from "lucide-react";
 
@@ -30,9 +33,15 @@ function formatDate(date: Date) {
   }).format(date);
 }
 
-export default async function LeadPage({
-  params,
-}: PageProps) {
+const statusLabels: Record<string, string> = {
+  NEW: "New",
+  CONTACTED: "Contacted",
+  QUALIFIED: "Qualified",
+  WON: "Won",
+  LOST: "Lost",
+};
+
+export default async function LeadPage({ params }: PageProps) {
   const { id } = await params;
 
   const lead = await prisma.lead.findUnique({
@@ -52,8 +61,11 @@ export default async function LeadPage({
     notFound();
   }
 
+  const displayName = lead.contact.name || "Unknown contact";
+  const opportunity = lead.service || "General enquiry";
+
   return (
-    <div className="hub-page">
+    <div className="hub-page hub-lead-v2-detail-page">
       <div className="hub-detail-back">
         <Link href="/hub/leads">
           <ArrowLeft size={16} />
@@ -61,106 +73,131 @@ export default async function LeadPage({
         </Link>
       </div>
 
-      <div className="hub-page-header">
+      <header className="hub-lead-v2-detail-head">
         <div>
-          <h1>
-            {lead.service || "General enquiry"}
-          </h1>
+          <span className="hub-lead-v2-detail-kicker">
+            <Target size={12} />
+            SALES OPPORTUNITY
+          </span>
+
+          <h1>{opportunity}</h1>
 
           <p>
-            Created {formatDate(lead.createdAt)}
+            {displayName} · Created {formatDate(lead.createdAt)}
           </p>
         </div>
 
         <span
           className={`hub-lead-status hub-lead-status-${lead.status.toLowerCase()}`}
         >
-          {lead.status}
+          {statusLabels[lead.status] ?? lead.status}
         </span>
-      </div>
+      </header>
 
-      <div className="hub-detail-grid">
-        <section className="hub-detail-card">
-          <h2>Lead details</h2>
+      <section className="hub-lead-v2-detail-stats">
+        <div>
+          <span><UserRound size={15} /> Contact</span>
+          <strong>{displayName}</strong>
+          <small>{lead.contact.email}</small>
+        </div>
 
-          <div className="hub-lead-detail-fields">
+        <div>
+          <span><Building2 size={15} /> Company</span>
+          <strong>{lead.contact.company || "Not specified"}</strong>
+          <small>{lead.contact.phone || "No phone added"}</small>
+        </div>
+
+        <div>
+          <span><CircleDollarSign size={15} /> Budget</span>
+          <strong>{formatAmount(lead.budget) || "Not specified"}</strong>
+          <small>{opportunity}</small>
+        </div>
+
+        <div>
+          <span><Target size={15} /> Stage</span>
+          <strong>{statusLabels[lead.status] ?? lead.status}</strong>
+          <small>{lead.client ? "Converted to client" : "Open opportunity"}</small>
+        </div>
+      </section>
+
+      <section className="hub-lead-v2-detail-grid">
+        <div className="hub-lead-v2-panel hub-lead-v2-message-panel">
+          <div className="hub-lead-v2-panel-head">
             <div>
-              <span>Service</span>
-              <strong>
-                {lead.service || "Not specified"}
-              </strong>
+              <span>ENQUIRY</span>
+              <h2>Message</h2>
             </div>
+            <MessageSquareText size={17} />
+          </div>
 
+          <div className="hub-lead-v2-message-body">
+            {lead.message || "No message was provided."}
+          </div>
+        </div>
+
+        <div className="hub-lead-v2-panel">
+          <div className="hub-lead-v2-panel-head">
             <div>
-              <span>Budget</span>
-              <strong>
-                {formatAmount(lead.budget) || "Not specified"}
-              </strong>
+              <span>CONTACT</span>
+              <h2>Customer</h2>
             </div>
+          </div>
+
+          <Link
+            href={`/hub/contacts/${lead.contact.id}`}
+            className="hub-lead-v2-contact-card"
+          >
+            <span className="hub-lead-v2-contact-icon">
+              <UserRound size={17} />
+            </span>
 
             <div>
-              <span>Status</span>
+              <strong>{displayName}</strong>
+              <span><Mail size={12} /> {lead.contact.email}</span>
+              {lead.contact.company && (
+                <span><Building2 size={12} /> {lead.contact.company}</span>
+              )}
+            </div>
+          </Link>
+        </div>
 
-              {lead.client ? (
-                <strong>WON · Converted to client</strong>
-              ) : (
+        <div className="hub-lead-v2-panel">
+          <div className="hub-lead-v2-panel-head">
+            <div>
+              <span>PIPELINE</span>
+              <h2>Next action</h2>
+            </div>
+          </div>
+
+          {lead.client ? (
+            <div className="hub-lead-v2-converted">
+              <strong>Converted to client</strong>
+              <p>This lead is already connected to an active client record.</p>
+              <Link href={`/hub/clients/${lead.client.id}`}>
+                Open {lead.client.name}
+              </Link>
+            </div>
+          ) : (
+            <div className="hub-lead-v2-actions-stack">
+              <div>
+                <span>Lead stage</span>
                 <LeadStatusForm
                   leadId={lead.id}
                   currentStatus={lead.status}
                 />
+              </div>
+
+              {lead.status !== "WON" && (
+                <div className="hub-lead-v2-convert-block">
+                  <span>Ready to close?</span>
+                  <ConvertLeadForm
+                    leadId={lead.id}
+                    defaultName={lead.contact.company || ""}
+                  />
+                </div>
               )}
             </div>
-          </div>
-        </section>
-
-        <section className="hub-detail-card">
-          <h2>Contact</h2>
-
-          <Link
-            href={`/hub/contacts/${lead.contact.id}`}
-            className="hub-lead-contact"
-          >
-            <UserRound size={18} />
-
-            <div>
-              <strong>
-                {lead.contact.name ||
-                  "Unknown contact"}
-              </strong>
-
-              <span>
-                <Mail size={13} />
-                {lead.contact.email}
-              </span>
-
-              {lead.contact.company && (
-                <span>
-                  <Building2 size={13} />
-                  {lead.contact.company}
-                </span>
-              )}
-            </div>
-          </Link>
-        </section>
-
-        {lead.status !== "WON" && !lead.client && (
-          <section className="hub-detail-card">
-            <h2>Convert to client</h2>
-
-            <ConvertLeadForm
-              leadId={lead.id}
-              defaultName={lead.contact.company || ""}
-            />
-          </section>
-        )}
-      </div>
-
-      <section className="hub-detail-card hub-lead-message-card">
-        <h2>Message</h2>
-
-        <div className="hub-lead-message">
-          {lead.message ||
-            "No message was provided."}
+          )}
         </div>
       </section>
     </div>
