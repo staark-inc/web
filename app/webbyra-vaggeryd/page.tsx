@@ -32,8 +32,9 @@ export default function Page() {
   return (
     <LocalLandingPage
       city="Vaggeryd"
+      canonicalPath="/webbyra-vaggeryd"
 
-      title="Webbdesign för företag i Vaggeryd."
+      title="Webbyrå i Vaggeryd med personlig webbdesign och SEO."
 
       description="Vi hjälper företag i Vaggeryd att skapa moderna och lättanvända webbplatser med fokus på tydlighet, prestanda och personlig kontakt."
 

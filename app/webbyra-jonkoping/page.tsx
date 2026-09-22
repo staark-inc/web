@@ -32,8 +32,9 @@ export default function Page() {
   return (
     <LocalLandingPage
       city="Jönköping"
+      canonicalPath="/webbyra-jonkoping"
 
-      title="Webbdesign för företag i Jönköping."
+      title="Webbyrå i Jönköping för företag som vill växa."
 
       description="Vi hjälper företag i Jönköping att skapa moderna, snabba och tydliga webbplatser som fungerar lika bra på mobil som på dator."
 

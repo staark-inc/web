@@ -7,7 +7,13 @@ import {
   Check,
 } from "lucide-react";
 
+import SeoJsonLd from "../../components/SeoJsonLd";
 import { StandaloneLayout } from "../../components/SiteChrome";
+
+import {
+  absoluteUrl,
+  ORGANIZATION_ID,
+} from "@/lib/seo";
 import {
   services,
   getServiceBySlug,
@@ -66,8 +72,56 @@ export default async function ServicePage({
     notFound();
   }
 
+  const pageUrl = absoluteUrl(`/tjanster/${slug}`);
+
+  const serviceJsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Service",
+        "@id": `${pageUrl}#service`,
+        name: service.title,
+        serviceType: service.shortTitle,
+        description: service.description,
+        url: pageUrl,
+        provider: {
+          "@id": ORGANIZATION_ID,
+        },
+        areaServed: {
+          "@type": "AdministrativeArea",
+          name: "Småland",
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${pageUrl}#breadcrumb`,
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Start",
+            item: absoluteUrl("/"),
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Tjänster",
+            item: absoluteUrl("/tjanster"),
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: service.shortTitle,
+            item: pageUrl,
+          },
+        ],
+      },
+    ],
+  };
+
   return (
     <div className="v2-page">
+      <SeoJsonLd data={serviceJsonLd} />
       <StandaloneLayout>
 
         {/* HERO */}

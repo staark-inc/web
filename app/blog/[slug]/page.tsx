@@ -8,7 +8,13 @@ import {
   Clock,
 } from "lucide-react";
 
+import SeoJsonLd from "../../components/SeoJsonLd";
 import { StandaloneLayout } from "../../components/SiteChrome";
+
+import {
+  absoluteUrl,
+  ORGANIZATION_ID,
+} from "@/lib/seo";
 import {
   getPostBySlug,
   posts,
@@ -90,8 +96,61 @@ export default async function BlogPostPage({
     notFound();
   }
 
+  const pageUrl = absoluteUrl(`/blog/${post.slug}`);
+
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BlogPosting",
+        "@id": `${pageUrl}#article`,
+        headline: post.title,
+        description: post.description,
+        datePublished: post.publishedAt,
+        dateModified:
+          post.updatedAt || post.publishedAt,
+        inLanguage: "sv-SE",
+        mainEntityOfPage: pageUrl,
+        author: {
+          "@id": ORGANIZATION_ID,
+        },
+        publisher: {
+          "@id": ORGANIZATION_ID,
+        },
+        image: post.image
+          ? [absoluteUrl(post.image)]
+          : undefined,
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${pageUrl}#breadcrumb`,
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Start",
+            item: absoluteUrl("/"),
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Blogg",
+            item: absoluteUrl("/blog"),
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: post.title,
+            item: pageUrl,
+          },
+        ],
+      },
+    ],
+  };
+
   return (
     <div className="v2-page">
+      <SeoJsonLd data={articleJsonLd} />
       <StandaloneLayout>
 
         {/* HERO */}
