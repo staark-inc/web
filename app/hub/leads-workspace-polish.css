@@ -94,7 +94,7 @@
 .hub-leads-v2-stat-icon {
   width: 32px;
   height: 32px;
-  display: grid;
+  display: grid !important;
   flex: 0 0 32px;
   place-items: center;
   border-radius: 9px;
