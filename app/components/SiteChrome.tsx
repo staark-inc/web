@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Code2 } from "lucide-react";
 import ClientSiteHeader from "./SiteHeader";
+import CookieSettingsButton from "./CookieSettingsButton";
 
 export function Brand({ compact = false }: { compact?: boolean }) {
   return (
@@ -21,12 +22,45 @@ export function SiteFooter() {
       <div className="footer-top">
         <div className="footer-about"><Link href="/"><Brand compact /></Link><p>Vi skapar rena och snabba webbplatser för lokala företag i Jönköping och Värnamo, med modern teknik där det verkligen gör skillnad.</p></div>
         <div className="footer-links">
-          <div><strong>Tjänster</strong><Link href="/services">Anpassad Design</Link><Link href="/services">SEO-optimering</Link><Link href="/services">Responsiv Webbplats</Link><Link href="/services">Support</Link></div>
-          <div><strong>Team</strong><Link href="/about">Om oss</Link><Link href="/contact">Kontakta oss</Link><Link href="/faq">Vanliga frågor</Link></div>
-          <div><strong>Sociala medier</strong><a href="#contact">Facebook</a><a href="#contact">Instagram</a><a href="#contact">LinkedIn</a></div>
+          <div><strong>Tjänster</strong><Link href="/tjanster/webbdesign">Webbdesign</Link><Link href="/tjanster/seo">SEO-optimering</Link><Link href="/tjanster/webbutveckling">Webbutveckling</Link><Link href="/tjanster/support-underhall">Support</Link></div>
+          <div><strong>Företaget</strong><Link href="/om-oss">Om oss</Link><Link href="/kontakt">Kontakta oss</Link><Link href="/priser">Priser</Link><Link href="/blog">Blogg</Link></div>
+          <div>
+            <strong>Sociala medier</strong>
+
+            <a
+              href="https://www.linkedin.com/company/staark-inc/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              LinkedIn
+            </a>
+
+            <a
+              href="https://www.facebook.com/profile.php?id=61594322476318"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Facebook
+            </a>
+          </div>
         </div>
       </div>
-      <div className="footer-bottom"><span>© 2026 Staark Inc. Alla rättigheter förbehållna.</span><span>Byggt med: <strong>React • Next.js • Tailwind</strong></span></div>
+      <div className="footer-bottom">
+        <div>
+          <span>© 2026 Staark Inc. Alla rättigheter förbehållna.</span>
+
+          <div className="site-footer-legal">
+            <Link href="/integritetspolicy">Integritetspolicy</Link>
+            <Link href="/kakor">Kakor</Link>
+            <Link href="/allmanna-villkor">Allmänna villkor</Link>
+            <CookieSettingsButton />
+          </div>
+        </div>
+
+        <span>
+          Byggt med: <strong>React • Next.js • Tailwind</strong>
+        </span>
+      </div>
     </footer>
   );
 }

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Unbounded } from "next/font/google";
 
 import SeoJsonLd from "./components/SeoJsonLd";
+import CookieConsent from "./components/CookieConsent";
 import SiteAnalytics from "./components/SiteAnalytics";
 
 import {
@@ -12,6 +13,7 @@ import {
 } from "@/lib/seo";
 
 import "./globals.css";
+import "./legal.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -91,6 +93,10 @@ const globalJsonLd = {
         url: absoluteUrl("/android-chrome-512x512.png"),
       },
       email: "contact@staarkinc.com",
+      sameAs: [
+        "https://www.linkedin.com/company/staark-inc/",
+        "https://www.facebook.com/profile.php?id=61594322476318",
+      ],
       description:
         "Webbyrå som hjälper företag med webbdesign, webbutveckling, SEO, prestanda, hosting och support.",
       areaServed: [
@@ -146,6 +152,7 @@ export default function RootLayout({
 
         {children}
 
+        <CookieConsent />
         <SiteAnalytics gaId={gaId} />
       </body>
     </html>

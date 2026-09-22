@@ -1,8 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { sendGAEvent } from "@next/third-parties/google";
+import { hasAnalyticsConsent } from "@/lib/consent";
 
 export default function ContactForm() {
   const [status, setStatus] = useState<
@@ -40,9 +42,11 @@ export default function ContactForm() {
         throw new Error("Contact request failed");
       }
 
-      sendGAEvent("event", "generate_lead", {
-        lead_source: "contact_form",
-      });
+      if (hasAnalyticsConsent()) {
+        sendGAEvent("event", "generate_lead", {
+          lead_source: "contact_form",
+        });
+      }
 
       form.reset();
       setStatus("success");
@@ -98,6 +102,11 @@ export default function ContactForm() {
           rows={5}
         />
       </label>
+
+      <p className="form-privacy-note">
+        När du skickar formuläret behandlar vi uppgifterna för att kunna svara på din förfrågan. Läs vår{" "}
+        <Link href="/integritetspolicy">integritetspolicy</Link>.
+      </p>
 
       <button
         className="button button-primary"
