@@ -45,7 +45,7 @@
 .v2-section-header h1,.v2-section-header h2 { max-width:850px; font-size:40px; line-height:1.2; letter-spacing:-1px; }
 .v2-section-header p { max-width:650px; color:var(--v2-muted); font-size:16px; line-height:1.6; }
 .v2-services .v2-section-header p { max-width:720px; }
-.v2-service-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:24px; margin-top:64px; }
+.v2-service-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:64px; }
 .v2-service-card { padding:32px; border:1px solid var(--v2-line); border-radius:12px; background:#fff; }
 .v2-icon { display:grid; place-items:center; width:48px; height:48px; margin-bottom:24px; border-radius:8px; background:#3b82f61a; }
 .v2-icon img { width:24px; height:24px; }
@@ -1296,10 +1296,6 @@ footer {
 }
 
 /* Services page */
-
-.v2-services .v2-service-grid {
-  grid-template-columns: repeat(3, 1fr);
-}
 
 .service-feature-list {
   display: grid;
@@ -3657,4 +3653,16 @@ footer {
 
 .v2-nav-support {
   white-space: nowrap;
+}
+
+.v2-section-responsive {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .v2-section-responsive {
+    flex-direction: column;
+  }
 }
