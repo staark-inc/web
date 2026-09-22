@@ -171,7 +171,7 @@ export default async function PublicOfferPage({
               >
                 <label className="public-offer-terms-check">
                   <input type="checkbox" name="acceptTerms" value="yes" required />
-                  <span>Jag har läst och godkänner offerten samt{" "}<Link href="/allmanna-villkor" target="_blank" rel="noreferrer">Staark Inc:s allmänna villkor</Link>.</span>
+                  <span>Jag har läst och godkänner offerten samt{" "}<Link href="/allmanna-villkor" target="_blank" rel="noreferrer">de allmänna villkoren</Link>.</span>
                 </label>
 
                 <button
