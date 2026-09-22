@@ -19,6 +19,7 @@ import {
   getPostBySlug,
   posts,
 } from "../../data/posts";
+import { getBlogRelatedLinks } from "../../data/content-links";
 
 type Props = {
   params: Promise<{
@@ -97,6 +98,7 @@ export default async function BlogPostPage({
   }
 
   const pageUrl = absoluteUrl(`/blog/${post.slug}`);
+  const relatedLinks = getBlogRelatedLinks(post.slug);
 
   const articleJsonLd = {
     "@context": "https://schema.org",
@@ -242,6 +244,53 @@ export default async function BlogPostPage({
               </section>
             ))}
 
+
+            {relatedLinks.length > 0 ? (
+              <div
+                style={{
+                  marginTop: 64,
+                  marginBottom: 64,
+                }}
+              >
+                <div className="v2-section-header">
+                  <span>RELATERAT INNEHÅLL</span>
+
+                  <h2>
+                    Nästa steg om du vill läsa vidare.
+                  </h2>
+
+                  <p>
+                    Tjänster, guider och sidor som hör ihop
+                    med ämnet i den här artikeln.
+                  </p>
+                </div>
+
+                <div className="v2-service-grid">
+                  {relatedLinks.map((link) => (
+                    <article
+                      key={link.href}
+                      className="v2-service-card"
+                    >
+                      <span className="service-benefit-label">
+                        {link.label}
+                      </span>
+
+                      <h3>{link.title}</h3>
+
+                      <p>{link.description}</p>
+
+                      <Link
+                        href={link.href}
+                        className="v2-text-link"
+                      >
+                        Läs mer
+                        <ArrowRight size={15} />
+                      </Link>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            ) : null}
 
             {/* CTA */}
             <div className="blog-article-cta">
