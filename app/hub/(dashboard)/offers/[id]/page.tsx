@@ -6,6 +6,7 @@ import { formatOfferAmount, offerStatusLabels } from "@/lib/offers";
 import { prisma } from "@/lib/prisma";
 import OfferForm from "../OfferForm";
 import OfferStatusActions from "../OfferStatusActions";
+import OfferDeleteButton from "../OfferDeleteButton";
 
 export const dynamic = "force-dynamic";
 
@@ -55,6 +56,21 @@ export default async function OfferDetailPage({ params }: { params: Promise<{ id
             {offer.status === "DRAFT" && <Link className="hub-secondary-button hub-offer-project-link" href={`/hub/offers/${offer.id}/send`}><Mail size={15} />Review and send offer</Link>}
             {offer.shareToken && offer.status !== "DRAFT" && <Link className="hub-secondary-button hub-offer-project-link" href={`/offert/${offer.shareToken}`} target="_blank" rel="noopener noreferrer"><ExternalLink size={15} />Open client offer</Link>}
             <OfferStatusActions offerId={offer.id} status={offer.status} />
+
+            <OfferDeleteButton
+              offerId={offer.id}
+              disabled={
+                Boolean(offer.project) ||
+                !["DRAFT", "DECLINED"].includes(offer.status)
+              }
+              disabledReason={
+                offer.project
+                  ? "Offers linked to a project cannot be deleted."
+                  : !["DRAFT", "DECLINED"].includes(offer.status)
+                    ? "Only draft or declined offers can be deleted."
+                    : undefined
+              }
+            />
             {offer.status === "ACCEPTED" && (
               offer.project ? (
                 <Link

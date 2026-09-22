@@ -153,3 +153,43 @@ export async function changeOfferStatus(_state: OfferActionState, formData: Form
   revalidatePath(`/hub/clients/${offer.clientId}`);
   return { error: null, success: true };
 }
+
+export async function deleteOffer(formData: FormData) {
+  await requireAdmin();
+
+  const offerId = field(formData, "offerId");
+
+  const offer = await prisma.offer.findUnique({
+    where: { id: offerId },
+    select: {
+      id: true,
+      clientId: true,
+      status: true,
+      project: {
+        select: { id: true },
+      },
+    },
+  });
+
+  if (!offer) {
+    redirect("/hub/offers");
+  }
+
+  if (offer.project) {
+    throw new Error("Offers linked to a project cannot be deleted.");
+  }
+
+  if (!["DRAFT", "DECLINED"].includes(offer.status)) {
+    throw new Error("Only draft or declined offers can be deleted.");
+  }
+
+  await prisma.offer.delete({
+    where: { id: offer.id },
+  });
+
+  revalidatePath("/hub/offers");
+  revalidatePath(`/hub/clients/${offer.clientId}`);
+
+  redirect("/hub/offers");
+}
+
