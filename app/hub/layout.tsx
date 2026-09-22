@@ -6,6 +6,7 @@ import "./project-demo-management.css";
 import "./project-detail-polish.css";
 import "./projects-v2.css";
 import "./client-workspace-polish.css";
+import "./contacts-workspace.css";
 import "./leads-workspace-polish.css";
 import "./operations-workspace.css";
 import "./billing-support-v2.css";
