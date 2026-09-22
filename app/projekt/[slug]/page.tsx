@@ -12,6 +12,7 @@ import {
   ORGANIZATION_ID,
 } from "@/lib/seo";
 import { projects, getProjectBySlug } from "../../data/projects";
+import { getProjectRelatedLinks } from "../../data/content-links";
 
 type Props = {
   params: Promise<{
@@ -71,6 +72,7 @@ export default async function ProjectPage({ params }: Props) {
   }
 
   const pageUrl = absoluteUrl(`/projekt/${project.slug}`);
+  const relatedLinks = getProjectRelatedLinks(project.slug);
 
   const projectJsonLd = {
     "@context": "https://schema.org",
@@ -235,6 +237,50 @@ export default async function ProjectPage({ params }: Props) {
           </div>
 
         </section>
+
+        {relatedLinks.length > 0 ? (
+          <section className="v2-section v2-services">
+
+            <div className="v2-section-header centered">
+              <span>RELATERAT TILL PROJEKTET</span>
+
+              <h2>
+                Tjänster och guider bakom lösningen.
+              </h2>
+
+              <p>
+                Läs mer om arbetssättet och tjänsterna som
+                är relevanta för den här typen av projekt.
+              </p>
+            </div>
+
+            <div className="v2-service-grid">
+              {relatedLinks.map((link) => (
+                <article
+                  key={link.href}
+                  className="v2-service-card"
+                >
+                  <span className="service-benefit-label">
+                    {link.label}
+                  </span>
+
+                  <h3>{link.title}</h3>
+
+                  <p>{link.description}</p>
+
+                  <Link
+                    href={link.href}
+                    className="v2-text-link"
+                  >
+                    Läs mer
+                    <ArrowRight size={15} />
+                  </Link>
+                </article>
+              ))}
+            </div>
+
+          </section>
+        ) : null}
 
         {/* CTA */}
         <section className="v2-section">

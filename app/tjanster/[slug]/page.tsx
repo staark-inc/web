@@ -18,6 +18,7 @@ import {
   services,
   getServiceBySlug,
 } from "../../data/services";
+import { getServiceRelatedGuides } from "../../data/content-links";
 
 type Props = {
   params: Promise<{
@@ -73,6 +74,7 @@ export default async function ServicePage({
   }
 
   const pageUrl = absoluteUrl(`/tjanster/${slug}`);
+  const relatedGuides = getServiceRelatedGuides(service.slug);
 
   const serviceJsonLd = {
     "@context": "https://schema.org",
@@ -288,6 +290,50 @@ export default async function ServicePage({
           </div>
 
         </section>
+
+        {relatedGuides.length > 0 ? (
+          <section className="v2-section v2-services">
+
+            <div className="v2-section-header centered">
+              <span>GUIDER & KUNSKAP</span>
+
+              <h2>
+                Läs mer om {service.shortTitle.toLowerCase()}.
+              </h2>
+
+              <p>
+                Praktiska guider som hjälper dig att förstå
+                valen bakom en bättre webbplats.
+              </p>
+            </div>
+
+            <div className="v2-service-grid">
+              {relatedGuides.map((guide) => (
+                <article
+                  key={guide.href}
+                  className="v2-service-card"
+                >
+                  <span className="service-benefit-label">
+                    {guide.label}
+                  </span>
+
+                  <h3>{guide.title}</h3>
+
+                  <p>{guide.description}</p>
+
+                  <Link
+                    href={guide.href}
+                    className="v2-text-link"
+                  >
+                    Läs guiden
+                    <ArrowRight size={15} />
+                  </Link>
+                </article>
+              ))}
+            </div>
+
+          </section>
+        ) : null}
 
         {/* CTA */}
         <section className="v2-section v2-pricing">
