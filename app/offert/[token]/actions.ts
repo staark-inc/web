@@ -58,6 +58,8 @@ export async function respondToOffer(
     );
   }
 
+  const decidedAt = new Date();
+
   const updated = await prisma.offer.updateMany({
     where: {
       id: offer.id,
@@ -65,7 +67,15 @@ export async function respondToOffer(
     },
     data: {
       status,
-      decidedAt: new Date(),
+      decidedAt,
+      termsAcceptedAt:
+        status === "ACCEPTED"
+          ? decidedAt
+          : null,
+      termsVersion:
+        status === "ACCEPTED"
+          ? "2026-09-22"
+          : null,
     },
   });
 

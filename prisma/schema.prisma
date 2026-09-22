@@ -190,6 +190,8 @@ model Offer {
   sharedAt        DateTime?
   viewedAt        DateTime?
   decidedAt       DateTime?
+  termsAcceptedAt DateTime?
+  termsVersion    String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -1668,6 +1668,8 @@ export const OfferScalarFieldEnum = {
   sharedAt: 'sharedAt',
   viewedAt: 'viewedAt',
   decidedAt: 'decidedAt',
+  termsAcceptedAt: 'termsAcceptedAt',
+  termsVersion: 'termsVersion',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

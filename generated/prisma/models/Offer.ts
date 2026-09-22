@@ -52,6 +52,8 @@ export type OfferMinAggregateOutputType = {
   sharedAt: Date | null
   viewedAt: Date | null
   decidedAt: Date | null
+  termsAcceptedAt: Date | null
+  termsVersion: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -70,6 +72,8 @@ export type OfferMaxAggregateOutputType = {
   sharedAt: Date | null
   viewedAt: Date | null
   decidedAt: Date | null
+  termsAcceptedAt: Date | null
+  termsVersion: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -88,6 +92,8 @@ export type OfferCountAggregateOutputType = {
   sharedAt: number
   viewedAt: number
   decidedAt: number
+  termsAcceptedAt: number
+  termsVersion: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -120,6 +126,8 @@ export type OfferMinAggregateInputType = {
   sharedAt?: true
   viewedAt?: true
   decidedAt?: true
+  termsAcceptedAt?: true
+  termsVersion?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -138,6 +146,8 @@ export type OfferMaxAggregateInputType = {
   sharedAt?: true
   viewedAt?: true
   decidedAt?: true
+  termsAcceptedAt?: true
+  termsVersion?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -156,6 +166,8 @@ export type OfferCountAggregateInputType = {
   sharedAt?: true
   viewedAt?: true
   decidedAt?: true
+  termsAcceptedAt?: true
+  termsVersion?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -261,6 +273,8 @@ export type OfferGroupByOutputType = {
   sharedAt: Date | null
   viewedAt: Date | null
   decidedAt: Date | null
+  termsAcceptedAt: Date | null
+  termsVersion: string | null
   createdAt: Date
   updatedAt: Date
   _count: OfferCountAggregateOutputType | null
@@ -302,6 +316,8 @@ export type OfferWhereInput = {
   sharedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
   viewedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
   decidedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
+  termsAcceptedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
+  termsVersion?: Prisma.StringNullableFilter<"Offer"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
@@ -322,6 +338,8 @@ export type OfferOrderByWithRelationInput = {
   sharedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   viewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   decidedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  termsAcceptedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  termsVersion?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   client?: Prisma.ClientOrderByWithRelationInput
@@ -345,6 +363,8 @@ export type OfferWhereUniqueInput = Prisma.AtLeast<{
   sharedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
   viewedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
   decidedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
+  termsAcceptedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
+  termsVersion?: Prisma.StringNullableFilter<"Offer"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
@@ -365,6 +385,8 @@ export type OfferOrderByWithAggregationInput = {
   sharedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   viewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   decidedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  termsAcceptedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  termsVersion?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.OfferCountOrderByAggregateInput
@@ -391,6 +413,8 @@ export type OfferScalarWhereWithAggregatesInput = {
   sharedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Offer"> | Date | string | null
   viewedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Offer"> | Date | string | null
   decidedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Offer"> | Date | string | null
+  termsAcceptedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Offer"> | Date | string | null
+  termsVersion?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Offer"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Offer"> | Date | string
 }
@@ -408,6 +432,8 @@ export type OfferCreateInput = {
   sharedAt?: Date | string | null
   viewedAt?: Date | string | null
   decidedAt?: Date | string | null
+  termsAcceptedAt?: Date | string | null
+  termsVersion?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   client: Prisma.ClientCreateNestedOneWithoutOffersInput
@@ -428,6 +454,8 @@ export type OfferUncheckedCreateInput = {
   sharedAt?: Date | string | null
   viewedAt?: Date | string | null
   decidedAt?: Date | string | null
+  termsAcceptedAt?: Date | string | null
+  termsVersion?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   project?: Prisma.ProjectUncheckedCreateNestedOneWithoutOfferInput
@@ -446,6 +474,8 @@ export type OfferUpdateInput = {
   sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   viewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  termsVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   client?: Prisma.ClientUpdateOneRequiredWithoutOffersNestedInput
@@ -466,6 +496,8 @@ export type OfferUncheckedUpdateInput = {
   sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   viewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  termsVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUncheckedUpdateOneWithoutOfferNestedInput
@@ -485,6 +517,8 @@ export type OfferCreateManyInput = {
   sharedAt?: Date | string | null
   viewedAt?: Date | string | null
   decidedAt?: Date | string | null
+  termsAcceptedAt?: Date | string | null
+  termsVersion?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -502,6 +536,8 @@ export type OfferUpdateManyMutationInput = {
   sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   viewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  termsVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -520,6 +556,8 @@ export type OfferUncheckedUpdateManyInput = {
   sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   viewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  termsVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -548,6 +586,8 @@ export type OfferCountOrderByAggregateInput = {
   sharedAt?: Prisma.SortOrder
   viewedAt?: Prisma.SortOrder
   decidedAt?: Prisma.SortOrder
+  termsAcceptedAt?: Prisma.SortOrder
+  termsVersion?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -572,6 +612,8 @@ export type OfferMaxOrderByAggregateInput = {
   sharedAt?: Prisma.SortOrder
   viewedAt?: Prisma.SortOrder
   decidedAt?: Prisma.SortOrder
+  termsAcceptedAt?: Prisma.SortOrder
+  termsVersion?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -590,6 +632,8 @@ export type OfferMinOrderByAggregateInput = {
   sharedAt?: Prisma.SortOrder
   viewedAt?: Prisma.SortOrder
   decidedAt?: Prisma.SortOrder
+  termsAcceptedAt?: Prisma.SortOrder
+  termsVersion?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -696,6 +740,8 @@ export type OfferCreateWithoutClientInput = {
   sharedAt?: Date | string | null
   viewedAt?: Date | string | null
   decidedAt?: Date | string | null
+  termsAcceptedAt?: Date | string | null
+  termsVersion?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   project?: Prisma.ProjectCreateNestedOneWithoutOfferInput
@@ -714,6 +760,8 @@ export type OfferUncheckedCreateWithoutClientInput = {
   sharedAt?: Date | string | null
   viewedAt?: Date | string | null
   decidedAt?: Date | string | null
+  termsAcceptedAt?: Date | string | null
+  termsVersion?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   project?: Prisma.ProjectUncheckedCreateNestedOneWithoutOfferInput
@@ -762,6 +810,8 @@ export type OfferScalarWhereInput = {
   sharedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
   viewedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
   decidedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
+  termsAcceptedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
+  termsVersion?: Prisma.StringNullableFilter<"Offer"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
 }
@@ -779,6 +829,8 @@ export type OfferCreateWithoutProjectInput = {
   sharedAt?: Date | string | null
   viewedAt?: Date | string | null
   decidedAt?: Date | string | null
+  termsAcceptedAt?: Date | string | null
+  termsVersion?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   client: Prisma.ClientCreateNestedOneWithoutOffersInput
@@ -798,6 +850,8 @@ export type OfferUncheckedCreateWithoutProjectInput = {
   sharedAt?: Date | string | null
   viewedAt?: Date | string | null
   decidedAt?: Date | string | null
+  termsAcceptedAt?: Date | string | null
+  termsVersion?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -831,6 +885,8 @@ export type OfferUpdateWithoutProjectInput = {
   sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   viewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  termsVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   client?: Prisma.ClientUpdateOneRequiredWithoutOffersNestedInput
@@ -850,6 +906,8 @@ export type OfferUncheckedUpdateWithoutProjectInput = {
   sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   viewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  termsVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -867,6 +925,8 @@ export type OfferCreateManyClientInput = {
   sharedAt?: Date | string | null
   viewedAt?: Date | string | null
   decidedAt?: Date | string | null
+  termsAcceptedAt?: Date | string | null
+  termsVersion?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -884,6 +944,8 @@ export type OfferUpdateWithoutClientInput = {
   sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   viewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  termsVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUpdateOneWithoutOfferNestedInput
@@ -902,6 +964,8 @@ export type OfferUncheckedUpdateWithoutClientInput = {
   sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   viewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  termsVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   project?: Prisma.ProjectUncheckedUpdateOneWithoutOfferNestedInput
@@ -920,6 +984,8 @@ export type OfferUncheckedUpdateManyWithoutClientInput = {
   sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   viewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  termsVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -940,6 +1006,8 @@ export type OfferSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   sharedAt?: boolean
   viewedAt?: boolean
   decidedAt?: boolean
+  termsAcceptedAt?: boolean
+  termsVersion?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
@@ -960,6 +1028,8 @@ export type OfferSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   sharedAt?: boolean
   viewedAt?: boolean
   decidedAt?: boolean
+  termsAcceptedAt?: boolean
+  termsVersion?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
@@ -979,6 +1049,8 @@ export type OfferSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   sharedAt?: boolean
   viewedAt?: boolean
   decidedAt?: boolean
+  termsAcceptedAt?: boolean
+  termsVersion?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
@@ -998,11 +1070,13 @@ export type OfferSelectScalar = {
   sharedAt?: boolean
   viewedAt?: boolean
   decidedAt?: boolean
+  termsAcceptedAt?: boolean
+  termsVersion?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type OfferOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientId" | "title" | "scope" | "terms" | "oneTimePriceOre" | "monthlyPriceOre" | "includedMonths" | "status" | "shareToken" | "sharedAt" | "viewedAt" | "decidedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["offer"]>
+export type OfferOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientId" | "title" | "scope" | "terms" | "oneTimePriceOre" | "monthlyPriceOre" | "includedMonths" | "status" | "shareToken" | "sharedAt" | "viewedAt" | "decidedAt" | "termsAcceptedAt" | "termsVersion" | "createdAt" | "updatedAt", ExtArgs["result"]["offer"]>
 export type OfferInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
   project?: boolean | Prisma.Offer$projectArgs<ExtArgs>
@@ -1034,6 +1108,8 @@ export type $OfferPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     sharedAt: Date | null
     viewedAt: Date | null
     decidedAt: Date | null
+    termsAcceptedAt: Date | null
+    termsVersion: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["offer"]>
@@ -1474,6 +1550,8 @@ export interface OfferFieldRefs {
   readonly sharedAt: Prisma.FieldRef<"Offer", 'DateTime'>
   readonly viewedAt: Prisma.FieldRef<"Offer", 'DateTime'>
   readonly decidedAt: Prisma.FieldRef<"Offer", 'DateTime'>
+  readonly termsAcceptedAt: Prisma.FieldRef<"Offer", 'DateTime'>
+  readonly termsVersion: Prisma.FieldRef<"Offer", 'String'>
   readonly createdAt: Prisma.FieldRef<"Offer", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Offer", 'DateTime'>
 }
