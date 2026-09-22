@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { CheckCircle2, LifeBuoy } from "lucide-react";
 
@@ -86,6 +87,11 @@ export default function SupportRequestForm() {
 
       <p className="public-support-priority-note">Välj Brådskande främst vid driftstopp eller kritiska fel som påverkar verksamheten.</p>
       {status === "error" && <p className="public-support-error" role="alert">{error}</p>}
+
+      <p className="public-support-privacy-note">
+        När du skickar ärendet behandlar vi uppgifterna för att kunna hantera supporten. Läs vår{" "}
+        <Link href="/integritetspolicy">integritetspolicy</Link>.
+      </p>
 
       <button type="submit" className="v2-button v2-button-primary public-support-submit" disabled={status === "sending"}>
         {status === "sending" ? "Skickar..." : "Skicka supportärende"}<LifeBuoy size={17} />

@@ -26,6 +26,15 @@ export async function respondToOffer(
     );
   }
 
+  if (
+    status === "ACCEPTED" &&
+    String(formData.get("acceptTerms") || "") !== "yes"
+  ) {
+    redirect(
+      `/offert/${encodeURIComponent(token)}?result=terms`
+    );
+  }
+
   const offer = await prisma.offer.findUnique({
     where: {
       shareToken: token,

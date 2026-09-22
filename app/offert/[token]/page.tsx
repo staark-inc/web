@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   CheckCircle2,
@@ -146,6 +147,12 @@ export default async function PublicOfferPage({
           </div>
         )}
 
+        {result === "terms" && (
+          <div className="public-offer-message">
+            Du behöver godkänna villkoren för att acceptera offerten.
+          </div>
+        )}
+
         {!decided && (
           <div className="public-offer-decision">
             <div>
@@ -162,6 +169,11 @@ export default async function PublicOfferPage({
                   token
                 )}
               >
+                <label className="public-offer-terms-check">
+                  <input type="checkbox" name="acceptTerms" value="yes" required />
+                  <span>Jag har läst och godkänner offerten samt{" "}<Link href="/allmanna-villkor" target="_blank" rel="noreferrer">Staark Inc:s allmänna villkor</Link>.</span>
+                </label>
+
                 <button
                   type="submit"
                   name="decision"
@@ -193,6 +205,10 @@ export default async function PublicOfferPage({
 
         <footer className="public-offer-footer">
           Har du frågor? Svara på mejlet du fick från oss så hjälper vi dig.
+          <span className="public-offer-legal">
+            <Link href="/integritetspolicy">Integritetspolicy</Link>
+            <Link href="/allmanna-villkor">Allmänna villkor</Link>
+          </span>
         </footer>
       </section>
     </main>
