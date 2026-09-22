@@ -21,7 +21,8 @@ export default function PrivacyPolicyPage() {
 
           <section>
             <h2>1. Personuppgiftsansvarig</h2>
-            <p>Staark Inc. ansvarar för den behandling av personuppgifter som beskrivs i denna policy.</p>
+            <p>Staark Inc. är arbetsnamnet som används för denna webbplats och de tjänster som presenteras här. Verksamheten är ännu inte registrerad under detta namn.</p>
+            <p>Personuppgiftsansvaret ligger hos den fysiska person som driver webbplatsen och bestämmer hur och varför personuppgifter behandlas.</p>
             <p>Kontakt: <a href="mailto:contact@staarkinc.com">contact@staarkinc.com</a><br />Webbplats: <a href="https://staarkinc.com">staarkinc.com</a></p>
           </section>
 
