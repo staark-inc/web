@@ -32,8 +32,9 @@ export default function Page() {
   return (
     <LocalLandingPage
       city="Värnamo"
+      canonicalPath="/webbyra-varnamo"
 
-      title="Webbplatser för företag som vill synas bättre i Värnamo."
+      title="Webbyrå i Värnamo för företag som vill synas bättre."
 
       description="Vi hjälper företag i Värnamo med webbdesign, utveckling och SEO för att skapa en snabbare, tydligare och mer professionell digital närvaro."
 

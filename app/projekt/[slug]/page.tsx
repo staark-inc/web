@@ -4,7 +4,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 
+import SeoJsonLd from "../../components/SeoJsonLd";
 import { StandaloneLayout } from "../../components/SiteChrome";
+
+import {
+  absoluteUrl,
+  ORGANIZATION_ID,
+} from "@/lib/seo";
 import { projects, getProjectBySlug } from "../../data/projects";
 
 type Props = {
@@ -64,8 +70,54 @@ export default async function ProjectPage({ params }: Props) {
     notFound();
   }
 
+  const pageUrl = absoluteUrl(`/projekt/${project.slug}`);
+
+  const projectJsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CreativeWork",
+        "@id": `${pageUrl}#case-study`,
+        name: project.title,
+        description: project.description,
+        url: pageUrl,
+        image: absoluteUrl(project.image),
+        inLanguage: "sv-SE",
+        creator: {
+          "@id": ORGANIZATION_ID,
+        },
+        about: project.services,
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${pageUrl}#breadcrumb`,
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Start",
+            item: absoluteUrl("/"),
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Projekt",
+            item: absoluteUrl("/projekt"),
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: project.title,
+            item: pageUrl,
+          },
+        ],
+      },
+    ],
+  };
+
   return (
     <div className="v2-page">
+      <SeoJsonLd data={projectJsonLd} />
       <StandaloneLayout>
 
         {/* HERO */}

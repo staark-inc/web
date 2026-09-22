@@ -1,14 +1,11 @@
 import type { MetadataRoute } from "next";
 
+import { posts } from "./data/posts";
 import { projects } from "./data/projects";
 import { services } from "./data/services";
-import { posts } from "./data/posts";
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://staarkinc.com";
+import { absoluteUrl } from "@/lib/seo";
 
-
-  
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes = [
     {
@@ -43,11 +40,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       route: "/support",
-      priority: 0.7,
+      priority: 0.5,
       changeFrequency: "monthly" as const,
     },
-
-    // Lokala landningssidor
     {
       route: "/webbyra-jonkoping",
       priority: 0.9,
@@ -60,7 +55,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       route: "/webbyra-vaggeryd",
-      priority: 0.8,
+      priority: 0.9,
       changeFrequency: "monthly" as const,
     },
     {
@@ -72,44 +67,41 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const staticPages: MetadataRoute.Sitemap =
     staticRoutes.map((page) => ({
-      url: new URL(page.route, siteUrl).toString(),
+      url: absoluteUrl(page.route),
       changeFrequency: page.changeFrequency,
       priority: page.priority,
     }));
 
   const servicePages: MetadataRoute.Sitemap =
     services.map((service) => ({
-      url: new URL(
-        `/tjanster/${service.slug}`,
-        siteUrl
-      ).toString(),
+      url: absoluteUrl(`/tjanster/${service.slug}`),
       changeFrequency: "monthly",
       priority: 0.8,
     }));
 
   const projectPages: MetadataRoute.Sitemap =
     projects.map((project) => ({
-      url: new URL(
-        `/projekt/${project.slug}`,
-        siteUrl
-      ).toString(),
+      url: absoluteUrl(`/projekt/${project.slug}`),
       changeFrequency: "monthly",
       priority: 0.7,
+      images: project.image
+        ? [absoluteUrl(project.image)]
+        : undefined,
     }));
 
   const blogPages: MetadataRoute.Sitemap =
     posts.map((post) => ({
-      url: new URL(
-        `/blog/${post.slug}`,
-        siteUrl
-      ).toString(),
+      url: absoluteUrl(`/blog/${post.slug}`),
       lastModified:
         post.updatedAt || post.publishedAt,
       changeFrequency: "monthly",
       priority: 0.7,
+      images: post.image
+        ? [absoluteUrl(post.image)]
+        : undefined,
     }));
 
-    return [
+  return [
     ...staticPages,
     ...servicePages,
     ...projectPages,

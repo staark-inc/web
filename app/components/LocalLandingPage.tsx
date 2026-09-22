@@ -9,10 +9,17 @@ import {
   Zap,
 } from "lucide-react";
 
+import SeoJsonLd from "./SeoJsonLd";
 import { StandaloneLayout } from "./SiteChrome";
+
+import {
+  absoluteUrl,
+  ORGANIZATION_ID,
+} from "@/lib/seo";
 
 type Props = {
   city: string;
+  canonicalPath: string;
   title: string;
   description: string;
 
@@ -58,14 +65,61 @@ const services = [
 
 export default function LocalLandingPage({
   city,
+  canonicalPath,
   title,
   description,
   localTitle,
   localDescription,
   localPoints = [],
 }: Props) {
+  const pageUrl = absoluteUrl(canonicalPath);
+
+  const localJsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Service",
+        "@id": `${pageUrl}#service`,
+        name: `Webbdesign och SEO i ${city}`,
+        serviceType: [
+          "Webbdesign",
+          "Webbutveckling",
+          "SEO",
+        ],
+        description,
+        url: pageUrl,
+        provider: {
+          "@id": ORGANIZATION_ID,
+        },
+        areaServed: {
+          "@type": "City",
+          name: city,
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${pageUrl}#breadcrumb`,
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Start",
+            item: absoluteUrl("/"),
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: `Webbyrå ${city}`,
+            item: pageUrl,
+          },
+        ],
+      },
+    ],
+  };
+
   return (
     <div className="v2-page">
+      <SeoJsonLd data={localJsonLd} />
       <StandaloneLayout>
 
         {/* =====================================================
