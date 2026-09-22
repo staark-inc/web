@@ -208,9 +208,7 @@
 .hub-project-add-task {
   margin-top: 16px;
   overflow: hidden;
-  border: 1px solid #e3e6ea;
   border-radius: 9px;
-  background: #fafbfc;
 }
 
 .hub-project-add-task input {

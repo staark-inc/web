@@ -431,7 +431,7 @@
 .hub-lead-v2-contact-icon {
   width: 35px;
   height: 35px;
-  display: grid;
+  display: grid !important;
   flex: 0 0 35px;
   place-items: center;
   border-radius: 10px;
