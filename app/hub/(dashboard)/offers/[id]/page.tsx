@@ -63,6 +63,13 @@ export default async function OfferDetailPage({ params }: { params: Promise<{ id
                 Boolean(offer.project) ||
                 !["DRAFT", "DECLINED"].includes(offer.status)
               }
+              disabledReason={
+                offer.project
+                  ? "Offers linked to a project cannot be deleted."
+                  : !["DRAFT", "DECLINED"].includes(offer.status)
+                    ? "Only draft or declined offers can be deleted."
+                    : undefined
+              }
             />
             {offer.status === "ACCEPTED" && (
               offer.project ? (

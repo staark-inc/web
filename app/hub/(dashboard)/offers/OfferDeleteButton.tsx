@@ -8,9 +8,11 @@ import { deleteOffer } from "./actions";
 export default function OfferDeleteButton({
   offerId,
   disabled = false,
+  disabledReason,
 }: {
   offerId: string;
   disabled?: boolean;
+  disabledReason?: string;
 }) {
   const [confirming, setConfirming] = useState(false);
 
@@ -20,7 +22,7 @@ export default function OfferDeleteButton({
         type="button"
         className="hub-danger-button"
         disabled
-        title="Offers linked to a project cannot be deleted."
+        title={disabledReason ?? "This offer cannot be deleted."}
       >
         <Trash2 size={15} />
         Delete offer
