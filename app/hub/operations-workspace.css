@@ -476,3 +476,65 @@
     padding-left: 0;
   }
 }
+
+/* HUB CSS OWNERSHIP: operations mobile filters */
+@media (max-width: 720px) {
+  .hub-workspace-filters {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 2px 2px 8px;
+    scroll-padding-inline: 2px;
+    overscroll-behavior-inline: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .hub-workspace-filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hub-workspace-filters > a {
+    min-width: max-content;
+    width: auto;
+    flex: 0 0 auto;
+    white-space: nowrap;
+    justify-content: center;
+    gap: 8px;
+    min-height: 38px;
+    padding: 0 13px;
+    border: 1px solid #e1e4e8;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: none;
+  }
+
+  .hub-workspace-filters > a strong {
+    min-width: 20px;
+    height: 20px;
+    display: inline-grid;
+    place-items: center;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: #f0f2f4;
+    font-size: 9px;
+    line-height: 1;
+  }
+
+  .hub-workspace-filters > a.hub-workspace-filter-active {
+    border-color: #17191d;
+    background: #17191d;
+    color: #fff;
+  }
+
+  .hub-workspace-filters > a.hub-workspace-filter-active strong {
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+  }
+}

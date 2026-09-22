@@ -573,3 +573,121 @@
     border-top: 1px solid #edf0f2;
   }
 }
+
+/* HUB CSS OWNERSHIP: leads mobile filters and density */
+@media (max-width: 720px) {
+  .hub-leads-v2-filters {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 2px 2px 8px;
+    scroll-padding-inline: 2px;
+    overscroll-behavior-inline: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .hub-leads-v2-filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hub-leads-v2-filters > a {
+    min-width: max-content;
+    width: auto;
+    flex: 0 0 auto;
+    white-space: nowrap;
+    justify-content: center;
+    gap: 8px;
+    min-height: 38px;
+    padding: 0 13px;
+    border: 1px solid #e1e4e8;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: none;
+  }
+
+  .hub-leads-v2-filters > a strong {
+    min-width: 20px;
+    height: 20px;
+    display: inline-grid;
+    place-items: center;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: #f0f2f4;
+    font-size: 9px;
+    line-height: 1;
+  }
+
+  .hub-leads-v2-filters > a.hub-leads-v2-filter-active {
+    border-color: #17191d;
+    background: #17191d;
+    color: #fff;
+  }
+
+  .hub-leads-v2-filters > a.hub-leads-v2-filter-active strong {
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+  }
+}
+
+@media (max-width: 520px) {
+  .hub-leads-v2-stats,
+  .hub-lead-v2-detail-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hub-leads-v2-stat,
+  .hub-lead-v2-detail-stats > div {
+    min-height: 92px;
+    align-items: flex-start;
+    padding: 13px 12px;
+  }
+
+  .hub-leads-v2-stat:nth-child(2),
+  .hub-lead-v2-detail-stats > div:nth-child(2) {
+    border-left: 1px solid #edf0f2;
+  }
+
+  .hub-leads-v2-stat:nth-child(3),
+  .hub-lead-v2-detail-stats > div:nth-child(3) {
+    border-left: 0;
+    border-top: 1px solid #edf0f2;
+  }
+
+  .hub-leads-v2-stat:nth-child(4),
+  .hub-lead-v2-detail-stats > div:nth-child(4) {
+    border-left: 1px solid #edf0f2;
+    border-top: 1px solid #edf0f2;
+  }
+
+  .hub-leads-v2-stat-icon {
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
+  }
+
+  .hub-leads-v2-stat strong {
+    font-size: 16px;
+  }
+
+  .hub-leads-v2-stat span {
+    line-height: 1.35;
+    display: grid;
+  }
+
+  .hub-leads-v2-head {
+    gap: 14px;
+  }
+
+  .hub-leads-v2-pipeline-summary {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+}

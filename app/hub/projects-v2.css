@@ -434,7 +434,7 @@
   }
 
   .hub-projects-v2-stats {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .hub-projects-v2-stat + .hub-projects-v2-stat {
@@ -452,5 +452,67 @@
   .hub-projects-v2-name-line {
     align-items: flex-start;
     flex-direction: column;
+  }
+}
+
+/* HUB CSS OWNERSHIP: projects mobile filters */
+@media (max-width: 720px) {
+  .hub-projects-v2-filters {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 2px 2px 8px;
+    scroll-padding-inline: 2px;
+    overscroll-behavior-inline: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .hub-projects-v2-filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hub-projects-v2-filters > a {
+    min-width: max-content;
+    width: auto;
+    flex: 0 0 auto;
+    white-space: nowrap;
+    justify-content: center;
+    gap: 8px;
+    min-height: 38px;
+    padding: 0 13px;
+    border: 1px solid #e1e4e8;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: none;
+  }
+
+  .hub-projects-v2-filters > a strong {
+    min-width: 20px;
+    height: 20px;
+    display: inline-grid;
+    place-items: center;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: #f0f2f4;
+    font-size: 9px;
+    line-height: 1;
+  }
+
+  .hub-projects-v2-filters > a.hub-projects-v2-filter-active {
+    border-color: #17191d;
+    background: #17191d;
+    color: #fff;
+  }
+
+  .hub-projects-v2-filters > a.hub-projects-v2-filter-active strong {
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
   }
 }
