@@ -23,6 +23,10 @@ RUN npm ci
 # Copy the rest of the application
 COPY . .
 
+# Regenerate after COPY because the repository contains generated/prisma,
+# which can otherwise overwrite the client produced during postinstall.
+RUN npx prisma generate
+
 # Build Next.js
 RUN npm run build
 

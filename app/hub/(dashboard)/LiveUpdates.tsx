@@ -3,10 +3,6 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-/*
- * Subscribes to /api/hub/stream and refreshes the current
- * route whenever the server reports new Hub activity.
- */
 export default function LiveUpdates() {
   const router = useRouter();
 
@@ -23,9 +19,28 @@ export default function LiveUpdates() {
 
       source.addEventListener("ready", () => {
         delay = 3000;
+        window.dispatchEvent(
+          new CustomEvent("hub:realtime-ready")
+        );
       });
 
-      source.addEventListener("update", () => {
+      source.addEventListener("update", (event) => {
+        let detail: unknown = null;
+
+        try {
+          detail = JSON.parse(
+            (event as MessageEvent<string>).data
+          );
+        } catch {
+          detail = null;
+        }
+
+        window.dispatchEvent(
+          new CustomEvent("hub:realtime-update", {
+            detail,
+          })
+        );
+
         router.refresh();
       });
 
@@ -33,13 +48,12 @@ export default function LiveUpdates() {
         source?.close();
         source = null;
 
+        window.dispatchEvent(
+          new CustomEvent("hub:realtime-disconnected")
+        );
+
         if (stopped) return;
 
-        /*
-         * EventSource retries on its own, but only after
-         * closing; backing off avoids hammering the server
-         * while it is restarting.
-         */
         retry = setTimeout(connect, delay);
         delay = Math.min(delay * 2, 30000);
       };
