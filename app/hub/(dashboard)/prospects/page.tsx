@@ -3,6 +3,8 @@ import {
   ArrowUpRight,
   Building2,
   CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
   Globe2,
   Mail,
   MapPin,
@@ -24,12 +26,15 @@ import {
 
 export const dynamic = "force-dynamic";
 
+const PAGE_SIZE = 50;
+
 type PageProps = {
   searchParams: Promise<{
     q?: string;
     status?: string;
     city?: string;
     category?: string;
+    page?: string;
   }>;
 };
 
@@ -81,6 +86,23 @@ function bestContact(prospect: {
   return { label: "Manual research", kind: "none" as const };
 }
 
+function paginationItems(currentPage: number, totalPages: number): Array<number | "ellipsis"> {
+  if (totalPages <= 7) {
+    return Array.from({ length: totalPages }, (_, index) => index + 1);
+  }
+
+  const items: Array<number | "ellipsis"> = [1];
+  const start = Math.max(2, currentPage - 1);
+  const end = Math.min(totalPages - 1, currentPage + 1);
+
+  if (start > 2) items.push("ellipsis");
+  for (let page = start; page <= end; page += 1) items.push(page);
+  if (end < totalPages - 1) items.push("ellipsis");
+
+  items.push(totalPages);
+  return items;
+}
+
 export default async function ProspectsPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const q = params.q?.trim() || "";
@@ -88,6 +110,8 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
   const category = params.category?.trim() || "";
   const requestedStatus = params.status?.toUpperCase() as ProspectStatus | undefined;
   const status = requestedStatus && allowedStatuses.has(requestedStatus) ? requestedStatus : undefined;
+  const parsedPage = Number.parseInt(params.page || "1", 10);
+  const requestedPage = Number.isFinite(parsedPage) && parsedPage > 0 ? parsedPage : 1;
 
   const where: Prisma.ProspectWhereInput = {
     ...(status ? { status } : {}),
@@ -106,7 +130,7 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
   };
 
   const [
-    prospects,
+    filteredCount,
     totalCount,
     noWebsiteCount,
     weakCount,
@@ -115,11 +139,7 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
     cities,
     categories,
   ] = await Promise.all([
-    prisma.prospect.findMany({
-      where,
-      orderBy: [{ leadScore: "desc" }, { reviews: "desc" }, { createdAt: "desc" }],
-      take: 250,
-    }),
+    prisma.prospect.count({ where }),
     prisma.prospect.count(),
     prisma.prospect.count({ where: { status: "NO_WEBSITE" } }),
     prisma.prospect.count({
@@ -149,6 +169,33 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
       orderBy: { category: "asc" },
     }),
   ]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredCount / PAGE_SIZE));
+  const currentPage = Math.min(requestedPage, totalPages);
+  const offset = (currentPage - 1) * PAGE_SIZE;
+
+  const prospects = await prisma.prospect.findMany({
+    where,
+    orderBy: [{ leadScore: "desc" }, { reviews: "desc" }, { createdAt: "desc" }],
+    skip: offset,
+    take: PAGE_SIZE,
+  });
+
+  function pageHref(page: number) {
+    const search = new URLSearchParams();
+    if (q) search.set("q", q);
+    if (status) search.set("status", status);
+    if (city) search.set("city", city);
+    if (category) search.set("category", category);
+    if (page > 1) search.set("page", String(page));
+
+    const query = search.toString();
+    return query ? `/hub/prospects?${query}` : "/hub/prospects";
+  }
+
+  const firstShown = filteredCount === 0 ? 0 : offset + 1;
+  const lastShown = Math.min(offset + prospects.length, filteredCount);
+  const pages = paginationItems(currentPage, totalPages);
 
   return (
     <div className="hub-page hub-prospects-page">
@@ -224,8 +271,12 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
       </form>
 
       <div className="hub-prospects-result-bar">
-        <span>{prospects.length} shown</span>
-        {prospects.length === 250 && <small>Showing the first 250 matching prospects.</small>}
+        <span>
+          {filteredCount === 0
+            ? "0 prospects"
+            : `Showing ${firstShown}–${lastShown} of ${filteredCount}`}
+        </span>
+        {totalPages > 1 && <small>Page {currentPage} of {totalPages}</small>}
       </div>
 
       {prospects.length === 0 ? (
@@ -376,6 +427,47 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
             );
           })}
         </section>
+      )}
+
+      {totalPages > 1 && (
+        <nav className="hub-prospects-pagination" aria-label="Prospects pages">
+          <Link
+            href={pageHref(Math.max(1, currentPage - 1))}
+            className={`hub-prospects-page-button hub-prospects-page-nav${currentPage === 1 ? " is-disabled" : ""}`}
+            aria-disabled={currentPage === 1}
+            tabIndex={currentPage === 1 ? -1 : undefined}
+          >
+            <ChevronLeft size={15} />
+            Previous
+          </Link>
+
+          <div className="hub-prospects-page-numbers">
+            {pages.map((item, index) =>
+              item === "ellipsis" ? (
+                <span key={`ellipsis-${index}`} className="hub-prospects-page-ellipsis">…</span>
+              ) : (
+                <Link
+                  key={item}
+                  href={pageHref(item)}
+                  className={`hub-prospects-page-button${item === currentPage ? " is-active" : ""}`}
+                  aria-current={item === currentPage ? "page" : undefined}
+                >
+                  {item}
+                </Link>
+              ),
+            )}
+          </div>
+
+          <Link
+            href={pageHref(Math.min(totalPages, currentPage + 1))}
+            className={`hub-prospects-page-button hub-prospects-page-nav${currentPage === totalPages ? " is-disabled" : ""}`}
+            aria-disabled={currentPage === totalPages}
+            tabIndex={currentPage === totalPages ? -1 : undefined}
+          >
+            Next
+            <ChevronRight size={15} />
+          </Link>
+        </nav>
       )}
     </div>
   );
