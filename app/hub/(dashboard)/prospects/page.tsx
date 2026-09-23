@@ -15,6 +15,7 @@ import {
 
 import { prisma } from "@/lib/prisma";
 import type { Prisma, ProspectStatus } from "@/generated/prisma/client";
+import ProspectImportButton from "./ProspectImportButton";
 import {
   addProspectToLeads,
   ignoreProspect,
@@ -161,9 +162,12 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
           </p>
         </div>
 
-        <div className="hub-prospects-head-badge">
-          <Sparkles size={16} />
-          <span>{totalCount} discovered</span>
+        <div className="hub-prospects-head-actions">
+          <div className="hub-prospects-head-badge">
+            <Sparkles size={16} />
+            <span>{totalCount} discovered</span>
+          </div>
+          <ProspectImportButton />
         </div>
       </header>
 
