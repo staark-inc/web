@@ -1,0 +1,250 @@
+.hub-inbox-v2-overview {
+  gap: 10px;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.hub-inbox-v2-stat {
+  min-height: 88px;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  align-items: center;
+  gap: 13px;
+  padding: 16px 17px;
+  border: 1px solid #e3e6ea;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .9);
+  box-shadow: 0 1px 2px rgba(20, 24, 31, .025);
+}
+
+.hub-inbox-v2-stat + .hub-inbox-v2-stat {
+  border-left: 1px solid #e3e6ea;
+}
+
+.hub-inbox-v2-stat-icon {
+  width: 38px;
+  height: 38px;
+  align-self: center;
+  flex: none;
+  border-radius: 11px;
+}
+
+.hub-inbox-v2-stat > div {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    "label label"
+    "value value"
+    "hint hint";
+  align-content: center;
+}
+
+.hub-inbox-v2-stat small {
+  grid-area: label;
+  margin: 0 0 1px;
+  font-size: 8px;
+}
+
+.hub-inbox-v2-stat strong {
+  grid-area: value;
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.1;
+}
+
+.hub-inbox-v2-stat > div > span {
+  grid-area: hint;
+  margin-top: 4px;
+  font-size: 8.5px;
+}
+
+/* Conversation list: one modern surface instead of boxed table rows. */
+.hub-inbox-v2-list {
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid #e1e5e9;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(20, 24, 31, .02);
+}
+
+.hub-inbox-v2-row {
+  min-height: 78px;
+  grid-template-columns: minmax(230px, .82fr) minmax(0, 1.55fr) minmax(150px, auto);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  transition: background-color .14s ease;
+}
+
+.hub-inbox-v2-row + .hub-inbox-v2-row {
+  border-top: 1px solid #edf0f2;
+}
+
+.hub-inbox-v2-row:hover {
+  border-color: transparent;
+  background: #fafbfc;
+  box-shadow: none;
+  transform: none;
+}
+
+.hub-inbox-v2-row-unread {
+  border-color: transparent;
+  background: #fbfdff;
+  box-shadow: inset 3px 0 0 #4779c7;
+}
+
+.hub-inbox-v2-row-unread:hover {
+  background: #f6faff;
+}
+
+.hub-inbox-v2-person,
+.hub-inbox-v2-content,
+.hub-inbox-v2-tail {
+  padding: 13px 16px;
+}
+
+.hub-inbox-v2-content,
+.hub-inbox-v2-tail {
+  border-left: 0;
+}
+
+.hub-inbox-v2-avatar {
+  width: 36px;
+  height: 36px;
+  flex-basis: 36px;
+  border-radius: 10px;
+  background: #f3f4f6;
+  font-size: 9.5px;
+}
+
+.hub-inbox-v2-name-line {
+  gap: 8px;
+}
+
+.hub-inbox-v2-name-line strong {
+  font-size: 11.5px;
+  letter-spacing: -.01em;
+}
+
+.hub-inbox-v2-email {
+  margin-top: 4px;
+  color: #9aa0a8;
+  font-size: 8.5px;
+}
+
+.hub-inbox-v2-badge {
+  min-height: 18px;
+  padding: 0 6px;
+  border-radius: 6px;
+  font-size: 7px;
+  letter-spacing: .01em;
+}
+
+.hub-inbox-v2-content {
+  justify-content: center;
+  padding-left: 20px;
+}
+
+.hub-inbox-v2-subject {
+  font-size: 11px;
+  font-weight: 720;
+  letter-spacing: -.01em;
+}
+
+.hub-inbox-v2-preview {
+  margin-top: 4px;
+  color: #8a9099;
+  font-size: 9px;
+  line-height: 1.4;
+  -webkit-line-clamp: 1;
+}
+
+.hub-inbox-v2-tail {
+  min-width: 150px;
+  gap: 7px;
+  padding-left: 12px;
+}
+
+.hub-inbox-v2-tail time {
+  font-size: 8px;
+  white-space: nowrap;
+}
+
+.hub-inbox-v2-meta {
+  gap: 8px;
+}
+
+.hub-inbox-v2-message-count {
+  color: #9298a1;
+  font-size: 8px;
+}
+
+.hub-inbox-v2-open {
+  gap: 4px;
+  font-size: 8.5px;
+}
+
+@media (max-width: 1120px) {
+  .hub-inbox-v2-row {
+    grid-template-columns: minmax(210px, .85fr) minmax(0, 1.4fr) minmax(135px, auto);
+  }
+}
+
+@media (max-width: 860px) {
+  .hub-inbox-v2-stat + .hub-inbox-v2-stat,
+  .hub-inbox-v2-stat:nth-child(3),
+  .hub-inbox-v2-stat:nth-child(4) {
+    border: 1px solid #e3e6ea;
+  }
+
+  .hub-inbox-v2-row {
+    grid-template-columns: minmax(210px, .9fr) minmax(0, 1.3fr);
+  }
+
+  .hub-inbox-v2-tail {
+    border-top: 1px solid #edf0f2;
+  }
+}
+
+@media (max-width: 640px) {
+  .hub-inbox-v2-overview {
+    gap: 8px;
+  }
+
+  .hub-inbox-v2-stat {
+    min-height: 78px;
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .hub-inbox-v2-stat-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .hub-inbox-v2-list {
+    border-radius: 13px;
+  }
+
+  .hub-inbox-v2-row {
+    grid-template-columns: 1fr;
+  }
+
+  .hub-inbox-v2-content,
+  .hub-inbox-v2-tail {
+    border-top: 1px solid #edf0f2;
+  }
+
+  .hub-inbox-v2-content {
+    padding-left: 16px;
+  }
+
+  .hub-inbox-v2-preview {
+    -webkit-line-clamp: 2;
+  }
+}
