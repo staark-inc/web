@@ -13,11 +13,25 @@ export default function OfferStatusActions({ offerId, status }: { offerId: strin
     <form action={action} className="hub-offer-actions">
       <input type="hidden" name="offerId" value={offerId} />
       {status === "DRAFT" ? (
-        <button type="submit" name="status" value="SHARED" className="hub-send-button" disabled={pending}>Mark as shared</button>
+        <button
+          type="submit"
+          name="status"
+          value="SHARED"
+          className="hub-offer-decision-button"
+          disabled={pending}
+        >
+          Mark as shared
+        </button>
       ) : (
-        <>
-          <button type="submit" name="status" value="DRAFT" className="hub-secondary-button" disabled={pending}>Revise draft</button>
-        </>
+        <button
+          type="submit"
+          name="status"
+          value="DRAFT"
+          className="hub-offer-decision-button"
+          disabled={pending}
+        >
+          Revise draft
+        </button>
       )}
       {state.error && <p role="alert" className="hub-compose-error">{state.error}</p>}
       {state.success && <p role="status" className="hub-compose-success">Status updated.</p>}
