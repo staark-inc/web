@@ -235,7 +235,7 @@ export async function countUnreadNotifications(
       AND "readAt" IS NULL
   `;
 
-  return Number(rows[0]?.count ?? 0n);
+  return Number(rows[0]?.count ?? BigInt(0));
 }
 
 export async function getNotificationStreamState(
