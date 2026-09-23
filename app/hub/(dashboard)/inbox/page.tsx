@@ -12,6 +12,7 @@ import {
 
 import Link from "next/link";
 
+import { createMailPreview } from "@/lib/mail-content";
 import { prisma } from "@/lib/prisma";
 import { isAutomatedSender } from "@/lib/crm-mail";
 import InboxSearch from "./InboxSearch";
@@ -31,16 +32,6 @@ function formatDate(date: Date) {
 
 function messageActivityDate(message: { sentAt: Date | null; createdAt: Date }) {
   return message.sentAt ?? message.createdAt;
-}
-
-function createPreview(value: string, maxLength = 150) {
-  const normalized = value.replace(/\s+/g, " ").trim();
-
-  if (normalized.length <= maxLength) {
-    return normalized;
-  }
-
-  return `${normalized.slice(0, maxLength)}...`;
 }
 
 function getInitials(name: string, email: string) {
@@ -467,7 +458,7 @@ export default async function HubInboxPage({ searchParams }: PageProps) {
                   <strong className="hub-inbox-v2-subject">{thread.subject}</strong>
                   <span className="hub-inbox-v2-preview">
                     {latestMessage.direction === "OUTBOUND" ? "You: " : ""}
-                    {createPreview(latestMessage.body)}
+                    {createMailPreview(latestMessage.body)}
                   </span>
                 </div>
 
