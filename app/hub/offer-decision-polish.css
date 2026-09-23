@@ -5,7 +5,8 @@
 }
 
 .hub-offer-decision-primary,
-.hub-offer-decision-button {
+.hub-offer-decision-button,
+.hub-offer-decision-admin-row > .hub-danger-button {
   min-height: 42px;
   width: 100%;
   display: inline-flex;
@@ -37,10 +38,12 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
+  align-items: stretch;
 }
 
 .hub-offer-actions {
   margin: 0;
+  width: 100%;
 }
 
 .hub-offer-actions .hub-offer-decision-button {
@@ -59,19 +62,25 @@
   opacity: .5;
 }
 
-.hub-offer-decision-danger {
+.hub-offer-decision-admin-row > .hub-danger-button {
+  margin: 0;
   border: 1px solid #f1c8c8;
   background: #fffafa;
   color: #b42318;
 }
 
-.hub-offer-decision-danger:hover:not(:disabled) {
+.hub-offer-decision-admin-row > .hub-danger-button:hover:not(:disabled) {
   border-color: #e9aaaa;
   background: #fff4f4;
 }
 
+.hub-offer-decision-admin-row > .hub-danger-button:disabled {
+  cursor: not-allowed;
+  opacity: .48;
+}
+
 .hub-offer-decision-project {
-  border-color: #d8dee6;
+  border: 1px solid #d8dee6;
   background: #f7f9fb;
   color: #25282d;
 }
@@ -124,7 +133,8 @@
   }
 
   .hub-offer-decision-primary,
-  .hub-offer-decision-button {
+  .hub-offer-decision-button,
+  .hub-offer-decision-admin-row > .hub-danger-button {
     min-height: 44px;
   }
 }
