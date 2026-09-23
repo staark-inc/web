@@ -89,7 +89,7 @@ export default function NotificationCenter({
       setNotifications(data.notifications ?? []);
       setUnread(data.unread ?? 0);
     } catch {
-      // Keep the existing list when the realtime refresh is temporarily unavailable.
+      // Keep the existing list when realtime refresh is temporarily unavailable.
     }
   }
 
@@ -107,7 +107,6 @@ export default function NotificationCenter({
 
   useEffect(() => {
     if (!open) return;
-
     void refreshNotifications();
   }, [open]);
 
@@ -179,9 +178,14 @@ export default function NotificationCenter({
       {open ? (
         <div className="hub-notification-panel">
           <div className="hub-notification-panel-head">
-            <div>
-              <span>Activity</span>
-              <strong>Notifications</strong>
+            <div className="hub-notification-panel-title">
+              <div className="hub-notification-panel-title-icon">
+                <Bell size={16} />
+              </div>
+              <div>
+                <strong>Notifications</strong>
+                <span>Recent activity across your Hub</span>
+              </div>
             </div>
 
             <button
@@ -190,23 +194,26 @@ export default function NotificationCenter({
               aria-label="Close notifications"
               onClick={() => setOpen(false)}
             >
-              <X size={16} />
+              <X size={15} />
             </button>
           </div>
 
           <div className="hub-notification-panel-actions">
-            <span>
-              {unread === 0
-                ? "You're all caught up"
-                : `${unread} unread`}
-            </span>
+            <div className="hub-notification-status">
+              <span className={`hub-notification-status-dot ${hasUnread ? "is-live" : ""}`} />
+              <span>
+                {unread === 0
+                  ? "All caught up"
+                  : `${unread} unread notification${unread === 1 ? "" : "s"}`}
+              </span>
+            </div>
 
             <button
               type="button"
               onClick={() => void markAllRead()}
               disabled={!hasUnread || loading}
             >
-              <CheckCheck size={14} />
+              <CheckCheck size={13} />
               Mark all read
             </button>
           </div>
@@ -214,9 +221,13 @@ export default function NotificationCenter({
           <div className="hub-notification-list">
             {sortedNotifications.length === 0 ? (
               <div className="hub-notification-empty">
-                <Bell size={20} />
-                <strong>No notifications yet</strong>
-                <span>New Hub activity will appear here.</span>
+                <div className="hub-notification-empty-icon">
+                  <Bell size={21} />
+                </div>
+                <strong>Nothing needs your attention</strong>
+                <span>
+                  New leads, messages, offers, support and billing activity will show up here.
+                </span>
               </div>
             ) : (
               sortedNotifications.map((item) => {
