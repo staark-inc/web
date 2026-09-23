@@ -5,11 +5,11 @@ import { getSmtpTransporter } from "@/lib/smtp";
 
 export const dynamic = "force-dynamic";
 
-export async function POST() {
+export async function POST(request: Request) {
   const session = await getSession();
 
   if (!session) {
-    return redirectTo("/hub/login");
+    return redirectTo("/hub/login", request);
   }
 
   try {
@@ -48,9 +48,9 @@ export async function POST() {
       transporter.close();
     }
 
-    return redirectTo("/hub/settings?tab=email&test=success");
+    return redirectTo("/hub/settings?tab=email&test=success", request);
   } catch (error) {
     console.error("Email test failed:", error);
-    return redirectTo("/hub/settings?tab=email&test=error");
+    return redirectTo("/hub/settings?tab=email&test=error", request);
   }
 }
