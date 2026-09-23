@@ -201,9 +201,9 @@ export async function POST(
         },
       });
 
-      return redirectToProfile(
-        request,
-        "notifications=1"
+      return redirectTo(
+        "/hub/profile/notifications?notifications=1",
+        request
       );
     } catch (error) {
       console.error(
@@ -211,9 +211,9 @@ export async function POST(
         error
       );
 
-      return redirectToProfile(
-        request,
-        "error=unknown"
+      return redirectTo(
+        "/hub/profile/notifications?error=unknown",
+        request
       );
     }
   }
