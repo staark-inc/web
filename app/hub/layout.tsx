@@ -19,6 +19,7 @@ import "./prospects-v1.css";
 import "./prospects-import.css";
 import "./prospects-pagination.css";
 import "./prospects-filters.css";
+import "./prospects-design-v2.css";
 
 export const metadata: Metadata = {
   title: "Staark Hub",
