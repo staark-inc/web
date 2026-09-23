@@ -6,15 +6,15 @@ import { redirectTo } from "@/lib/redirect";
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function redirectToSettings(params: string) {
-  return redirectTo(`/hub/settings?tab=email&${params}`);
+function redirectToSettings(request: Request, params: string) {
+  return redirectTo(`/hub/settings?tab=email&${params}`, request);
 }
 
 export async function POST(request: NextRequest) {
   const session = await getSession();
 
   if (!session) {
-    return redirectToSettings("error=not_logged_in");
+    return redirectToSettings(request, "error=not_logged_in");
   }
 
   const formData = await request.formData();
@@ -29,15 +29,15 @@ export async function POST(request: NextRequest) {
   const signature = String(formData.get("signature") ?? "").trim();
 
   if (senderName.length < 2 || senderName.length > 80) {
-    return redirectToSettings("error=invalid_name");
+    return redirectToSettings(request, "error=invalid_name");
   }
 
   if (!senderEmail || senderEmail.length > 160 || !emailPattern.test(senderEmail)) {
-    return redirectToSettings("error=invalid_email");
+    return redirectToSettings(request, "error=invalid_email");
   }
 
   if (replyToEmail && (replyToEmail.length > 160 || !emailPattern.test(replyToEmail))) {
-    return redirectToSettings("error=invalid_reply_email");
+    return redirectToSettings(request, "error=invalid_reply_email");
   }
 
   try {
@@ -58,9 +58,9 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return redirectToSettings("updated=1");
+    return redirectToSettings(request, "updated=1");
   } catch (error) {
     console.error("Settings update failed:", error);
-    return redirectToSettings("error=unknown");
+    return redirectToSettings(request, "error=unknown");
   }
 }
