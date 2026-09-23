@@ -58,6 +58,7 @@ export async function POST(
           offerId: offer.id,
         },
         dedupeKey: `offer-viewed:${offer.id}`,
+        preference: "offers",
       });
     }
   }
