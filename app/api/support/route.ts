@@ -6,6 +6,7 @@ import type {
   SupportCategory,
   SupportPriority,
 } from "@/generated/prisma/client";
+import { createAdminNotification } from "@/lib/notifications";
 import { prisma } from "@/lib/prisma";
 
 export const runtime = "nodejs";
@@ -141,6 +142,19 @@ export async function POST(request: Request) {
         timeSpentMinutes: 0,
       },
       select: { id: true, clientId: true, reference: true },
+    });
+
+    await createAdminNotification({
+      type: "support.created",
+      title: "New support request",
+      message: `${name} · ${title}`,
+      href: `/hub/support/${supportRequest.id}`,
+      metadata: {
+        supportRequestId: supportRequest.id,
+        reference: supportRequest.reference,
+        priority,
+      },
+      dedupeKey: `support:${supportRequest.id}`,
     });
 
     revalidatePath("/hub/support");
