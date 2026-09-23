@@ -182,6 +182,42 @@ export async function POST(
     return response;
   }
 
+  if (action === "notifications") {
+    const notificationPreferences = {
+      inbox: formData.get("notifyInbox") === "on",
+      leads: formData.get("notifyLeads") === "on",
+      offers: formData.get("notifyOffers") === "on",
+      support: formData.get("notifySupport") === "on",
+      billing: formData.get("notifyBilling") === "on",
+    };
+
+    try {
+      await prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          notificationPreferences,
+        },
+      });
+
+      return redirectToProfile(
+        request,
+        "notifications=1"
+      );
+    } catch (error) {
+      console.error(
+        "Notification preferences update failed:",
+        error
+      );
+
+      return redirectToProfile(
+        request,
+        "error=unknown"
+      );
+    }
+  }
+
   if (action === "password") {
     const currentPassword = String(
       formData.get("currentPassword") ?? ""
