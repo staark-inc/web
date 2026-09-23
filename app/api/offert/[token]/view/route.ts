@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { createAdminNotification } from "@/lib/notifications";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(
@@ -18,7 +19,13 @@ export async function POST(
     },
     select: {
       id: true,
+      title: true,
       status: true,
+      client: {
+        select: {
+          name: true,
+        },
+      },
     },
   });
 
@@ -30,7 +37,7 @@ export async function POST(
   }
 
   if (offer.status === "SHARED") {
-    await prisma.offer.updateMany({
+    const updated = await prisma.offer.updateMany({
       where: {
         id: offer.id,
         status: "SHARED",
@@ -40,6 +47,20 @@ export async function POST(
         viewedAt: new Date(),
       },
     });
+
+    if (updated.count === 1) {
+      await createAdminNotification({
+        type: "offer.viewed",
+        title: "Offer viewed",
+        message: `${offer.client.name} · ${offer.title}`,
+        href: `/hub/offers/${offer.id}`,
+        metadata: {
+          offerId: offer.id,
+        },
+        dedupeKey: `offer-viewed:${offer.id}`,
+        preference: "offers",
+      });
+    }
   }
 
   return NextResponse.json({

@@ -83,13 +83,33 @@ enum ActivityKind {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  name         String
-  email        String   @unique
-  passwordHash String
-  role         UserRole @default(ADMIN)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id                      String         @id @default(cuid())
+  name                    String
+  email                   String         @unique
+  passwordHash            String
+  role                    UserRole       @default(ADMIN)
+  notificationPreferences Json?
+  createdAt               DateTime       @default(now())
+  updatedAt               DateTime       @updatedAt
+  notifications           Notification[]
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String
+  title     String
+  message   String?
+  href      String?
+  metadata  Json?
+  dedupeKey String?
+  readAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@unique([userId, dedupeKey])
+  @@index([userId, readAt, createdAt])
+  @@index([createdAt])
 }
 
 model Settings {
@@ -208,15 +228,9 @@ model Project {
   clientId String
   client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
 
-  /**
-   * Optional link to the accepted offer that created this project.
-   */
   offerId String? @unique
   offer   Offer?  @relation(fields: [offerId], references: [id], onDelete: SetNull)
 
-  /**
-   * Optional link to the Inbox conversation with this client.
-   */
   threadId String?
   thread   Thread? @relation(fields: [threadId], references: [id], onDelete: SetNull)
 
@@ -283,10 +297,6 @@ model ProjectTask {
 
   title String
   done  Boolean @default(false)
-
-  /**
-   * Manual ordering inside a project.
-   */
   position Int @default(0)
 
   createdAt   DateTime  @default(now())
