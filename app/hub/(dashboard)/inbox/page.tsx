@@ -29,6 +29,10 @@ function formatDate(date: Date) {
   }).format(date);
 }
 
+function messageActivityDate(message: { sentAt: Date | null; createdAt: Date }) {
+  return message.sentAt ?? message.createdAt;
+}
+
 function createPreview(value: string, maxLength = 150) {
   const normalized = value.replace(/\s+/g, " ").trim();
 
@@ -124,9 +128,17 @@ export default async function HubInboxPage({ searchParams }: PageProps) {
     include: {
       contact: true,
       messages: {
-        orderBy: {
-          createdAt: "desc",
-        },
+        orderBy: [
+          {
+            sentAt: {
+              sort: "desc",
+              nulls: "last",
+            },
+          },
+          {
+            createdAt: "desc",
+          },
+        ],
         take: 1,
       },
       _count: {
@@ -145,7 +157,26 @@ export default async function HubInboxPage({ searchParams }: PageProps) {
     },
   });
 
-  const threadIds = threads.map((thread) => thread.id);
+  /*
+   * Thread.updatedAt only changes when the Thread itself is written.
+   * Creating a related Message does not reliably make it the newest thread.
+   * Sort from the latest actual email timestamp instead.
+   */
+  const sortedThreads = [...threads].sort((left, right) => {
+    const leftMessage = left.messages[0];
+    const rightMessage = right.messages[0];
+
+    const leftTime = leftMessage
+      ? messageActivityDate(leftMessage).getTime()
+      : left.updatedAt.getTime();
+    const rightTime = rightMessage
+      ? messageActivityDate(rightMessage).getTime()
+      : right.updatedAt.getTime();
+
+    return rightTime - leftTime;
+  });
+
+  const threadIds = sortedThreads.map((thread) => thread.id);
 
   const messageCounts = threadIds.length
     ? await prisma.message.groupBy({
@@ -180,7 +211,7 @@ export default async function HubInboxPage({ searchParams }: PageProps) {
   }
 
   const otherThreads = new Set(
-    threads
+    sortedThreads
       .filter((thread) =>
         isAutomatedSender(
           senderByThread.get(thread.id) ?? "",
@@ -190,16 +221,18 @@ export default async function HubInboxPage({ searchParams }: PageProps) {
       .map((thread) => thread.id)
   );
 
-  const customerThreads = threads.filter((thread) => !otherThreads.has(thread.id));
+  const customerThreads = sortedThreads.filter(
+    (thread) => !otherThreads.has(thread.id)
+  );
 
   const counts: Record<InboxView, number> = {
     inbox: customerThreads.length,
     unread: customerThreads.filter((thread) => thread._count.messages > 0).length,
     other: otherThreads.size,
-    all: threads.length,
+    all: sortedThreads.length,
   };
 
-  const visibleThreads = threads.filter((thread) => {
+  const visibleThreads = sortedThreads.filter((thread) => {
     if (activeView === "all") return true;
     if (activeView === "other") return otherThreads.has(thread.id);
 
@@ -389,6 +422,7 @@ export default async function HubInboxPage({ searchParams }: PageProps) {
 
             const latestIsInbound = latestMessage.direction === "INBOUND";
             const initials = getInitials(contactName, contactEmail);
+            const latestActivityAt = messageActivityDate(latestMessage);
 
             return (
               <Link
@@ -438,8 +472,8 @@ export default async function HubInboxPage({ searchParams }: PageProps) {
                 </div>
 
                 <div className="hub-inbox-v2-tail">
-                  <time dateTime={latestMessage.createdAt.toISOString()}>
-                    {formatDate(latestMessage.createdAt)}
+                  <time dateTime={latestActivityAt.toISOString()}>
+                    {formatDate(latestActivityAt)}
                   </time>
 
                   <div className="hub-inbox-v2-meta">
