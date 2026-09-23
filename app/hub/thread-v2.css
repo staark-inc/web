@@ -1,26 +1,31 @@
 /* =========================================================
    THREAD V2
-   Clean email conversation layout
+   Focused mail-reader layout
    ========================================================= */
 
 .hub-thread-page {
-  width: min(1040px, calc(100% - 64px));
-  max-width: 1040px;
-  padding-top: 34px;
-  padding-bottom: 52px;
+  width: min(1180px, calc(100% - 56px));
+  max-width: 1180px;
+  padding-top: 28px;
+  padding-bottom: 56px;
 }
 
 .hub-thread-page > .hub-back {
-  margin-bottom: 18px;
+  margin-bottom: 16px;
+  color: #70757d;
 }
 
-/* Header: keep it flat, not card-like */
+.hub-thread-page > .hub-back:hover {
+  color: #17191d;
+}
+
+/* Top thread identity */
 
 .hub-thread-header {
   margin: 0;
-  padding: 0 0 22px;
+  padding: 0 0 18px;
   border: 0;
-  border-bottom: 1px solid #e8eaed;
+  border-bottom: 1px solid #e6e8eb;
   border-radius: 0;
   background: transparent;
   box-shadow: none;
@@ -31,16 +36,17 @@
 }
 
 .hub-thread-heading .hub-eyebrow {
-  margin-bottom: 8px;
+  margin-bottom: 7px;
+  color: #969ba3;
 }
 
 .hub-thread-heading h1 {
-  max-width: 900px;
+  max-width: 980px;
   margin: 0;
-  color: #17191c;
-  font-size: clamp(26px, 3vw, 36px);
+  color: #15171a;
+  font-size: clamp(28px, 3vw, 38px);
   line-height: 1.12;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.04em;
 }
 
 .hub-thread-meta {
@@ -60,20 +66,20 @@
   border: 0;
   border-radius: 0;
   background: transparent;
-  color: #81868e;
-  font-size: 11px;
+  color: #7b8088;
+  font-size: 12px;
   font-weight: 600;
 }
 
-/* Contact summary: compact identity row */
+/* Contact strip */
 
 .hub-thread-contact {
   display: grid;
-  grid-template-columns: 38px minmax(0, 1fr) auto;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
   align-items: center;
   gap: 12px;
   margin: 0;
-  padding: 15px 0;
+  padding: 14px 0;
   border: 0;
   border-bottom: 1px solid #eceef1;
   border-radius: 0;
@@ -81,12 +87,12 @@
 }
 
 .hub-thread-contact-avatar {
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: #17191d;
+  background: #15171a;
   color: #fff;
 }
 
@@ -99,7 +105,7 @@
 
 .hub-thread-contact-info strong {
   overflow: hidden;
-  color: #202328;
+  color: #1d2024;
   font-size: 13px;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -111,7 +117,7 @@
   align-items: center;
   gap: 5px;
   overflow: hidden;
-  color: #8a8f97;
+  color: #8c9199;
   font-size: 11px;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -125,10 +131,9 @@
   text-decoration: none;
 }
 
-/* Conversation: one continuous thread surface */
+/* Conversation */
 
 .hub-thread-conversation {
-  position: relative;
   display: block;
   margin: 0 0 18px;
   padding: 0;
@@ -156,16 +161,15 @@
 .hub-thread-message-inbound,
 .hub-thread-message-outbound {
   align-self: auto;
-  border-color: #eceef1;
   background: transparent;
 }
 
 .hub-thread-message-header {
   display: grid;
-  grid-template-columns: 36px minmax(0, 1fr) auto;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
   align-items: center;
   gap: 11px;
-  padding: 18px 0 8px;
+  padding: 18px 0 7px;
   border: 0;
   background: transparent;
 }
@@ -175,19 +179,19 @@
 }
 
 .hub-thread-message-avatar {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: #eff1f3;
-  color: #3c4148;
+  background: #eef0f2;
+  color: #353a40;
   font-size: 11px;
   font-weight: 800;
 }
 
 .hub-thread-message-outbound .hub-thread-message-avatar {
-  background: #17191d;
+  background: #15171a;
   color: #fff;
 }
 
@@ -206,12 +210,12 @@
 }
 
 .hub-thread-message-sender strong {
-  color: #25282d;
-  font-size: 12px;
+  color: #24272c;
+  font-size: 13px;
 }
 
 .hub-thread-message-sender span {
-  color: #969ba3;
+  color: #999ea6;
   font-size: 10px;
 }
 
@@ -223,7 +227,7 @@
 }
 
 .hub-thread-message-side time {
-  color: #969ba3;
+  color: #9a9fa7;
   font-size: 10px;
   white-space: nowrap;
 }
@@ -237,32 +241,34 @@
   background: transparent;
   font-size: 9px;
   font-weight: 800;
-  letter-spacing: 0.045em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
 .hub-message-direction-inbound {
-  color: #858a92;
+  color: #7c828b;
 }
 
 .hub-message-direction-outbound {
-  color: #5d7188;
+  color: #506b86;
 }
 
 .hub-thread-message .hub-thread-message-body {
-  padding: 4px 0 20px 47px;
-  color: #35393f;
-  font-size: 13px;
+  padding: 5px 0 22px 49px;
+  color: #34383e;
+  font-size: 14px;
   line-height: 1.72;
 }
 
 .hub-thread-message-text {
+  max-width: 860px;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
-.hub-thread-message-text a {
-  color: #335f8a;
+.hub-thread-message-text a,
+.hub-thread-quoted-text a {
+  color: #315f8b;
   text-decoration: underline;
   text-underline-offset: 2px;
 }
@@ -275,18 +281,58 @@
   padding: 0;
   border: 0;
   background: transparent;
-  color: #6f7580;
+  color: #666d76;
   font: inherit;
   font-size: 11px;
   font-weight: 700;
   cursor: pointer;
 }
 
-/* Attachments inline with the message */
+/* Quoted previous email */
+
+.hub-thread-quoted-wrap {
+  margin-top: 12px;
+}
+
+.hub-thread-quoted-toggle {
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 9px;
+  border: 1px solid #e1e4e8;
+  border-radius: 7px;
+  background: #fafbfc;
+  color: #777d86;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.hub-thread-quoted-toggle:hover {
+  background: #f2f4f6;
+  color: #3f444a;
+}
+
+.hub-thread-quoted-text {
+  max-width: 860px;
+  margin-top: 10px;
+  padding: 12px 14px;
+  border-left: 2px solid #d9dde2;
+  background: #fafbfc;
+  color: #7d838c;
+  font-size: 12px;
+  line-height: 1.62;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Attachments */
 
 .hub-thread-attachments {
-  margin: -6px 0 20px 47px;
-  padding: 12px 0 0;
+  margin: -8px 0 22px 49px;
+  padding-top: 10px;
   border-top: 1px solid #f0f1f3;
 }
 
@@ -295,7 +341,7 @@
   align-items: center;
   gap: 6px;
   margin-bottom: 8px;
-  color: #8a8f97;
+  color: #8b9098;
   font-size: 9px;
   font-weight: 800;
   letter-spacing: 0.05em;
@@ -311,18 +357,22 @@
 
 .hub-thread-attachment {
   min-width: 0;
-  max-width: 520px;
+  max-width: 540px;
   display: flex;
   flex: 1;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   padding: 9px 10px;
-  border: 1px solid #e4e7eb;
-  border-radius: 9px;
+  border: 1px solid #e3e6ea;
+  border-radius: 8px;
   background: #fafbfc;
   color: #31353a;
   text-decoration: none;
+}
+
+.hub-thread-attachment:hover {
+  background: #f5f6f8;
 }
 
 .hub-thread-attachment span {
@@ -351,23 +401,28 @@
   text-decoration: none;
 }
 
-/* Reply: integrated at the end of the conversation */
+/* Reply composer */
 
 .hub-thread-reply {
   overflow: hidden;
-  margin-top: 10px;
+  margin-top: 16px;
   border: 1px solid #dfe3e8;
   border-radius: 12px;
   background: #fff;
   box-shadow: none;
 }
 
+.hub-thread-reply:focus-within {
+  border-color: #c9ced5;
+  box-shadow: 0 0 0 3px rgba(28, 32, 37, 0.035);
+}
+
 .hub-thread-reply-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  padding: 12px 14px;
+  gap: 14px;
+  padding: 11px 14px;
   border-bottom: 1px solid #eceef1;
   background: #fafbfc;
 }
@@ -383,7 +438,7 @@
   padding: 0;
   border-radius: 0;
   background: transparent;
-  color: #8a9098;
+  color: #8b9098;
   font-size: 9px;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -397,21 +452,21 @@
 }
 
 .hub-thread-reply-header strong {
-  color: #3a3e44;
+  color: #373b41;
   font-size: 11px;
 }
 
 .hub-thread-reply-subject {
-  max-width: 52%;
+  max-width: 55%;
   color: #969ba3;
   font-size: 10px;
 }
 
 .hub-thread-reply form > textarea {
   width: 100%;
-  min-height: 155px;
+  min-height: 130px;
   display: block;
-  padding: 16px;
+  padding: 15px 16px;
   border: 0;
   outline: 0;
   resize: vertical;
@@ -431,7 +486,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 14px;
-  padding: 10px 12px;
+  padding: 9px 11px;
   border-top: 1px solid #eceef1;
   background: #fafbfc;
 }
@@ -445,14 +500,14 @@
   border: 0;
   border-radius: 7px;
   background: transparent;
-  color: #686e76;
+  color: #676d75;
   font-size: 10px;
   font-weight: 700;
   cursor: pointer;
 }
 
 .hub-thread-reply .hub-file-label:hover {
-  background: #eff1f3;
+  background: #eef0f2;
 }
 
 .hub-thread-reply .hub-send-button {
@@ -486,14 +541,14 @@
 
 @media (max-width: 850px) {
   .hub-thread-page {
-    width: min(100% - 32px, 1040px);
+    width: min(100% - 32px, 1180px);
   }
 }
 
 @media (max-width: 600px) {
   .hub-thread-page {
     width: calc(100% - 24px);
-    padding-top: 22px;
+    padding-top: 20px;
   }
 
   .hub-thread-heading h1 {
