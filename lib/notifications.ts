@@ -3,6 +3,26 @@ import { randomUUID } from "node:crypto";
 import { prisma } from "@/lib/prisma";
 import { publishRealtimeEvent } from "@/lib/realtime";
 
+export type NotificationPreferenceKey =
+  | "inbox"
+  | "leads"
+  | "offers"
+  | "support"
+  | "billing";
+
+export type NotificationPreferences = Record<
+  NotificationPreferenceKey,
+  boolean
+>;
+
+export const DEFAULT_NOTIFICATION_PREFERENCES: NotificationPreferences = {
+  inbox: true,
+  leads: true,
+  offers: true,
+  support: true,
+  billing: true,
+};
+
 export type HubNotification = {
   id: string;
   type: string;
@@ -21,10 +41,12 @@ type CreateAdminNotificationInput = {
   href?: string | null;
   metadata?: Record<string, unknown> | null;
   dedupeKey?: string | null;
+  preference?: NotificationPreferenceKey;
 };
 
-type UserIdRow = {
+type UserRow = {
   id: string;
+  notificationPreferences: unknown;
 };
 
 type CountRow = {
@@ -36,16 +58,61 @@ type LatestRow = {
   createdAt: Date;
 };
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+export function parseNotificationPreferences(
+  value: unknown
+): NotificationPreferences {
+  if (!isRecord(value)) {
+    return { ...DEFAULT_NOTIFICATION_PREFERENCES };
+  }
+
+  return {
+    inbox:
+      typeof value.inbox === "boolean"
+        ? value.inbox
+        : DEFAULT_NOTIFICATION_PREFERENCES.inbox,
+    leads:
+      typeof value.leads === "boolean"
+        ? value.leads
+        : DEFAULT_NOTIFICATION_PREFERENCES.leads,
+    offers:
+      typeof value.offers === "boolean"
+        ? value.offers
+        : DEFAULT_NOTIFICATION_PREFERENCES.offers,
+    support:
+      typeof value.support === "boolean"
+        ? value.support
+        : DEFAULT_NOTIFICATION_PREFERENCES.support,
+    billing:
+      typeof value.billing === "boolean"
+        ? value.billing
+        : DEFAULT_NOTIFICATION_PREFERENCES.billing,
+  };
+}
+
 export async function createAdminNotification(
   input: CreateAdminNotificationInput
 ) {
-  const admins = await prisma.$queryRaw<UserIdRow[]>`
-    SELECT "id"
+  const admins = await prisma.$queryRaw<UserRow[]>`
+    SELECT "id", "notificationPreferences"
     FROM "User"
     WHERE "role" = 'ADMIN'
   `;
 
-  if (admins.length === 0) {
+  const recipients = admins.filter((admin) => {
+    if (!input.preference) return true;
+
+    const preferences = parseNotificationPreferences(
+      admin.notificationPreferences
+    );
+
+    return preferences[input.preference];
+  });
+
+  if (recipients.length === 0) {
     return;
   }
 
@@ -54,7 +121,7 @@ export async function createAdminNotification(
     : null;
 
   await prisma.$transaction(
-    admins.map((admin) =>
+    recipients.map((admin) =>
       prisma.$executeRaw`
         INSERT INTO "Notification" (
           "id",
