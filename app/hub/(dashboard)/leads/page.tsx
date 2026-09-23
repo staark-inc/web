@@ -12,6 +12,7 @@ import {
 import { prisma } from "@/lib/prisma";
 import { formatAmount } from "@/lib/format";
 import type { LeadStatus } from "@/generated/prisma/client";
+import "../../leads-v2-readable.css";
 
 export const dynamic = "force-dynamic";
 
