@@ -11,6 +11,7 @@ import "./leads-workspace-polish.css";
 import "./operations-workspace.css";
 import "./billing-support-v2.css";
 import "./settings-v2.css";
+import "./prospects-vars.css";
 import "./prospects-v1.css";
 
 export const metadata: Metadata = {
