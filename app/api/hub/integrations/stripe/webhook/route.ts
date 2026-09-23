@@ -5,6 +5,8 @@ export const runtime = "nodejs";
 
 const SIGNATURE_TOLERANCE_SECONDS = 300;
 
+type StripeEnvironment = "live" | "test";
+
 function verifyStripeSignature(payload: string, signatureHeader: string, secret: string) {
   const parts = signatureHeader.split(",").map((part) => part.trim());
   const timestampPart = parts.find((part) => part.startsWith("t="));
@@ -42,11 +44,27 @@ function verifyStripeSignature(payload: string, signatureHeader: string, secret:
   });
 }
 
-export async function POST(request: Request) {
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET?.trim();
+function getVerifiedEnvironment(payload: string, signature: string): StripeEnvironment | null {
+  const liveSecret = process.env.STRIPE_WEBHOOK_SECRET?.trim();
+  const testSecret = process.env.STRIPE_TEST_WEBHOOK_SECRET?.trim();
 
-  if (!webhookSecret) {
-    console.error("[STRIPE] STRIPE_WEBHOOK_SECRET is missing.");
+  if (liveSecret && verifyStripeSignature(payload, signature, liveSecret)) {
+    return "live";
+  }
+
+  if (testSecret && verifyStripeSignature(payload, signature, testSecret)) {
+    return "test";
+  }
+
+  return null;
+}
+
+export async function POST(request: Request) {
+  const liveWebhookSecret = process.env.STRIPE_WEBHOOK_SECRET?.trim();
+  const testWebhookSecret = process.env.STRIPE_TEST_WEBHOOK_SECRET?.trim();
+
+  if (!liveWebhookSecret && !testWebhookSecret) {
+    console.error("[STRIPE] No webhook secret is configured.");
     return NextResponse.json({ error: "Webhook is not configured." }, { status: 503 });
   }
 
@@ -56,8 +74,9 @@ export async function POST(request: Request) {
   }
 
   const rawBody = await request.text();
+  const environment = getVerifiedEnvironment(rawBody, signature);
 
-  if (!verifyStripeSignature(rawBody, signature, webhookSecret)) {
+  if (!environment) {
     console.error("[STRIPE] Invalid webhook signature.");
     return NextResponse.json({ error: "Invalid webhook signature." }, { status: 400 });
   }
@@ -75,8 +94,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid JSON payload." }, { status: 400 });
   }
 
+  if (typeof event.livemode === "boolean") {
+    const payloadEnvironment: StripeEnvironment = event.livemode ? "live" : "test";
+    if (payloadEnvironment !== environment) {
+      console.error("[STRIPE] Webhook environment mismatch.");
+      return NextResponse.json({ error: "Webhook environment mismatch." }, { status: 400 });
+    }
+  }
+
   const eventType = event.type ?? "unknown";
   const eventId = event.id ?? "unknown";
+  const prefix = `[STRIPE:${environment.toUpperCase()}]`;
 
   switch (eventType) {
     case "checkout.session.completed":
@@ -90,11 +118,11 @@ export async function POST(request: Request) {
     case "customer.subscription.deleted":
     case "payment_intent.succeeded":
     case "payment_intent.payment_failed":
-      console.log(`[STRIPE] Received ${eventType} (${eventId})`);
+      console.log(`${prefix} Received ${eventType} (${eventId})`);
       break;
     default:
-      console.log(`[STRIPE] Ignored ${eventType} (${eventId})`);
+      console.log(`${prefix} Ignored ${eventType} (${eventId})`);
   }
 
-  return NextResponse.json({ received: true });
+  return NextResponse.json({ received: true, environment });
 }
