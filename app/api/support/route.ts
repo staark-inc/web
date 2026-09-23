@@ -155,6 +155,7 @@ export async function POST(request: Request) {
         priority,
       },
       dedupeKey: `support:${supportRequest.id}`,
+      preference: "support",
     });
 
     revalidatePath("/hub/support");
