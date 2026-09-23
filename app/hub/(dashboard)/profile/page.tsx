@@ -1,13 +1,21 @@
+import Link from "next/link";
+import { cookies } from "next/headers";
 import {
+  BellDot,
   CircleCheck,
   Clock3,
+  ExternalLink,
   Fingerprint,
+  Globe2,
   IdCard,
   KeyRound,
+  LayoutPanelLeft,
   LockKeyhole,
   Mail,
   Save,
+  Settings,
   ShieldCheck,
+  SlidersHorizontal,
   UserRound,
 } from "lucide-react";
 
@@ -21,6 +29,7 @@ export const dynamic = "force-dynamic";
 type ProfileSearchParams = Promise<{
   updated?: string;
   password?: string;
+  preferences?: string;
   error?: string;
 }>;
 
@@ -61,7 +70,10 @@ export default async function HubProfilePage({
     redirect("/hub/login");
   }
 
-  const params = await searchParams;
+  const [params, cookieStore] = await Promise.all([
+    searchParams,
+    cookies(),
+  ]);
 
   const user = await prisma.user.findUnique({
     where: {
@@ -75,6 +87,17 @@ export default async function HubProfilePage({
 
   const initials = getInitials(user.name, user.email);
   const roleLabel = getRoleLabel(user.role);
+  const sidebarMode =
+    cookieStore.get("hub_sidebar")?.value === "compact"
+      ? "compact"
+      : "standard";
+  const countMode =
+    cookieStore.get("hub_counts")?.value === "hide"
+      ? "hide"
+      : "show";
+  const timezone =
+    cookieStore.get("hub_timezone")?.value ??
+    "Europe/Stockholm";
 
   return (
     <div className="hub-page hub-profile-v2-page">
@@ -83,7 +106,7 @@ export default async function HubProfilePage({
           <span className="hub-eyebrow">STAARK HUB</span>
           <h1>Profile</h1>
           <p>
-            Your identity, access and security settings in one place.
+            Your identity, access, preferences and security settings in one place.
           </p>
         </div>
       </header>
@@ -138,6 +161,16 @@ export default async function HubProfilePage({
           <div>
             <strong>Password changed</strong>
             <span>Your new password is now active.</span>
+          </div>
+        </div>
+      ) : null}
+
+      {params.preferences === "1" ? (
+        <div className="hub-profile-v2-alert hub-profile-v2-alert-success">
+          <SlidersHorizontal size={17} />
+          <div>
+            <strong>Preferences saved</strong>
+            <span>Your Hub workspace preferences are now active.</span>
           </div>
         </div>
       ) : null}
@@ -296,6 +329,130 @@ export default async function HubProfilePage({
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+
+        <section className="hub-profile-v2-card hub-profile-v2-card-full">
+          <div className="hub-profile-v2-card-head hub-profile-v2-card-head-actions">
+            <div className="hub-profile-v2-card-icon">
+              <SlidersHorizontal size={18} />
+            </div>
+            <div>
+              <h2>Workspace preferences</h2>
+              <p>Adjust how your personal Staark Hub workspace behaves.</p>
+            </div>
+
+            <Link href="/hub/settings" className="hub-profile-v2-head-link">
+              Workspace settings
+              <ExternalLink size={13} />
+            </Link>
+          </div>
+
+          <div className="hub-profile-v2-card-body">
+            <form action="/api/hub/profile" method="post">
+              <input type="hidden" name="action" value="preferences" />
+
+              <div className="hub-profile-v2-preferences-grid">
+                <fieldset className="hub-profile-v2-preference-group">
+                  <legend>
+                    <LayoutPanelLeft size={15} />
+                    Sidebar layout
+                  </legend>
+                  <p>Choose between the full navigation or a compact icon rail.</p>
+
+                  <div className="hub-profile-v2-choice-grid">
+                    <label className="hub-profile-v2-choice">
+                      <input
+                        type="radio"
+                        name="sidebar"
+                        value="standard"
+                        defaultChecked={sidebarMode === "standard"}
+                      />
+                      <span>
+                        <strong>Standard</strong>
+                        <small>Labels and icons</small>
+                      </span>
+                    </label>
+
+                    <label className="hub-profile-v2-choice">
+                      <input
+                        type="radio"
+                        name="sidebar"
+                        value="compact"
+                        defaultChecked={sidebarMode === "compact"}
+                      />
+                      <span>
+                        <strong>Compact</strong>
+                        <small>Icons only</small>
+                      </span>
+                    </label>
+                  </div>
+                </fieldset>
+
+                <fieldset className="hub-profile-v2-preference-group">
+                  <legend>
+                    <BellDot size={15} />
+                    Navigation counters
+                  </legend>
+                  <p>Control Inbox and Leads number badges in the sidebar.</p>
+
+                  <div className="hub-profile-v2-choice-grid">
+                    <label className="hub-profile-v2-choice">
+                      <input
+                        type="radio"
+                        name="counts"
+                        value="show"
+                        defaultChecked={countMode === "show"}
+                      />
+                      <span>
+                        <strong>Show</strong>
+                        <small>Keep counters visible</small>
+                      </span>
+                    </label>
+
+                    <label className="hub-profile-v2-choice">
+                      <input
+                        type="radio"
+                        name="counts"
+                        value="hide"
+                        defaultChecked={countMode === "hide"}
+                      />
+                      <span>
+                        <strong>Hide</strong>
+                        <small>Cleaner navigation</small>
+                      </span>
+                    </label>
+                  </div>
+                </fieldset>
+
+                <label className="hub-profile-v2-preference-group hub-profile-v2-timezone">
+                  <span className="hub-profile-v2-preference-title">
+                    <Globe2 size={15} />
+                    Timezone
+                  </span>
+                  <p>Used as your personal time display preference inside Hub.</p>
+                  <select name="timezone" defaultValue={timezone}>
+                    <option value="Europe/Stockholm">Europe/Stockholm</option>
+                    <option value="Europe/Bucharest">Europe/Bucharest</option>
+                    <option value="UTC">UTC</option>
+                  </select>
+                </label>
+              </div>
+
+              <div className="hub-profile-v2-preference-footer">
+                <div className="hub-profile-v2-current-preferences">
+                  <span>Current workspace</span>
+                  <strong>
+                    {sidebarMode === "compact" ? "Compact" : "Standard"} sidebar · {countMode === "show" ? "Counters on" : "Counters off"} · {timezone}
+                  </strong>
+                </div>
+
+                <button className="hub-send-button" type="submit">
+                  Save preferences
+                  <Save size={16} />
+                </button>
+              </div>
+            </form>
           </div>
         </section>
 
