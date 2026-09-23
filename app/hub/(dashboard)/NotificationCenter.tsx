@@ -9,6 +9,7 @@ import {
   FileCheck2,
   Inbox,
   LifeBuoy,
+  Settings2,
   Target,
   X,
 } from "lucide-react";
@@ -188,14 +189,26 @@ export default function NotificationCenter({
               </div>
             </div>
 
-            <button
-              type="button"
-              className="hub-notification-close"
-              aria-label="Close notifications"
-              onClick={() => setOpen(false)}
-            >
-              <X size={15} />
-            </button>
+            <div className="hub-notification-panel-tools">
+              <Link
+                href="/hub/profile/notifications"
+                className="hub-notification-settings"
+                aria-label="Notification settings"
+                title="Notification settings"
+                onClick={() => setOpen(false)}
+              >
+                <Settings2 size={15} />
+              </Link>
+
+              <button
+                type="button"
+                className="hub-notification-close"
+                aria-label="Close notifications"
+                onClick={() => setOpen(false)}
+              >
+                <X size={15} />
+              </button>
+            </div>
           </div>
 
           <div className="hub-notification-panel-actions">
