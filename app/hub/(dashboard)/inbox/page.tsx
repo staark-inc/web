@@ -16,6 +16,7 @@ import { prisma } from "@/lib/prisma";
 import { isAutomatedSender } from "@/lib/crm-mail";
 import InboxSearch from "./InboxSearch";
 import "../../inbox-workspace-v2.css";
+import "../../inbox-workspace-polish.css";
 
 export const dynamic = "force-dynamic";
 
