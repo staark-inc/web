@@ -108,6 +108,7 @@ export async function respondToOffer(
       status,
     },
     dedupeKey: `offer-decision:${offer.id}:${status}`,
+    preference: "offers",
   });
 
   revalidatePath(`/offert/${token}`);
