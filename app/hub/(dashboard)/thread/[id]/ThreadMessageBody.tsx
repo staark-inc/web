@@ -3,6 +3,8 @@
 import { ChevronDown, ChevronUp, MoreHorizontal } from "lucide-react";
 import { useState } from "react";
 
+import { splitQuotedMail } from "@/lib/mail-content";
+
 function formatMessageBody(value: string) {
   const pattern = /<(https?:\/\/[^\s>]+)>|(https?:\/\/[^\s<>]+)/g;
   const nodes: React.ReactNode[] = [];
@@ -39,38 +41,11 @@ function formatMessageBody(value: string) {
   return nodes;
 }
 
-function splitQuotedContent(value: string) {
-  const lines = value.split("\n");
-  const quoteStart = lines.findIndex((line, index) => {
-    if (index === 0) return false;
-
-    const clean = line.trim();
-    return (
-      /^On .+ wrote:$/i.test(clean) ||
-      /^În .+ a scris:$/i.test(clean) ||
-      /^Den .+ skrev .+:$/i.test(clean) ||
-      /^Am .+ schrieb .+:$/i.test(clean) ||
-      /^Le .+ a écrit\s*:$/i.test(clean) ||
-      /^>/.test(clean)
-    );
-  });
-
-  if (quoteStart === -1) {
-    return { main: value.trim(), quoted: "" };
-  }
-
-  return {
-    main: lines.slice(0, quoteStart).join("\n").trim(),
-    quoted: lines.slice(quoteStart).join("\n").trim(),
-  };
-}
-
 export default function ThreadMessageBody({ body }: { body: string }) {
   const [expanded, setExpanded] = useState(false);
   const [showQuoted, setShowQuoted] = useState(false);
 
-  const normalizedBody = body.replace(/\r\n?/g, "\n");
-  const { main, quoted } = splitQuotedContent(normalizedBody);
+  const { visible: main, quoted } = splitQuotedMail(body);
   const isLong = main.length > 1400 || main.split("\n").length > 22;
   const preview = isLong ? main.slice(0, 1000).trimEnd() : main;
   const visibleBody = isLong && !expanded ? preview : main;
