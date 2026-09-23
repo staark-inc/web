@@ -7,21 +7,27 @@ export type StripeConfigStatus = {
   mode: StripeMode;
 };
 
+function detectStripeMode(secretKey: string): StripeMode {
+  if (secretKey.startsWith("sk_live_") || secretKey.startsWith("rk_live_")) {
+    return "live";
+  }
+
+  if (secretKey.startsWith("sk_test_") || secretKey.startsWith("rk_test_")) {
+    return "test";
+  }
+
+  return "unknown";
+}
+
 export function getStripeConfigStatus(): StripeConfigStatus {
   const secretKey = process.env.STRIPE_SECRET_KEY?.trim() ?? "";
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET?.trim() ?? "";
-
-  const mode: StripeMode = secretKey.startsWith("sk_live_")
-    ? "live"
-    : secretKey.startsWith("sk_test_")
-      ? "test"
-      : "unknown";
 
   return {
     configured: Boolean(secretKey),
     secretConfigured: Boolean(secretKey),
     webhookConfigured: Boolean(webhookSecret),
-    mode,
+    mode: detectStripeMode(secretKey),
   };
 }
 
@@ -65,5 +71,6 @@ export async function testStripeConnection() {
     email: data?.email ?? null,
     country: data?.country ?? null,
     defaultCurrency: data?.default_currency?.toUpperCase() ?? null,
+    mode: detectStripeMode(secretKey),
   };
 }
