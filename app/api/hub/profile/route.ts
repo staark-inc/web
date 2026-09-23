@@ -10,13 +10,9 @@ function redirectToProfile(
   request: NextRequest,
   params: string
 ) {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_APP_URL ||
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    "https://staarkinc.com/";
-
   return redirectTo(
-    `${baseUrl}/hub/profile?${params}`
+    `/hub/profile?${params}`,
+    request
   );
 }
 
@@ -45,18 +41,12 @@ export async function POST(
   });
 
   if (!user) {
-      return redirectToProfile(
-        request,
-        "error=not_logged_in"
-      );
-
+    return redirectToProfile(
+      request,
+      "error=not_logged_in"
+    );
   }
 
-  /**
-   * -------------------------------------------------------
-   * PROFILE INFORMATION
-   * -------------------------------------------------------
-   */
   if (action === "profile") {
     const name = String(
       formData.get("name") ?? ""
@@ -130,11 +120,6 @@ export async function POST(
     }
   }
 
-  /**
-   * -------------------------------------------------------
-   * PASSWORD
-   * -------------------------------------------------------
-   */
   if (action === "password") {
     const currentPassword = String(
       formData.get("currentPassword") ?? ""
