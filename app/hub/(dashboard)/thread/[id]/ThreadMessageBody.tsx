@@ -40,13 +40,19 @@ function formatMessageBody(value: string) {
 
 export default function ThreadMessageBody({ body }: { body: string }) {
   const [expanded, setExpanded] = useState(false);
-  const isLong = body.length > 1400 || body.split("\n").length > 22;
-  const preview = isLong ? body.slice(0, 1000).trimEnd() : body;
+
+  // Browsers normalize CRLF in server-rendered HTML text nodes to LF.
+  // Normalize the prop before both SSR and hydration so React compares
+  // the exact same text on the server and in the client tree.
+  const normalizedBody = body.replace(/\r\n?/g, "\n");
+
+  const isLong = normalizedBody.length > 1400 || normalizedBody.split("\n").length > 22;
+  const preview = isLong ? normalizedBody.slice(0, 1000).trimEnd() : normalizedBody;
 
   return (
     <div className="hub-thread-message-body">
       <div className="hub-thread-message-text">
-        {formatMessageBody(isLong && !expanded ? preview : body)}
+        {formatMessageBody(isLong && !expanded ? preview : normalizedBody)}
         {isLong && !expanded ? "…" : null}
       </div>
       {isLong && (
