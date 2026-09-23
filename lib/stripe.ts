@@ -1,10 +1,20 @@
-type StripeMode = "live" | "test" | "unknown";
+export type StripeMode = "live" | "test" | "unknown";
+export type StripeEnvironment = "live" | "test";
+
+type StripeEnvironmentStatus = {
+  configured: boolean;
+  secretConfigured: boolean;
+  webhookConfigured: boolean;
+  mode: StripeMode;
+};
 
 export type StripeConfigStatus = {
   configured: boolean;
   secretConfigured: boolean;
   webhookConfigured: boolean;
   mode: StripeMode;
+  live: StripeEnvironmentStatus;
+  test: StripeEnvironmentStatus;
 };
 
 function detectStripeMode(secretKey: string): StripeMode {
@@ -19,10 +29,10 @@ function detectStripeMode(secretKey: string): StripeMode {
   return "unknown";
 }
 
-export function getStripeConfigStatus(): StripeConfigStatus {
-  const secretKey = process.env.STRIPE_SECRET_KEY?.trim() ?? "";
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET?.trim() ?? "";
-
+function getEnvironmentStatus(
+  secretKey: string,
+  webhookSecret: string
+): StripeEnvironmentStatus {
   return {
     configured: Boolean(secretKey),
     secretConfigured: Boolean(secretKey),
@@ -31,11 +41,40 @@ export function getStripeConfigStatus(): StripeConfigStatus {
   };
 }
 
-export async function testStripeConnection() {
-  const secretKey = process.env.STRIPE_SECRET_KEY?.trim();
+export function getStripeConfigStatus(): StripeConfigStatus {
+  const liveSecretKey = process.env.STRIPE_SECRET_KEY?.trim() ?? "";
+  const liveWebhookSecret = process.env.STRIPE_WEBHOOK_SECRET?.trim() ?? "";
+  const testSecretKey = process.env.STRIPE_TEST_SECRET_KEY?.trim() ?? "";
+  const testWebhookSecret = process.env.STRIPE_TEST_WEBHOOK_SECRET?.trim() ?? "";
+
+  const live = getEnvironmentStatus(liveSecretKey, liveWebhookSecret);
+  const test = getEnvironmentStatus(testSecretKey, testWebhookSecret);
+
+  return {
+    configured: live.configured,
+    secretConfigured: live.secretConfigured,
+    webhookConfigured: live.webhookConfigured,
+    mode: live.mode,
+    live,
+    test,
+  };
+}
+
+function getStripeSecretKey(environment: StripeEnvironment) {
+  return environment === "test"
+    ? process.env.STRIPE_TEST_SECRET_KEY?.trim()
+    : process.env.STRIPE_SECRET_KEY?.trim();
+}
+
+export async function testStripeConnection(environment: StripeEnvironment = "live") {
+  const secretKey = getStripeSecretKey(environment);
 
   if (!secretKey) {
-    throw new Error("STRIPE_SECRET_KEY is not configured.");
+    throw new Error(
+      environment === "test"
+        ? "STRIPE_TEST_SECRET_KEY is not configured."
+        : "STRIPE_SECRET_KEY is not configured."
+    );
   }
 
   const response = await fetch("https://api.stripe.com/v1/account", {
@@ -72,5 +111,6 @@ export async function testStripeConnection() {
     country: data?.country ?? null,
     defaultCurrency: data?.default_currency?.toUpperCase() ?? null,
     mode: detectStripeMode(secretKey),
+    environment,
   };
 }
