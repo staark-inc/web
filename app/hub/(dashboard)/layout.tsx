@@ -10,9 +10,14 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getCustomerUnreadCount } from "@/lib/crm-unread";
 import { getSession } from "@/lib/auth";
+import {
+  countUnreadNotifications,
+  listNotifications,
+} from "@/lib/notifications";
 
 import HubNav from "./HubNav";
 import LiveUpdates from "./LiveUpdates";
+import NotificationCenter from "./NotificationCenter";
 
 export const dynamic = "force-dynamic";
 
@@ -49,31 +54,47 @@ export default async function HubDashboardLayout({
   const showCounts =
     cookieStore.get("hub_counts")?.value !== "hide";
 
-  const [unreadCount, newLeadCount, user] =
-    await Promise.all([
-      getCustomerUnreadCount(),
-      prisma.lead.count({
-        where: {
-          status: "NEW",
-        },
-      }),
-      prisma.user.findUnique({
-        where: {
-          id: session.userId,
-        },
-        select: {
-          name: true,
-          email: true,
-          role: true,
-        },
-      }),
-    ]);
+  const [
+    unreadCount,
+    newLeadCount,
+    user,
+    notifications,
+    notificationUnread,
+  ] = await Promise.all([
+    getCustomerUnreadCount(),
+    prisma.lead.count({
+      where: {
+        status: "NEW",
+      },
+    }),
+    prisma.user.findUnique({
+      where: {
+        id: session.userId,
+      },
+      select: {
+        name: true,
+        email: true,
+        role: true,
+      },
+    }),
+    listNotifications(session.userId, 12),
+    countUnreadNotifications(session.userId),
+  ]);
 
   if (!user) {
     redirect("/hub/login");
   }
 
   const initials = getInitials(user.name, user.email);
+  const initialNotifications = notifications.map((item) => ({
+    id: item.id,
+    type: item.type,
+    title: item.title,
+    message: item.message,
+    href: item.href,
+    readAt: item.readAt?.toISOString() ?? null,
+    createdAt: item.createdAt.toISOString(),
+  }));
 
   return (
     <div
@@ -112,6 +133,11 @@ export default async function HubDashboardLayout({
         />
 
         <div className="hub-sidebar-bottom">
+          <NotificationCenter
+            initialNotifications={initialNotifications}
+            initialUnread={notificationUnread}
+          />
+
           <div className="hub-user">
             <Link
               href="/hub/profile"
