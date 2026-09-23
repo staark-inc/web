@@ -34,13 +34,16 @@ export type HubNotification = {
   createdAt: Date;
 };
 
-type CreateAdminNotificationInput = {
+type CreateNotificationInput = {
   type: string;
   title: string;
   message?: string | null;
   href?: string | null;
   metadata?: Record<string, unknown> | null;
   dedupeKey?: string | null;
+};
+
+type CreateAdminNotificationInput = CreateNotificationInput & {
   preference?: NotificationPreferenceKey;
 };
 
@@ -93,6 +96,53 @@ export function parseNotificationPreferences(
   };
 }
 
+async function insertNotification(
+  userId: string,
+  input: CreateNotificationInput
+) {
+  const metadata = input.metadata
+    ? JSON.stringify(input.metadata)
+    : null;
+
+  await prisma.$executeRaw`
+    INSERT INTO "Notification" (
+      "id",
+      "userId",
+      "type",
+      "title",
+      "message",
+      "href",
+      "metadata",
+      "dedupeKey",
+      "createdAt"
+    )
+    VALUES (
+      ${randomUUID()},
+      ${userId},
+      ${input.type},
+      ${input.title},
+      ${input.message ?? null},
+      ${input.href ?? null},
+      ${metadata}::jsonb,
+      ${input.dedupeKey ?? null},
+      NOW()
+    )
+    ON CONFLICT ("userId", "dedupeKey")
+    DO NOTHING
+  `;
+}
+
+export async function createNotificationForUser(
+  userId: string,
+  input: CreateNotificationInput
+) {
+  await insertNotification(userId, input);
+
+  await publishRealtimeEvent({
+    type: "notification:update",
+  });
+}
+
 export async function createAdminNotification(
   input: CreateAdminNotificationInput
 ) {
@@ -116,10 +166,6 @@ export async function createAdminNotification(
     return;
   }
 
-  const metadata = input.metadata
-    ? JSON.stringify(input.metadata)
-    : null;
-
   await prisma.$transaction(
     recipients.map((admin) =>
       prisma.$executeRaw`
@@ -141,7 +187,7 @@ export async function createAdminNotification(
           ${input.title},
           ${input.message ?? null},
           ${input.href ?? null},
-          ${metadata}::jsonb,
+          ${input.metadata ? JSON.stringify(input.metadata) : null}::jsonb,
           ${input.dedupeKey ?? null},
           NOW()
         )
