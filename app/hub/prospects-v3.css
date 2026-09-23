@@ -1,0 +1,426 @@
+.hub-prospects-page {
+  gap: 18px;
+}
+
+/* Header */
+.hub-prospects-head {
+  padding: 22px 24px;
+  border: 1px solid var(--hub-border);
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at 95% 10%, rgba(37, 99, 235, .055), transparent 22%),
+    var(--hub-surface);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .03);
+}
+
+.hub-prospects-head h1 {
+  margin: 1px 0 6px;
+  font-size: clamp(26px, 2vw, 34px);
+  letter-spacing: -.035em;
+}
+
+.hub-prospects-head p {
+  max-width: 720px;
+  font-size: 13px;
+}
+
+.hub-prospects-kicker {
+  display: none;
+}
+
+/* Stat cards */
+.hub-prospects-stats {
+  gap: 10px;
+}
+
+.hub-prospects-stat {
+  position: relative;
+  min-height: 80px;
+  padding: 15px 16px;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .035);
+}
+
+.hub-prospects-stat::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  border-radius: 14px 0 0 14px;
+}
+
+.hub-prospects-stat:nth-child(1)::before { background: #f59e0b; }
+.hub-prospects-stat:nth-child(2)::before { background: #fb5a61; }
+.hub-prospects-stat:nth-child(3)::before { background: #3978ff; }
+.hub-prospects-stat:nth-child(4)::before { background: #23b26d; }
+
+.hub-prospects-stat > svg {
+  width: 34px;
+  height: 34px;
+  border: 1px solid transparent;
+}
+
+.hub-prospects-stat:nth-child(1) > svg {
+  color: #c97b00;
+  background: #fff7e7;
+  border-color: #fce8bd;
+}
+
+.hub-prospects-stat:nth-child(2) > svg {
+  color: #e14950;
+  background: #fff0f1;
+  border-color: #ffd8da;
+}
+
+.hub-prospects-stat:nth-child(3) > svg {
+  color: #3269e8;
+  background: #edf3ff;
+  border-color: #d8e5ff;
+}
+
+.hub-prospects-stat:nth-child(4) > svg {
+  color: #1b9a59;
+  background: #edf9f2;
+  border-color: #d3f0df;
+}
+
+.hub-prospects-stat small {
+  font-size: 11px;
+}
+
+.hub-prospects-stat strong {
+  margin-top: 2px;
+  font-size: 22px;
+  letter-spacing: -.03em;
+}
+
+/* Filter card */
+.hub-prospects-toolbar {
+  gap: 8px;
+  padding: 10px;
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .025);
+}
+
+.hub-prospects-search,
+.hub-prospects-toolbar > select,
+.hub-prospects-toolbar > button {
+  min-height: 36px;
+  height: 36px;
+  border-radius: 9px;
+}
+
+.hub-prospects-search {
+  min-width: 260px;
+  flex: 2 1 320px;
+  background: #fbfcfe;
+}
+
+.hub-prospects-toolbar > select {
+  min-width: 128px;
+  flex: 0 1 auto;
+  background: #fbfcfe;
+  font-size: 12px;
+}
+
+.hub-prospects-toolbar > button {
+  padding: 0 17px;
+  border-radius: 9px;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, .12);
+}
+
+.hub-prospects-more {
+  margin-top: 0;
+  padding-top: 8px;
+}
+
+.hub-prospects-more > summary {
+  min-height: 31px;
+  padding: 0 8px;
+  font-size: 11px;
+}
+
+/* Result bar */
+.hub-prospects-result-bar {
+  padding: 0 4px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* Floating table header + row cards */
+.hub-prospects-list {
+  display: grid;
+  gap: 8px;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.hub-prospects-table-head,
+.hub-prospect-row > summary {
+  grid-template-columns: minmax(230px, 1.35fr) minmax(180px, 1.05fr) minmax(170px, 1fr) 145px 145px 60px;
+  gap: 14px;
+}
+
+.hub-prospects-table-head {
+  padding: 0 14px 4px;
+  border: 0;
+  background: transparent;
+  color: #737b8c;
+  font-size: 9px;
+  letter-spacing: .055em;
+}
+
+.hub-prospect-row {
+  overflow: hidden;
+  border: 1px solid #e2e6ed;
+  border-radius: 14px;
+  background: var(--hub-surface);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .018);
+  transition:
+    border-color .16s ease,
+    box-shadow .16s ease,
+    transform .16s ease;
+}
+
+.hub-prospect-row:hover {
+  border-color: #cfd6e1;
+  box-shadow: 0 5px 18px rgba(15, 23, 42, .055);
+  transform: translateY(-1px);
+}
+
+.hub-prospect-row[open] {
+  border-color: #cbd5e1;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, .065);
+}
+
+.hub-prospect-row > summary {
+  min-height: 66px;
+  padding: 10px 14px;
+}
+
+.hub-prospect-row[open] > summary {
+  background: var(--hub-surface);
+}
+
+/* Company */
+.hub-prospect-logo {
+  width: 36px;
+  height: 36px;
+  flex-basis: 36px;
+  border-color: #d9e4ff;
+  border-radius: 10px;
+  background: #f1f5ff;
+  color: #111827;
+  font-size: 10px;
+}
+
+.hub-prospect-company strong {
+  font-size: 13px;
+  letter-spacing: -.01em;
+}
+
+.hub-prospect-company span {
+  margin-top: 3px;
+  font-size: 9px;
+}
+
+/* Website */
+.hub-prospect-website a {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.hub-prospect-website small {
+  display: block;
+  margin-top: 4px;
+  font-size: 9px;
+}
+
+.hub-prospect-no-website {
+  padding: 4px 8px;
+  border: 1px solid #f8dfad;
+  border-radius: 8px;
+  background: #fff4dc;
+  color: #aa6500;
+  font-size: 9px;
+}
+
+/* Contact / location */
+.hub-prospect-contact,
+.hub-prospect-location {
+  font-size: 10px;
+}
+
+.hub-prospect-contact svg,
+.hub-prospect-location svg {
+  opacity: .7;
+}
+
+.hub-prospect-location small {
+  margin-left: 18px;
+  font-size: 9px;
+}
+
+/* Opportunity */
+.hub-prospect-score-cell {
+  align-items: center;
+  gap: 6px;
+}
+
+.hub-prospect-score-cell > strong {
+  min-width: 31px;
+  height: 27px;
+  border: 1px solid #e7ebf1;
+  border-radius: 8px;
+  background: #f8fafc;
+  font-size: 10px;
+}
+
+.hub-prospect-status {
+  max-width: 108px;
+  padding: 5px 8px;
+  border-radius: 9px;
+  font-size: 9px;
+}
+
+/* No website = compact opportunity card like mockup */
+.hub-prospect-score-cell:has(.hub-prospect-status-no-website) {
+  width: 104px;
+  min-height: 46px;
+  display: grid;
+  place-items: center;
+  gap: 1px;
+  padding: 6px 9px;
+  border: 1px solid #e5e9ef;
+  border-radius: 9px;
+  background: #f8fafc;
+}
+
+.hub-prospect-score-cell:has(.hub-prospect-status-no-website) .hub-prospect-status-no-website {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #111827;
+  font-size: 0;
+}
+
+.hub-prospect-score-cell:has(.hub-prospect-status-no-website) .hub-prospect-status-no-website::after {
+  content: "Lead Available";
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.hub-prospect-score-cell:has(.hub-prospect-status-no-website) > strong {
+  min-width: 0;
+  height: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 10px;
+}
+
+/* Open action */
+.hub-prospect-open {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: end;
+  min-width: 48px;
+  min-height: 27px;
+  padding: 0 9px;
+  border: 1px solid #dde2e9;
+  border-radius: 8px;
+  background: #fafbfc;
+  color: #111827;
+  font-size: 9px;
+  font-weight: 800;
+  text-align: center;
+  transition: background .15s ease, border-color .15s ease;
+}
+
+.hub-prospect-row:hover .hub-prospect-open {
+  border-color: #cfd6df;
+  background: #f3f5f7;
+}
+
+/* Expanded area */
+.hub-prospect-detail {
+  margin: 0 10px 10px;
+  padding: 17px;
+  border: 1px solid #e7eaf0;
+  border-radius: 11px;
+  background: #f8fafc;
+}
+
+.hub-prospect-tech-grid span {
+  background: #fff;
+}
+
+@media (max-width: 1180px) {
+  .hub-prospects-table-head,
+  .hub-prospect-row > summary {
+    grid-template-columns: minmax(220px, 1.35fr) minmax(170px, 1fr) minmax(155px, 1fr) 140px 120px;
+  }
+}
+
+@media (max-width: 900px) {
+  .hub-prospects-head {
+    padding: 18px;
+  }
+
+  .hub-prospect-row > summary {
+    min-height: 0;
+    padding: 13px;
+  }
+
+  .hub-prospect-score-cell:has(.hub-prospect-status-no-website) {
+    width: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .hub-prospects-page {
+    gap: 14px;
+  }
+
+  .hub-prospects-head {
+    border-radius: 14px;
+  }
+
+  .hub-prospects-stats {
+    gap: 7px;
+  }
+
+  .hub-prospects-stat {
+    min-height: 70px;
+    padding: 11px;
+  }
+
+  .hub-prospects-stat > svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .hub-prospects-stat strong {
+    font-size: 19px;
+  }
+
+  .hub-prospects-toolbar {
+    gap: 7px;
+  }
+
+  .hub-prospects-list {
+    gap: 7px;
+  }
+
+  .hub-prospect-row {
+    border-radius: 12px;
+  }
+
+  .hub-prospect-open {
+    display: none;
+  }
+}

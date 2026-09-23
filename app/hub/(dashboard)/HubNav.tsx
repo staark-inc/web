@@ -10,6 +10,7 @@ import {
   UserRound,
   UsersRound,
   Target,
+  Search,
   FolderKanban,
   FileText,
   CreditCard,
@@ -39,6 +40,7 @@ export default function HubNav({
   const isSettings = pathname.startsWith("/hub/settings");
   const isContacts = pathname.startsWith("/hub/contacts");
   const isLeads = pathname.startsWith("/hub/leads");
+  const isProspects = pathname.startsWith("/hub/prospects");
 
   const isClients =
     pathname === "/hub/clients" ||
@@ -67,9 +69,7 @@ export default function HubNav({
         aria-label="Overview"
         data-tooltip="Overview"
         className={`hub-nav-item hub-compact-tooltip ${
-          pathname === "/hub"
-            ? "hub-nav-item-active"
-            : ""
+          pathname === "/hub" ? "hub-nav-item-active" : ""
         }`}
       >
         <LayoutDashboard size={17} />
@@ -86,11 +86,8 @@ export default function HubNav({
       >
         <Inbox size={18} />
         <span>Inbox</span>
-
         {showCounts && unreadCount > 0 && (
-          <span className="hub-nav-count">
-            {unreadCount > 99 ? "99+" : unreadCount}
-          </span>
+          <span className="hub-nav-count">{unreadCount > 99 ? "99+" : unreadCount}</span>
         )}
       </Link>
 
@@ -131,10 +128,20 @@ export default function HubNav({
         <Target size={17} />
         <span>Leads</span>
         {showCounts && newLeadCount > 0 && (
-          <span className="hub-nav-count">
-            {newLeadCount > 99 ? "99+" : newLeadCount}
-          </span>
+          <span className="hub-nav-count">{newLeadCount > 99 ? "99+" : newLeadCount}</span>
         )}
+      </Link>
+
+      <Link
+        href="/hub/prospects"
+        aria-label="Prospects"
+        data-tooltip="Prospects"
+        className={`hub-nav-item hub-compact-tooltip ${
+          isProspects ? "hub-nav-item-active" : ""
+        }`}
+      >
+        <Search size={17} />
+        <span>Prospects</span>
       </Link>
 
       <Link

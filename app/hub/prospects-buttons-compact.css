@@ -1,0 +1,68 @@
+.hub-prospects-toolbar > button,
+.hub-prospects-clear,
+.hub-prospects-more > summary,
+.hub-prospect-open,
+.hub-prospect-primary-action,
+.hub-prospect-secondary-action,
+.hub-prospects-page-button,
+.hub-prospect-import-button {
+  min-height: 32px;
+  height: 32px;
+  padding: 0 11px;
+  border-radius: 8px;
+  font-size: 11px;
+  line-height: 1;
+}
+
+.hub-prospects-toolbar > button {
+  min-width: 58px;
+  padding-inline: 13px;
+}
+
+.hub-prospects-more > summary {
+  width: max-content;
+  min-height: 30px;
+  height: 30px;
+  padding-inline: 8px;
+}
+
+.hub-prospect-open {
+  min-width: 46px;
+  min-height: 28px;
+  height: 28px;
+  padding-inline: 9px;
+  font-size: 9px;
+}
+
+.hub-prospect-primary-action,
+.hub-prospect-secondary-action {
+  min-height: 34px;
+  height: 34px;
+  font-size: 11px;
+}
+
+.hub-prospects-page-button {
+  min-width: 32px;
+  justify-content: center;
+}
+
+.hub-prospects-page-nav {
+  min-width: auto;
+}
+
+.hub-prospect-import-button {
+  min-height: 34px;
+  height: 34px;
+  padding-inline: 11px;
+}
+
+@media (max-width: 640px) {
+  .hub-prospects-toolbar > button,
+  .hub-prospects-clear,
+  .hub-prospect-primary-action,
+  .hub-prospect-secondary-action,
+  .hub-prospect-import-button {
+    min-height: 34px;
+    height: 34px;
+  }
+}

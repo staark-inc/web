@@ -24,6 +24,16 @@ enum LeadStatus {
   LOST
 }
 
+enum ProspectStatus {
+  NO_WEBSITE
+  BROKEN_WEBSITE
+  OLD_WEBSITE
+  WEAK_WEBSITE
+  GOOD_WEBSITE
+  IGNORED
+  IMPORTED
+}
+
 enum OfferStatus {
   DRAFT
   SHARED
@@ -164,11 +174,65 @@ model Lead {
   clientId String?
   client   Client?    @relation(fields: [clientId], references: [id], onDelete: SetNull)
 
+  prospect Prospect?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([contactId])
   @@index([status])
+  @@index([createdAt])
+}
+
+model Prospect {
+  id      String @id @default(cuid())
+  placeId String @unique
+
+  name     String
+  city     String?
+  category String?
+  address  String?
+
+  website      String?
+  email        String?
+  websitePhone String?
+  googlePhone  String?
+  contactPage  String?
+  contactForm  Boolean @default(false)
+
+  facebook  String?
+  instagram String?
+  linkedin  String?
+
+  rating  Float?
+  reviews Int?
+
+  status       ProspectStatus @default(NO_WEBSITE)
+  leadScore    Int            @default(0)
+  websiteScore Int?
+  reasons      Json?
+
+  https         Boolean?
+  mobile        Boolean?
+  copyrightYear Int?
+  loadSeconds   Float?
+  pageTitle     String?
+  httpStatus    Int?
+
+  googleMapsUrl String?
+  source        String @default("google_places")
+  scannedAt     DateTime?
+
+  importedLeadId String? @unique
+  importedLead   Lead?   @relation(fields: [importedLeadId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([city])
+  @@index([category])
+  @@index([leadScore])
   @@index([createdAt])
 }
 
