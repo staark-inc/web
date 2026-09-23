@@ -1,0 +1,130 @@
+.hub-offer-decision-actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.hub-offer-decision-primary,
+.hub-offer-decision-button {
+  min-height: 42px;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1;
+  text-decoration: none;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease, transform .15s ease;
+}
+
+.hub-offer-decision-primary {
+  border: 1px solid #17191d;
+  background: #17191d;
+  color: #fff;
+  box-shadow: 0 1px 2px rgba(17, 24, 39, .08);
+}
+
+.hub-offer-decision-primary:hover {
+  background: #24272c;
+  border-color: #24272c;
+  transform: translateY(-1px);
+}
+
+.hub-offer-decision-admin-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.hub-offer-actions {
+  margin: 0;
+}
+
+.hub-offer-actions .hub-offer-decision-button {
+  border: 1px solid #dfe3e7;
+  background: #fff;
+  color: #25282d;
+}
+
+.hub-offer-actions .hub-offer-decision-button:hover:not(:disabled) {
+  border-color: #cfd5db;
+  background: #f8f9fa;
+}
+
+.hub-offer-decision-button:disabled {
+  cursor: not-allowed;
+  opacity: .5;
+}
+
+.hub-offer-decision-danger {
+  border: 1px solid #f1c8c8;
+  background: #fffafa;
+  color: #b42318;
+}
+
+.hub-offer-decision-danger:hover:not(:disabled) {
+  border-color: #e9aaaa;
+  background: #fff4f4;
+}
+
+.hub-offer-decision-project {
+  border-color: #d8dee6;
+  background: #f7f9fb;
+  color: #25282d;
+}
+
+.hub-offer-decision-project:hover {
+  background: #f0f3f6;
+  border-color: #cdd4dc;
+}
+
+.hub-offer-decision-actions .hub-compose-error,
+.hub-offer-decision-actions .hub-compose-success {
+  margin: 6px 0 0;
+  font-size: 10px;
+}
+
+.hub-offer-decision-actions .hub-delete-confirm {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 9px;
+  padding: 12px;
+  border: 1px solid #f1c8c8;
+  border-radius: 10px;
+  background: #fffafa;
+}
+
+.hub-offer-decision-actions .hub-delete-confirm > span {
+  color: #7a271a;
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.hub-offer-decision-actions .hub-delete-confirm-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.hub-offer-decision-actions .hub-delete-confirm-actions form {
+  margin: 0;
+}
+
+.hub-offer-decision-actions .hub-delete-confirm-actions button {
+  width: 100%;
+  min-height: 38px;
+}
+
+@media (max-width: 640px) {
+  .hub-offer-decision-admin-row {
+    grid-template-columns: 1fr;
+  }
+
+  .hub-offer-decision-primary,
+  .hub-offer-decision-button {
+    min-height: 44px;
+  }
+}
