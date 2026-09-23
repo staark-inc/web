@@ -14,16 +14,6 @@ import "./settings-v2.css";
 import "./profile-v2.css";
 import "./notifications-v1.css";
 import "./notification-preferences.css";
-import "./prospects-vars.css";
-import "./prospects-v1.css";
-import "./prospects-import.css";
-import "./prospects-pagination.css";
-import "./prospects-filters.css";
-import "./prospects-design-v2.css";
-import "./prospects-v3.css";
-import "./prospects-more-compact.css";
-import "./prospects-buttons-compact.css";
-import "./prospects-top10.css";
 import "./mail-workspace-v2.css";
 
 export const metadata: Metadata = {
