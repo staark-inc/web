@@ -4,6 +4,7 @@ import {
   AlertCircle,
   BarChart3,
   CheckCircle2,
+  CreditCard,
   GitMerge,
   Mail,
   Plug,
@@ -22,6 +23,8 @@ import {
 } from "@/lib/email-templates";
 import { getGitHubOverview } from "@/lib/github";
 import { prisma } from "@/lib/prisma";
+import { getStripeConfigStatus } from "@/lib/stripe";
+import { GmailWatchButton, StripeTestButton } from "./IntegrationActions";
 import TemplateEditor from "./TemplateEditor";
 
 export const dynamic = "force-dynamic";
@@ -39,6 +42,15 @@ type SettingsSearchParams = Promise<{
 
 function isSettingsTab(value: string | undefined): value is SettingsTab {
   return value === "email" || value === "templates" || value === "integrations";
+}
+
+function formatDateTime(value: Date | null | undefined) {
+  if (!value) return "Not available";
+
+  return new Intl.DateTimeFormat("sv-SE", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(value);
 }
 
 export default async function HubSettingsPage({
@@ -89,6 +101,8 @@ export default async function HubSettingsPage({
           .then((data) => ({ connected: true as const, data }))
           .catch(() => ({ connected: false as const, data: null }))
       : { connected: false as const, data: null };
+
+  const stripeStatus = getStripeConfigStatus();
 
   return (
     <div className="hub-page hub-settings-page hub-settings-v2-page">
@@ -260,70 +274,145 @@ export default async function HubSettingsPage({
       )}
 
       {activeTab === "integrations" && (
-        <section className="hub-settings-card">
-          <div className="hub-settings-heading">
-            <div className="hub-settings-icon"><Plug size={19} /></div>
-            <div><h2>Integrations</h2><p>External services connected to Staark Hub.</p></div>
+        <div className="hub-settings-v2-integrations-page">
+          <div className="hub-settings-v2-integrations-head">
+            <div>
+              <span className="hub-settings-v2-kicker">CONNECTED SERVICES</span>
+              <h2>Integrations</h2>
+              <p>Manage the external services used by Staark Hub. Secrets stay in server environment variables.</p>
+            </div>
           </div>
 
-          <div className="hub-integration-row">
-            <div className="hub-integration-main">
-              <div className="hub-integration-logo"><Mail size={18} /></div>
-              <div className="hub-integration-info"><strong>Google Workspace</strong><span>Gmail sync and customer communication</span></div>
-            </div>
-            <div className="hub-integration-actions">
-              <div className={gmailConnected ? "hub-integration-status" : "hub-integration-status hub-integration-status-offline"}>
-                {gmailConnected && <span className="hub-integration-dot" />}{gmailConnected ? "Connected" : "Not connected"}
+          <section className="hub-settings-v2-integration-grid">
+            <article className="hub-settings-v2-integration-card">
+              <div className="hub-settings-v2-integration-card-head">
+                <span className="hub-settings-v2-integration-icon"><Mail size={19} /></span>
+                <div>
+                  <strong>Google Workspace</strong>
+                  <span>Mailbox sync, inbound watch and SMTP relay.</span>
+                </div>
+                <span className={gmailConnected ? "hub-settings-v2-status is-connected" : "hub-settings-v2-status is-offline"}>
+                  {gmailConnected ? "Connected" : "Not connected"}
+                </span>
               </div>
-              <a href="/api/google/gmail/connect" className="hub-secondary-button"><RefreshCw size={14} />{gmailConnected ? "Reconnect" : "Connect"}</a>
-            </div>
-          </div>
 
-          <div className="hub-integration-row">
-            <div className="hub-integration-main">
-              <div className="hub-integration-logo"><BarChart3 size={18} /></div>
-              <div className="hub-integration-info"><strong>Google Analytics</strong><span>Website traffic and visitor analytics</span></div>
-            </div>
-            <div className="hub-integration-actions">
-              <div className={analyticsConnected ? "hub-integration-status" : "hub-integration-status hub-integration-status-offline"}>
-                {analyticsConnected && <span className="hub-integration-dot" />}{analyticsConnected ? "Connected" : "Not connected"}
+              <div className="hub-settings-v2-integration-facts">
+                <div><span>Mailbox</span><strong>{process.env.GOOGLE_GMAIL_ACCOUNT ?? replyToEmail}</strong></div>
+                <div><span>Inbound watch</span><strong className={gmailWatchActive ? "is-good" : "is-bad"}>{gmailWatchActive ? "Active" : "Inactive"}</strong></div>
+                <div><span>Watch expires</span><strong>{formatDateTime(settings?.gmailWatchExpiresAt)}</strong></div>
+                <div><span>Outbound</span><strong>Google SMTP relay</strong></div>
               </div>
-              <a href="/api/hub/google/connect" className="hub-secondary-button"><RefreshCw size={14} />{analyticsConnected ? "Reconnect" : "Connect"}</a>
-            </div>
-          </div>
 
-          <div className="hub-integration-row">
-            <div className="hub-integration-main">
-              <div className="hub-integration-logo"><Search size={18} /></div>
-              <div className="hub-integration-info"><strong>Google Search Console</strong><span>Search performance and ranking data</span></div>
-            </div>
-            <div className="hub-integration-actions">
-              <div className={analyticsConnected ? "hub-integration-status" : "hub-integration-status hub-integration-status-offline"}>
-                {analyticsConnected && <span className="hub-integration-dot" />}{analyticsConnected ? "Connected" : "Not connected"}
+              <div className="hub-settings-v2-integration-actions-row">
+                <a href="/api/google/gmail/connect" className="hub-secondary-button">
+                  <RefreshCw size={14} />
+                  {gmailConnected ? "Reconnect" : "Connect"}
+                </a>
+                {gmailConnected && <GmailWatchButton />}
               </div>
-            </div>
-          </div>
+            </article>
 
-          <div className="hub-integration-row">
-            <div className="hub-integration-main">
-              <div className="hub-integration-logo"><GitMerge size={18} /></div>
-              <div className="hub-integration-info"><strong>GitHub</strong><span>Repository and deployment status</span></div>
-            </div>
-            <div className="hub-integration-actions">
-              <div className={githubResult.connected ? "hub-integration-status" : "hub-integration-status hub-integration-status-offline"}>
-                {githubResult.connected && <span className="hub-integration-dot" />}{githubResult.connected ? "Connected" : "Unavailable"}
+            <article className="hub-settings-v2-integration-card">
+              <div className="hub-settings-v2-integration-card-head">
+                <span className="hub-settings-v2-integration-icon"><BarChart3 size={19} /></span>
+                <div>
+                  <strong>Google Analytics</strong>
+                  <span>Traffic and website performance data.</span>
+                </div>
+                <span className={analyticsConnected ? "hub-settings-v2-status is-connected" : "hub-settings-v2-status is-offline"}>
+                  {analyticsConnected ? "Connected" : "Not connected"}
+                </span>
               </div>
-            </div>
-          </div>
 
-          {githubResult.connected && githubResult.data && (
-            <div className="hub-settings-v2-integration-summary">
-              <span>GitHub</span>
-              <strong>{githubResult.data.repository.fullName}</strong>
-              <small>{githubResult.data.branch.name} · {githubResult.data.commit.shortSha}</small>
-            </div>
-          )}
-        </section>
+              <div className="hub-settings-v2-integration-facts">
+                <div><span>Access</span><strong>Read only</strong></div>
+                <div><span>Connected</span><strong>{formatDateTime(settings?.ga4ConnectedAt)}</strong></div>
+              </div>
+
+              <div className="hub-settings-v2-integration-actions-row">
+                <a href="/api/hub/google/connect" className="hub-secondary-button">
+                  <RefreshCw size={14} />
+                  {analyticsConnected ? "Reconnect Google" : "Connect Google"}
+                </a>
+              </div>
+            </article>
+
+            <article className="hub-settings-v2-integration-card">
+              <div className="hub-settings-v2-integration-card-head">
+                <span className="hub-settings-v2-integration-icon"><Search size={19} /></span>
+                <div>
+                  <strong>Google Search Console</strong>
+                  <span>Search visibility and ranking data.</span>
+                </div>
+                <span className={analyticsConnected ? "hub-settings-v2-status is-connected" : "hub-settings-v2-status is-offline"}>
+                  {analyticsConnected ? "Connected" : "Not connected"}
+                </span>
+              </div>
+
+              <div className="hub-settings-v2-integration-facts">
+                <div><span>Access</span><strong>Read only</strong></div>
+                <div><span>OAuth</span><strong>Shared Google connection</strong></div>
+              </div>
+
+              <div className="hub-settings-v2-integration-actions-row">
+                <a href="/api/hub/google/connect" className="hub-secondary-button">
+                  <RefreshCw size={14} />
+                  {analyticsConnected ? "Reconnect Google" : "Connect Google"}
+                </a>
+              </div>
+            </article>
+
+            <article className="hub-settings-v2-integration-card">
+              <div className="hub-settings-v2-integration-card-head">
+                <span className="hub-settings-v2-integration-icon"><GitMerge size={19} /></span>
+                <div>
+                  <strong>GitHub</strong>
+                  <span>Repository, branch and deployment visibility.</span>
+                </div>
+                <span className={githubResult.connected ? "hub-settings-v2-status is-connected" : "hub-settings-v2-status is-offline"}>
+                  {githubResult.connected ? "Connected" : "Unavailable"}
+                </span>
+              </div>
+
+              <div className="hub-settings-v2-integration-facts">
+                <div><span>Repository</span><strong>{githubResult.data?.repository.fullName ?? "Not available"}</strong></div>
+                <div><span>Branch</span><strong>{githubResult.data?.branch.name ?? "Not available"}</strong></div>
+                <div><span>Latest commit</span><strong>{githubResult.data?.commit.shortSha ?? "Not available"}</strong></div>
+                <div><span>Workflow</span><strong>{githubResult.data?.workflow?.conclusion ?? githubResult.data?.workflow?.status ?? "No recent run"}</strong></div>
+              </div>
+            </article>
+
+            <article className="hub-settings-v2-integration-card hub-settings-v2-integration-card-stripe">
+              <div className="hub-settings-v2-integration-card-head">
+                <span className="hub-settings-v2-integration-icon"><CreditCard size={19} /></span>
+                <div>
+                  <strong>Stripe</strong>
+                  <span>Payments, invoices and future Billing sync.</span>
+                </div>
+                <span className={stripeStatus.configured ? "hub-settings-v2-status is-connected" : "hub-settings-v2-status is-offline"}>
+                  {stripeStatus.configured ? "Configured" : "Not configured"}
+                </span>
+              </div>
+
+              <div className="hub-settings-v2-integration-facts">
+                <div><span>Mode</span><strong>{stripeStatus.mode === "unknown" ? "Not available" : stripeStatus.mode === "live" ? "Live" : "Test"}</strong></div>
+                <div><span>Secret key</span><strong className={stripeStatus.secretConfigured ? "is-good" : "is-bad"}>{stripeStatus.secretConfigured ? "Configured" : "Missing"}</strong></div>
+                <div><span>Webhook secret</span><strong className={stripeStatus.webhookConfigured ? "is-good" : "is-bad"}>{stripeStatus.webhookConfigured ? "Configured" : "Missing"}</strong></div>
+                <div><span>Currency</span><strong>SEK</strong></div>
+              </div>
+
+              <div className="hub-settings-v2-integration-actions-row">
+                {stripeStatus.configured ? (
+                  <StripeTestButton />
+                ) : (
+                  <span className="hub-settings-v2-integration-hint">
+                    Add STRIPE_SECRET_KEY and STRIPE_WEBHOOK_SECRET to the server environment.
+                  </span>
+                )}
+              </div>
+            </article>
+          </section>
+        </div>
       )}
     </div>
   );
