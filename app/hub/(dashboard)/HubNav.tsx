@@ -20,11 +20,13 @@ import {
 type HubNavProps = {
   unreadCount: number;
   newLeadCount: number;
+  showCounts: boolean;
 };
 
 export default function HubNav({
   unreadCount,
   newLeadCount,
+  showCounts,
 }: HubNavProps) {
   const pathname = usePathname();
 
@@ -64,7 +66,11 @@ export default function HubNav({
     <nav className="hub-nav">
       <Link
         href="/hub"
-        className={`hub-nav-item ${pathname === "/hub" ? "hub-nav-item-active" : ""}`}
+        aria-label="Overview"
+        data-tooltip="Overview"
+        className={`hub-nav-item hub-compact-tooltip ${
+          pathname === "/hub" ? "hub-nav-item-active" : ""
+        }`}
       >
         <LayoutDashboard size={17} />
         <span>Overview</span>
@@ -72,16 +78,26 @@ export default function HubNav({
 
       <Link
         href="/hub/inbox"
-        className={`hub-nav-item ${isInbox ? "hub-nav-item-active" : ""}`}
+        aria-label="Inbox"
+        data-tooltip="Inbox"
+        className={`hub-nav-item hub-compact-tooltip ${
+          isInbox ? "hub-nav-item-active" : ""
+        }`}
       >
         <Inbox size={18} />
         <span>Inbox</span>
-        {unreadCount > 0 && <span className="hub-nav-count">{unreadCount}</span>}
+        {showCounts && unreadCount > 0 && (
+          <span className="hub-nav-count">{unreadCount > 99 ? "99+" : unreadCount}</span>
+        )}
       </Link>
 
       <Link
         href="/hub/sent"
-        className={`hub-nav-item ${isSent ? "hub-nav-item-active" : ""}`}
+        aria-label="Sent"
+        data-tooltip="Sent"
+        className={`hub-nav-item hub-compact-tooltip ${
+          isSent ? "hub-nav-item-active" : ""
+        }`}
       >
         <Send size={18} />
         <span>Sent</span>
@@ -91,7 +107,11 @@ export default function HubNav({
 
       <Link
         href="/hub/contacts"
-        className={`hub-nav-item ${isContacts ? "hub-nav-item-active" : ""}`}
+        aria-label="Contacts"
+        data-tooltip="Contacts"
+        className={`hub-nav-item hub-compact-tooltip ${
+          isContacts ? "hub-nav-item-active" : ""
+        }`}
       >
         <UsersRound size={17} />
         <span>Contacts</span>
@@ -99,18 +119,26 @@ export default function HubNav({
 
       <Link
         href="/hub/leads"
-        className={`hub-nav-item ${isLeads ? "hub-nav-item-active" : ""}`}
+        aria-label="Leads"
+        data-tooltip="Leads"
+        className={`hub-nav-item hub-compact-tooltip ${
+          isLeads ? "hub-nav-item-active" : ""
+        }`}
       >
         <Target size={17} />
         <span>Leads</span>
-        {newLeadCount > 0 && (
+        {showCounts && newLeadCount > 0 && (
           <span className="hub-nav-count">{newLeadCount > 99 ? "99+" : newLeadCount}</span>
         )}
       </Link>
 
       <Link
         href="/hub/prospects"
-        className={`hub-nav-item ${isProspects ? "hub-nav-item-active" : ""}`}
+        aria-label="Prospects"
+        data-tooltip="Prospects"
+        className={`hub-nav-item hub-compact-tooltip ${
+          isProspects ? "hub-nav-item-active" : ""
+        }`}
       >
         <Search size={17} />
         <span>Prospects</span>
@@ -118,7 +146,11 @@ export default function HubNav({
 
       <Link
         href="/hub/clients"
-        className={`hub-nav-item ${isClients ? "hub-nav-item-active" : ""}`}
+        aria-label="Clients"
+        data-tooltip="Clients"
+        className={`hub-nav-item hub-compact-tooltip ${
+          isClients ? "hub-nav-item-active" : ""
+        }`}
       >
         <FolderKanban size={17} />
         <span>Clients</span>
@@ -128,7 +160,11 @@ export default function HubNav({
 
       <Link
         href="/hub/projects"
-        className={`hub-nav-item ${isProjects ? "hub-nav-item-active" : ""}`}
+        aria-label="Projects"
+        data-tooltip="Projects"
+        className={`hub-nav-item hub-compact-tooltip ${
+          isProjects ? "hub-nav-item-active" : ""
+        }`}
       >
         <FolderKanban size={17} />
         <span>Projects</span>
@@ -136,7 +172,11 @@ export default function HubNav({
 
       <Link
         href="/hub/offers"
-        className={`hub-nav-item ${isOffers ? "hub-nav-item-active" : ""}`}
+        aria-label="Offers"
+        data-tooltip="Offers"
+        className={`hub-nav-item hub-compact-tooltip ${
+          isOffers ? "hub-nav-item-active" : ""
+        }`}
       >
         <FileText size={17} />
         <span>Offers</span>
@@ -146,7 +186,11 @@ export default function HubNav({
 
       <Link
         href="/hub/billing"
-        className={`hub-nav-item ${isBilling ? "hub-nav-item-active" : ""}`}
+        aria-label="Billing"
+        data-tooltip="Billing"
+        className={`hub-nav-item hub-compact-tooltip ${
+          isBilling ? "hub-nav-item-active" : ""
+        }`}
       >
         <CreditCard size={17} />
         <span>Billing</span>
@@ -154,7 +198,11 @@ export default function HubNav({
 
       <Link
         href="/hub/support"
-        className={`hub-nav-item ${isSupport ? "hub-nav-item-active" : ""}`}
+        aria-label="Support"
+        data-tooltip="Support"
+        className={`hub-nav-item hub-compact-tooltip ${
+          isSupport ? "hub-nav-item-active" : ""
+        }`}
       >
         <LifeBuoy size={17} />
         <span>Support</span>
@@ -164,7 +212,11 @@ export default function HubNav({
 
       <Link
         href="/hub/profile"
-        className={`hub-nav-item ${isProfile ? "hub-nav-item-active" : ""}`}
+        aria-label="Profile"
+        data-tooltip="Profile"
+        className={`hub-nav-item hub-compact-tooltip ${
+          isProfile ? "hub-nav-item-active" : ""
+        }`}
       >
         <UserRound size={18} />
         <span>Profile</span>
@@ -172,7 +224,11 @@ export default function HubNav({
 
       <Link
         href="/hub/settings"
-        className={`hub-nav-item ${isSettings ? "hub-nav-item-active" : ""}`}
+        aria-label="Settings"
+        data-tooltip="Settings"
+        className={`hub-nav-item hub-compact-tooltip ${
+          isSettings ? "hub-nav-item-active" : ""
+        }`}
       >
         <Settings size={18} />
         <span>Settings</span>
