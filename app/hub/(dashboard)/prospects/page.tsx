@@ -9,15 +9,22 @@ import {
   Mail,
   MapPin,
   Phone,
-  Search,
   Sparkles,
   Target,
   UserPlus,
 } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
-import type { Prisma, ProspectStatus } from "@/generated/prisma/client";
+import type { Prisma } from "@/generated/prisma/client";
 import ProspectImportButton from "./ProspectImportButton";
+import {
+  ProspectFilterBar,
+  PROSPECT_STATUS_LABELS,
+  buildProspectPageHref,
+  buildProspectWhere,
+  normalizeProspectFilters,
+  type ProspectFilterParams,
+} from "./prospect-filters";
 import {
   addProspectToLeads,
   ignoreProspect,
@@ -29,34 +36,8 @@ export const dynamic = "force-dynamic";
 const PAGE_SIZE = 25;
 
 type PageProps = {
-  searchParams: Promise<{
-    q?: string;
-    status?: string;
-    city?: string;
-    category?: string;
-    page?: string;
-  }>;
+  searchParams: Promise<ProspectFilterParams>;
 };
-
-const statusLabels: Record<ProspectStatus, string> = {
-  NO_WEBSITE: "No website",
-  BROKEN_WEBSITE: "Broken website",
-  OLD_WEBSITE: "Old website",
-  WEAK_WEBSITE: "Weak website",
-  GOOD_WEBSITE: "Good website",
-  IGNORED: "Ignored",
-  IMPORTED: "Added to Leads",
-};
-
-const allowedStatuses = new Set<ProspectStatus>([
-  "NO_WEBSITE",
-  "BROKEN_WEBSITE",
-  "OLD_WEBSITE",
-  "WEAK_WEBSITE",
-  "GOOD_WEBSITE",
-  "IGNORED",
-  "IMPORTED",
-]);
 
 function reasonList(value: Prisma.JsonValue | null): string[] {
   if (!Array.isArray(value)) return [];
@@ -104,30 +85,8 @@ function paginationItems(currentPage: number, totalPages: number): Array<number 
 }
 
 export default async function ProspectsPage({ searchParams }: PageProps) {
-  const params = await searchParams;
-  const q = params.q?.trim() || "";
-  const city = params.city?.trim() || "";
-  const category = params.category?.trim() || "";
-  const requestedStatus = params.status?.toUpperCase() as ProspectStatus | undefined;
-  const status = requestedStatus && allowedStatuses.has(requestedStatus) ? requestedStatus : undefined;
-  const parsedPage = Number.parseInt(params.page || "1", 10);
-  const requestedPage = Number.isFinite(parsedPage) && parsedPage > 0 ? parsedPage : 1;
-
-  const where: Prisma.ProspectWhereInput = {
-    ...(status ? { status } : {}),
-    ...(city ? { city } : {}),
-    ...(category ? { category } : {}),
-    ...(q
-      ? {
-          OR: [
-            { name: { contains: q, mode: "insensitive" } },
-            { email: { contains: q, mode: "insensitive" } },
-            { website: { contains: q, mode: "insensitive" } },
-            { address: { contains: q, mode: "insensitive" } },
-          ],
-        }
-      : {}),
-  };
+  const filters = normalizeProspectFilters(await searchParams);
+  const where = buildProspectWhere(filters);
 
   const [
     filteredCount,
@@ -171,7 +130,7 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
   ]);
 
   const totalPages = Math.max(1, Math.ceil(filteredCount / PAGE_SIZE));
-  const currentPage = Math.min(requestedPage, totalPages);
+  const currentPage = Math.min(filters.page, totalPages);
   const offset = (currentPage - 1) * PAGE_SIZE;
 
   const prospects = await prisma.prospect.findMany({
@@ -180,18 +139,6 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
     skip: offset,
     take: PAGE_SIZE,
   });
-
-  function pageHref(page: number) {
-    const search = new URLSearchParams();
-    if (q) search.set("q", q);
-    if (status) search.set("status", status);
-    if (city) search.set("city", city);
-    if (category) search.set("category", category);
-    if (page > 1) search.set("page", String(page));
-
-    const query = search.toString();
-    return query ? `/hub/prospects?${query}` : "/hub/prospects";
-  }
 
   const firstShown = filteredCount === 0 ? 0 : offset + 1;
   const lastShown = Math.min(offset + prospects.length, filteredCount);
@@ -237,38 +184,7 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
         </div>
       </section>
 
-      <form className="hub-prospects-toolbar" action="/hub/prospects" method="get">
-        <label className="hub-prospects-search">
-          <Search size={16} />
-          <input name="q" defaultValue={q} placeholder="Search company, email, website..." />
-        </label>
-
-        <select name="status" defaultValue={status || ""} aria-label="Filter by status">
-          <option value="">All statuses</option>
-          {Object.entries(statusLabels).map(([value, label]) => (
-            <option key={value} value={value}>{label}</option>
-          ))}
-        </select>
-
-        <select name="city" defaultValue={city} aria-label="Filter by city">
-          <option value="">All cities</option>
-          {cities.map((item) => item.city && (
-            <option key={item.city} value={item.city}>{item.city}</option>
-          ))}
-        </select>
-
-        <select name="category" defaultValue={category} aria-label="Filter by category">
-          <option value="">All categories</option>
-          {categories.map((item) => item.category && (
-            <option key={item.category} value={item.category}>{item.category}</option>
-          ))}
-        </select>
-
-        <button type="submit">Filter</button>
-        {(q || status || city || category) && (
-          <Link href="/hub/prospects" className="hub-prospects-clear">Clear</Link>
-        )}
-      </form>
+      <ProspectFilterBar filters={filters} cities={cities} categories={categories} />
 
       <div className="hub-prospects-result-bar">
         <span>
@@ -282,8 +198,8 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
       {prospects.length === 0 ? (
         <div className="hub-empty-state">
           <Building2 size={28} />
-          <h2>No prospects yet</h2>
-          <p>Import scanner results and they will appear here for qualification.</p>
+          <h2>No prospects found</h2>
+          <p>Try clearing a filter or import scanner results if this workspace is still empty.</p>
         </div>
       ) : (
         <section className="hub-prospects-list" aria-label="Prospect list">
@@ -337,7 +253,7 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
 
                   <div className="hub-prospect-score-cell">
                     <span className={`hub-prospect-status hub-prospect-status-${prospect.status.toLowerCase().replaceAll("_", "-")}`}>
-                      {statusLabels[prospect.status]}
+                      {PROSPECT_STATUS_LABELS[prospect.status]}
                     </span>
                     <strong>{prospect.leadScore}</strong>
                   </div>
@@ -432,7 +348,7 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
       {totalPages > 1 && (
         <nav className="hub-prospects-pagination" aria-label="Prospects pages">
           <Link
-            href={pageHref(Math.max(1, currentPage - 1))}
+            href={buildProspectPageHref(filters, Math.max(1, currentPage - 1))}
             className={`hub-prospects-page-button hub-prospects-page-nav${currentPage === 1 ? " is-disabled" : ""}`}
             aria-disabled={currentPage === 1}
             tabIndex={currentPage === 1 ? -1 : undefined}
@@ -448,7 +364,7 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
               ) : (
                 <Link
                   key={item}
-                  href={pageHref(item)}
+                  href={buildProspectPageHref(filters, item)}
                   className={`hub-prospects-page-button${item === currentPage ? " is-active" : ""}`}
                   aria-current={item === currentPage ? "page" : undefined}
                 >
@@ -459,7 +375,7 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
           </div>
 
           <Link
-            href={pageHref(Math.min(totalPages, currentPage + 1))}
+            href={buildProspectPageHref(filters, Math.min(totalPages, currentPage + 1))}
             className={`hub-prospects-page-button hub-prospects-page-nav${currentPage === totalPages ? " is-disabled" : ""}`}
             aria-disabled={currentPage === totalPages}
             tabIndex={currentPage === totalPages ? -1 : undefined}
