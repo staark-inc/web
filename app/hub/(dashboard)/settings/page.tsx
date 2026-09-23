@@ -250,6 +250,7 @@ export default async function HubSettingsPage({
 
           {selectedTemplate && (
             <TemplateEditor
+              key={selectedTemplate.key}
               template={selectedTemplate}
               variables={selectedTemplate.variables}
               sampleValues={EMAIL_TEMPLATE_SAMPLE_VALUES}
@@ -262,45 +263,66 @@ export default async function HubSettingsPage({
         <section className="hub-settings-card">
           <div className="hub-settings-heading">
             <div className="hub-settings-icon"><Plug size={19} /></div>
-            <div><h2>Connected services</h2><p>External services used by Staark Hub.</p></div>
+            <div><h2>Integrations</h2><p>External services connected to Staark Hub.</p></div>
           </div>
 
-          <div className="hub-settings-v2-integration-list">
-            <div className="hub-settings-v2-integration-row">
-              <div className="hub-integration-logo"><BarChart3 size={18} /></div>
-              <div className="hub-settings-v2-integration-copy"><strong>Google Analytics</strong><span>Website traffic and visitor analytics.</span></div>
-              <div className={analyticsConnected ? "hub-integration-status" : "hub-integration-status hub-integration-status-offline"}>{analyticsConnected ? "Connected" : "Not connected"}</div>
-              <a href="/api/hub/google/connect" className="hub-secondary-button"><RefreshCw size={14} />{analyticsConnected ? "Reconnect" : "Connect"}</a>
-            </div>
-
-            <div className="hub-settings-v2-integration-row">
-              <div className="hub-integration-logo"><Search size={18} /></div>
-              <div className="hub-settings-v2-integration-copy"><strong>Google Search Console</strong><span>Search performance, clicks and rankings.</span></div>
-              <div className={analyticsConnected ? "hub-integration-status" : "hub-integration-status hub-integration-status-offline"}>{analyticsConnected ? "Connected" : "Not connected"}</div>
-              <span />
-            </div>
-
-            <div className="hub-settings-v2-integration-row">
+          <div className="hub-integration-row">
+            <div className="hub-integration-main">
               <div className="hub-integration-logo"><Mail size={18} /></div>
-              <div className="hub-settings-v2-integration-copy"><strong>Gmail / Google Workspace</strong><span>Inbound customer replies and mailbox sync.</span></div>
-              <div className={gmailConnected ? "hub-integration-status" : "hub-integration-status hub-integration-status-offline"}>{gmailConnected ? "Connected" : "Not connected"}</div>
+              <div className="hub-integration-info"><strong>Google Workspace</strong><span>Gmail sync and customer communication</span></div>
+            </div>
+            <div className="hub-integration-actions">
+              <div className={gmailConnected ? "hub-integration-status" : "hub-integration-status hub-integration-status-offline"}>
+                {gmailConnected && <span className="hub-integration-dot" />}{gmailConnected ? "Connected" : "Not connected"}
+              </div>
               <a href="/api/google/gmail/connect" className="hub-secondary-button"><RefreshCw size={14} />{gmailConnected ? "Reconnect" : "Connect"}</a>
             </div>
+          </div>
 
-            <div className="hub-settings-v2-integration-row">
-              <div className="hub-integration-logo"><Server size={18} /></div>
-              <div className="hub-settings-v2-integration-copy"><strong>Email / SMTP</strong><span>Google Workspace relay for outgoing mail.</span></div>
-              <div className="hub-integration-status hub-integration-status-neutral">Configured</div>
-              <span />
+          <div className="hub-integration-row">
+            <div className="hub-integration-main">
+              <div className="hub-integration-logo"><BarChart3 size={18} /></div>
+              <div className="hub-integration-info"><strong>Google Analytics</strong><span>Website traffic and visitor analytics</span></div>
             </div>
-
-            <div className="hub-settings-v2-integration-row">
-              <div className="hub-integration-logo"><GitMerge size={18} /></div>
-              <div className="hub-settings-v2-integration-copy"><strong>GitHub</strong><span>{githubResult.data?.repository.fullName ?? "Repository integration"}</span></div>
-              <div className={githubResult.connected ? "hub-integration-status" : "hub-integration-status hub-integration-status-offline"}>{githubResult.connected ? "Connected" : "Unavailable"}</div>
-              <span />
+            <div className="hub-integration-actions">
+              <div className={analyticsConnected ? "hub-integration-status" : "hub-integration-status hub-integration-status-offline"}>
+                {analyticsConnected && <span className="hub-integration-dot" />}{analyticsConnected ? "Connected" : "Not connected"}
+              </div>
+              <a href="/api/hub/google/connect" className="hub-secondary-button"><RefreshCw size={14} />{analyticsConnected ? "Reconnect" : "Connect"}</a>
             </div>
           </div>
+
+          <div className="hub-integration-row">
+            <div className="hub-integration-main">
+              <div className="hub-integration-logo"><Search size={18} /></div>
+              <div className="hub-integration-info"><strong>Google Search Console</strong><span>Search performance and ranking data</span></div>
+            </div>
+            <div className="hub-integration-actions">
+              <div className={analyticsConnected ? "hub-integration-status" : "hub-integration-status hub-integration-status-offline"}>
+                {analyticsConnected && <span className="hub-integration-dot" />}{analyticsConnected ? "Connected" : "Not connected"}
+              </div>
+            </div>
+          </div>
+
+          <div className="hub-integration-row">
+            <div className="hub-integration-main">
+              <div className="hub-integration-logo"><GitMerge size={18} /></div>
+              <div className="hub-integration-info"><strong>GitHub</strong><span>Repository and deployment status</span></div>
+            </div>
+            <div className="hub-integration-actions">
+              <div className={githubResult.connected ? "hub-integration-status" : "hub-integration-status hub-integration-status-offline"}>
+                {githubResult.connected && <span className="hub-integration-dot" />}{githubResult.connected ? "Connected" : "Unavailable"}
+              </div>
+            </div>
+          </div>
+
+          {githubResult.connected && githubResult.data && (
+            <div className="hub-settings-v2-integration-summary">
+              <span>GitHub</span>
+              <strong>{githubResult.data.repository.fullName}</strong>
+              <small>{githubResult.data.branch.name} · {githubResult.data.commit.shortSha}</small>
+            </div>
+          )}
         </section>
       )}
     </div>
