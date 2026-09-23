@@ -96,8 +96,10 @@ model Settings {
   id              String  @id @default("default")
   senderName      String  @default("Staark Inc.")
   senderEmail     String
+  replyToEmail    String?
   signature       String?
   defaultTemplate String  @default("staark-standard")
+  emailTemplates  Json?
 
   // Google Analytics
   ga4RefreshToken String?
@@ -154,7 +156,7 @@ model Client {
   id                 String  @id @default(cuid())
   name               String
   billingEmail       String?
-  phone              String?
+  phone               String?
   organizationNumber String?
   billingAddress     String?
   notes              String?

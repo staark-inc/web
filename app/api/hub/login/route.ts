@@ -5,6 +5,7 @@ import {
   createSessionToken,
   verifyPassword,
 } from "@/lib/auth";
+import { redirectTo } from "@/lib/redirect";
 
 export const runtime = "nodejs";
 
@@ -129,8 +130,9 @@ export async function POST(request: Request) {
             role: user.role,
           },
         })
-      : NextResponse.redirect(
-          new URL("/hub", request.url),
+      : redirectTo(
+          "/hub",
+          request,
           303
         );
 

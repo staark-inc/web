@@ -1,6 +1,8 @@
 import dns from "node:dns/promises";
 import nodemailer from "nodemailer";
 
+import { prisma } from "@/lib/prisma";
+
 const SMTP_HOST =
   process.env.SMTP_HOST ??
   "smtp-relay.gmail.com";
@@ -31,37 +33,15 @@ async function createSmtpTransporter() {
     `[SMTP] Connecting to ${SMTP_HOST} via IPv4 ${smtpIpv4}`
   );
 
-  return nodemailer.createTransport({
-    /*
-     * Connect directly over IPv4.
-     */
+  const transporter = nodemailer.createTransport({
     host: smtpIpv4,
-
     port: SMTP_PORT,
-
-    /*
-     * Port 587 + STARTTLS.
-     */
     secure: false,
     requireTLS: true,
-
-    /*
-     * EHLO/HELO hostname.
-     */
     name: "staarkinc.com",
-
-    /*
-     * Even though we connect to an IP,
-     * TLS must validate Google's hostname.
-     */
     tls: {
       servername: SMTP_HOST,
     },
-
-    /*
-     * smtp-relay.gmail.com authorises by IP, while
-     * smtp.gmail.com requires an app password.
-     */
     ...(SMTP_USER && SMTP_PASSWORD
       ? {
           auth: {
@@ -71,6 +51,33 @@ async function createSmtpTransporter() {
         }
       : {}),
   });
+
+  /*
+   * Settings owns Reply-To. A stream plugin applies it to every
+   * outgoing Hub message, including older callers that still pass
+   * senderEmail as replyTo.
+   */
+  const settings = await prisma.settings.findUnique({
+    where: { id: "default" },
+    select: {
+      senderName: true,
+      replyToEmail: true,
+    },
+  });
+
+  const replyToEmail = settings?.replyToEmail?.trim().toLowerCase();
+
+  if (replyToEmail) {
+    transporter.use("stream", (mail, callback) => {
+      mail.data.replyTo = {
+        name: settings?.senderName?.trim() || "Staark Inc.",
+        address: replyToEmail,
+      };
+      callback();
+    });
+  }
+
+  return transporter;
 }
 
 export async function verifySmtpConnection() {

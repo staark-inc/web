@@ -1,14 +1,14 @@
-import { NextResponse } from "next/server";
 import { google } from "googleapis";
 import { getSession } from "@/lib/auth";
 import { redirectTo } from "@/lib/redirect";
 
-export async function GET() {
+export async function GET(request: Request) {
   const session = await getSession();
 
   if (!session) {
     return redirectTo(
-      "/hub/login"
+      "/hub/login",
+      request
     );
   }
 
@@ -27,7 +27,8 @@ export async function GET() {
     !redirectUri
   ) {
     return redirectTo(
-      "/hub/settings?error=google_oauth_config_missing"
+      "/hub/settings?error=google_oauth_config_missing",
+      request
     );
   }
 
@@ -41,20 +42,12 @@ export async function GET() {
   const url =
     oauth2Client.generateAuthUrl({
       access_type: "offline",
-
-      // Important:
-      // force Google to show the consent screen again
-      // so we can receive permission for Search Console.
       prompt: "consent",
-
       scope: [
-        // Google Analytics
         "https://www.googleapis.com/auth/analytics.readonly",
-
-        // Google Search Console
         "https://www.googleapis.com/auth/webmasters.readonly",
       ],
     });
 
-  return redirectTo(url);
+  return redirectTo(url, request);
 }

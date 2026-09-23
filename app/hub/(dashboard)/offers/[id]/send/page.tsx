@@ -4,6 +4,10 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 
 import ComposeForm from "../../../compose/ComposeForm";
+import {
+  getEmailTemplate,
+  renderEmailTemplate,
+} from "@/lib/email-templates";
 import { formatOfferAmount } from "@/lib/offers";
 import { prisma } from "@/lib/prisma";
 
@@ -18,7 +22,11 @@ export default async function SendOfferPage({ params }: { params: Promise<{ id: 
         select: {
           name: true,
           billingEmail: true,
-          contacts: { select: { email: true }, orderBy: { createdAt: "desc" }, take: 1 },
+          contacts: {
+            select: { email: true, name: true },
+            orderBy: { createdAt: "desc" },
+            take: 1,
+          },
         },
       },
     },
@@ -42,39 +50,54 @@ export default async function SendOfferPage({ params }: { params: Promise<{ id: 
     "https://staarkinc.com"
   ).replace(/\/$/, "");
 
-  const publicOfferUrl =
-    `${siteUrl}/offert/${shareToken}`;
-
+  const publicOfferUrl = `${siteUrl}/offert/${shareToken}`;
   const backToOffer = `/hub/offers/${id}`;
-  const ready = Boolean(offer.scope && (offer.oneTimePriceOre !== null || offer.monthlyPriceOre !== null));
-  const clientEmail = offer.client.contacts[0]?.email ?? offer.client.billingEmail ?? "";
-  // Sample contacts are often imported with example.com addresses. Never prefill those for sending.
-  const recipient = /@example\.(com|org|net)$/i.test(clientEmail) ? "" : clientEmail;
-  const body = [
-    "Hej!",
-    "",
-    `Här kommer vårt förslag för ${offer.client.name}: ${offer.title}.`,
-    "",
-    "Omfattning",
-    offer.scope ?? "",
-    "",
+  const ready = Boolean(
+    offer.scope &&
+      (offer.oneTimePriceOre !== null || offer.monthlyPriceOre !== null)
+  );
+  const clientEmail =
+    offer.client.contacts[0]?.email ?? offer.client.billingEmail ?? "";
+  const recipient = /@example\.(com|org|net)$/i.test(clientEmail)
+    ? ""
+    : clientEmail;
+
+  const template = await getEmailTemplate("OFFER_SHARED");
+  const pricing = [
     ...(offer.oneTimePriceOre !== null
-      ? [`Engångspris för webbplatsen: ${formatOfferAmount(offer.oneTimePriceOre)} exkl. moms.`]
+      ? [
+          `Engångspris för webbplatsen: ${formatOfferAmount(
+            offer.oneTimePriceOre
+          )} exkl. moms.`,
+        ]
       : []),
     ...(offer.monthlyPriceOre !== null
-      ? [`Hosting och support: ${formatOfferAmount(offer.monthlyPriceOre)}/månad exkl. moms.`]
+      ? [
+          `Hosting och support: ${formatOfferAmount(
+            offer.monthlyPriceOre
+          )}/månad exkl. moms.`,
+        ]
       : []),
-    `Support ingår i ${offer.includedMonths} månader enligt förslaget.`,
-    ...(offer.terms ? ["", "Villkor", offer.terms] : []),
-    "",
-    "Se hela offerten och svara direkt här:",
-    publicOfferUrl,
-    "",
-    "Återkom gärna om ni vill gå igenom förslaget tillsammans eller har några frågor.",
-    "",
-    "Vänliga hälsningar,",
-    "Staark Inc.",
   ].join("\n");
+
+  const values = {
+    clientName: offer.client.contacts[0]?.name || offer.client.name,
+    companyName: offer.client.name,
+    offerTitle: offer.title,
+    offerScope: offer.scope ?? "",
+    pricing,
+    includedMonths: offer.includedMonths,
+    termsSection: offer.terms ? `Villkor\n${offer.terms}\n\n` : "",
+    offerUrl: publicOfferUrl,
+    senderName: "Staark Inc.",
+  };
+
+  const subject = template.active
+    ? renderEmailTemplate(template.subject, values)
+    : `Förslag: ${offer.title}`;
+  const body = template.active
+    ? renderEmailTemplate(template.body, values)
+    : "";
 
   return (
     <div className="hub-page hub-compose-page">
@@ -94,7 +117,7 @@ export default async function SendOfferPage({ params }: { params: Promise<{ id: 
           {!recipient && <p className="hub-offer-send-note">Enter an email address you control for this demo. Sample example.com addresses cannot receive the offer.</p>}
           <ComposeForm
             initialTo={recipient}
-            initialSubject={`Förslag: ${offer.title}`}
+            initialSubject={subject}
             initialMessage={body}
             returnTo={backToOffer}
             confirmRecipient
