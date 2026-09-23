@@ -95,10 +95,10 @@
 
 .hub-inbox-v2-row {
   min-height: 78px;
-  grid-template-columns: minmax(230px, .82fr) minmax(0, 1.55fr) minmax(150px, auto);
+  grid-template-columns: minmax(130px, .32fr) minmax(0, 1.55fr) minmax(150px, auto);
   border: 0;
   border-radius: 0;
-  background: transparent;
+  background: none;
   transition: background-color .14s ease;
 }
 
