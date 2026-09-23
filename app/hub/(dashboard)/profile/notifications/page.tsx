@@ -15,6 +15,8 @@ import {
 } from "@/lib/notifications";
 import { prisma } from "@/lib/prisma";
 
+import TestNotificationButton from "./TestNotificationButton";
+
 export const dynamic = "force-dynamic";
 
 type SearchParams = Promise<{
@@ -109,6 +111,8 @@ export default async function NotificationPreferencesPage({
           </div>
         </div>
       ) : null}
+
+      <TestNotificationButton />
 
       <section className="hub-notification-preferences-card">
         <div className="hub-notification-preferences-head">
