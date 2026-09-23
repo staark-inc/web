@@ -1,4 +1,5 @@
 import { getSession } from "@/lib/auth";
+import { getNotificationStreamState } from "@/lib/notifications";
 import { prisma } from "@/lib/prisma";
 
 export const runtime = "nodejs";
@@ -6,31 +7,34 @@ export const dynamic = "force-dynamic";
 
 const POLL_INTERVAL = 5000;
 
-/*
- * The signature only needs to change when something
- * the Hub displays changes, so it is built from the
- * newest message timestamp plus the unread counters.
- */
-async function readSignature() {
-  const [latest, unread, newLeads] = await Promise.all([
+async function readSignature(userId: string) {
+  const [latest, unread, newLeads, notifications] = await Promise.all([
     prisma.message.findFirst({
       orderBy: { createdAt: "desc" },
       select: { createdAt: true },
     }),
-
     prisma.message.count({
       where: { direction: "INBOUND", isRead: false },
     }),
-
     prisma.lead.count({
       where: { status: "NEW" },
     }),
+    getNotificationStreamState(userId),
   ]);
 
   return {
-    signature: `${latest?.createdAt.getTime() ?? 0}:${unread}:${newLeads}`,
+    signature: [
+      latest?.createdAt.getTime() ?? 0,
+      unread,
+      newLeads,
+      notifications.unread,
+      notifications.latestId ?? "",
+      notifications.latestAt?.getTime() ?? 0,
+    ].join(":"),
     unread,
     newLeads,
+    notificationUnread: notifications.unread,
+    latestNotificationId: notifications.latestId,
   };
 }
 
@@ -46,7 +50,7 @@ export async function GET(request: Request) {
   const stream = new ReadableStream({
     async start(controller) {
       let closed = false;
-      let previous = (await readSignature()).signature;
+      let previous = (await readSignature(session.userId)).signature;
 
       const send = (event: string, data: unknown) => {
         if (closed) return;
@@ -68,7 +72,7 @@ export async function GET(request: Request) {
         if (closed) return;
 
         try {
-          const current = await readSignature();
+          const current = await readSignature(session.userId);
 
           if (current.signature !== previous) {
             previous = current.signature;
@@ -76,9 +80,10 @@ export async function GET(request: Request) {
             send("update", {
               unread: current.unread,
               newLeads: current.newLeads,
+              notificationUnread: current.notificationUnread,
+              latestNotificationId: current.latestNotificationId,
             });
           } else {
-            /* Keeps proxies from dropping an idle connection. */
             send("ping", { at: Date.now() });
           }
         } catch (error) {
@@ -95,7 +100,7 @@ export async function GET(request: Request) {
         try {
           controller.close();
         } catch {
-          /* Already closed by the runtime. */
+          // Already closed by the runtime.
         }
       };
 
