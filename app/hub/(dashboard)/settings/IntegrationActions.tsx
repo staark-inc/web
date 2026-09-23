@@ -9,6 +9,8 @@ type ActionState =
   | { kind: "success"; message: string }
   | { kind: "error"; message: string };
 
+type StripeEnvironment = "live" | "test";
+
 type StripeAccount = {
   id: string | null;
   name: string | null;
@@ -16,6 +18,7 @@ type StripeAccount = {
   country: string | null;
   defaultCurrency: string | null;
   mode: "live" | "test" | "unknown";
+  environment?: StripeEnvironment;
 };
 
 function ActionFeedback({ state }: { state: ActionState }) {
@@ -83,17 +86,40 @@ export function GmailWatchButton() {
   );
 }
 
-export function StripeTestButton() {
-  const [state, setState] = useState<ActionState>({ kind: "idle", message: "" });
-  const [account, setAccount] = useState<StripeAccount | null>(null);
+const INITIAL_STATE: Record<StripeEnvironment, ActionState> = {
+  live: { kind: "idle", message: "" },
+  test: { kind: "idle", message: "" },
+};
 
-  async function testStripe() {
-    setState({ kind: "loading", message: "Testing Stripe…" });
-    setAccount(null);
+const INITIAL_ACCOUNTS: Record<StripeEnvironment, StripeAccount | null> = {
+  live: null,
+  test: null,
+};
+
+export function StripeTestButton() {
+  const [states, setStates] = useState<Record<StripeEnvironment, ActionState>>(INITIAL_STATE);
+  const [accounts, setAccounts] = useState<Record<StripeEnvironment, StripeAccount | null>>(
+    INITIAL_ACCOUNTS
+  );
+
+  async function testStripe(environment: StripeEnvironment) {
+    setStates((current) => ({
+      ...current,
+      [environment]: {
+        kind: "loading",
+        message: environment === "live" ? "Testing Live…" : "Testing Sandbox…",
+      },
+    }));
+
+    setAccounts((current) => ({ ...current, [environment]: null }));
 
     try {
       const response = await fetch("/api/hub/integrations/stripe/test", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ environment }),
       });
       const data = await response.json().catch(() => null);
 
@@ -102,73 +128,97 @@ export function StripeTestButton() {
       }
 
       const stripeAccount = (data?.account ?? null) as StripeAccount | null;
-      setAccount(stripeAccount);
+
+      setAccounts((current) => ({
+        ...current,
+        [environment]: stripeAccount,
+      }));
 
       const label = stripeAccount?.name || stripeAccount?.id || "Stripe account";
-      const mode =
-        stripeAccount?.mode === "live"
-          ? "Live"
-          : stripeAccount?.mode === "test"
-            ? "Test"
-            : "Connected";
-
-      setState({ kind: "success", message: `${label} · ${mode}` });
+      setStates((current) => ({
+        ...current,
+        [environment]: {
+          kind: "success",
+          message: `${label} · ${environment === "live" ? "Live" : "Sandbox"}`,
+        },
+      }));
     } catch (error) {
-      setState({
-        kind: "error",
-        message: error instanceof Error ? error.message : "Stripe connection failed.",
-      });
+      setStates((current) => ({
+        ...current,
+        [environment]: {
+          kind: "error",
+          message: error instanceof Error ? error.message : "Stripe connection failed.",
+        },
+      }));
     }
   }
 
   return (
-    <div className="hub-settings-v2-action-stack">
-      <button
-        type="button"
-        className="hub-secondary-button"
-        onClick={testStripe}
-        disabled={state.kind === "loading"}
-      >
-        <TestTube2 size={14} />
-        {state.kind === "loading" ? "Testing…" : "Test connection"}
-      </button>
+    <div className="hub-settings-v2-action-stack" style={{ width: "100%" }}>
+      <div className="hub-settings-v2-integration-actions-row">
+        {(["live", "test"] as const).map((environment) => {
+          const state = states[environment];
+          return (
+            <div className="hub-settings-v2-action-stack" key={environment}>
+              <button
+                type="button"
+                className="hub-secondary-button"
+                onClick={() => testStripe(environment)}
+                disabled={state.kind === "loading"}
+              >
+                <TestTube2 size={14} />
+                {state.kind === "loading"
+                  ? environment === "live"
+                    ? "Testing Live…"
+                    : "Testing Sandbox…"
+                  : environment === "live"
+                    ? "Test Live"
+                    : "Test Sandbox"}
+              </button>
+              <ActionFeedback state={state} />
+            </div>
+          );
+        })}
+      </div>
 
-      <ActionFeedback state={state} />
+      {(["live", "test"] as const).map((environment) => {
+        const account = accounts[environment];
+        if (!account) return null;
 
-      {account && (
-        <div className="hub-settings-v2-integration-facts" style={{ width: "100%", marginTop: 4 }}>
-          <div>
-            <span>Status</span>
-            <strong className="is-good">Connected</strong>
+        return (
+          <div key={environment} style={{ width: "100%", marginTop: 6 }}>
+            <div className="hub-settings-v2-kicker">
+              STRIPE {environment === "live" ? "LIVE" : "SANDBOX"}
+            </div>
+            <div className="hub-settings-v2-integration-facts">
+              <div>
+                <span>Status</span>
+                <strong className="is-good">Connected</strong>
+              </div>
+              <div>
+                <span>Mode</span>
+                <strong>{environment === "live" ? "Live" : "Test"}</strong>
+              </div>
+              <div>
+                <span>Account</span>
+                <strong>{account.name || account.email || "Stripe account"}</strong>
+              </div>
+              <div>
+                <span>Account ID</span>
+                <strong>{account.id || "Not available"}</strong>
+              </div>
+              <div>
+                <span>Country</span>
+                <strong>{account.country?.toUpperCase() || "Not available"}</strong>
+              </div>
+              <div>
+                <span>Currency</span>
+                <strong>{account.defaultCurrency || "SEK"}</strong>
+              </div>
+            </div>
           </div>
-          <div>
-            <span>Mode</span>
-            <strong>
-              {account.mode === "live"
-                ? "Live"
-                : account.mode === "test"
-                  ? "Test"
-                  : "Connected"}
-            </strong>
-          </div>
-          <div>
-            <span>Account</span>
-            <strong>{account.name || account.email || "Stripe account"}</strong>
-          </div>
-          <div>
-            <span>Account ID</span>
-            <strong>{account.id || "Not available"}</strong>
-          </div>
-          <div>
-            <span>Country</span>
-            <strong>{account.country?.toUpperCase() || "Not available"}</strong>
-          </div>
-          <div>
-            <span>Currency</span>
-            <strong>{account.defaultCurrency || "SEK"}</strong>
-          </div>
-        </div>
-      )}
+        );
+      })}
     </div>
   );
 }
