@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   output: "standalone",
 
-  allowedDevOrigins: ["192.168.0.10", "*.trycloudflare.com"],
+  allowedDevOrigins: ["192.168.0.10", "dev.staarkinc.com", "*.trycloudflare.com"],
 
   poweredByHeader: false,
 
