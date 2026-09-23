@@ -64,7 +64,9 @@ export default function HubNav({
     <nav className="hub-nav">
       <Link
         href="/hub"
-        className={`hub-nav-item ${
+        aria-label="Overview"
+        data-tooltip="Overview"
+        className={`hub-nav-item hub-compact-tooltip ${
           pathname === "/hub"
             ? "hub-nav-item-active"
             : ""
@@ -76,7 +78,9 @@ export default function HubNav({
 
       <Link
         href="/hub/inbox"
-        className={`hub-nav-item ${
+        aria-label="Inbox"
+        data-tooltip="Inbox"
+        className={`hub-nav-item hub-compact-tooltip ${
           isInbox ? "hub-nav-item-active" : ""
         }`}
       >
@@ -92,7 +96,9 @@ export default function HubNav({
 
       <Link
         href="/hub/sent"
-        className={`hub-nav-item ${
+        aria-label="Sent"
+        data-tooltip="Sent"
+        className={`hub-nav-item hub-compact-tooltip ${
           isSent ? "hub-nav-item-active" : ""
         }`}
       >
@@ -104,7 +110,9 @@ export default function HubNav({
 
       <Link
         href="/hub/contacts"
-        className={`hub-nav-item ${
+        aria-label="Contacts"
+        data-tooltip="Contacts"
+        className={`hub-nav-item hub-compact-tooltip ${
           isContacts ? "hub-nav-item-active" : ""
         }`}
       >
@@ -114,7 +122,9 @@ export default function HubNav({
 
       <Link
         href="/hub/leads"
-        className={`hub-nav-item ${
+        aria-label="Leads"
+        data-tooltip="Leads"
+        className={`hub-nav-item hub-compact-tooltip ${
           isLeads ? "hub-nav-item-active" : ""
         }`}
       >
@@ -129,7 +139,9 @@ export default function HubNav({
 
       <Link
         href="/hub/clients"
-        className={`hub-nav-item ${
+        aria-label="Clients"
+        data-tooltip="Clients"
+        className={`hub-nav-item hub-compact-tooltip ${
           isClients ? "hub-nav-item-active" : ""
         }`}
       >
@@ -141,7 +153,9 @@ export default function HubNav({
 
       <Link
         href="/hub/projects"
-        className={`hub-nav-item ${
+        aria-label="Projects"
+        data-tooltip="Projects"
+        className={`hub-nav-item hub-compact-tooltip ${
           isProjects ? "hub-nav-item-active" : ""
         }`}
       >
@@ -151,7 +165,9 @@ export default function HubNav({
 
       <Link
         href="/hub/offers"
-        className={`hub-nav-item ${
+        aria-label="Offers"
+        data-tooltip="Offers"
+        className={`hub-nav-item hub-compact-tooltip ${
           isOffers ? "hub-nav-item-active" : ""
         }`}
       >
@@ -163,7 +179,9 @@ export default function HubNav({
 
       <Link
         href="/hub/billing"
-        className={`hub-nav-item ${
+        aria-label="Billing"
+        data-tooltip="Billing"
+        className={`hub-nav-item hub-compact-tooltip ${
           isBilling ? "hub-nav-item-active" : ""
         }`}
       >
@@ -173,7 +191,9 @@ export default function HubNav({
 
       <Link
         href="/hub/support"
-        className={`hub-nav-item ${
+        aria-label="Support"
+        data-tooltip="Support"
+        className={`hub-nav-item hub-compact-tooltip ${
           isSupport ? "hub-nav-item-active" : ""
         }`}
       >
@@ -185,7 +205,9 @@ export default function HubNav({
 
       <Link
         href="/hub/profile"
-        className={`hub-nav-item ${
+        aria-label="Profile"
+        data-tooltip="Profile"
+        className={`hub-nav-item hub-compact-tooltip ${
           isProfile ? "hub-nav-item-active" : ""
         }`}
       >
@@ -195,7 +217,9 @@ export default function HubNav({
 
       <Link
         href="/hub/settings"
-        className={`hub-nav-item ${
+        aria-label="Settings"
+        data-tooltip="Settings"
+        className={`hub-nav-item hub-compact-tooltip ${
           isSettings ? "hub-nav-item-active" : ""
         }`}
       >
