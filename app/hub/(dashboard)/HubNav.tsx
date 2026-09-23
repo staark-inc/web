@@ -19,11 +19,13 @@ import {
 type HubNavProps = {
   unreadCount: number;
   newLeadCount: number;
+  showCounts: boolean;
 };
 
 export default function HubNav({
   unreadCount,
   newLeadCount,
+  showCounts,
 }: HubNavProps) {
   const pathname = usePathname();
 
@@ -33,15 +35,10 @@ export default function HubNav({
     pathname.startsWith("/hub/thread/");
 
   const isSent = pathname.startsWith("/hub/sent");
-
   const isProfile = pathname.startsWith("/hub/profile");
-
   const isSettings = pathname.startsWith("/hub/settings");
-  const isContacts =
-    pathname.startsWith("/hub/contacts");
-
-  const isLeads =
-    pathname.startsWith("/hub/leads");
+  const isContacts = pathname.startsWith("/hub/contacts");
+  const isLeads = pathname.startsWith("/hub/leads");
 
   const isClients =
     pathname === "/hub/clients" ||
@@ -65,17 +62,17 @@ export default function HubNav({
 
   return (
     <nav className="hub-nav">
-    <Link
-      href="/hub"
-      className={`hub-nav-item ${
-        pathname === "/hub"
-          ? "hub-nav-item-active"
-          : ""
-      }`}
-    >
-      <LayoutDashboard size={17} />
-      <span>Overview</span>
-    </Link>
+      <Link
+        href="/hub"
+        className={`hub-nav-item ${
+          pathname === "/hub"
+            ? "hub-nav-item-active"
+            : ""
+        }`}
+      >
+        <LayoutDashboard size={17} />
+        <span>Overview</span>
+      </Link>
 
       <Link
         href="/hub/inbox"
@@ -86,9 +83,9 @@ export default function HubNav({
         <Inbox size={18} />
         <span>Inbox</span>
 
-        {unreadCount > 0 && (
+        {showCounts && unreadCount > 0 && (
           <span className="hub-nav-count">
-            {unreadCount}
+            {unreadCount > 99 ? "99+" : unreadCount}
           </span>
         )}
       </Link>
@@ -103,16 +100,12 @@ export default function HubNav({
         <span>Sent</span>
       </Link>
 
-      <div className="hub-nav-section-label">
-        Customers
-      </div>
+      <div className="hub-nav-section-label">Customers</div>
 
       <Link
         href="/hub/contacts"
         className={`hub-nav-item ${
-          isContacts
-            ? "hub-nav-item-active"
-            : ""
+          isContacts ? "hub-nav-item-active" : ""
         }`}
       >
         <UsersRound size={17} />
@@ -122,18 +115,14 @@ export default function HubNav({
       <Link
         href="/hub/leads"
         className={`hub-nav-item ${
-          isLeads
-            ? "hub-nav-item-active"
-            : ""
+          isLeads ? "hub-nav-item-active" : ""
         }`}
       >
         <Target size={17} />
         <span>Leads</span>
-        {newLeadCount > 0 && (
+        {showCounts && newLeadCount > 0 && (
           <span className="hub-nav-count">
-            {newLeadCount > 99
-              ? "99+"
-              : newLeadCount}
+            {newLeadCount > 99 ? "99+" : newLeadCount}
           </span>
         )}
       </Link>
@@ -149,6 +138,7 @@ export default function HubNav({
       </Link>
 
       <div className="hub-nav-section-label">Work</div>
+
       <Link
         href="/hub/projects"
         className={`hub-nav-item ${
@@ -191,9 +181,7 @@ export default function HubNav({
         <span>Support</span>
       </Link>
 
-      <div className="hub-nav-section-label">
-        Account
-      </div>
+      <div className="hub-nav-section-label">Account</div>
 
       <Link
         href="/hub/profile"
