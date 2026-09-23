@@ -13,7 +13,6 @@ import {
   LockKeyhole,
   Mail,
   Save,
-  Settings,
   ShieldCheck,
   SlidersHorizontal,
   UserRound,
@@ -342,7 +341,19 @@ export default async function HubProfilePage({
               <p>Adjust how your personal Staark Hub workspace behaves.</p>
             </div>
 
-            <Link href="/hub/settings" className="hub-profile-v2-head-link">
+            <Link
+              href="/hub/profile/notifications"
+              className="hub-profile-v2-head-link"
+            >
+              <BellDot size={13} />
+              Notifications
+            </Link>
+
+            <Link
+              href="/hub/settings"
+              className="hub-profile-v2-head-link"
+              style={{ marginLeft: 0 }}
+            >
               Workspace settings
               <ExternalLink size={13} />
             </Link>
