@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import {
   countUnreadNotifications,
+  createNotificationForUser,
   listNotifications,
   markAllNotificationsRead,
   markNotificationRead,
@@ -30,6 +31,27 @@ export async function GET() {
     notifications,
     unread,
   });
+}
+
+export async function POST() {
+  const session = await getSession();
+
+  if (!session || session.role !== "ADMIN") {
+    return NextResponse.json(
+      { error: "Unauthorized" },
+      { status: 401 }
+    );
+  }
+
+  await createNotificationForUser(session.userId, {
+    type: "system.test",
+    title: "Realtime test",
+    message: "If you can see this without refreshing, Hub notifications are live.",
+    href: "/hub/profile/notifications",
+    dedupeKey: `test:${Date.now()}`,
+  });
+
+  return NextResponse.json({ ok: true });
 }
 
 export async function PATCH(request: NextRequest) {
