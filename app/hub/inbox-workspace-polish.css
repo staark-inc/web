@@ -31,6 +31,28 @@
   border-radius: 11px;
 }
 
+/* The base inbox stylesheet styles every span inside a stat card.
+ * Make the icon span more specific so it keeps its centering and color. */
+.hub-inbox-v2-stat > .hub-inbox-v2-stat-icon {
+  display: grid;
+  place-items: center;
+  margin-top: 0;
+  color: #727983;
+  font-size: inherit;
+}
+
+.hub-inbox-v2-stat > .hub-inbox-v2-stat-icon-unread {
+  color: #416caa;
+}
+
+.hub-inbox-v2-stat > .hub-inbox-v2-stat-icon-reply {
+  color: #ad690d;
+}
+
+.hub-inbox-v2-stat > .hub-inbox-v2-stat-icon-other {
+  color: #6c55a7;
+}
+
 .hub-inbox-v2-stat > div {
   min-width: 0;
   display: grid;
@@ -73,10 +95,10 @@
 
 .hub-inbox-v2-row {
   min-height: 78px;
-  grid-template-columns: minmax(230px, .82fr) minmax(0, 1.55fr) minmax(150px, auto);
+  grid-template-columns: minmax(130px, .32fr) minmax(0, 1.55fr) minmax(150px, auto);
   border: 0;
   border-radius: 0;
-  background: transparent;
+  background: none;
   transition: background-color .14s ease;
 }
 
