@@ -261,7 +261,7 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
 
                   <div className="hub-prospect-website">
                     {prospect.website ? (
-                      <a href={prospect.website} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()}>
+                      <a href={prospect.website} target="_blank" rel="noreferrer">
                         {prospect.website.replace(/^https?:\/\//, "").replace(/\/$/, "")}
                         <ArrowUpRight size={12} />
                       </a>
