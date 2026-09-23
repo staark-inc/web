@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+import { createAdminNotification } from "@/lib/notifications";
 import { prisma } from "@/lib/prisma";
 
 export async function respondToOffer(
@@ -42,7 +43,13 @@ export async function respondToOffer(
     select: {
       id: true,
       clientId: true,
+      title: true,
       status: true,
+      client: {
+        select: {
+          name: true,
+        },
+      },
     },
   });
 
@@ -84,6 +91,24 @@ export async function respondToOffer(
       `/offert/${encodeURIComponent(token)}?result=locked`
     );
   }
+
+  await createAdminNotification({
+    type:
+      status === "ACCEPTED"
+        ? "offer.accepted"
+        : "offer.declined",
+    title:
+      status === "ACCEPTED"
+        ? "Offer accepted"
+        : "Offer declined",
+    message: `${offer.client.name} · ${offer.title}`,
+    href: `/hub/offers/${offer.id}`,
+    metadata: {
+      offerId: offer.id,
+      status,
+    },
+    dedupeKey: `offer-decision:${offer.id}:${status}`,
+  });
 
   revalidatePath(`/offert/${token}`);
   revalidatePath("/hub/offers");
