@@ -1,0 +1,176 @@
+.hub-prospects-top10 {
+  padding: 14px;
+  border: 1px solid var(--hub-border);
+  border-radius: 14px;
+  background: var(--hub-surface);
+}
+
+.hub-prospects-top10-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.hub-prospects-top10-head > div {
+  display: grid;
+  gap: 3px;
+}
+
+.hub-prospects-top10-head span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--hub-accent);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.hub-prospects-top10-head h2 {
+  margin: 0;
+  font-size: 15px;
+  letter-spacing: -.015em;
+}
+
+.hub-prospects-top10-head small {
+  color: var(--hub-muted);
+  font-size: 9px;
+}
+
+.hub-prospects-top10-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.hub-prospects-top10-item {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) 28px 34px auto;
+  align-items: center;
+  gap: 9px;
+  min-height: 58px;
+  padding: 8px 9px;
+  border: 1px solid #e5e9ef;
+  border-radius: 10px;
+  background: #fbfcfe;
+}
+
+.hub-prospects-top10-rank {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  background: #111827;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.hub-prospects-top10-company {
+  min-width: 0;
+}
+
+.hub-prospects-top10-company > strong,
+.hub-prospects-top10-company > small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hub-prospects-top10-company > strong {
+  font-size: 11px;
+}
+
+.hub-prospects-top10-company > small {
+  margin-top: 2px;
+  color: var(--hub-muted);
+  font-size: 8px;
+}
+
+.hub-prospects-top10-tags {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-top: 5px;
+}
+
+.hub-prospects-top10-tags span {
+  padding: 2px 5px;
+  border: 1px solid #e4e8ef;
+  border-radius: 999px;
+  background: #fff;
+  color: #596274;
+  font-size: 7px;
+  font-weight: 800;
+}
+
+.hub-prospects-top10-contact {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid #e1e6ee;
+  border-radius: 8px;
+  background: #fff;
+  color: #5f6878;
+}
+
+.hub-prospects-top10-score {
+  display: grid;
+  place-items: center;
+  min-width: 34px;
+  height: 28px;
+  border-radius: 8px;
+  background: #edf4ff;
+  color: #275fc9;
+  font-size: 10px;
+}
+
+.hub-prospects-top10-review {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 27px;
+  padding: 0 8px;
+  border: 1px solid #dde2e9;
+  border-radius: 8px;
+  background: #fff;
+  color: inherit;
+  font-size: 8px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.hub-prospects-top10-review:hover {
+  border-color: #cfd6df;
+  background: #f7f8fa;
+}
+
+@media (max-width: 900px) {
+  .hub-prospects-top10-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .hub-prospects-top10 {
+    padding: 11px;
+  }
+
+  .hub-prospects-top10-head {
+    display: grid;
+  }
+
+  .hub-prospects-top10-item {
+    grid-template-columns: 24px minmax(0, 1fr) 30px;
+  }
+
+  .hub-prospects-top10-contact,
+  .hub-prospects-top10-review {
+    display: none;
+  }
+}

@@ -1,0 +1,64 @@
+.hub-prospects-head-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.hub-prospect-import-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.hub-prospect-import-input {
+  display: none;
+}
+
+.hub-prospect-import-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--hub-accent);
+  border-radius: 10px;
+  background: var(--hub-accent);
+  color: var(--hub-button-text, #fff);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.hub-prospect-import-button:disabled {
+  cursor: wait;
+  opacity: .65;
+}
+
+.hub-prospect-import-message {
+  width: 100%;
+  color: var(--hub-muted);
+  font-size: 11px;
+  text-align: right;
+}
+
+.hub-prospect-import-message-error {
+  color: #c43f3f;
+}
+
+@media (max-width: 760px) {
+  .hub-prospects-head-actions,
+  .hub-prospect-import-wrap {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .hub-prospect-import-message {
+    text-align: left;
+  }
+}

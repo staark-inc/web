@@ -1,0 +1,584 @@
+.hub-prospects-page {
+  display: grid;
+  gap: 22px;
+}
+
+.hub-prospects-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.hub-prospects-head h1 {
+  margin: 4px 0 8px;
+}
+
+.hub-prospects-head p {
+  max-width: 760px;
+  margin: 0;
+  color: var(--hub-muted);
+  line-height: 1.55;
+}
+
+.hub-prospects-kicker {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  color: var(--hub-accent);
+}
+
+.hub-prospects-head-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--hub-border);
+  border-radius: 12px;
+  background: var(--hub-surface);
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.hub-prospects-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.hub-prospects-stat {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 78px;
+  padding: 16px;
+  border: 1px solid var(--hub-border);
+  border-radius: 14px;
+  background: var(--hub-surface);
+}
+
+.hub-prospects-stat > svg {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  padding: 8px;
+  border-radius: 10px;
+  background: var(--hub-surface-soft);
+}
+
+.hub-prospects-stat div {
+  display: grid;
+  gap: 2px;
+}
+
+.hub-prospects-stat small {
+  color: var(--hub-muted);
+  font-size: 12px;
+}
+
+.hub-prospects-stat strong {
+  font-size: 21px;
+  line-height: 1;
+}
+
+.hub-prospects-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 12px;
+  border: 1px solid var(--hub-border);
+  border-radius: 14px;
+  background: var(--hub-surface);
+}
+
+.hub-prospects-toolbar select,
+.hub-prospects-toolbar button,
+.hub-prospects-search {
+  min-height: 40px;
+  border: 1px solid var(--hub-border);
+  border-radius: 10px;
+  background: var(--hub-surface-soft);
+}
+
+.hub-prospects-search {
+  min-width: min(360px, 100%);
+  flex: 1 1 280px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+}
+
+.hub-prospects-search input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: inherit;
+}
+
+.hub-prospects-toolbar select {
+  padding: 0 12px;
+  color: inherit;
+}
+
+.hub-prospects-toolbar button {
+  padding: 0 16px;
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--hub-button-text, #fff);
+  background: var(--hub-accent);
+  border-color: var(--hub-accent);
+}
+
+.hub-prospects-clear {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 10px;
+  color: var(--hub-muted);
+  text-decoration: none;
+}
+
+.hub-prospects-result-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--hub-muted);
+  font-size: 12px;
+}
+
+.hub-prospects-list {
+  overflow: hidden;
+  border: 1px solid var(--hub-border);
+  border-radius: 15px;
+  background: var(--hub-surface);
+}
+
+.hub-prospects-table-head,
+.hub-prospect-row > summary {
+  display: grid;
+  grid-template-columns: minmax(230px, 1.3fr) minmax(190px, 1fr) minmax(180px, 1fr) 150px 150px 52px;
+  gap: 16px;
+  align-items: center;
+}
+
+.hub-prospects-table-head {
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--hub-border);
+  color: var(--hub-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  background: var(--hub-surface-soft);
+}
+
+.hub-prospect-row {
+  border-bottom: 1px solid var(--hub-border);
+}
+
+.hub-prospect-row:last-child {
+  border-bottom: 0;
+}
+
+.hub-prospect-row > summary {
+  padding: 14px 16px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.hub-prospect-row > summary::-webkit-details-marker {
+  display: none;
+}
+
+.hub-prospect-row[open] > summary {
+  background: var(--hub-surface-soft);
+}
+
+.hub-prospect-company {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+
+.hub-prospect-logo {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 800;
+  background: var(--hub-surface-soft);
+  border: 1px solid var(--hub-border);
+}
+
+.hub-prospect-company > div:last-child,
+.hub-prospect-website,
+.hub-prospect-contact,
+.hub-prospect-location {
+  min-width: 0;
+}
+
+.hub-prospect-company strong,
+.hub-prospect-company span,
+.hub-prospect-website a,
+.hub-prospect-contact span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hub-prospect-company span,
+.hub-prospect-website small,
+.hub-prospect-location small {
+  margin-top: 3px;
+  color: var(--hub-muted);
+  font-size: 11px;
+}
+
+.hub-prospect-website a,
+.hub-prospect-links a,
+.hub-prospect-map-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.hub-prospect-website a {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.hub-prospect-no-website {
+  display: inline-flex;
+  padding: 4px 7px;
+  border-radius: 7px;
+  background: rgba(245, 158, 11, .12);
+  color: #b66d00;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.hub-prospect-contact,
+.hub-prospect-location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--hub-muted);
+  font-size: 12px;
+}
+
+.hub-prospect-location {
+  flex-wrap: wrap;
+}
+
+.hub-prospect-location small {
+  width: 100%;
+  margin-left: 19px;
+}
+
+.hub-prospect-score-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hub-prospect-score-cell > strong {
+  display: grid;
+  place-items: center;
+  min-width: 32px;
+  height: 28px;
+  padding: 0 7px;
+  border-radius: 8px;
+  background: var(--hub-surface-soft);
+  font-size: 12px;
+}
+
+.hub-prospect-status {
+  display: inline-flex;
+  max-width: 115px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10px;
+  font-weight: 800;
+  background: var(--hub-surface-soft);
+}
+
+.hub-prospect-status-no-website,
+.hub-prospect-status-broken-website,
+.hub-prospect-status-old-website {
+  background: rgba(239, 68, 68, .12);
+  color: #c43f3f;
+}
+
+.hub-prospect-status-weak-website {
+  background: rgba(245, 158, 11, .13);
+  color: #a96800;
+}
+
+.hub-prospect-status-good-website,
+.hub-prospect-status-imported {
+  background: rgba(34, 197, 94, .12);
+  color: #21874a;
+}
+
+.hub-prospect-status-ignored {
+  opacity: .65;
+}
+
+.hub-prospect-open {
+  color: var(--hub-accent);
+  font-size: 12px;
+  font-weight: 800;
+  text-align: right;
+}
+
+.hub-prospect-detail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 24px;
+  padding: 20px 16px 22px;
+  border-top: 1px solid var(--hub-border);
+  background: var(--hub-surface-soft);
+}
+
+.hub-prospect-detail-main {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.hub-prospect-detail-block {
+  min-width: 0;
+}
+
+.hub-prospect-detail-block > small {
+  display: block;
+  margin-bottom: 9px;
+  color: var(--hub-muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .05em;
+}
+
+.hub-prospect-detail-block ul,
+.hub-prospect-detail-block p {
+  margin: 0;
+  padding: 0;
+  color: var(--hub-muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.hub-prospect-detail-block ul {
+  padding-left: 18px;
+}
+
+.hub-prospect-links {
+  display: grid;
+  gap: 7px;
+}
+
+.hub-prospect-links a,
+.hub-prospect-map-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.hub-prospect-tech-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.hub-prospect-tech-grid span {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 9px;
+  border: 1px solid var(--hub-border);
+  border-radius: 8px;
+  color: var(--hub-muted);
+  font-size: 11px;
+  background: var(--hub-surface);
+}
+
+.hub-prospect-detail-side {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  padding-left: 20px;
+  border-left: 1px solid var(--hub-border);
+}
+
+.hub-prospect-detail-side p {
+  margin: 0;
+  color: var(--hub-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.hub-prospect-actions {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.hub-prospect-actions form {
+  margin: 0;
+}
+
+.hub-prospect-primary-action,
+.hub-prospect-secondary-action {
+  width: 100%;
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 12px;
+  border-radius: 9px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.hub-prospect-primary-action {
+  border: 1px solid var(--hub-accent);
+  color: var(--hub-button-text, #fff);
+  background: var(--hub-accent);
+}
+
+.hub-prospect-secondary-action {
+  border: 1px solid var(--hub-border);
+  color: inherit;
+  background: var(--hub-surface);
+}
+
+.hub-prospect-action-note {
+  color: var(--hub-muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+@media (max-width: 1180px) {
+  .hub-prospects-table-head,
+  .hub-prospect-row > summary {
+    grid-template-columns: minmax(220px, 1.4fr) minmax(170px, 1fr) minmax(160px, 1fr) 140px 120px;
+  }
+
+  .hub-prospects-table-head > :last-child,
+  .hub-prospect-open {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .hub-prospects-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hub-prospects-table-head {
+    display: none;
+  }
+
+  .hub-prospect-row > summary {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px 14px;
+  }
+
+  .hub-prospect-company {
+    grid-column: 1;
+  }
+
+  .hub-prospect-score-cell {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .hub-prospect-website,
+  .hub-prospect-contact,
+  .hub-prospect-location {
+    grid-column: 1 / -1;
+  }
+
+  .hub-prospect-detail,
+  .hub-prospect-detail-main {
+    grid-template-columns: 1fr;
+  }
+
+  .hub-prospect-detail-side {
+    padding-left: 0;
+    padding-top: 16px;
+    border-left: 0;
+    border-top: 1px solid var(--hub-border);
+  }
+}
+
+@media (max-width: 640px) {
+  .hub-prospects-head {
+    display: grid;
+  }
+
+  .hub-prospects-head-badge {
+    width: max-content;
+  }
+
+  .hub-prospects-stats {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .hub-prospects-stat {
+    min-height: 68px;
+    padding: 12px;
+  }
+
+  .hub-prospects-toolbar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .hub-prospects-search,
+  .hub-prospects-toolbar button,
+  .hub-prospects-clear {
+    grid-column: 1 / -1;
+  }
+
+  .hub-prospects-toolbar select {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .hub-prospect-row > summary {
+    padding: 13px;
+  }
+
+  .hub-prospect-score-cell {
+    align-items: flex-end;
+    flex-direction: column;
+  }
+
+  .hub-prospect-status {
+    max-width: 100px;
+  }
+
+  .hub-prospect-detail {
+    padding: 16px 13px 18px;
+  }
+}
