@@ -17,6 +17,7 @@ import {
 import { prisma } from "@/lib/prisma";
 import type { Prisma } from "@/generated/prisma/client";
 import ProspectImportButton from "./ProspectImportButton";
+import ProspectTop10 from "./ProspectTop10";
 import {
   ProspectFilterBar,
   PROSPECT_STATUS_LABELS,
@@ -183,6 +184,8 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
           <div><small>Added to Leads</small><strong>{importedCount}</strong></div>
         </div>
       </section>
+
+      <ProspectTop10 />
 
       <ProspectFilterBar filters={filters} cities={cities} categories={categories} />
 
