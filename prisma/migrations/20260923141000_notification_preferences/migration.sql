@@ -54,7 +54,7 @@ EXECUTE FUNCTION "create_lead_notification"();
 CREATE OR REPLACE FUNCTION "create_inbound_message_notification"()
 RETURNS TRIGGER AS $$
 BEGIN
-  IF NEW."direction" <> 'INBOUND' THEN
+  IF NEW."direction" <> 'INBOUND' OR NEW."gmailMessageId" IS NULL THEN
     RETURN NEW;
   END IF;
 
