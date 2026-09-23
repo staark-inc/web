@@ -1,10 +1,18 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
 import bcrypt from "bcryptjs";
 
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirectTo } from "@/lib/redirect";
+
+const SIDEBAR_OPTIONS = new Set(["standard", "compact"]);
+const COUNT_OPTIONS = new Set(["show", "hide"]);
+const TIMEZONE_OPTIONS = new Set([
+  "Europe/Stockholm",
+  "Europe/Bucharest",
+  "UTC",
+]);
 
 function redirectToProfile(
   request: NextRequest,
@@ -118,6 +126,60 @@ export async function POST(
         "error=unknown"
       );
     }
+  }
+
+  if (action === "preferences") {
+    const sidebar = String(
+      formData.get("sidebar") ?? ""
+    );
+    const counts = String(
+      formData.get("counts") ?? ""
+    );
+    const timezone = String(
+      formData.get("timezone") ?? ""
+    );
+
+    if (
+      !SIDEBAR_OPTIONS.has(sidebar) ||
+      !COUNT_OPTIONS.has(counts) ||
+      !TIMEZONE_OPTIONS.has(timezone)
+    ) {
+      return redirectToProfile(
+        request,
+        "error=invalid"
+      );
+    }
+
+    const response = redirectToProfile(
+      request,
+      "preferences=1"
+    );
+
+    const cookieOptions = {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365,
+      httpOnly: true,
+      sameSite: "lax" as const,
+      secure: process.env.NODE_ENV === "production",
+    };
+
+    response.cookies.set(
+      "hub_sidebar",
+      sidebar,
+      cookieOptions
+    );
+    response.cookies.set(
+      "hub_counts",
+      counts,
+      cookieOptions
+    );
+    response.cookies.set(
+      "hub_timezone",
+      timezone,
+      cookieOptions
+    );
+
+    return response;
   }
 
   if (action === "password") {
