@@ -12,6 +12,7 @@ import "./operations-workspace.css";
 import "./billing-support-v2.css";
 import "./settings-v2.css";
 import "./profile-v2.css";
+import "./notifications-v1.css";
 
 export const metadata: Metadata = {
   title: "Staark Hub",
