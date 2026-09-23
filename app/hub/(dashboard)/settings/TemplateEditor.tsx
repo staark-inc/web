@@ -1,7 +1,7 @@
 "use client";
 
 import { RotateCcw, Save } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type TemplateEditorProps = {
   template: {
@@ -31,6 +31,18 @@ export default function TemplateEditor({
   const [subject, setSubject] = useState(template.subject);
   const [body, setBody] = useState(template.body);
   const [active, setActive] = useState(template.active);
+
+  /*
+   * Next.js keeps this client component mounted when navigating
+   * between templates using search params. Sync local editor state
+   * whenever the selected server-side template changes so the form
+   * and live preview always represent the same template.
+   */
+  useEffect(() => {
+    setSubject(template.subject);
+    setBody(template.body);
+    setActive(template.active);
+  }, [template.key, template.subject, template.body, template.active]);
 
   const previewSubject = useMemo(
     () => renderPreview(subject, sampleValues),
