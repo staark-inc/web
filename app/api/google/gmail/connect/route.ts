@@ -20,11 +20,11 @@ function requiredEnv(name: string) {
   return value;
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   const session = await getSession();
 
   if (!session) {
-    return redirectTo("/hub/login");
+    return redirectTo("/hub/login", request);
   }
 
   const clientId =
@@ -49,12 +49,6 @@ export async function GET() {
       redirectUri
     );
 
-  /*
-   * CSRF protection.
-   *
-   * Callback-ul va trebui să primească
-   * exact același state.
-   */
   const state =
     crypto.randomBytes(32).toString(
       "hex"
@@ -66,19 +60,9 @@ export async function GET() {
 
   const authorizationUrl =
     oauth2Client.generateAuthUrl({
-      /*
-       * Required so we can receive a
-       * refresh token and keep Gmail
-       * connected while nobody is
-       * logged into Hub.
-       */
       access_type:
         "offline",
 
-      /*
-       * We want the refresh token on
-       * this initial connection.
-       */
       prompt:
         "consent",
 
@@ -104,12 +88,6 @@ export async function GET() {
       authorizationUrl,
       302
     );
-
-  /*
-   * Response.redirect() gives a standard
-   * Response, so convert it to headers
-   * we can attach our secure state cookie to.
-   */
 
   const headers =
     new Headers(response.headers);
