@@ -1,5 +1,7 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
+  ArrowLeft,
   BellDot,
   CircleDollarSign,
   FileCheck2,
@@ -92,6 +94,11 @@ export default async function NotificationPreferencesPage({
 
   return (
     <div className="hub-page hub-notification-preferences-page">
+      <Link href="/hub/profile" className="hub-back">
+        <ArrowLeft size={14} />
+        Back to profile
+      </Link>
+
       <header className="hub-page-header">
         <div>
           <span className="hub-eyebrow">PROFILE</span>
