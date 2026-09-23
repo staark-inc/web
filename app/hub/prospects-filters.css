@@ -1,0 +1,135 @@
+.hub-prospects-toolbar {
+  position: relative;
+}
+
+.hub-prospects-toolbar > select {
+  min-width: 142px;
+}
+
+.hub-prospects-more {
+  width: 100%;
+  border-top: 1px solid var(--hub-border);
+  margin-top: 2px;
+  padding-top: 10px;
+}
+
+.hub-prospects-more > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 10px;
+  border-radius: 9px;
+  cursor: pointer;
+  list-style: none;
+  color: var(--hub-muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.hub-prospects-more > summary::-webkit-details-marker {
+  display: none;
+}
+
+.hub-prospects-more > summary:hover {
+  background: var(--hub-surface-soft);
+  color: inherit;
+}
+
+.hub-prospects-more > summary > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.hub-prospects-more > summary > strong {
+  display: grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--hub-accent);
+  color: var(--hub-button-text, #fff);
+  font-size: 10px;
+}
+
+.hub-prospects-more-chevron {
+  transition: transform .16s ease;
+}
+
+.hub-prospects-more[open] .hub-prospects-more-chevron {
+  transform: rotate(180deg);
+}
+
+.hub-prospects-advanced-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px solid var(--hub-border);
+  border-radius: 12px;
+  background: var(--hub-surface-soft);
+}
+
+.hub-prospects-advanced-grid label {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.hub-prospects-advanced-grid label > span {
+  color: var(--hub-muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.hub-prospects-advanced-grid select {
+  width: 100%;
+  min-width: 0;
+  min-height: 38px;
+  padding: 0 10px;
+  border: 1px solid var(--hub-border);
+  border-radius: 9px;
+  background: var(--hub-surface);
+  color: inherit;
+}
+
+@media (max-width: 1180px) {
+  .hub-prospects-advanced-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 820px) {
+  .hub-prospects-toolbar > select {
+    flex: 1 1 160px;
+  }
+
+  .hub-prospects-advanced-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .hub-prospects-toolbar > select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .hub-prospects-more {
+    grid-column: 1 / -1;
+  }
+
+  .hub-prospects-more > summary {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .hub-prospects-advanced-grid {
+    grid-template-columns: 1fr;
+  }
+}
