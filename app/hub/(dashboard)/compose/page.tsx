@@ -62,18 +62,27 @@ export default async function HubComposePage({
     }),
   ]);
 
-  const recipients = contacts.map((contact) => ({
-    id: contact.id,
-    name: contact.name ?? contact.email,
-    email: contact.email,
-    company: contact.company ?? "",
-    kind: contact.clients.length > 0 ? "Client" : contact.leads.length > 0 ? "Lead" : "Contact",
-    leadService: contact.leads[0]?.service ?? "",
-    leadMessage: contact.leads[0]?.message ?? "",
-    lastThreadId: contact.threads[0]?.id ?? "",
-    lastThreadSubject: contact.threads[0]?.subject ?? "",
-    lastThreadAt: contact.threads[0]?.updatedAt.toISOString() ?? "",
-  }));
+  const recipients = contacts.map((contact) => {
+    const kind: "Contact" | "Lead" | "Client" =
+      contact.clients.length > 0
+        ? "Client"
+        : contact.leads.length > 0
+          ? "Lead"
+          : "Contact";
+
+    return {
+      id: contact.id,
+      name: contact.name ?? contact.email,
+      email: contact.email,
+      company: contact.company ?? "",
+      kind,
+      leadService: contact.leads[0]?.service ?? "",
+      leadMessage: contact.leads[0]?.message ?? "",
+      lastThreadId: contact.threads[0]?.id ?? "",
+      lastThreadSubject: contact.threads[0]?.subject ?? "",
+      lastThreadAt: contact.threads[0]?.updatedAt.toISOString() ?? "",
+    };
+  });
 
   const availableTemplates = templates
     .filter((template) => template.active)
