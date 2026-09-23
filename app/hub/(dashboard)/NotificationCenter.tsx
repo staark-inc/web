@@ -162,9 +162,10 @@ export default function NotificationCenter({
     <div className="hub-notification-center">
       <button
         type="button"
-        className={`hub-notification-trigger ${hasUnread ? "has-unread" : ""}`}
+        className={`hub-notification-trigger hub-compact-tooltip ${hasUnread ? "has-unread" : ""}`}
         aria-label="Notifications"
         aria-expanded={open}
+        data-tooltip="Notifications"
         onClick={() => setOpen((value) => !value)}
       >
         <Bell size={17} />
