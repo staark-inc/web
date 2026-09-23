@@ -8,6 +8,7 @@ import {
   Send,
 } from "lucide-react";
 
+import { createMailPreview } from "@/lib/mail-content";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -24,13 +25,6 @@ function formatDate(date: Date) {
     hour: "2-digit",
     minute: "2-digit",
   }).format(date);
-}
-
-function createPreview(value: string, maxLength = 150) {
-  const normalized = value.replace(/\s+/g, " ").trim();
-  return normalized.length <= maxLength
-    ? normalized
-    : `${normalized.slice(0, maxLength)}...`;
 }
 
 function normalizedStatus(value: string | undefined) {
@@ -223,7 +217,7 @@ export default async function HubSentPage({
 
                   <p>
                     <b>{row.latestDirection === "OUTBOUND" ? "You:" : "Reply:"}</b>{" "}
-                    {createPreview(row.preview)}
+                    {createMailPreview(row.preview)}
                   </p>
 
                   <div className="hub-sent-v2-meta">
