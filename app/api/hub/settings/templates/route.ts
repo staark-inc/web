@@ -13,9 +13,10 @@ function isTemplateKey(value: string): value is SystemEmailTemplateKey {
   return SYSTEM_EMAIL_TEMPLATE_KEYS.includes(value as SystemEmailTemplateKey);
 }
 
-function templateRedirect(key: string, params: string) {
+function templateRedirect(request: Request, key: string, params: string) {
   return redirectTo(
-    `/hub/settings?tab=templates&template=${encodeURIComponent(key)}&${params}`
+    `/hub/settings?tab=templates&template=${encodeURIComponent(key)}&${params}`,
+    request
   );
 }
 
@@ -23,14 +24,17 @@ export async function POST(request: Request) {
   const session = await getSession();
 
   if (!session) {
-    return redirectTo("/hub/login");
+    return redirectTo("/hub/login", request);
   }
 
   const formData = await request.formData();
   const key = String(formData.get("key") ?? "").trim();
 
   if (!isTemplateKey(key)) {
-    return redirectTo("/hub/settings?tab=templates&templateError=invalid_template");
+    return redirectTo(
+      "/hub/settings?tab=templates&templateError=invalid_template",
+      request
+    );
   }
 
   const intent = String(formData.get("intent") ?? "save");
@@ -38,7 +42,7 @@ export async function POST(request: Request) {
   const index = templates.findIndex((template) => template.key === key);
 
   if (index === -1) {
-    return templateRedirect(key, "templateError=invalid_template");
+    return templateRedirect(request, key, "templateError=invalid_template");
   }
 
   if (intent === "reset") {
@@ -49,7 +53,7 @@ export async function POST(request: Request) {
     const active = formData.getAll("active").map(String).includes("1");
 
     if (!subject || subject.length > 300 || !body || body.length > 20000) {
-      return templateRedirect(key, "templateError=invalid_template");
+      return templateRedirect(request, key, "templateError=invalid_template");
     }
 
     templates[index] = {
@@ -77,9 +81,9 @@ export async function POST(request: Request) {
       },
     });
 
-    return templateRedirect(key, "templateUpdated=1");
+    return templateRedirect(request, key, "templateUpdated=1");
   } catch (error) {
     console.error("Template update failed:", error);
-    return templateRedirect(key, "templateError=unknown");
+    return templateRedirect(request, key, "templateError=unknown");
   }
 }
