@@ -120,7 +120,9 @@ export default async function HubDashboardLayout({
 
         <Link
           href="/hub/compose"
-          className="hub-compose-button"
+          className="hub-compose-button hub-compact-tooltip"
+          aria-label="Compose"
+          data-tooltip="Compose"
         >
           <PenSquare size={18} />
           <span>Compose</span>
@@ -141,8 +143,9 @@ export default async function HubDashboardLayout({
           <div className="hub-user">
             <Link
               href="/hub/profile"
-              className="hub-user-profile-link"
+              className="hub-user-profile-link hub-compact-tooltip"
               aria-label="Open profile"
+              data-tooltip="Profile"
             >
               <div className="hub-user-avatar">
                 {initials}
