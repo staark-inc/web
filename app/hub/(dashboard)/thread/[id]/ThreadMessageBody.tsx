@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, MoreHorizontal } from "lucide-react";
+import { useState } from "react";
 
 function formatMessageBody(value: string) {
   const pattern = /<(https?:\/\/[^\s>]+)>|(https?:\/\/[^\s<>]+)/g;
@@ -39,25 +39,49 @@ function formatMessageBody(value: string) {
   return nodes;
 }
 
+function splitQuotedContent(value: string) {
+  const lines = value.split("\n");
+  const quoteStart = lines.findIndex((line, index) => {
+    if (index === 0) return false;
+
+    const clean = line.trim();
+    return (
+      /^On .+ wrote:$/i.test(clean) ||
+      /^În .+ a scris:$/i.test(clean) ||
+      /^Den .+ skrev .+:$/i.test(clean) ||
+      /^Am .+ schrieb .+:$/i.test(clean) ||
+      /^Le .+ a écrit\s*:$/i.test(clean) ||
+      /^>/.test(clean)
+    );
+  });
+
+  if (quoteStart === -1) {
+    return { main: value.trim(), quoted: "" };
+  }
+
+  return {
+    main: lines.slice(0, quoteStart).join("\n").trim(),
+    quoted: lines.slice(quoteStart).join("\n").trim(),
+  };
+}
+
 export default function ThreadMessageBody({ body }: { body: string }) {
   const [expanded, setExpanded] = useState(false);
-  const [hydrated, setHydrated] = useState(false);
-
-  useEffect(() => {
-    setHydrated(true);
-  }, []);
+  const [showQuoted, setShowQuoted] = useState(false);
 
   const normalizedBody = body.replace(/\r\n?/g, "\n");
-  const isLong = normalizedBody.length > 1400 || normalizedBody.split("\n").length > 22;
-  const preview = isLong ? normalizedBody.slice(0, 1000).trimEnd() : normalizedBody;
-  const visibleBody = isLong && !expanded ? preview : normalizedBody;
+  const { main, quoted } = splitQuotedContent(normalizedBody);
+  const isLong = main.length > 1400 || main.split("\n").length > 22;
+  const preview = isLong ? main.slice(0, 1000).trimEnd() : main;
+  const visibleBody = isLong && !expanded ? preview : main;
 
   return (
     <div className="hub-thread-message-body">
       <div className="hub-thread-message-text">
-        {hydrated ? formatMessageBody(visibleBody) : visibleBody}
+        {formatMessageBody(visibleBody)}
         {isLong && !expanded ? "…" : null}
       </div>
+
       {isLong && (
         <button
           className="hub-thread-expand"
@@ -68,6 +92,27 @@ export default function ThreadMessageBody({ body }: { body: string }) {
           {expanded ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
           {expanded ? "Show less" : "Show full message"}
         </button>
+      )}
+
+      {quoted && (
+        <div className="hub-thread-quoted-wrap">
+          <button
+            className="hub-thread-quoted-toggle"
+            type="button"
+            onClick={() => setShowQuoted((value) => !value)}
+            aria-expanded={showQuoted}
+            title={showQuoted ? "Hide quoted text" : "Show quoted text"}
+          >
+            <MoreHorizontal size={16} />
+            <span>{showQuoted ? "Hide quoted text" : "Show quoted text"}</span>
+          </button>
+
+          {showQuoted && (
+            <div className="hub-thread-quoted-text">
+              {formatMessageBody(quoted)}
+            </div>
+          )}
+        </div>
       )}
     </div>
   );
