@@ -1,29 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 function formatMessageBody(value: string) {
-  const pattern = /(\S[^\n<]*?)?<(https?:\/\/[^\s>]+)>|(https?:\/\/[^\s<>]+)/g;
+  const pattern = /<(https?:\/\/[^\s>]+)>|(https?:\/\/[^\s<>]+)/g;
   const nodes: React.ReactNode[] = [];
   let lastIndex = 0;
   let match: RegExpExecArray | null;
   let key = 0;
 
   while ((match = pattern.exec(value)) !== null) {
-    const [full, label, wrappedUrl, bareUrl] = match;
+    const [full, wrappedUrl, bareUrl] = match;
     const url = wrappedUrl ?? bareUrl;
-    let start = match.index;
-    if (wrappedUrl && label) start += full.indexOf(label);
-    if (start > lastIndex) nodes.push(value.slice(lastIndex, start));
+    const start = match.index;
 
-    let text = label?.trim() || url;
-    if (!label) {
-      try {
-        text = new URL(url).hostname.replace(/^www\./, "");
-      } catch {
-        text = url;
-      }
+    if (start > lastIndex) {
+      nodes.push(value.slice(lastIndex, start));
+    }
+
+    let text = url;
+    try {
+      text = new URL(url).hostname.replace(/^www\./, "");
+    } catch {
+      text = url;
     }
 
     nodes.push(
@@ -31,6 +31,7 @@ function formatMessageBody(value: string) {
         {text}
       </a>
     );
+
     lastIndex = match.index + full.length;
   }
 
@@ -40,13 +41,21 @@ function formatMessageBody(value: string) {
 
 export default function ThreadMessageBody({ body }: { body: string }) {
   const [expanded, setExpanded] = useState(false);
-  const isLong = body.length > 1400 || body.split("\n").length > 22;
-  const preview = isLong ? body.slice(0, 1000).trimEnd() : body;
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  const normalizedBody = body.replace(/\r\n?/g, "\n");
+  const isLong = normalizedBody.length > 1400 || normalizedBody.split("\n").length > 22;
+  const preview = isLong ? normalizedBody.slice(0, 1000).trimEnd() : normalizedBody;
+  const visibleBody = isLong && !expanded ? preview : normalizedBody;
 
   return (
     <div className="hub-thread-message-body">
       <div className="hub-thread-message-text">
-        {formatMessageBody(isLong && !expanded ? preview : body)}
+        {hydrated ? formatMessageBody(visibleBody) : visibleBody}
         {isLong && !expanded ? "…" : null}
       </div>
       {isLong && (
