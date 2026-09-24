@@ -65,25 +65,128 @@ function readOffer(data: FormData): { error: string } | { data: OfferFields } {
   };
 }
 
+function clientNameForLead(contact: {
+  company: string | null;
+  name: string | null;
+  email: string | null;
+  phone: string | null;
+}) {
+  return contact.company || contact.name || contact.email || contact.phone || "New client";
+}
+
 export async function createOffer(_state: OfferActionState, formData: FormData): Promise<OfferActionState> {
   await requireAdmin();
-  const clientId = field(formData, "clientId");
+
+  const submittedClientId = field(formData, "clientId");
+  const leadId = field(formData, "leadId");
   const result = readOffer(formData);
   if ("error" in result) return { error: result.error, success: false };
 
-  const client = await prisma.client.findUnique({ where: { id: clientId }, select: { id: true } });
-  if (!client) return { error: "Select an existing client.", success: false };
-
   let offerId: string;
+  let clientId: string;
+
   try {
-    const offer = await prisma.offer.create({ data: { clientId, ...result.data }, select: { id: true } });
-    offerId = offer.id;
+    const created = await prisma.$transaction(async (tx) => {
+      if (leadId) {
+        const lead = await tx.lead.findUnique({
+          where: { id: leadId },
+          select: {
+            id: true,
+            status: true,
+            clientId: true,
+            contactId: true,
+            contact: {
+              select: {
+                name: true,
+                company: true,
+                email: true,
+                phone: true,
+              },
+            },
+          },
+        });
+
+        if (!lead) throw new Error("LEAD_NOT_FOUND");
+        if (lead.status === "LOST") throw new Error("LEAD_LOST");
+        if (lead.status === "WON") throw new Error("LEAD_WON");
+
+        let linkedClientId = lead.clientId;
+
+        if (!linkedClientId) {
+          const client = await tx.client.create({
+            data: {
+              name: clientNameForLead(lead.contact),
+              billingEmail: lead.contact.email,
+              phone: lead.contact.phone,
+              contacts: {
+                connect: { id: lead.contactId },
+              },
+            },
+            select: { id: true },
+          });
+
+          linkedClientId = client.id;
+        }
+
+        await tx.lead.update({
+          where: { id: lead.id },
+          data: {
+            clientId: linkedClientId,
+            status: "QUALIFIED",
+          },
+        });
+
+        const offer = await tx.offer.create({
+          data: {
+            clientId: linkedClientId,
+            leadId: lead.id,
+            ...result.data,
+          },
+          select: { id: true },
+        });
+
+        return { offerId: offer.id, clientId: linkedClientId, leadId: lead.id };
+      }
+
+      const client = await tx.client.findUnique({
+        where: { id: submittedClientId },
+        select: { id: true },
+      });
+
+      if (!client) throw new Error("CLIENT_NOT_FOUND");
+
+      const offer = await tx.offer.create({
+        data: {
+          clientId: client.id,
+          ...result.data,
+        },
+        select: { id: true },
+      });
+
+      return { offerId: offer.id, clientId: client.id, leadId: null };
+    });
+
+    offerId = created.offerId;
+    clientId = created.clientId;
+
+    if (created.leadId) {
+      revalidatePath("/hub/leads");
+      revalidatePath(`/hub/leads/${created.leadId}`);
+    }
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message === "LEAD_NOT_FOUND") return { error: "Lead not found.", success: false };
+      if (error.message === "LEAD_LOST") return { error: "A lost lead cannot be used to create an offer.", success: false };
+      if (error.message === "LEAD_WON") return { error: "This lead is already won.", success: false };
+      if (error.message === "CLIENT_NOT_FOUND") return { error: "Select an existing client.", success: false };
+    }
+
     console.error("[HUB] Could not create offer:", error);
     return { error: "Could not create the offer.", success: false };
   }
 
   revalidatePath("/hub/offers");
+  revalidatePath("/hub/clients");
   revalidatePath(`/hub/clients/${clientId}`);
   redirect(`/hub/offers/${offerId}`);
 }
@@ -192,4 +295,3 @@ export async function deleteOffer(formData: FormData) {
 
   redirect("/hub/offers");
 }
-
