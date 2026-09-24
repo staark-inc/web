@@ -52,7 +52,13 @@ type PageProps = {
   }>;
 };
 
-type InboxView = "inbox" | "unread" | "other" | "all";
+type InboxView =
+  | "inbox"
+  | "needs-reply"
+  | "unread"
+  | "replied"
+  | "other"
+  | "all";
 
 function inboxHref(view: InboxView, query: string) {
   const params = new URLSearchParams();
@@ -66,7 +72,13 @@ export default async function HubInboxPage({ searchParams }: PageProps) {
   const { q, view } = await searchParams;
   const query = q?.trim() ?? "";
   const activeView: InboxView =
-    view === "unread" || view === "other" || view === "all" ? view : "inbox";
+    view === "needs-reply" ||
+    view === "unread" ||
+    view === "replied" ||
+    view === "other" ||
+    view === "all"
+      ? view
+      : "inbox";
 
   const threads = await prisma.thread.findMany({
     where: {
@@ -119,17 +131,15 @@ export default async function HubInboxPage({ searchParams }: PageProps) {
     include: {
       contact: true,
       messages: {
-        orderBy: [
-          {
-            sentAt: {
-              sort: "desc",
-              nulls: "last",
-            },
-          },
-          {
-            createdAt: "desc",
-          },
-        ],
+        /*
+         * Inbound Gmail messages use createdAt as their real Gmail date,
+         * while outbound messages also get sentAt. Ordering by sentAt with
+         * nulls last made an older outbound message look newer than a fresh
+         * inbound reply. createdAt is the common activity timestamp here.
+         */
+        orderBy: {
+          createdAt: "desc",
+        },
         take: 1,
       },
       _count: {
@@ -148,11 +158,6 @@ export default async function HubInboxPage({ searchParams }: PageProps) {
     },
   });
 
-  /*
-   * Thread.updatedAt only changes when the Thread itself is written.
-   * Creating a related Message does not reliably make it the newest thread.
-   * Sort from the latest actual email timestamp instead.
-   */
   const sortedThreads = [...threads].sort((left, right) => {
     const leftMessage = left.messages[0];
     const rightMessage = right.messages[0];
@@ -216,30 +221,6 @@ export default async function HubInboxPage({ searchParams }: PageProps) {
     (thread) => !otherThreads.has(thread.id)
   );
 
-  const counts: Record<InboxView, number> = {
-    inbox: customerThreads.length,
-    unread: customerThreads.filter((thread) => thread._count.messages > 0).length,
-    other: otherThreads.size,
-    all: sortedThreads.length,
-  };
-
-  const visibleThreads = sortedThreads.filter((thread) => {
-    if (activeView === "all") return true;
-    if (activeView === "other") return otherThreads.has(thread.id);
-
-    return (
-      !otherThreads.has(thread.id) &&
-      (activeView !== "unread" || thread._count.messages > 0)
-    );
-  });
-
-  const messageCountMap = new Map<string, number>();
-  for (const item of messageCounts) {
-    if (item.threadId) {
-      messageCountMap.set(item.threadId, item._count._all);
-    }
-  }
-
   const unreadMessageCount = customerThreads.reduce(
     (total, thread) => total + thread._count.messages,
     0
@@ -253,6 +234,44 @@ export default async function HubInboxPage({ searchParams }: PageProps) {
     (thread) => thread.messages[0]?.direction === "OUTBOUND"
   ).length;
 
+  const counts: Record<InboxView, number> = {
+    inbox: customerThreads.length,
+    "needs-reply": awaitingReplyCount,
+    unread: customerThreads.filter((thread) => thread._count.messages > 0).length,
+    replied: repliedCount,
+    other: otherThreads.size,
+    all: sortedThreads.length,
+  };
+
+  const visibleThreads = sortedThreads.filter((thread) => {
+    if (activeView === "all") return true;
+    if (activeView === "other") return otherThreads.has(thread.id);
+    if (otherThreads.has(thread.id)) return false;
+
+    if (activeView === "needs-reply") {
+      return thread.messages[0]?.direction === "INBOUND";
+    }
+
+    if (activeView === "unread") {
+      return thread._count.messages > 0;
+    }
+
+    if (activeView === "replied") {
+      return thread.messages[0]?.direction === "OUTBOUND";
+    }
+
+    return true;
+  });
+
+  const messageCountMap = new Map<string, number>();
+  for (const item of messageCounts) {
+    if (item.threadId) {
+      messageCountMap.set(item.threadId, item._count._all);
+    }
+  }
+
+  const returnTo = inboxHref(activeView, query);
+
   return (
     <div className="hub-page hub-inbox-v2-page">
       <header className="hub-inbox-v2-head">
@@ -264,7 +283,7 @@ export default async function HubInboxPage({ searchParams }: PageProps) {
 
         <div className="hub-inbox-v2-actions">
           <Link
-            href={inboxHref(activeView, query)}
+            href={returnTo}
             className="hub-secondary-button"
             aria-label="Refresh inbox"
           >
@@ -340,7 +359,9 @@ export default async function HubInboxPage({ searchParams }: PageProps) {
       <nav className="hub-inbox-v2-tabs" aria-label="Inbox views">
         {([
           ["inbox", "Inbox"],
+          ["needs-reply", "Needs reply"],
           ["unread", "Unread"],
+          ["replied", "Replied"],
           ["other", "Other"],
           ["all", "All mail"],
         ] as const).map(([key, label]) => (
@@ -375,16 +396,24 @@ export default async function HubInboxPage({ searchParams }: PageProps) {
               <h2>
                 {activeView === "unread"
                   ? "All caught up"
-                  : activeView === "other"
-                    ? "No other messages"
-                    : "Your inbox is empty"}
+                  : activeView === "needs-reply"
+                    ? "Nothing needs a reply"
+                    : activeView === "replied"
+                      ? "No replied conversations"
+                      : activeView === "other"
+                        ? "No other messages"
+                        : "Your inbox is empty"}
               </h2>
               <p>
                 {activeView === "other"
                   ? "Previously imported automated messages appear here. Nothing is deleted."
                   : activeView === "unread"
                     ? "You have no unread customer conversations."
-                    : "New customer conversations will appear here automatically."}
+                    : activeView === "needs-reply"
+                      ? "No customer conversation is currently waiting for your reply."
+                      : activeView === "replied"
+                        ? "No customer conversation currently has your message as the latest reply."
+                        : "New customer conversations will appear here automatically."}
               </p>
             </>
           )}
@@ -417,7 +446,7 @@ export default async function HubInboxPage({ searchParams }: PageProps) {
 
             return (
               <Link
-                href={`/hub/thread/${thread.id}`}
+                href={`/hub/thread/${thread.id}?returnTo=${encodeURIComponent(returnTo)}`}
                 className={`hub-inbox-v2-row ${
                   hasUnread ? "hub-inbox-v2-row-unread" : ""
                 }`}
