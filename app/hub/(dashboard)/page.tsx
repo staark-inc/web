@@ -1578,7 +1578,10 @@ const githubPromise = getGitHubOverview()
                         )
                         .join("")
                         .toUpperCase()
-                    : lead.contact.email
+                    : (lead.contact.email ||
+                        lead.contact.phone ||
+                        lead.contact.facebook ||
+                        "??")
                         .slice(0, 2)
                         .toUpperCase();
 
@@ -1595,7 +1598,10 @@ const githubPromise = getGitHubOverview()
                     <div className="hub-overview-main">
                       <strong>
                         {lead.contact.name ||
-                          lead.contact.email}
+                          lead.contact.email ||
+                          lead.contact.phone ||
+                          lead.contact.facebook ||
+                          "Unknown contact"}
                       </strong>
 
                       <span>
