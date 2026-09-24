@@ -1,0 +1,56 @@
+.hub-brand {
+  color: inherit;
+  text-decoration: none;
+}
+
+.hub-brand-icon {
+  overflow: hidden;
+  background: #fff;
+}
+
+.hub-brand-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.hub-logout-form {
+  flex: 0 0 auto;
+}
+
+.hub-dashboard-sidebar-compact .hub-brand {
+  justify-content: center;
+  padding-inline: 0;
+}
+
+.hub-dashboard-sidebar-compact .hub-brand-text {
+  display: none;
+}
+
+.hub-dashboard-sidebar-compact .hub-user {
+  justify-content: center;
+  gap: 6px;
+  padding-inline: 0;
+}
+
+.hub-dashboard-sidebar-compact .hub-user-profile-link {
+  flex: 0 0 auto;
+}
+
+.hub-dashboard-sidebar-compact .hub-user-info {
+  display: none;
+}
+
+.hub-dashboard-sidebar-compact .hub-logout-form {
+  display: block;
+}
+
+.hub-dashboard-sidebar-compact .hub-logout-button {
+  display: grid;
+}
+
+@media (max-width: 850px) and (min-width: 601px) {
+  .hub-icon-button.hub-logout-button {
+    display: grid;
+  }
+}
