@@ -27,6 +27,7 @@ import "./prospects-buttons-compact.css";
 import "./prospects-top10.css";
 import "./mail-workspace-v2.css";
 import "./thread-v2.css";
+import "./smoke-sidebar-fixes.css";
 
 export const metadata: Metadata = {
   title: "Staark Hub",
