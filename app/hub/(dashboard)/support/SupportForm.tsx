@@ -57,6 +57,8 @@ export default function SupportForm({
     options.projects.some((project) => project.id === projectId && project.threadId === thread.id)
   );
 
+  const existingLinkedClient = Boolean(request?.clientId);
+
   return (
     <form action={action} className="hub-client-form">
       {request && <input type="hidden" name="requestId" value={request.id} />}
@@ -68,10 +70,26 @@ export default function SupportForm({
         </div>
         <div className="hub-client-form-field">
           <label htmlFor="support-client">Client</label>
-          <select id="support-client" name={request?.clientId ? undefined : "clientId"} value={clientId} disabled={pending || Boolean(request?.clientId)} required onChange={(event) => { setClientId(event.target.value); setProjectId(""); setThreadId(""); }}>
-            <option value="" disabled>Select a client</option>
+          <select
+            id="support-client"
+            name={existingLinkedClient ? undefined : "clientId"}
+            value={clientId}
+            disabled={pending || existingLinkedClient}
+            required={!request}
+            onChange={(event) => {
+              setClientId(event.target.value);
+              setProjectId("");
+              setThreadId("");
+            }}
+          >
+            <option value="" disabled={!request}>
+              {request ? "Unmatched / no client linked" : "Select a client"}
+            </option>
             {options.clients.map((client) => <option key={client.id} value={client.id}>{client.name}</option>)}
           </select>
+          {request && !request.clientId && (
+            <small>This request can be saved without a client. Link one later when the requester is identified.</small>
+          )}
         </div>
         <div className="hub-client-form-field">
           <label htmlFor="support-project">Project (optional)</label>
