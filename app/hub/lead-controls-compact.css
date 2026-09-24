@@ -2,6 +2,12 @@
   padding: 14px 16px;
 }
 
+.hub-lead-v2-contact-card + .hub-lead-v2-actions-stack {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
 .hub-lead-v2-detail-page .hub-lead-v2-actions-stack > div + div {
   margin-top: 12px;
   padding-top: 12px;
