@@ -167,8 +167,7 @@ export async function POST(
      */
     if (
       existingThread?.contact &&
-      existingThread.contact.email
-        .toLowerCase() !== to
+      existingThread.contact.email?.toLowerCase() !== to
     ) {
       return NextResponse.json(
         {
