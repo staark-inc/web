@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Building2, CalendarDays, ExternalLink, FolderKanban, Mail } from "lucide-react";
+import { ArrowLeft, Building2, CalendarDays, ExternalLink, FolderKanban, Mail, Target } from "lucide-react";
 
 import { formatOfferAmount, offerStatusLabels } from "@/lib/offers";
 import { prisma } from "@/lib/prisma";
@@ -21,6 +21,7 @@ export default async function OfferDetailPage({ params }: { params: Promise<{ id
     where: { id },
     include: {
       client: { select: { id: true, name: true } },
+      lead: { select: { id: true, service: true, status: true } },
       project: { select: { id: true, name: true } },
     },
   });
@@ -48,9 +49,18 @@ export default async function OfferDetailPage({ params }: { params: Promise<{ id
           )}
         </div>
         <div className="hub-client-side">
-          <div className="hub-client-panel"><h2>Client</h2><Link className="hub-offer-client-link" href={`/hub/clients/${offer.clientId}`}><Building2 size={16} />{offer.client.name}</Link></div>
+          <div className="hub-client-panel">
+            <h2>Client</h2>
+            <Link className="hub-offer-client-link" href={`/hub/clients/${offer.clientId}`}><Building2 size={16} />{offer.client.name}</Link>
+            {offer.lead && (
+              <Link className="hub-offer-client-link" href={`/hub/leads/${offer.lead.id}`}>
+                <Target size={16} />
+                {offer.lead.service || "Linked lead"} · {offer.lead.status}
+              </Link>
+            )}
+          </div>
           <div className="hub-client-panel"><h2>Decision</h2>
-            <p className="hub-client-empty">The client can accept or decline from the secure offer link. The status updates automatically.</p>
+            <p className="hub-client-empty">The client can accept or decline from the secure offer link. Linked leads become won automatically when the offer is accepted.</p>
             {offer.sharedAt && <p className="hub-offer-timestamp hub-offer-timestamp-shared">Shared {formatDate(offer.sharedAt)}</p>}
             {offer.viewedAt && <p className="hub-offer-timestamp hub-offer-timestamp-viewed">Viewed {formatDate(offer.viewedAt)}</p>}
             {offer.decidedAt && <p className="hub-offer-timestamp hub-offer-timestamp-decided">Decision {formatDate(offer.decidedAt)}</p>}
