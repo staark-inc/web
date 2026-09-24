@@ -15,6 +15,7 @@ import {
   FileText,
   CreditCard,
   LifeBuoy,
+  Sparkles,
 } from "lucide-react";
 
 type HubNavProps = {
@@ -41,6 +42,7 @@ export default function HubNav({
   const isContacts = pathname.startsWith("/hub/contacts");
   const isLeads = pathname.startsWith("/hub/leads");
   const isProspects = pathname.startsWith("/hub/prospects");
+  const isOpportunities = pathname.startsWith("/hub/opportunities");
 
   const isClients =
     pathname === "/hub/clients" ||
@@ -142,6 +144,18 @@ export default function HubNav({
       >
         <Search size={17} />
         <span>Prospects</span>
+      </Link>
+
+      <Link
+        href="/hub/opportunities"
+        aria-label="Opportunities"
+        data-tooltip="Opportunities"
+        className={`hub-nav-item hub-compact-tooltip ${
+          isOpportunities ? "hub-nav-item-active" : ""
+        }`}
+      >
+        <Sparkles size={17} />
+        <span>Opportunities</span>
       </Link>
 
       <Link
