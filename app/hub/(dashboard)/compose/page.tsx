@@ -14,13 +14,12 @@ type PageProps = {
 
 export const dynamic = "force-dynamic";
 
-export default async function HubComposePage({
-  searchParams,
-}: PageProps) {
+export default async function HubComposePage({ searchParams }: PageProps) {
   const params = await searchParams;
 
   const [contacts, templates, settings] = await Promise.all([
     prisma.contact.findMany({
+      where: { email: { not: null } },
       orderBy: { updatedAt: "desc" },
       take: 120,
       select: {
@@ -62,7 +61,9 @@ export default async function HubComposePage({
     }),
   ]);
 
-  const recipients = contacts.map((contact) => {
+  const recipients = contacts.flatMap((contact) => {
+    if (!contact.email) return [];
+
     const kind: "Contact" | "Lead" | "Client" =
       contact.clients.length > 0
         ? "Client"
@@ -70,7 +71,7 @@ export default async function HubComposePage({
           ? "Lead"
           : "Contact";
 
-    return {
+    return [{
       id: contact.id,
       name: contact.name ?? contact.email,
       email: contact.email,
@@ -81,7 +82,7 @@ export default async function HubComposePage({
       lastThreadId: contact.threads[0]?.id ?? "",
       lastThreadSubject: contact.threads[0]?.subject ?? "",
       lastThreadAt: contact.threads[0]?.updatedAt.toISOString() ?? "",
-    };
+    }];
   });
 
   const availableTemplates = templates
