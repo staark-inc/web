@@ -1,8 +1,8 @@
+import Image from "next/image";
 import Link from "next/link";
 import {
   PenSquare,
   LogOut,
-  Sparkles,
 } from "lucide-react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -107,16 +107,23 @@ export default async function HubDashboardLayout({
       <LiveUpdates />
 
       <aside className="hub-sidebar">
-        <div className="hub-brand">
+        <Link href="/hub" className="hub-brand" aria-label="Staark Hub overview">
           <div className="hub-brand-icon">
-            <Sparkles size={19} />
+            <Image
+              src="/logo.png"
+              alt=""
+              width={38}
+              height={38}
+              className="hub-brand-logo"
+              priority
+            />
           </div>
 
           <div className="hub-brand-text">
             <strong>Staark</strong>
             <span>Hub</span>
           </div>
-        </div>
+        </Link>
 
         <Link
           href="/hub/compose"
@@ -164,11 +171,13 @@ export default async function HubDashboardLayout({
             <form
               action="/api/hub/logout"
               method="post"
+              className="hub-logout-form"
             >
               <button
                 type="submit"
-                className="hub-icon-button"
+                className="hub-icon-button hub-logout-button hub-compact-tooltip"
                 aria-label="Sign out"
+                data-tooltip="Sign out"
                 title="Sign out"
               >
                 <LogOut size={17} />
