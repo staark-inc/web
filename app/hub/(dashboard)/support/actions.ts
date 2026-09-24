@@ -31,7 +31,6 @@ function field(data: FormData, name: string) {
   return typeof value === "string" ? value.trim() : "";
 }
 
-
 function jsonRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === "object" && !Array.isArray(value)
     ? { ...(value as Record<string, unknown>) }
@@ -105,8 +104,8 @@ export async function replyToWordPressTicket(formData: FormData) {
   redirect(`/hub/support/${encodeURIComponent(requestId)}?reply=sent`);
 }
 
-async function readRequest(data: FormData) {
-  const clientId = field(data, "clientId");
+async function readRequest(data: FormData, { requireClient }: { requireClient: boolean }) {
+  const clientId = field(data, "clientId") || null;
   const projectId = field(data, "projectId") || null;
   const threadId = field(data, "threadId") || null;
   const title = field(data, "title");
@@ -127,15 +126,23 @@ async function readRequest(data: FormData) {
     return { error: "Time must be between 0 and 600000 minutes." } as const;
   }
 
-  const client = await prisma.client.findUnique({ where: { id: clientId }, select: { id: true } });
-  if (!client) return { error: "Select an existing client." } as const;
+  if (requireClient && !clientId) return { error: "Select an existing client." } as const;
 
-  const project = projectId
+  if (clientId) {
+    const client = await prisma.client.findUnique({ where: { id: clientId }, select: { id: true } });
+    if (!client) return { error: "Select an existing client." } as const;
+  }
+
+  if (!clientId && (projectId || threadId)) {
+    return { error: "Link a client before selecting a project or conversation." } as const;
+  }
+
+  const project = projectId && clientId
     ? await prisma.project.findFirst({ where: { id: projectId, clientId }, select: { id: true, threadId: true } })
     : null;
   if (projectId && !project) return { error: "Select a project belonging to this client." } as const;
 
-  if (threadId) {
+  if (threadId && clientId) {
     const thread = await prisma.thread.findFirst({
       where: {
         id: threadId,
@@ -168,7 +175,7 @@ async function readRequest(data: FormData) {
 
 export async function createSupportRequest(_state: SupportActionState, formData: FormData): Promise<SupportActionState> {
   await requireAdmin();
-  const result = await readRequest(formData);
+  const result = await readRequest(formData, { requireClient: true });
   if ("error" in result) return { error: result.error ?? "Invalid request.", success: false };
 
   let id: string;
@@ -187,7 +194,7 @@ export async function createSupportRequest(_state: SupportActionState, formData:
   }
 
   revalidatePath("/hub/support");
-  revalidatePath(`/hub/clients/${result.data.clientId}`);
+  if (result.data.clientId) revalidatePath(`/hub/clients/${result.data.clientId}`);
   if (result.data.projectId) revalidatePath(`/hub/projects/${result.data.projectId}`);
   redirect(`/hub/support/${id}`);
 }
@@ -195,12 +202,17 @@ export async function createSupportRequest(_state: SupportActionState, formData:
 export async function updateSupportRequest(_state: SupportActionState, formData: FormData): Promise<SupportActionState> {
   await requireAdmin();
   const id = field(formData, "requestId");
-  const existing = await prisma.supportRequest.findUnique({ where: { id }, select: { clientId: true, projectId: true, status: true, resolvedAt: true } });
+  const existing = await prisma.supportRequest.findUnique({
+    where: { id },
+    select: { clientId: true, projectId: true, status: true, resolvedAt: true },
+  });
   if (!existing) return { error: "Support request not found.", success: false };
 
-  const result = await readRequest(formData);
+  const result = await readRequest(formData, { requireClient: false });
   if ("error" in result) return { error: result.error ?? "Invalid request.", success: false };
-  if (existing.clientId && existing.clientId !== result.data.clientId) return { error: "A support request cannot be moved to another client.", success: false };
+  if (existing.clientId && existing.clientId !== result.data.clientId) {
+    return { error: "A support request cannot be moved to another client.", success: false };
+  }
 
   try {
     await prisma.supportRequest.update({
@@ -220,7 +232,7 @@ export async function updateSupportRequest(_state: SupportActionState, formData:
   revalidatePath("/hub/support");
   revalidatePath(`/hub/support/${id}`);
   if (existing.clientId) revalidatePath(`/hub/clients/${existing.clientId}`);
-  revalidatePath(`/hub/clients/${result.data.clientId}`);
+  if (result.data.clientId) revalidatePath(`/hub/clients/${result.data.clientId}`);
   if (existing.projectId) revalidatePath(`/hub/projects/${existing.projectId}`);
   if (result.data.projectId) revalidatePath(`/hub/projects/${result.data.projectId}`);
   return { error: null, success: true };
