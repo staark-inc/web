@@ -26,6 +26,7 @@ import { prisma } from "@/lib/prisma";
 import { getStripeConfigStatus } from "@/lib/stripe";
 import { GmailWatchButton, StripeTestButton } from "./IntegrationActions";
 import TemplateEditor from "./TemplateEditor";
+import WordPressConnectorPanel from "./WordPressConnectorPanel";
 
 export const dynamic = "force-dynamic";
 
@@ -103,6 +104,64 @@ export default async function HubSettingsPage({
       : { connected: false as const, data: null };
 
   const stripeStatus = getStripeConfigStatus();
+
+  let wordpressSites: Array<{
+    id: string;
+    siteName: string;
+    siteUrl: string;
+    status: string;
+    hubVersion: string | null;
+    lastSeenAt: string | null;
+    clientName: string | null;
+    projectName: string | null;
+  }> = [];
+  let wordpressClients: Array<{
+    id: string;
+    name: string;
+    projects: Array<{ id: string; name: string }>;
+  }> = [];
+
+  if (activeTab === "integrations") {
+    const [siteRows, clientRows] = await Promise.all([
+      prisma.wordPressSite.findMany({
+        orderBy: [{ lastSeenAt: "desc" }, { updatedAt: "desc" }],
+        take: 12,
+        select: {
+          id: true,
+          siteName: true,
+          siteUrl: true,
+          status: true,
+          hubVersion: true,
+          lastSeenAt: true,
+          client: { select: { name: true } },
+          project: { select: { name: true } },
+        },
+      }),
+      prisma.client.findMany({
+        orderBy: { name: "asc" },
+        select: {
+          id: true,
+          name: true,
+          projects: {
+            orderBy: { name: "asc" },
+            select: { id: true, name: true },
+          },
+        },
+      }),
+    ]);
+
+    wordpressSites = siteRows.map((site) => ({
+      id: site.id,
+      siteName: site.siteName,
+      siteUrl: site.siteUrl,
+      status: site.status,
+      hubVersion: site.hubVersion,
+      lastSeenAt: site.lastSeenAt?.toISOString() ?? null,
+      clientName: site.client?.name ?? null,
+      projectName: site.project?.name ?? null,
+    }));
+    wordpressClients = clientRows;
+  }
 
   return (
     <div className="hub-page hub-settings-page hub-settings-v2-page">
@@ -279,11 +338,13 @@ export default async function HubSettingsPage({
             <div>
               <span className="hub-settings-v2-kicker">CONNECTED SERVICES</span>
               <h2>Integrations</h2>
-              <p>Manage the external services used by Staark Hub. Secrets stay in server environment variables.</p>
+              <p>Manage the external services used by Staark Hub. Sensitive credentials remain server-side.</p>
             </div>
           </div>
 
           <section className="hub-settings-v2-integration-grid">
+            <WordPressConnectorPanel sites={wordpressSites} clients={wordpressClients} />
+
             <article className="hub-settings-v2-integration-card">
               <div className="hub-settings-v2-integration-card-head">
                 <span className="hub-settings-v2-integration-icon"><Mail size={19} /></span>

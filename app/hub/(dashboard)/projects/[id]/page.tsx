@@ -27,6 +27,7 @@ import ProjectActivity from "./ProjectActivity";
 import ProjectStatusMenu from "./ProjectStatusMenu";
 import LinkThreadForm from "./LinkThreadForm";
 import ProjectDemo from "./ProjectDemo";
+import ProjectWordPressPanel from "./ProjectWordPressPanel";
 
 export const dynamic = "force-dynamic";
 
@@ -89,6 +90,19 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
       supportRequests: {
         orderBy: { updatedAt: "desc" },
         select: { id: true, title: true, status: true },
+      },
+      wordpressSites: {
+        orderBy: [{ lastSeenAt: "desc" }, { createdAt: "desc" }],
+        select: {
+          id: true,
+          siteName: true,
+          siteUrl: true,
+          adminUrl: true,
+          status: true,
+          wordpressVersion: true,
+          hubVersion: true,
+          lastSeenAt: true,
+        },
       },
       demo: true,
     },
@@ -357,6 +371,16 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
           </div>
 
           <div className="hub-client-side">
+            <ProjectWordPressPanel
+              projectId={project.id}
+              clientId={project.clientId}
+              clientName={project.client.name}
+              sites={project.wordpressSites.map((site) => ({
+                ...site,
+                lastSeenAt: site.lastSeenAt?.toISOString() ?? null,
+              }))}
+            />
+
             <ProjectMaterials projectId={project.id} materials={project.materials} />
 
             <div className="hub-client-panel">
