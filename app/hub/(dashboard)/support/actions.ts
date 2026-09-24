@@ -1,5 +1,7 @@
 "use server";
 
+import { randomUUID } from "node:crypto";
+
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -27,6 +29,80 @@ async function requireAdmin() {
 function field(data: FormData, name: string) {
   const value = data.get(name);
   return typeof value === "string" ? value.trim() : "";
+}
+
+
+function jsonRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? { ...(value as Record<string, unknown>) }
+    : {};
+}
+
+function jsonObjectArray(value: unknown): Record<string, unknown>[] {
+  return Array.isArray(value)
+    ? value.filter(
+        (item): item is Record<string, unknown> =>
+          Boolean(item) && typeof item === "object" && !Array.isArray(item)
+      )
+    : [];
+}
+
+export async function replyToWordPressTicket(formData: FormData) {
+  await requireAdmin();
+
+  const requestId = field(formData, "requestId");
+  const body = field(formData, "reply");
+
+  if (!requestId || body.length < 1 || body.length > 5000) {
+    redirect(`/hub/support/${encodeURIComponent(requestId || "missing")}?reply=invalid`);
+  }
+
+  const sync = await prisma.wordPressTicketSync.findUnique({
+    where: { supportRequestId: requestId },
+    select: {
+      id: true,
+      payload: true,
+    },
+  });
+
+  if (!sync) {
+    redirect(`/hub/support/${encodeURIComponent(requestId)}?reply=unavailable`);
+  }
+
+  const payload = jsonRecord(sync.payload);
+  const existingReplies = jsonObjectArray(payload.hubReplies).slice(-49);
+  const reply = {
+    id: randomUUID(),
+    body,
+    createdAt: new Date().toISOString(),
+  };
+
+  const nextPayload = JSON.parse(
+    JSON.stringify({
+      ...payload,
+      hubReplies: [...existingReplies, reply],
+    })
+  );
+
+  try {
+    await prisma.$transaction([
+      prisma.wordPressTicketSync.update({
+        where: { id: sync.id },
+        data: { payload: nextPayload },
+      }),
+      prisma.supportRequest.update({
+        where: { id: requestId },
+        data: { status: "WAITING_CLIENT" },
+      }),
+    ]);
+  } catch (error) {
+    console.error("[HUB] Could not save WordPress support reply:", error);
+    redirect(`/hub/support/${encodeURIComponent(requestId)}?reply=error`);
+  }
+
+  revalidatePath("/hub/support");
+  revalidatePath(`/hub/support/${requestId}`);
+  redirect(`/hub/support/${encodeURIComponent(requestId)}?reply=sent`);
 }
 
 async function readRequest(data: FormData) {

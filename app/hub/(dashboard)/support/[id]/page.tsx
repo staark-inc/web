@@ -18,6 +18,7 @@ import {
 } from "@/lib/support";
 import { getSupportOptions } from "../options";
 import SupportForm from "../SupportForm";
+import { replyToWordPressTicket } from "../actions";
 
 export const dynamic = "force-dynamic";
 
@@ -29,12 +30,60 @@ function formatDate(date: Date) {
   }).format(date);
 }
 
+
+type PublicWordPressReply = {
+  id: string;
+  body: string;
+  createdAt: string;
+};
+
+function jsonRecord(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : null;
+}
+
+function wordpressReplies(payload: unknown): PublicWordPressReply[] {
+  const source = jsonRecord(payload);
+  if (!source || !Array.isArray(source.hubReplies)) return [];
+
+  return source.hubReplies
+    .map((value) => {
+      const reply = jsonRecord(value);
+      if (!reply) return null;
+
+      const id = typeof reply.id === "string" ? reply.id : "";
+      const body = typeof reply.body === "string" ? reply.body : "";
+      const createdAt = typeof reply.createdAt === "string" ? reply.createdAt : "";
+      if (!id || !body || !createdAt) return null;
+
+      return { id, body, createdAt };
+    })
+    .filter((reply): reply is PublicWordPressReply => reply !== null);
+}
+
+function formatReplyDate(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+
+  return new Intl.DateTimeFormat("sv-SE", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+}
+
 export default async function SupportRequestPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ reply?: string }>;
 }) {
   const { id } = await params;
+  const query = await searchParams;
 
   const [request, options] = await Promise.all([
     prisma.supportRequest.findUnique({
@@ -43,12 +92,29 @@ export default async function SupportRequestPage({
         client: { select: { name: true } },
         project: { select: { name: true } },
         thread: { select: { subject: true } },
+        wordpressTicketSync: {
+          select: {
+            localId: true,
+            payload: true,
+            wordpressSite: {
+              select: {
+                siteName: true,
+                siteUrl: true,
+                lastSeenAt: true,
+              },
+            },
+          },
+        },
       },
     }),
     getSupportOptions(),
   ]);
 
   if (!request) notFound();
+
+  const publicReplies = request.wordpressTicketSync
+    ? wordpressReplies(request.wordpressTicketSync.payload)
+    : [];
 
   if (
     request.threadId &&
@@ -71,6 +137,27 @@ export default async function SupportRequestPage({
           Support
         </Link>
       </div>
+
+      {query.reply === "sent" && (
+        <p className="hub-compose-success" role="status">
+          Response saved. It will appear in WordPress on the next signed support sync.
+        </p>
+      )}
+      {query.reply === "invalid" && (
+        <p className="hub-compose-error" role="alert">
+          Write a response between 1 and 5000 characters.
+        </p>
+      )}
+      {query.reply === "unavailable" && (
+        <p className="hub-compose-error" role="alert">
+          This request is not linked to a WordPress ticket.
+        </p>
+      )}
+      {query.reply === "error" && (
+        <p className="hub-compose-error" role="alert">
+          The response could not be saved.
+        </p>
+      )}
 
       <header className="hub-support-v2-detail-head">
         <div>
@@ -126,6 +213,53 @@ export default async function SupportRequestPage({
 
           <div className="hub-support-v2-panel-body">
             <SupportForm request={request} options={options} />
+
+            {request.wordpressTicketSync && (
+              <div style={{ marginTop: "32px", paddingTop: "24px", borderTop: "1px solid var(--hub-border, #e2e8f0)" }}>
+                <div className="hub-support-v2-panel-head">
+                  <span>WORDPRESS CLIENT</span>
+                  <h2>Public response</h2>
+                </div>
+
+                {publicReplies.length > 0 ? (
+                  <div className="hub-support-v2-context-list">
+                    {publicReplies.map((reply) => (
+                      <p key={reply.id}>
+                        <strong>Staark Inc. · {formatReplyDate(reply.createdAt)}</strong>
+                        <span style={{ whiteSpace: "pre-wrap" }}>{reply.body}</span>
+                      </p>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="hub-client-empty">
+                    No public response has been sent to this WordPress ticket yet.
+                  </p>
+                )}
+
+                <form action={replyToWordPressTicket} className="hub-client-form">
+                  <input type="hidden" name="requestId" value={request.id} />
+                  <div className="hub-client-form-field">
+                    <label htmlFor="wordpress-support-reply">Response shown to the client</label>
+                    <textarea
+                      id="wordpress-support-reply"
+                      name="reply"
+                      rows={5}
+                      maxLength={5000}
+                      required
+                      placeholder="Write the update or answer that should appear inside the client's WordPress support ticket..."
+                    />
+                  </div>
+                  <p className="hub-support-help">
+                    Sending a response sets the ticket to Waiting for client. The message is delivered on the next signed WordPress sync.
+                  </p>
+                  <div className="hub-client-form-actions">
+                    <button type="submit" className="hub-send-button">
+                      Send response to WordPress
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
           </div>
         </section>
 
@@ -190,6 +324,12 @@ export default async function SupportRequestPage({
                 )}
                 <p><strong>Category</strong><span>{supportCategoryLabels[request.category]}</span></p>
                 <p><strong>Priority</strong><span>{supportPriorityLabels[request.priority]}</span></p>
+                {request.wordpressTicketSync && (
+                  <>
+                    <p><strong>WordPress ticket</strong><span>#{request.wordpressTicketSync.localId}</span></p>
+                    <p><strong>Website</strong><span>{request.wordpressTicketSync.wordpressSite.siteName}</span></p>
+                  </>
+                )}
               </div>
             </section>
           )}
