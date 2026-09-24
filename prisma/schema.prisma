@@ -265,6 +265,7 @@ model Client {
   projects        Project[]
   offers          Offer[]
   supportRequests SupportRequest[]
+  wordpressSites  WordPressSite[]
 
   @@index([name])
   @@index([createdAt])
@@ -332,6 +333,7 @@ model Project {
   materials       ProjectMaterial[]
   activities      ProjectActivity[]
   supportRequests SupportRequest[]
+  wordpressSites  WordPressSite[]
   demo            DemoDeployment?
 
   @@index([clientId])
@@ -439,6 +441,8 @@ model SupportRequest {
   updatedAt  DateTime  @updatedAt
   resolvedAt DateTime?
 
+  wordpressTicketSync WordPressTicketSync?
+
   @@index([clientId])
   @@index([projectId])
   @@index([threadId])
@@ -511,4 +515,69 @@ model DemoDeployment {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model WordPressSite {
+  id                    String   @id @default(cuid())
+  siteId                String   @unique
+  siteSecretEncrypted   String
+  siteUrl               String
+  siteName              String
+  adminUrl              String?
+  wordpressVersion      String?
+  phpVersion            String?
+  hubVersion            String?
+  theme                 String?
+  locale                String?
+  timezone              String?
+  capabilities          Json?
+  status                String   @default("CONNECTED")
+  connectedAt           DateTime @default(now())
+  lastSeenAt             DateTime?
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  clientId String?
+  client   Client? @relation(fields: [clientId], references: [id], onDelete: SetNull)
+
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  ticketSyncs WordPressTicketSync[]
+
+  @@index([clientId])
+  @@index([projectId])
+  @@index([status])
+  @@index([lastSeenAt])
+}
+
+model WordPressPairingCode {
+  id              String   @id @default(cuid())
+  codeHash        String   @unique
+  hint            String
+  targetClientId  String?
+  targetProjectId String?
+  createdById     String
+  expiresAt       DateTime
+  usedAt          DateTime?
+  usedBySiteId    String?
+  createdAt       DateTime @default(now())
+
+  @@index([expiresAt])
+  @@index([usedAt])
+}
+
+model WordPressTicketSync {
+  id               String         @id @default(cuid())
+  wordpressSiteId  String
+  wordpressSite    WordPressSite  @relation(fields: [wordpressSiteId], references: [id], onDelete: Cascade)
+  localId          Int
+  supportRequestId String         @unique
+  supportRequest   SupportRequest @relation(fields: [supportRequestId], references: [id], onDelete: Cascade)
+  payload          Json?
+  createdAt        DateTime       @default(now())
+
+  @@unique([wordpressSiteId, localId])
+  @@index([wordpressSiteId])
+  @@index([createdAt])
 }
