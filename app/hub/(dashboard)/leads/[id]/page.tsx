@@ -4,6 +4,7 @@ import {
   ArrowLeft,
   Building2,
   CircleDollarSign,
+  FileText,
   Globe2,
   Mail,
   MessageCircle,
@@ -70,6 +71,7 @@ export default async function LeadPage({ params }: PageProps) {
         ? lead.contact.facebook
         : lead.contact.email;
   const whatsappNumber = lead.contact.phone?.replace(/\D/g, "") || "";
+  const canCreateOffer = !["WON", "LOST"].includes(lead.status);
 
   return (
     <div className="hub-page hub-lead-v2-detail-page">
@@ -155,20 +157,29 @@ export default async function LeadPage({ params }: PageProps) {
           </div>
 
           <div className="hub-lead-v2-actions-stack">
-            <div>
+            <div className="hub-lead-v2-stage-block">
               <span>Lead stage</span>
-              <LeadStatusForm leadId={lead.id} currentStatus={lead.status} />
+              <div className="hub-lead-v2-stage-row">
+                <LeadStatusForm leadId={lead.id} currentStatus={lead.status} />
+
+                {canCreateOffer && (
+                  <Link href={`/hub/offers/new?leadId=${encodeURIComponent(lead.id)}`} className="hub-secondary-button">
+                    <FileText size={14} />
+                    Create offer
+                  </Link>
+                )}
+              </div>
             </div>
 
             {lead.client ? (
               <div className="hub-lead-v2-converted">
                 <strong>Client record linked</strong>
-                <p>The lead keeps its own sales stage until the deal is actually won or lost.</p>
+                <p>Offers created from this lead stay linked to the opportunity. An accepted linked offer marks the lead as won.</p>
                 <Link href={`/hub/clients/${lead.client.id}`}>Open {lead.client.name}</Link>
               </div>
-            ) : lead.status !== "WON" ? (
+            ) : canCreateOffer ? (
               <div className="hub-lead-v2-convert-block">
-                <span>Create a client record when you need it for offers or billing.</span>
+                <span>Creating an offer will create and link the client automatically. You can still create the client manually for billing before an offer is needed.</span>
                 <ConvertLeadForm leadId={lead.id} defaultName={lead.contact.company || ""} />
               </div>
             ) : null}

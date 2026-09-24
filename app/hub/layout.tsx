@@ -8,6 +8,7 @@ import "./projects-v2.css";
 import "./client-workspace-polish.css";
 import "./contacts-workspace.css";
 import "./leads-workspace-polish.css";
+import "./lead-controls-compact.css";
 import "./operations-workspace.css";
 import "./billing-support-v2.css";
 import "./settings-v2.css";

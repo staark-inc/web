@@ -185,6 +185,7 @@ model Lead {
   client         Client?        @relation(fields: [clientId], references: [id], onDelete: SetNull)
 
   prospect Prospect?
+  offers   Offer[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -274,6 +275,9 @@ model Offer {
   clientId String
   client   Client @relation(fields: [clientId], references: [id], onDelete: Restrict)
 
+  leadId String?
+  lead   Lead?   @relation(fields: [leadId], references: [id], onDelete: SetNull)
+
   project Project?
 
   title           String
@@ -294,6 +298,7 @@ model Offer {
   updatedAt DateTime @updatedAt
 
   @@index([clientId])
+  @@index([leadId])
   @@index([status])
   @@index([createdAt])
 }
