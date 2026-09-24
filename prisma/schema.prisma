@@ -24,6 +24,22 @@ enum LeadStatus {
   LOST
 }
 
+enum ContactChannel {
+  EMAIL
+  WHATSAPP
+  FACEBOOK
+}
+
+enum ProspectStatus {
+  NO_WEBSITE
+  BROKEN_WEBSITE
+  OLD_WEBSITE
+  WEAK_WEBSITE
+  GOOD_WEBSITE
+  IGNORED
+  IMPORTED
+}
+
 enum OfferStatus {
   DRAFT
   SHARED
@@ -136,8 +152,9 @@ model Settings {
 model Contact {
   id        String   @id @default(cuid())
   name      String?
-  email     String   @unique
+  email     String?  @unique
   phone     String?
+  facebook  String?
   company   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -148,6 +165,8 @@ model Contact {
   clients  Client[]
 
   @@index([email])
+  @@index([phone])
+  @@index([facebook])
   @@index([createdAt])
 }
 
@@ -160,15 +179,72 @@ model Lead {
   budget  String?
   message String?
 
-  status   LeadStatus @default(NEW)
-  clientId String?
-  client   Client?    @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  contactChannel ContactChannel @default(EMAIL)
+  status         LeadStatus     @default(NEW)
+  clientId       String?
+  client         Client?        @relation(fields: [clientId], references: [id], onDelete: SetNull)
+
+  prospect Prospect?
+  offers   Offer[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([contactId])
+  @@index([contactChannel])
   @@index([status])
+  @@index([createdAt])
+}
+
+model Prospect {
+  id      String @id @default(cuid())
+  placeId String @unique
+
+  name     String
+  city     String?
+  category String?
+  address  String?
+
+  website      String?
+  email        String?
+  websitePhone String?
+  googlePhone  String?
+  contactPage  String?
+  contactForm  Boolean @default(false)
+
+  facebook  String?
+  instagram String?
+  linkedin  String?
+
+  rating  Float?
+  reviews Int?
+
+  status       ProspectStatus @default(NO_WEBSITE)
+  leadScore    Int            @default(0)
+  websiteScore Int?
+  reasons      Json?
+
+  https         Boolean?
+  mobile        Boolean?
+  copyrightYear Int?
+  loadSeconds   Float?
+  pageTitle     String?
+  httpStatus    Int?
+
+  googleMapsUrl String?
+  source        String @default("google_places")
+  scannedAt     DateTime?
+
+  importedLeadId String? @unique
+  importedLead   Lead?   @relation(fields: [importedLeadId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([city])
+  @@index([category])
+  @@index([leadScore])
   @@index([createdAt])
 }
 
@@ -189,6 +265,7 @@ model Client {
   projects        Project[]
   offers          Offer[]
   supportRequests SupportRequest[]
+  wordpressSites  WordPressSite[]
 
   @@index([name])
   @@index([createdAt])
@@ -198,6 +275,9 @@ model Offer {
   id       String @id @default(cuid())
   clientId String
   client   Client @relation(fields: [clientId], references: [id], onDelete: Restrict)
+
+  leadId String?
+  lead   Lead?   @relation(fields: [leadId], references: [id], onDelete: SetNull)
 
   project Project?
 
@@ -219,6 +299,7 @@ model Offer {
   updatedAt DateTime @updatedAt
 
   @@index([clientId])
+  @@index([leadId])
   @@index([status])
   @@index([createdAt])
 }
@@ -252,6 +333,7 @@ model Project {
   materials       ProjectMaterial[]
   activities      ProjectActivity[]
   supportRequests SupportRequest[]
+  wordpressSites  WordPressSite[]
   demo            DemoDeployment?
 
   @@index([clientId])
@@ -359,6 +441,8 @@ model SupportRequest {
   updatedAt  DateTime  @updatedAt
   resolvedAt DateTime?
 
+  wordpressTicketSync WordPressTicketSync?
+
   @@index([clientId])
   @@index([projectId])
   @@index([threadId])
@@ -431,4 +515,69 @@ model DemoDeployment {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model WordPressSite {
+  id                    String   @id @default(cuid())
+  siteId                String   @unique
+  siteSecretEncrypted   String
+  siteUrl               String
+  siteName              String
+  adminUrl              String?
+  wordpressVersion      String?
+  phpVersion            String?
+  hubVersion            String?
+  theme                 String?
+  locale                String?
+  timezone              String?
+  capabilities          Json?
+  status                String   @default("CONNECTED")
+  connectedAt           DateTime @default(now())
+  lastSeenAt             DateTime?
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  clientId String?
+  client   Client? @relation(fields: [clientId], references: [id], onDelete: SetNull)
+
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  ticketSyncs WordPressTicketSync[]
+
+  @@index([clientId])
+  @@index([projectId])
+  @@index([status])
+  @@index([lastSeenAt])
+}
+
+model WordPressPairingCode {
+  id              String   @id @default(cuid())
+  codeHash        String   @unique
+  hint            String
+  targetClientId  String?
+  targetProjectId String?
+  createdById     String
+  expiresAt       DateTime
+  usedAt          DateTime?
+  usedBySiteId    String?
+  createdAt       DateTime @default(now())
+
+  @@index([expiresAt])
+  @@index([usedAt])
+}
+
+model WordPressTicketSync {
+  id               String         @id @default(cuid())
+  wordpressSiteId  String
+  wordpressSite    WordPressSite  @relation(fields: [wordpressSiteId], references: [id], onDelete: Cascade)
+  localId          Int
+  supportRequestId String         @unique
+  supportRequest   SupportRequest @relation(fields: [supportRequestId], references: [id], onDelete: Cascade)
+  payload          Json?
+  createdAt        DateTime       @default(now())
+
+  @@unique([wordpressSiteId, localId])
+  @@index([wordpressSiteId])
+  @@index([createdAt])
 }

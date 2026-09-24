@@ -62,7 +62,7 @@ export async function convertLeadToClient(
       }
 
       if (lead.status === "LOST") {
-        return { error: "A lost lead cannot be converted." };
+        return { error: "A lost lead cannot be linked to a client record." };
       }
 
       const client = await tx.client.create({
@@ -81,7 +81,6 @@ export async function convertLeadToClient(
         },
         data: {
           clientId: client.id,
-          status: "WON",
         },
       });
 
@@ -94,7 +93,7 @@ export async function convertLeadToClient(
   } catch (error) {
     if (error instanceof ConversionConflict) {
       return {
-        error: "This lead was converted in another request. Refresh the page.",
+        error: "This lead was linked in another request. Refresh the page.",
       };
     }
 
@@ -108,5 +107,5 @@ export async function convertLeadToClient(
   revalidatePath("/hub/leads");
   revalidatePath(`/hub/leads/${leadId}`);
   revalidatePath("/hub/clients");
-  redirect("/hub/clients");
+  redirect(`/hub/leads/${leadId}`);
 }

@@ -6,7 +6,7 @@ import {
   FileText,
   FolderKanban,
   MessageSquare,
-  Timer,
+  Send,
 } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
@@ -18,6 +18,7 @@ import {
 } from "@/lib/support";
 import { getSupportOptions } from "../options";
 import SupportForm from "../SupportForm";
+import { replyToWordPressTicket } from "../actions";
 
 export const dynamic = "force-dynamic";
 
@@ -29,12 +30,59 @@ function formatDate(date: Date) {
   }).format(date);
 }
 
+type PublicWordPressReply = {
+  id: string;
+  body: string;
+  createdAt: string;
+};
+
+function jsonRecord(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : null;
+}
+
+function wordpressReplies(payload: unknown): PublicWordPressReply[] {
+  const source = jsonRecord(payload);
+  if (!source || !Array.isArray(source.hubReplies)) return [];
+
+  return source.hubReplies
+    .map((value) => {
+      const reply = jsonRecord(value);
+      if (!reply) return null;
+
+      const id = typeof reply.id === "string" ? reply.id : "";
+      const body = typeof reply.body === "string" ? reply.body : "";
+      const createdAt = typeof reply.createdAt === "string" ? reply.createdAt : "";
+      if (!id || !body || !createdAt) return null;
+
+      return { id, body, createdAt };
+    })
+    .filter((reply): reply is PublicWordPressReply => reply !== null);
+}
+
+function formatReplyDate(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+
+  return new Intl.DateTimeFormat("sv-SE", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+}
+
 export default async function SupportRequestPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ reply?: string }>;
 }) {
   const { id } = await params;
+  const query = await searchParams;
 
   const [request, options] = await Promise.all([
     prisma.supportRequest.findUnique({
@@ -43,12 +91,29 @@ export default async function SupportRequestPage({
         client: { select: { name: true } },
         project: { select: { name: true } },
         thread: { select: { subject: true } },
+        wordpressTicketSync: {
+          select: {
+            localId: true,
+            payload: true,
+            wordpressSite: {
+              select: {
+                siteName: true,
+                siteUrl: true,
+                lastSeenAt: true,
+              },
+            },
+          },
+        },
       },
     }),
     getSupportOptions(),
   ]);
 
   if (!request) notFound();
+
+  const publicReplies = request.wordpressTicketSync
+    ? wordpressReplies(request.wordpressTicketSync.payload)
+    : [];
 
   if (
     request.threadId &&
@@ -71,6 +136,27 @@ export default async function SupportRequestPage({
           Support
         </Link>
       </div>
+
+      {query.reply === "sent" && (
+        <p className="hub-compose-success" role="status">
+          Response saved. It will appear in WordPress on the next signed support sync.
+        </p>
+      )}
+      {query.reply === "invalid" && (
+        <p className="hub-compose-error" role="alert">
+          Write a response between 1 and 5000 characters.
+        </p>
+      )}
+      {query.reply === "unavailable" && (
+        <p className="hub-compose-error" role="alert">
+          This request is not linked to a WordPress ticket.
+        </p>
+      )}
+      {query.reply === "error" && (
+        <p className="hub-compose-error" role="alert">
+          The response could not be saved.
+        </p>
+      )}
 
       <header className="hub-support-v2-detail-head">
         <div>
@@ -126,6 +212,66 @@ export default async function SupportRequestPage({
 
           <div className="hub-support-v2-panel-body">
             <SupportForm request={request} options={options} />
+
+            {request.wordpressTicketSync && (
+              <section className="hub-wp-support-response">
+                <div className="hub-wp-support-response-head">
+                  <div className="hub-wp-support-response-icon">
+                    <MessageSquare size={16} />
+                  </div>
+                  <div>
+                    <span>WORDPRESS CLIENT</span>
+                    <h2>Public response</h2>
+                    <p>Updates sent here are returned to the connected WordPress ticket.</p>
+                  </div>
+                </div>
+
+                <div className="hub-wp-support-response-body">
+                  {publicReplies.length > 0 ? (
+                    <div className="hub-wp-support-replies">
+                      {publicReplies.map((reply) => (
+                        <article key={reply.id} className="hub-wp-support-reply">
+                          <div className="hub-wp-support-reply-meta">
+                            <strong>Staark Inc.</strong>
+                            <time>{formatReplyDate(reply.createdAt)}</time>
+                          </div>
+                          <p>{reply.body}</p>
+                        </article>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="hub-wp-support-empty">
+                      <MessageSquare size={16} />
+                      <span>No public response has been sent yet.</span>
+                    </div>
+                  )}
+
+                  <form action={replyToWordPressTicket} className="hub-wp-support-form">
+                    <input type="hidden" name="requestId" value={request.id} />
+                    <div className="hub-client-form-field">
+                      <label htmlFor="wordpress-support-reply">Response shown to the client</label>
+                      <textarea
+                        id="wordpress-support-reply"
+                        name="reply"
+                        rows={5}
+                        maxLength={5000}
+                        required
+                        placeholder="Write the update or answer that should appear inside the client's WordPress support ticket..."
+                      />
+                    </div>
+                    <div className="hub-wp-support-form-footer">
+                      <p className="hub-support-help">
+                        Sending a response sets the ticket to Waiting for client and delivers it on the next signed WordPress sync.
+                      </p>
+                      <button type="submit" className="hub-send-button">
+                        <Send size={14} />
+                        Send response
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </section>
+            )}
           </div>
         </section>
 
@@ -190,6 +336,12 @@ export default async function SupportRequestPage({
                 )}
                 <p><strong>Category</strong><span>{supportCategoryLabels[request.category]}</span></p>
                 <p><strong>Priority</strong><span>{supportPriorityLabels[request.priority]}</span></p>
+                {request.wordpressTicketSync && (
+                  <>
+                    <p><strong>WordPress ticket</strong><span>#{request.wordpressTicketSync.localId}</span></p>
+                    <p><strong>Website</strong><span>{request.wordpressTicketSync.wordpressSite.siteName}</span></p>
+                  </>
+                )}
               </div>
             </section>
           )}

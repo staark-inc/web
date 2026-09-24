@@ -29,6 +29,9 @@ type PageProps = {
   params: Promise<{
     id: string;
   }>;
+  searchParams: Promise<{
+    returnTo?: string;
+  }>;
 };
 
 function formatDate(date: Date) {
@@ -58,13 +61,25 @@ function createReplySubject(
   return `Re: ${subject}`;
 }
 
+function safeInboxReturnTo(value: string | undefined) {
+  if (!value) return "/hub/inbox";
+
+  try {
+    const url = new URL(value, "https://staark.local");
+    if (url.origin !== "https://staark.local" || url.pathname !== "/hub/inbox") {
+      return "/hub/inbox";
+    }
+
+    return `${url.pathname}${url.search}`;
+  } catch {
+    return "/hub/inbox";
+  }
+}
+
 export default async function ThreadPage({
   params,
+  searchParams,
 }: PageProps) {
-  /*
-   * Require Hub login.
-   */
-
   const session =
     await getSession();
 
@@ -74,10 +89,8 @@ export default async function ThreadPage({
 
   const { id } =
     await params;
-
-  /*
-   * Load complete conversation.
-   */
+  const { returnTo } = await searchParams;
+  const inboxReturnTo = safeInboxReturnTo(returnTo);
 
   const thread =
     await prisma.thread.findUnique({
@@ -114,12 +127,6 @@ export default async function ThreadPage({
     attachmentsByMessage.set(attachment.messageId, list);
   }
 
-
-  /*
-   * Mark inbound messages as read
-   * when opening the conversation.
-   */
-
   const readResult =
     await prisma.message.updateMany({
       where: {
@@ -144,13 +151,6 @@ export default async function ThreadPage({
   ) {
     await publishCurrentBadges();
   }
-
-  /*
-   * Normally this comes from Contact.
-   *
-   * Fallbacks allow older/imported
-   * conversations to still work.
-   */
 
   const firstInbound =
     thread.messages.find(
@@ -178,18 +178,13 @@ export default async function ThreadPage({
 
   return (
     <div className="hub-page hub-thread-page">
-      {/* BACK */}
-
       <Link
-        href="/hub/inbox"
+        href={inboxReturnTo}
         className="hub-back"
       >
         <ArrowLeft size={15} />
-
         Back to inbox
       </Link>
-
-      {/* HEADER */}
 
       <header className="hub-thread-header">
         <div className="hub-thread-heading">
@@ -203,26 +198,14 @@ export default async function ThreadPage({
 
           <div className="hub-thread-meta">
             <span>
-              <MessageSquare
-                size={14}
-              />
-
-              {
-                thread.messages
-                  .length
-              }{" "}
-              {thread.messages
-                .length === 1
-                ? "message"
-                : "messages"}
+              <MessageSquare size={14} />
+              {thread.messages.length}{" "}
+              {thread.messages.length === 1 ? "message" : "messages"}
             </span>
 
             {contactEmail && (
               <span>
-                <Mail
-                  size={14}
-                />
-
+                <Mail size={14} />
                 {contactEmail}
               </span>
             )}
@@ -230,36 +213,20 @@ export default async function ThreadPage({
         </div>
       </header>
 
-      {/* CUSTOMER */}
-
       {thread.contact && (
         <section className="hub-thread-contact">
           <div className="hub-thread-contact-avatar">
-            <UserRound
-              size={18}
-            />
+            <UserRound size={18} />
           </div>
 
           <div className="hub-thread-contact-info">
-            <strong>
-              {contactName}
-            </strong>
+            <strong>{contactName}</strong>
+            <span>{contactEmail}</span>
 
-            <span>
-              {contactEmail}
-            </span>
-
-            {thread.contact
-              .company && (
+            {thread.contact.company && (
               <span>
-                <Building2
-                  size={13}
-                />
-
-                {
-                  thread.contact
-                    .company
-                }
+                <Building2 size={13} />
+                {thread.contact.company}
               </span>
             )}
           </div>
@@ -268,12 +235,10 @@ export default async function ThreadPage({
             href={`/hub/contacts/${thread.contact.id}`}
             className="hub-secondary-button"
           >
-            View client
+            View contact
           </Link>
         </section>
       )}
-
-      {/* CONVERSATION */}
 
       <section className="hub-thread-conversation">
         {thread.messages.map(
@@ -281,6 +246,7 @@ export default async function ThreadPage({
             const isOutbound =
               message.direction ===
               "OUTBOUND";
+            const activityAt = message.sentAt ?? message.createdAt;
 
             return (
               <article
@@ -291,8 +257,6 @@ export default async function ThreadPage({
                     : "hub-thread-message-inbound"
                 }`}
               >
-                {/* MESSAGE HEADER */}
-
                 <div className="hub-thread-message-header">
                   <div className="hub-thread-message-avatar">
                     {isOutbound
@@ -302,10 +266,7 @@ export default async function ThreadPage({
                           contactName ||
                           message.fromEmail
                         )
-                          .slice(
-                            0,
-                            1
-                          )
+                          .slice(0, 1)
                           .toUpperCase()}
                   </div>
 
@@ -313,16 +274,10 @@ export default async function ThreadPage({
                     <strong>
                       {isOutbound
                         ? "Staark Inc."
-                        : message.fromName ||
-                          contactName ||
-                          message.fromEmail}
+                        : message.fromName || contactName || message.fromEmail}
                     </strong>
 
-                    <span>
-                      {isOutbound
-                        ? message.fromEmail
-                        : message.fromEmail}
-                    </span>
+                    <span>{message.fromEmail}</span>
                   </div>
 
                   <div className="hub-thread-message-side">
@@ -333,24 +288,14 @@ export default async function ThreadPage({
                           : "hub-message-direction-inbound"
                       }`}
                     >
-                      {isOutbound
-                        ? "Sent"
-                        : "Received"}
+                      {isOutbound ? "Sent" : "Received"}
                     </span>
 
-                    <time
-                      dateTime={
-                        message.createdAt.toISOString()
-                      }
-                    >
-                      {formatDate(
-                        message.createdAt
-                      )}
+                    <time dateTime={activityAt.toISOString()}>
+                      {formatDate(activityAt)}
                     </time>
                   </div>
                 </div>
-
-                {/* MESSAGE BODY */}
 
                 <ThreadMessageBody body={message.body} />
 
@@ -388,26 +333,16 @@ export default async function ThreadPage({
         )}
       </section>
 
-      {/* REPLY */}
-
       {contactEmail ? (
         <ReplyForm
-          threadId={
-            thread.id
-          }
-          to={
-            contactEmail
-          }
-          subject={
-            replySubject
-          }
+          threadId={thread.id}
+          to={contactEmail}
+          subject={replySubject}
         />
       ) : (
         <section className="hub-detail-card">
           <p className="hub-detail-empty">
-            This conversation has no
-            customer email address, so
-            a reply cannot be sent.
+            This conversation has no customer email address, so a reply cannot be sent.
           </p>
         </section>
       )}

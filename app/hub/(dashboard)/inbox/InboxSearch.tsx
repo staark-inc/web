@@ -6,7 +6,13 @@ import { useEffect, useRef, useState, useTransition } from "react";
 
 type InboxSearchProps = {
   initialQuery: string;
-  view: "inbox" | "unread" | "other" | "all";
+  view:
+    | "inbox"
+    | "needs-reply"
+    | "unread"
+    | "replied"
+    | "other"
+    | "all";
 };
 
 export default function InboxSearch({

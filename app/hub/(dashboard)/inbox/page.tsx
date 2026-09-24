@@ -1,49 +1,48 @@
 import {
+  ArrowRight,
+  Bot,
   Inbox,
+  Mail,
+  MailCheck,
+  MailOpen,
+  PenLine,
   RefreshCw,
   Search,
-  Mail,
 } from "lucide-react";
 
 import Link from "next/link";
 
+import { createMailPreview } from "@/lib/mail-content";
 import { prisma } from "@/lib/prisma";
 import { isAutomatedSender } from "@/lib/crm-mail";
 import InboxSearch from "./InboxSearch";
+import "../../inbox-workspace-v2.css";
+import "../../inbox-workspace-polish.css";
 
 export const dynamic = "force-dynamic";
 
 function formatDate(date: Date) {
-  return new Intl.DateTimeFormat(
-    "sv-SE",
-    {
-      day: "2-digit",
-      month: "short",
-      hour: "2-digit",
-      minute: "2-digit",
-    }
-  ).format(date);
+  return new Intl.DateTimeFormat("sv-SE", {
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
 }
 
-function createPreview(
-  value: string,
-  maxLength = 120
-) {
-  const normalized =
-    value
-      .replace(/\s+/g, " ")
-      .trim();
+function messageActivityDate(message: { sentAt: Date | null; createdAt: Date }) {
+  return message.sentAt ?? message.createdAt;
+}
 
-  if (
-    normalized.length <= maxLength
-  ) {
-    return normalized;
-  }
+function getInitials(name: string, email: string) {
+  const source = name && name !== email ? name : email.split("@")[0] ?? email;
 
-  return `${normalized.slice(
-    0,
-    maxLength
-  )}...`;
+  return source
+    .split(/[\s._-]+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("") || "IN";
 }
 
 type PageProps = {
@@ -53,7 +52,13 @@ type PageProps = {
   }>;
 };
 
-type InboxView = "inbox" | "unread" | "other" | "all";
+type InboxView =
+  | "inbox"
+  | "needs-reply"
+  | "unread"
+  | "replied"
+  | "other"
+  | "all";
 
 function inboxHref(view: InboxView, query: string) {
   const params = new URLSearchParams();
@@ -63,150 +68,126 @@ function inboxHref(view: InboxView, query: string) {
   return `/hub/inbox${suffix ? `?${suffix}` : ""}`;
 }
 
-export default async function HubInboxPage({
-  searchParams,
-}: PageProps) {
-  /*
-   * Inbox now displays conversations
-   * instead of individual messages.
-   *
-   * Only threads containing at least
-   * one inbound customer message belong
-   * in Inbox.
-   */
-
+export default async function HubInboxPage({ searchParams }: PageProps) {
   const { q, view } = await searchParams;
   const query = q?.trim() ?? "";
   const activeView: InboxView =
-    view === "unread" || view === "other" || view === "all"
+    view === "needs-reply" ||
+    view === "unread" ||
+    view === "replied" ||
+    view === "other" ||
+    view === "all"
       ? view
       : "inbox";
 
-  const threads =
-    await prisma.thread.findMany({
-      where: {
-        messages: {
-          some: {
-            direction: "INBOUND",
-          },
+  const threads = await prisma.thread.findMany({
+    where: {
+      messages: {
+        some: {
+          direction: "INBOUND",
         },
-
-        ...(query
-          ? {
-              OR: [
-                {
-                  subject: {
-                    contains: query,
-                    mode: "insensitive" as const,
-                  },
+      },
+      ...(query
+        ? {
+            OR: [
+              {
+                subject: {
+                  contains: query,
+                  mode: "insensitive" as const,
                 },
-                {
-                  contact: {
-                    OR: [
-                      {
-                        name: {
-                          contains: query,
-                          mode: "insensitive" as const,
-                        },
-                      },
-                      {
-                        email: {
-                          contains: query,
-                          mode: "insensitive" as const,
-                        },
-                      },
-                    ],
-                  },
-                },
-                {
-                  messages: {
-                    some: {
-                      body: {
+              },
+              {
+                contact: {
+                  OR: [
+                    {
+                      name: {
                         contains: query,
                         mode: "insensitive" as const,
                       },
                     },
+                    {
+                      email: {
+                        contains: query,
+                        mode: "insensitive" as const,
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                messages: {
+                  some: {
+                    body: {
+                      contains: query,
+                      mode: "insensitive" as const,
+                    },
                   },
                 },
-              ],
-            }
-          : {}),
-      },
-
-      include: {
-        contact: true,
-
-        /*
-         * We only need the latest message
-         * here to generate the preview.
-         */
-
-        messages: {
-          orderBy: {
-            createdAt: "desc",
-          },
-
-          take: 1,
-        },
-
-        /*
-         * Count unread inbound messages
-         * inside each conversation.
-         */
-
-        _count: {
-          select: {
-            messages: {
-              where: {
-                direction: "INBOUND",
-                isRead: false,
               },
+            ],
+          }
+        : {}),
+    },
+    include: {
+      contact: true,
+      messages: {
+        /*
+         * Inbound Gmail messages use createdAt as their real Gmail date,
+         * while outbound messages also get sentAt. Ordering by sentAt with
+         * nulls last made an older outbound message look newer than a fresh
+         * inbound reply. createdAt is the common activity timestamp here.
+         */
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: 1,
+      },
+      _count: {
+        select: {
+          messages: {
+            where: {
+              direction: "INBOUND",
+              isRead: false,
             },
           },
         },
       },
+    },
+    orderBy: {
+      updatedAt: "desc",
+    },
+  });
 
-      orderBy: {
-        updatedAt: "desc",
-      },
-    });
+  const sortedThreads = [...threads].sort((left, right) => {
+    const leftMessage = left.messages[0];
+    const rightMessage = right.messages[0];
 
-  /*
-   * Count ALL messages per thread.
-   *
-   * This is intentionally separate from
-   * the filtered unread count above.
-   */
+    const leftTime = leftMessage
+      ? messageActivityDate(leftMessage).getTime()
+      : left.updatedAt.getTime();
+    const rightTime = rightMessage
+      ? messageActivityDate(rightMessage).getTime()
+      : right.updatedAt.getTime();
 
-  const threadIds =
-    threads.map(
-      (thread) => thread.id
-    );
+    return rightTime - leftTime;
+  });
 
-  const messageCounts =
-    threadIds.length > 0
-      ? await prisma.message.groupBy({
-          by: [
-            "threadId",
-          ],
+  const threadIds = sortedThreads.map((thread) => thread.id);
 
-          where: {
-            threadId: {
-              in: threadIds,
-            },
+  const messageCounts = threadIds.length
+    ? await prisma.message.groupBy({
+        by: ["threadId"],
+        where: {
+          threadId: {
+            in: threadIds,
           },
+        },
+        _count: {
+          _all: true,
+        },
+      })
+    : [];
 
-          _count: {
-            _all: true,
-          },
-        })
-      : [];
-
-  const messageCountMap =
-    new Map<string, number>();
-
-  // Classify older automated conversations that were imported before
-  // the Gmail webhook began skipping automated senders.
   const inboundSenders = threadIds.length
     ? await prisma.message.findMany({
         where: {
@@ -217,6 +198,7 @@ export default async function HubInboxPage({
         orderBy: { createdAt: "asc" },
       })
     : [];
+
   const senderByThread = new Map<string, string>();
   for (const message of inboundSenders) {
     if (message.threadId && !senderByThread.has(message.threadId)) {
@@ -225,7 +207,7 @@ export default async function HubInboxPage({
   }
 
   const otherThreads = new Set(
-    threads
+    sortedThreads
       .filter((thread) =>
         isAutomatedSender(
           senderByThread.get(thread.id) ?? "",
@@ -234,291 +216,305 @@ export default async function HubInboxPage({
       )
       .map((thread) => thread.id)
   );
-  const customerThreads = threads.filter((thread) => !otherThreads.has(thread.id));
+
+  const customerThreads = sortedThreads.filter(
+    (thread) => !otherThreads.has(thread.id)
+  );
+
+  const unreadMessageCount = customerThreads.reduce(
+    (total, thread) => total + thread._count.messages,
+    0
+  );
+
+  const awaitingReplyCount = customerThreads.filter(
+    (thread) => thread.messages[0]?.direction === "INBOUND"
+  ).length;
+
+  const repliedCount = customerThreads.filter(
+    (thread) => thread.messages[0]?.direction === "OUTBOUND"
+  ).length;
+
   const counts: Record<InboxView, number> = {
     inbox: customerThreads.length,
+    "needs-reply": awaitingReplyCount,
     unread: customerThreads.filter((thread) => thread._count.messages > 0).length,
+    replied: repliedCount,
     other: otherThreads.size,
-    all: threads.length,
+    all: sortedThreads.length,
   };
-  const visibleThreads = threads.filter((thread) => {
+
+  const visibleThreads = sortedThreads.filter((thread) => {
     if (activeView === "all") return true;
     if (activeView === "other") return otherThreads.has(thread.id);
-    return !otherThreads.has(thread.id) &&
-      (activeView !== "unread" || thread._count.messages > 0);
+    if (otherThreads.has(thread.id)) return false;
+
+    if (activeView === "needs-reply") {
+      return thread.messages[0]?.direction === "INBOUND";
+    }
+
+    if (activeView === "unread") {
+      return thread._count.messages > 0;
+    }
+
+    if (activeView === "replied") {
+      return thread.messages[0]?.direction === "OUTBOUND";
+    }
+
+    return true;
   });
 
-  for (
-    const item of messageCounts
-  ) {
+  const messageCountMap = new Map<string, number>();
+  for (const item of messageCounts) {
     if (item.threadId) {
-      messageCountMap.set(
-        item.threadId,
-        item._count._all
-      );
+      messageCountMap.set(item.threadId, item._count._all);
     }
   }
 
-  /*
-   * Total unread customer messages.
-   */
-
-  const unreadCount =
-    visibleThreads.reduce(
-      (total, thread) =>
-        total +
-        thread._count.messages,
-      0
-    );
+  const returnTo = inboxHref(activeView, query);
 
   return (
-    <div className="hub-page">
-      {/* HEADER */}
-
-      <header className="hub-page-header">
+    <div className="hub-page hub-inbox-v2-page">
+      <header className="hub-inbox-v2-head">
         <div>
-          <span className="hub-eyebrow">
-            STAARK HUB
-          </span>
-
+          <span className="hub-eyebrow">MAIL / CONVERSATIONS</span>
           <h1>Inbox</h1>
-
-          <p>
-            Conversations and enquiries
-            from your customers.
-          </p>
+          <p>Customer conversations, replies and incoming enquiries in one place.</p>
         </div>
 
-        <Link
-          href={inboxHref(activeView, query)}
-          className="hub-secondary-button"
-          aria-label="Refresh inbox"
-        >
-          <RefreshCw size={17} />
+        <div className="hub-inbox-v2-actions">
+          <Link
+            href={returnTo}
+            className="hub-secondary-button"
+            aria-label="Refresh inbox"
+          >
+            <RefreshCw size={14} />
+            Refresh
+          </Link>
 
-          Refresh
-        </Link>
+          <Link href="/hub/compose" className="hub-inbox-v2-compose">
+            <PenLine size={14} />
+            New message
+          </Link>
+        </div>
       </header>
 
-      {/* TOOLBAR */}
+      <section className="hub-inbox-v2-overview" aria-label="Inbox overview">
+        <div className="hub-inbox-v2-stat">
+          <span className="hub-inbox-v2-stat-icon">
+            <Inbox size={16} />
+          </span>
+          <div>
+            <small>Conversations</small>
+            <strong>{counts.inbox}</strong>
+            <span>Customer threads</span>
+          </div>
+        </div>
 
-      <div className="hub-toolbar">
+        <div className="hub-inbox-v2-stat">
+          <span className="hub-inbox-v2-stat-icon hub-inbox-v2-stat-icon-unread">
+            <MailOpen size={16} />
+          </span>
+          <div>
+            <small>Unread</small>
+            <strong>{unreadMessageCount}</strong>
+            <span>Messages needing review</span>
+          </div>
+        </div>
+
+        <div className="hub-inbox-v2-stat">
+          <span className="hub-inbox-v2-stat-icon hub-inbox-v2-stat-icon-reply">
+            <Mail size={16} />
+          </span>
+          <div>
+            <small>Awaiting reply</small>
+            <strong>{awaitingReplyCount}</strong>
+            <span>Latest message is inbound</span>
+          </div>
+        </div>
+
+        <div className="hub-inbox-v2-stat">
+          <span className="hub-inbox-v2-stat-icon hub-inbox-v2-stat-icon-other">
+            <Bot size={16} />
+          </span>
+          <div>
+            <small>Other mail</small>
+            <strong>{counts.other}</strong>
+            <span>Automated or filtered</span>
+          </div>
+        </div>
+      </section>
+
+      <div className="hub-inbox-v2-toolbar">
         <InboxSearch initialQuery={query} view={activeView} />
 
-        <div className="hub-inbox-total">
-          <Inbox size={16} />
-
+        <div className="hub-inbox-v2-total">
+          <MailCheck size={15} />
           <span>
-            {visibleThreads.length}{" "}
-            {visibleThreads.length === 1
-              ? "conversation"
-              : "conversations"}
+            {visibleThreads.length} {visibleThreads.length === 1 ? "conversation" : "conversations"}
             {query && " found"}
           </span>
         </div>
       </div>
 
-      <nav className="hub-inbox-tabs" aria-label="Inbox views">
+      <nav className="hub-inbox-v2-tabs" aria-label="Inbox views">
         {([
           ["inbox", "Inbox"],
+          ["needs-reply", "Needs reply"],
           ["unread", "Unread"],
+          ["replied", "Replied"],
           ["other", "Other"],
           ["all", "All mail"],
         ] as const).map(([key, label]) => (
           <Link
             key={key}
             href={inboxHref(key, query)}
-            className={`hub-inbox-tab ${activeView === key ? "hub-inbox-tab-active" : ""}`}
+            className={`hub-inbox-v2-tab ${
+              activeView === key ? "hub-inbox-v2-tab-active" : ""
+            }`}
             aria-current={activeView === key ? "page" : undefined}
           >
-            {label} <span>{counts[key]}</span>
+            {label}
+            <span>{counts[key]}</span>
           </Link>
         ))}
       </nav>
 
-      {/* EMPTY INBOX */}
-
       {visibleThreads.length === 0 ? (
-        <section className="hub-empty-inbox">
+        <section className="hub-inbox-v2-empty">
           {query ? (
             <>
               <Search size={28} />
-
-              <h2>
-                No matches for &ldquo;{query}&rdquo;
-              </h2>
-
-              <p>
-                Try a different name, email
-                address, subject or keyword.
-              </p>
-
-              <Link
-                href={inboxHref(activeView, "")}
-                className="hub-secondary-button"
-              >
+              <h2>No matches for &ldquo;{query}&rdquo;</h2>
+              <p>Try a different name, email address, subject or keyword.</p>
+              <Link href={inboxHref(activeView, "")} className="hub-secondary-button">
                 Clear search
               </Link>
             </>
           ) : (
             <>
               <Inbox size={28} />
-
               <h2>
                 {activeView === "unread"
                   ? "All caught up"
-                  : activeView === "other"
-                    ? "No other messages"
-                    : "Your inbox is empty"}
+                  : activeView === "needs-reply"
+                    ? "Nothing needs a reply"
+                    : activeView === "replied"
+                      ? "No replied conversations"
+                      : activeView === "other"
+                        ? "No other messages"
+                        : "Your inbox is empty"}
               </h2>
-
               <p>
                 {activeView === "other"
                   ? "Previously imported automated messages appear here. Nothing is deleted."
                   : activeView === "unread"
                     ? "You have no unread customer conversations."
-                    : "New customer conversations will appear here automatically."}
+                    : activeView === "needs-reply"
+                      ? "No customer conversation is currently waiting for your reply."
+                      : activeView === "replied"
+                        ? "No customer conversation currently has your message as the latest reply."
+                        : "New customer conversations will appear here automatically."}
               </p>
             </>
           )}
         </section>
       ) : (
-        /*
-         * THREAD LIST
-         */
+        <section className="hub-inbox-v2-list" aria-label="Inbox conversations">
+          {visibleThreads.map((thread) => {
+            const latestMessage = thread.messages[0];
+            if (!latestMessage) return null;
 
-        <section className="hub-mail-list">
-          {visibleThreads.map(
-            (thread) => {
-              const latestMessage =
-                thread.messages[0];
+            const unreadInThread = thread._count.messages;
+            const hasUnread = unreadInThread > 0;
+            const messageCount = messageCountMap.get(thread.id) ?? 1;
+            const isOther = otherThreads.has(thread.id);
 
-              /*
-               * Because our query requires
-               * an inbound message, this
-               * should normally never happen.
-               */
-              if (!latestMessage) {
-                return null;
-              }
+            const contactEmail =
+              thread.contact?.email ??
+              (latestMessage.direction === "INBOUND"
+                ? latestMessage.fromEmail
+                : latestMessage.toEmail);
 
-              const unreadInThread =
-                thread._count.messages;
+            const contactName =
+              thread.contact?.name ||
+              (latestMessage.direction === "INBOUND" ? latestMessage.fromName : null) ||
+              contactEmail;
 
-              const hasUnread =
-                unreadInThread > 0;
+            const latestIsInbound = latestMessage.direction === "INBOUND";
+            const initials = getInitials(contactName, contactEmail);
+            const latestActivityAt = messageActivityDate(latestMessage);
 
-              const messageCount =
-                messageCountMap.get(
-                  thread.id
-                ) ?? 1;
-
-              /*
-               * Prefer CRM contact data.
-               *
-               * Fallbacks are useful for
-               * legacy/imported threads.
-               */
-
-              const contactEmail =
-                thread.contact
-                  ?.email ??
-                (latestMessage.direction ===
-                "INBOUND"
-                  ? latestMessage.fromEmail
-                  : latestMessage.toEmail);
-
-              const contactName =
-                thread.contact
-                  ?.name ||
-                (latestMessage.direction ===
-                "INBOUND"
-                  ? latestMessage.fromName
-                  : null) ||
-                contactEmail;
-
-              return (
-                <Link
-                  href={`/hub/thread/${thread.id}`}
-                  className={`hub-mail-row ${
-                    hasUnread
-                      ? "hub-mail-unread"
-                      : ""
-                  }`}
-                  key={thread.id}
-                >
-                  {/* STATUS */}
-
-                  <div className="hub-mail-status">
-                    {hasUnread && (
-                      <span className="hub-unread-dot" />
-                    )}
-
-                    <Mail size={16} aria-hidden="true" />
+            return (
+              <Link
+                href={`/hub/thread/${thread.id}?returnTo=${encodeURIComponent(returnTo)}`}
+                className={`hub-inbox-v2-row ${
+                  hasUnread ? "hub-inbox-v2-row-unread" : ""
+                }`}
+                key={thread.id}
+              >
+                <div className="hub-inbox-v2-person">
+                  <div className="hub-inbox-v2-avatar">
+                    {initials}
+                    {hasUnread && <span className="hub-inbox-v2-unread-dot" />}
                   </div>
 
-                  {/* CUSTOMER */}
-
-                  <div className="hub-mail-sender">
-                    <strong>
-                      {contactName}
-                    </strong>
-
-                    <span>
-                      {contactEmail}
-                      {" · "}
-                      {messageCount}{" "}
-                      {messageCount === 1
-                        ? "message"
-                        : "messages"}
-                    </span>
-                  </div>
-
-                  {/* SUBJECT + PREVIEW */}
-
-                  <div className="hub-mail-body">
-                    <strong>
-                      {thread.subject}
-                    </strong>
-
-                    <span>
-                      {latestMessage.direction ===
-                      "OUTBOUND"
-                        ? "You: "
-                        : ""}
-
-                      {createPreview(
-                        latestMessage.body
+                  <div className="hub-inbox-v2-identity">
+                    <div className="hub-inbox-v2-name-line">
+                      <strong>{contactName}</strong>
+                      {isOther ? (
+                        <span className="hub-inbox-v2-badge hub-inbox-v2-badge-other">
+                          Other
+                        </span>
+                      ) : hasUnread ? (
+                        <span className="hub-inbox-v2-badge hub-inbox-v2-badge-unread">
+                          {unreadInThread} unread
+                        </span>
+                      ) : latestIsInbound ? (
+                        <span className="hub-inbox-v2-badge hub-inbox-v2-badge-reply">
+                          Reply
+                        </span>
+                      ) : (
+                        <span className="hub-inbox-v2-badge hub-inbox-v2-badge-done">
+                          Replied
+                        </span>
                       )}
+                    </div>
+                    <span className="hub-inbox-v2-email">{contactEmail}</span>
+                  </div>
+                </div>
+
+                <div className="hub-inbox-v2-content">
+                  <strong className="hub-inbox-v2-subject">{thread.subject}</strong>
+                  <span className="hub-inbox-v2-preview">
+                    {latestMessage.direction === "OUTBOUND" ? "You: " : ""}
+                    {createMailPreview(latestMessage.body)}
+                  </span>
+                </div>
+
+                <div className="hub-inbox-v2-tail">
+                  <time dateTime={latestActivityAt.toISOString()}>
+                    {formatDate(latestActivityAt)}
+                  </time>
+
+                  <div className="hub-inbox-v2-meta">
+                    <span className="hub-inbox-v2-message-count">
+                      {messageCount} {messageCount === 1 ? "message" : "messages"}
+                    </span>
+                    <span className="hub-inbox-v2-open">
+                      Open
+                      <ArrowRight size={13} />
                     </span>
                   </div>
-
-                  {/* LAST ACTIVITY */}
-
-                  <time
-                    dateTime={
-                      latestMessage.createdAt.toISOString()
-                    }
-                  >
-                    {formatDate(
-                      latestMessage.createdAt
-                    )}
-                  </time>
-                </Link>
-              );
-            }
-          )}
+                </div>
+              </Link>
+            );
+          })}
         </section>
       )}
 
-      {/* UNREAD SUMMARY */}
-
-      {unreadCount > 0 && (
-        <div className="hub-inbox-summary">
-          {unreadCount}{" "}
-          {unreadCount === 1
-            ? "unread message"
-            : "unread messages"}
+      {unreadMessageCount > 0 && (
+        <div className="hub-inbox-v2-unread-summary">
+          {unreadMessageCount} {unreadMessageCount === 1 ? "unread message" : "unread messages"}
         </div>
       )}
     </div>

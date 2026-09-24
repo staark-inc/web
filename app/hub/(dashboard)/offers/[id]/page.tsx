@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Building2, CalendarDays, ExternalLink, FolderKanban, Mail } from "lucide-react";
+import { ArrowLeft, Building2, CalendarDays, ExternalLink, FolderKanban, Mail, Target } from "lucide-react";
 
 import { formatOfferAmount, offerStatusLabels } from "@/lib/offers";
 import { prisma } from "@/lib/prisma";
 import OfferForm from "../OfferForm";
 import OfferStatusActions from "../OfferStatusActions";
 import OfferDeleteButton from "../OfferDeleteButton";
+import "../../../offer-decision-polish.css";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +21,7 @@ export default async function OfferDetailPage({ params }: { params: Promise<{ id
     where: { id },
     include: {
       client: { select: { id: true, name: true } },
+      lead: { select: { id: true, service: true, status: true } },
       project: { select: { id: true, name: true } },
     },
   });
@@ -47,49 +49,81 @@ export default async function OfferDetailPage({ params }: { params: Promise<{ id
           )}
         </div>
         <div className="hub-client-side">
-          <div className="hub-client-panel"><h2>Client</h2><Link className="hub-offer-client-link" href={`/hub/clients/${offer.clientId}`}><Building2 size={16} />{offer.client.name}</Link></div>
+          <div className="hub-client-panel">
+            <h2>Client</h2>
+            <Link className="hub-offer-client-link" href={`/hub/clients/${offer.clientId}`}><Building2 size={16} />{offer.client.name}</Link>
+            {offer.lead && (
+              <Link className="hub-offer-client-link" href={`/hub/leads/${offer.lead.id}`}>
+                <Target size={16} />
+                {offer.lead.service || "Linked lead"} · {offer.lead.status}
+              </Link>
+            )}
+          </div>
           <div className="hub-client-panel"><h2>Decision</h2>
-            <p className="hub-client-empty">The client can accept or decline from the secure offer link. The status updates automatically.</p>
+            <p className="hub-client-empty">The client can accept or decline from the secure offer link. Linked leads become won automatically when the offer is accepted.</p>
             {offer.sharedAt && <p className="hub-offer-timestamp hub-offer-timestamp-shared">Shared {formatDate(offer.sharedAt)}</p>}
             {offer.viewedAt && <p className="hub-offer-timestamp hub-offer-timestamp-viewed">Viewed {formatDate(offer.viewedAt)}</p>}
             {offer.decidedAt && <p className="hub-offer-timestamp hub-offer-timestamp-decided">Decision {formatDate(offer.decidedAt)}</p>}
-            {offer.status === "DRAFT" && <Link className="hub-secondary-button hub-offer-project-link" href={`/hub/offers/${offer.id}/send`}><Mail size={15} />Review and send offer</Link>}
-            {offer.shareToken && offer.status !== "DRAFT" && <Link className="hub-secondary-button hub-offer-project-link" href={`/offert/${offer.shareToken}`} target="_blank" rel="noopener noreferrer"><ExternalLink size={15} />Open client offer</Link>}
-            <OfferStatusActions offerId={offer.id} status={offer.status} />
 
-            <OfferDeleteButton
-              offerId={offer.id}
-              disabled={
-                Boolean(offer.project) ||
-                !["DRAFT", "DECLINED"].includes(offer.status)
-              }
-              disabledReason={
-                offer.project
-                  ? "Offers linked to a project cannot be deleted."
-                  : !["DRAFT", "DECLINED"].includes(offer.status)
-                    ? "Only draft or declined offers can be deleted."
-                    : undefined
-              }
-            />
-            {offer.status === "ACCEPTED" && (
-              offer.project ? (
-                <Link
-                  className="hub-secondary-button hub-offer-project-link"
-                  href={`/hub/projects/${offer.project.id}`}
-                >
-                  <FolderKanban size={15} />
-                  Open project
+            <div className="hub-offer-decision-actions">
+              {offer.status === "DRAFT" && (
+                <Link className="hub-offer-decision-primary" href={`/hub/offers/${offer.id}/send`}>
+                  <Mail size={15} />
+                  Review and send offer
                 </Link>
-              ) : (
+              )}
+
+              {offer.shareToken && offer.status !== "DRAFT" && (
                 <Link
-                  className="hub-secondary-button hub-offer-project-link"
-                  href={`/hub/projects/new?clientId=${encodeURIComponent(offer.clientId)}&offerId=${encodeURIComponent(offer.id)}`}
+                  className="hub-offer-decision-primary"
+                  href={`/offert/${offer.shareToken}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  <FolderKanban size={15} />
-                  Start a project
+                  <ExternalLink size={15} />
+                  Open client offer
                 </Link>
-              )
-            )}
+              )}
+
+              <div className="hub-offer-decision-admin-row">
+                <OfferStatusActions offerId={offer.id} status={offer.status} />
+
+                <OfferDeleteButton
+                  offerId={offer.id}
+                  disabled={
+                    Boolean(offer.project) ||
+                    !["DRAFT", "DECLINED"].includes(offer.status)
+                  }
+                  disabledReason={
+                    offer.project
+                      ? "Offers linked to a project cannot be deleted."
+                      : !["DRAFT", "DECLINED"].includes(offer.status)
+                        ? "Only draft or declined offers can be deleted."
+                        : undefined
+                  }
+                />
+              </div>
+
+              {offer.status === "ACCEPTED" && (
+                offer.project ? (
+                  <Link
+                    className="hub-offer-decision-button hub-offer-decision-project"
+                    href={`/hub/projects/${offer.project.id}`}
+                  >
+                    <FolderKanban size={15} />
+                    Open project
+                  </Link>
+                ) : (
+                  <Link
+                    className="hub-offer-decision-button hub-offer-decision-project"
+                    href={`/hub/projects/new?clientId=${encodeURIComponent(offer.clientId)}&offerId=${encodeURIComponent(offer.id)}`}
+                  >
+                    <FolderKanban size={15} />
+                    Start a project
+                  </Link>
+                )
+              )}
+            </div>
           </div>
         </div>
       </div>

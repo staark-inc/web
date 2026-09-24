@@ -43,6 +43,7 @@ export async function respondToOffer(
     select: {
       id: true,
       clientId: true,
+      leadId: true,
       title: true,
       status: true,
       client: {
@@ -67,26 +68,44 @@ export async function respondToOffer(
 
   const decidedAt = new Date();
 
-  const updated = await prisma.offer.updateMany({
-    where: {
-      id: offer.id,
-      status: offer.status,
-    },
-    data: {
-      status,
-      decidedAt,
-      termsAcceptedAt:
-        status === "ACCEPTED"
-          ? decidedAt
-          : null,
-      termsVersion:
-        status === "ACCEPTED"
-          ? "2026-09-22"
-          : null,
-    },
+  const updated = await prisma.$transaction(async (tx) => {
+    const offerUpdate = await tx.offer.updateMany({
+      where: {
+        id: offer.id,
+        status: offer.status,
+      },
+      data: {
+        status,
+        decidedAt,
+        termsAcceptedAt:
+          status === "ACCEPTED"
+            ? decidedAt
+            : null,
+        termsVersion:
+          status === "ACCEPTED"
+            ? "2026-09-22"
+            : null,
+      },
+    });
+
+    if (offerUpdate.count !== 1) {
+      return false;
+    }
+
+    if (status === "ACCEPTED" && offer.leadId) {
+      await tx.lead.update({
+        where: { id: offer.leadId },
+        data: {
+          status: "WON",
+          clientId: offer.clientId,
+        },
+      });
+    }
+
+    return true;
   });
 
-  if (updated.count !== 1) {
+  if (!updated) {
     redirect(
       `/offert/${encodeURIComponent(token)}?result=locked`
     );
@@ -105,6 +124,7 @@ export async function respondToOffer(
     href: `/hub/offers/${offer.id}`,
     metadata: {
       offerId: offer.id,
+      leadId: offer.leadId,
       status,
     },
     dedupeKey: `offer-decision:${offer.id}:${status}`,
@@ -115,6 +135,11 @@ export async function respondToOffer(
   revalidatePath("/hub/offers");
   revalidatePath(`/hub/offers/${offer.id}`);
   revalidatePath(`/hub/clients/${offer.clientId}`);
+
+  if (offer.leadId) {
+    revalidatePath("/hub/leads");
+    revalidatePath(`/hub/leads/${offer.leadId}`);
+  }
 
   redirect(
     `/offert/${encodeURIComponent(token)}?result=${
