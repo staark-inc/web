@@ -234,9 +234,10 @@ export async function verifyWordPressRequest(request: Request, rawBody: string) 
     return { ok: false as const, status: 401, error: "Connector secret is unavailable." };
   }
 
-  const path = new URL(request.url).pathname;
+  const url = new URL(request.url);
+  const requestTarget = `${url.pathname}${url.search}`;
   const bodyHash = createHash("sha256").update(rawBody).digest("hex");
-  const signedValue = [request.method.toUpperCase(), path, timestampValue, bodyHash].join("\n");
+  const signedValue = [request.method.toUpperCase(), requestTarget, timestampValue, bodyHash].join("\n");
   const expected = createHmac("sha256", secret).update(signedValue).digest("hex");
 
   const actualBuffer = Buffer.from(signature, "hex");
