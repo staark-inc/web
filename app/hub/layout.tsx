@@ -27,6 +27,7 @@ import "./prospects-more-compact.css";
 import "./prospects-buttons-compact.css";
 import "./prospects-top10.css";
 import "./opportunities.css";
+import "./opportunities-mobile.css";
 import "./mail-workspace-v2.css";
 import "./thread-v2.css";
 import "./smoke-sidebar-fixes.css";
