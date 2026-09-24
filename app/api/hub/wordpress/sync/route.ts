@@ -139,7 +139,7 @@ export async function POST(request: Request) {
               wordpressSiteId: verified.site.id,
               localId,
               supportRequestId: supportRequest.id,
-              payload: ticket,
+              payload: JSON.parse(JSON.stringify(ticket)),
             },
           });
 
@@ -167,19 +167,26 @@ export async function POST(request: Request) {
       synced.push(localId);
 
       if (supportRequestId) {
-        await createAdminNotification({
-          type: "support.wordpress.created",
-          title: "New WordPress support request",
-          message: `${verified.site.siteName} · ${title}`,
-          href: `/hub/support/${supportRequestId}`,
-          metadata: {
-            supportRequestId,
-            wordpressSiteId: verified.site.id,
-            localId,
-          },
-          dedupeKey: `wordpress-support:${verified.site.id}:${localId}`,
-          preference: "support",
-        });
+        try {
+          await createAdminNotification({
+            type: "support.wordpress.created",
+            title: "New WordPress support request",
+            message: `${verified.site.siteName} · ${title}`,
+            href: `/hub/support/${supportRequestId}`,
+            metadata: {
+              supportRequestId,
+              wordpressSiteId: verified.site.id,
+              localId,
+            },
+            dedupeKey: `wordpress-support:${verified.site.id}:${localId}`,
+            preference: "support",
+          });
+        } catch (notificationError) {
+          console.error(
+            `[WORDPRESS] Ticket ${localId} synced but notification failed:`,
+            notificationError
+          );
+        }
       }
     }
 
