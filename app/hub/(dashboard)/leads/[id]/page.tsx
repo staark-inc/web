@@ -107,7 +107,7 @@ export default async function LeadPage({ params }: PageProps) {
         <div>
           <span><Target size={15} /> Stage</span>
           <strong>{statusLabels[lead.status] ?? lead.status}</strong>
-          <small>{lead.client ? "Converted to client" : "Open opportunity"}</small>
+          <small>{lead.client ? `Linked to client: ${lead.client.name}` : "Open opportunity"}</small>
         </div>
       </section>
 
@@ -154,26 +154,25 @@ export default async function LeadPage({ params }: PageProps) {
             <div><span>PIPELINE</span><h2>Next action</h2></div>
           </div>
 
-          {lead.client ? (
-            <div className="hub-lead-v2-converted">
-              <strong>Converted to client</strong>
-              <p>This lead is already connected to an active client record.</p>
-              <Link href={`/hub/clients/${lead.client.id}`}>Open {lead.client.name}</Link>
+          <div className="hub-lead-v2-actions-stack">
+            <div>
+              <span>Lead stage</span>
+              <LeadStatusForm leadId={lead.id} currentStatus={lead.status} />
             </div>
-          ) : (
-            <div className="hub-lead-v2-actions-stack">
-              <div>
-                <span>Lead stage</span>
-                <LeadStatusForm leadId={lead.id} currentStatus={lead.status} />
+
+            {lead.client ? (
+              <div className="hub-lead-v2-converted">
+                <strong>Client record linked</strong>
+                <p>The lead keeps its own sales stage until the deal is actually won or lost.</p>
+                <Link href={`/hub/clients/${lead.client.id}`}>Open {lead.client.name}</Link>
               </div>
-              {lead.status !== "WON" && (
-                <div className="hub-lead-v2-convert-block">
-                  <span>Ready to close?</span>
-                  <ConvertLeadForm leadId={lead.id} defaultName={lead.contact.company || ""} />
-                </div>
-              )}
-            </div>
-          )}
+            ) : lead.status !== "WON" ? (
+              <div className="hub-lead-v2-convert-block">
+                <span>Create a client record when you need it for offers or billing.</span>
+                <ConvertLeadForm leadId={lead.id} defaultName={lead.contact.company || ""} />
+              </div>
+            ) : null}
+          </div>
         </div>
       </section>
     </div>
