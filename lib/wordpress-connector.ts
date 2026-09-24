@@ -157,7 +157,9 @@ export function sitePayloadData(site: WordPressSitePayload) {
     theme: site.theme,
     locale: site.locale,
     timezone: site.timezone,
-    capabilities: site.capabilities,
+    capabilities: site.capabilities
+      ? JSON.parse(JSON.stringify(site.capabilities))
+      : undefined,
   };
 }
 
