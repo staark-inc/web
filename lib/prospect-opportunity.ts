@@ -121,24 +121,30 @@ export function rankOpportunity(candidate: OpportunityCandidate): RankedOpportun
     reasons.push(`${candidate.rating.toFixed(1)}★ · ${candidate.reviews} reviews`);
   }
 
+  // Technical checks only make sense when a website actually exists. A
+  // missing website already receives the maximum website-need score above;
+  // treating scanner defaults such as mobile=false / https=false as extra
+  // faults would double-count the same opportunity.
   let technicalNeed = 0;
-  if (candidate.mobile === false) {
-    technicalNeed += 4;
-    reasons.push("Not mobile friendly");
-  }
-  if (candidate.https === false) {
-    technicalNeed += 3;
-    reasons.push("No HTTPS");
-  }
+  if (candidate.website) {
+    if (candidate.mobile === false) {
+      technicalNeed += 4;
+      reasons.push("Not mobile friendly");
+    }
+    if (candidate.https === false) {
+      technicalNeed += 3;
+      reasons.push("No HTTPS");
+    }
 
-  const staleYear = new Date().getFullYear() - 3;
-  if (candidate.copyrightYear != null && candidate.copyrightYear <= staleYear) {
-    technicalNeed += 2;
-    reasons.push(`Copyright ${candidate.copyrightYear}`);
-  }
-  if ((candidate.loadSeconds ?? 0) >= 4) {
-    technicalNeed += 1;
-    reasons.push(`Slow load ${candidate.loadSeconds?.toFixed(1)}s`);
+    const staleYear = new Date().getFullYear() - 3;
+    if (candidate.copyrightYear != null && candidate.copyrightYear <= staleYear) {
+      technicalNeed += 2;
+      reasons.push(`Copyright ${candidate.copyrightYear}`);
+    }
+    if ((candidate.loadSeconds ?? 0) >= 4) {
+      technicalNeed += 1;
+      reasons.push(`Slow load ${candidate.loadSeconds?.toFixed(1)}s`);
+    }
   }
   technicalNeed = Math.min(technicalNeed, 10);
 
