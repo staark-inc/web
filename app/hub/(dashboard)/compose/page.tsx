@@ -1,4 +1,4 @@
-import { ArrowLeft, MailPlus } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 import { getEmailTemplates } from "@/lib/email-templates";
@@ -106,11 +106,6 @@ export default async function HubComposePage({ searchParams }: PageProps) {
           <span className="hub-eyebrow">MAIL WORKSPACE</span>
           <h1>New message</h1>
           <p>Write, preview and send client communication from one place.</p>
-        </div>
-
-        <div className="hub-mail-v2-header-chip">
-          <MailPlus size={15} />
-          Compose V2
         </div>
       </header>
 
