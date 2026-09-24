@@ -45,15 +45,23 @@ export async function POST(request: Request) {
     const now = new Date();
 
     const connectedSite = await prisma.$transaction(async (tx) => {
-      const currentPairing = await tx.wordPressPairingCode.findUnique({
-        where: { id: pairing.id },
+      const consumed = await tx.wordPressPairingCode.updateMany({
+        where: {
+          id: pairing.id,
+          usedAt: null,
+          expiresAt: { gt: now },
+        },
+        data: {
+          usedAt: now,
+          usedBySiteId: site.siteId,
+        },
       });
 
-      if (!currentPairing || currentPairing.usedAt || currentPairing.expiresAt.getTime() <= Date.now()) {
+      if (consumed.count !== 1) {
         throw new Error("PAIRING_CODE_CONSUMED");
       }
 
-      const record = await tx.wordPressSite.upsert({
+      return tx.wordPressSite.upsert({
         where: { siteId: site.siteId },
         create: {
           siteId: site.siteId,
@@ -62,8 +70,8 @@ export async function POST(request: Request) {
           status: "CONNECTED",
           connectedAt: now,
           lastSeenAt: now,
-          clientId: currentPairing.targetClientId,
-          projectId: currentPairing.targetProjectId,
+          clientId: pairing.targetClientId,
+          projectId: pairing.targetProjectId,
         },
         update: {
           siteSecretEncrypted: encryptedSecret,
@@ -71,20 +79,10 @@ export async function POST(request: Request) {
           status: "CONNECTED",
           connectedAt: now,
           lastSeenAt: now,
-          clientId: currentPairing.targetClientId,
-          projectId: currentPairing.targetProjectId,
+          clientId: pairing.targetClientId,
+          projectId: pairing.targetProjectId,
         },
       });
-
-      await tx.wordPressPairingCode.update({
-        where: { id: currentPairing.id },
-        data: {
-          usedAt: now,
-          usedBySiteId: site.siteId,
-        },
-      });
-
-      return record;
     });
 
     return NextResponse.json({
