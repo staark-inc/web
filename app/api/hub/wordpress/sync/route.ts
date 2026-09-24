@@ -32,6 +32,30 @@ function ticketWebsite(ticket: Record<string, unknown>, fallback: string) {
   return siteUrl || fallback;
 }
 
+
+function hubReplies(payload: unknown) {
+  const source = record(payload);
+  if (!source || !Array.isArray(source.hubReplies)) return [];
+
+  return source.hubReplies
+    .map((value) => {
+      const reply = record(value);
+      if (!reply) return null;
+
+      const id = connectorString(reply.id, 120);
+      const body = connectorString(reply.body, 5000);
+      const createdAt = connectorString(reply.createdAt, 80);
+      if (!id || !body || !createdAt) return null;
+
+      return { id, body, createdAt };
+    })
+    .filter(
+      (value): value is { id: string; body: string; createdAt: string } =>
+        value !== null
+    )
+    .slice(-50);
+}
+
 export async function POST(request: Request) {
   const rawBody = await request.text();
 
@@ -190,9 +214,35 @@ export async function POST(request: Request) {
       }
     }
 
+    const remoteSyncs = await prisma.wordPressTicketSync.findMany({
+      where: { wordpressSiteId: verified.site.id },
+      orderBy: { localId: "desc" },
+      take: 100,
+      select: {
+        localId: true,
+        payload: true,
+        supportRequest: {
+          select: {
+            status: true,
+            updatedAt: true,
+          },
+        },
+      },
+    });
+
+    const remoteTickets = remoteSyncs
+      .map((sync) => ({
+        localId: sync.localId,
+        status: sync.supportRequest.status,
+        updatedAt: sync.supportRequest.updatedAt.toISOString(),
+        replies: hubReplies(sync.payload),
+      }))
+      .reverse();
+
     return NextResponse.json({
       ok: true,
       synced: { tickets: synced },
+      remote: { tickets: remoteTickets },
     });
   } catch (error) {
     console.error("[WORDPRESS] Sync failed:", error);
