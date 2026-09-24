@@ -157,17 +157,19 @@ export default async function LeadPage({ params }: PageProps) {
           </div>
 
           <div className="hub-lead-v2-actions-stack">
-            <div>
+            <div className="hub-lead-v2-stage-block">
               <span>Lead stage</span>
-              <LeadStatusForm leadId={lead.id} currentStatus={lead.status} />
-            </div>
+              <div className="hub-lead-v2-stage-row">
+                <LeadStatusForm leadId={lead.id} currentStatus={lead.status} />
 
-            {canCreateOffer && (
-              <Link href={`/hub/offers/new?leadId=${encodeURIComponent(lead.id)}`} className="hub-secondary-button">
-                <FileText size={14} />
-                Create offer
-              </Link>
-            )}
+                {canCreateOffer && (
+                  <Link href={`/hub/offers/new?leadId=${encodeURIComponent(lead.id)}`} className="hub-secondary-button">
+                    <FileText size={14} />
+                    Create offer
+                  </Link>
+                )}
+              </div>
+            </div>
 
             {lead.client ? (
               <div className="hub-lead-v2-converted">
