@@ -24,6 +24,12 @@ enum LeadStatus {
   LOST
 }
 
+enum ContactChannel {
+  EMAIL
+  WHATSAPP
+  FACEBOOK
+}
+
 enum ProspectStatus {
   NO_WEBSITE
   BROKEN_WEBSITE
@@ -146,8 +152,9 @@ model Settings {
 model Contact {
   id        String   @id @default(cuid())
   name      String?
-  email     String   @unique
+  email     String?  @unique
   phone     String?
+  facebook  String?
   company   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -158,6 +165,8 @@ model Contact {
   clients  Client[]
 
   @@index([email])
+  @@index([phone])
+  @@index([facebook])
   @@index([createdAt])
 }
 
@@ -170,9 +179,10 @@ model Lead {
   budget  String?
   message String?
 
-  status   LeadStatus @default(NEW)
-  clientId String?
-  client   Client?    @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  contactChannel ContactChannel @default(EMAIL)
+  status         LeadStatus     @default(NEW)
+  clientId       String?
+  client         Client?        @relation(fields: [clientId], references: [id], onDelete: SetNull)
 
   prospect Prospect?
 
@@ -180,6 +190,7 @@ model Lead {
   updatedAt DateTime @updatedAt
 
   @@index([contactId])
+  @@index([contactChannel])
   @@index([status])
   @@index([createdAt])
 }

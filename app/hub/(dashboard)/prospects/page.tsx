@@ -8,6 +8,7 @@ import {
   Globe2,
   Mail,
   MapPin,
+  MessageCircle,
   Phone,
   Sparkles,
   Target,
@@ -55,15 +56,15 @@ function bestContact(prospect: {
   linkedin: string | null;
 }) {
   if (prospect.email) return { label: prospect.email, kind: "email" as const };
-  if (prospect.contactForm) return { label: "Contact form", kind: "form" as const };
   if (prospect.googlePhone || prospect.websitePhone) {
     return {
       label: prospect.googlePhone || prospect.websitePhone || "Phone",
       kind: "phone" as const,
     };
   }
-  if (prospect.instagram) return { label: "Instagram", kind: "social" as const };
   if (prospect.facebook) return { label: "Facebook", kind: "social" as const };
+  if (prospect.contactForm) return { label: "Contact form", kind: "form" as const };
+  if (prospect.instagram) return { label: "Instagram", kind: "social" as const };
   if (prospect.linkedin) return { label: "LinkedIn", kind: "social" as const };
   return { label: "Manual research", kind: "none" as const };
 }
@@ -111,6 +112,7 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
           { email: { not: null } },
           { googlePhone: { not: null } },
           { websitePhone: { not: null } },
+          { facebook: { not: null } },
           { contactForm: true },
         ],
       },
@@ -219,6 +221,12 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
             const contact = bestContact(prospect);
             const reasons = reasonList(prospect.reasons);
             const phone = prospect.googlePhone || prospect.websitePhone;
+            const whatsappNumber = phone?.replace(/\D/g, "") || "";
+            const contactChannels = [
+              prospect.email ? { value: "EMAIL", label: "Email" } : null,
+              phone ? { value: "WHATSAPP", label: "WhatsApp" } : null,
+              prospect.facebook ? { value: "FACEBOOK", label: "Facebook" } : null,
+            ].filter((channel): channel is { value: string; label: string } => Boolean(channel));
 
             return (
               <details key={prospect.id} className="hub-prospect-row">
@@ -286,6 +294,11 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
                       <div className="hub-prospect-links">
                         {prospect.email && <a href={`mailto:${prospect.email}`}><Mail size={14} />{prospect.email}</a>}
                         {phone && <a href={`tel:${phone}`}><Phone size={14} />{phone}</a>}
+                        {phone && whatsappNumber && (
+                          <a href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noreferrer">
+                            <MessageCircle size={14} /> WhatsApp
+                          </a>
+                        )}
                         {prospect.contactPage && <a href={prospect.contactPage} target="_blank" rel="noreferrer"><Globe2 size={14} />Contact page</a>}
                         {prospect.instagram && <a href={prospect.instagram} target="_blank" rel="noreferrer">Instagram</a>}
                         {prospect.facebook && <a href={prospect.facebook} target="_blank" rel="noreferrer">Facebook</a>}
@@ -317,15 +330,23 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
                         <Link href={`/hub/leads/${prospect.importedLeadId}`} className="hub-prospect-primary-action">
                           Open Lead <ArrowUpRight size={14} />
                         </Link>
-                      ) : prospect.email && prospect.status !== "IGNORED" ? (
+                      ) : contactChannels.length > 0 && prospect.status !== "IGNORED" ? (
                         <form action={addProspectToLeads}>
                           <input type="hidden" name="prospectId" value={prospect.id} />
+                          <label>
+                            <span className="hub-prospect-action-note">Contact channel</span>
+                            <select name="contactChannel" defaultValue={contactChannels[0]?.value}>
+                              {contactChannels.map((channel) => (
+                                <option key={channel.value} value={channel.value}>{channel.label}</option>
+                              ))}
+                            </select>
+                          </label>
                           <button type="submit" className="hub-prospect-primary-action">
                             <UserPlus size={14} /> Add to Leads
                           </button>
                         </form>
-                      ) : !prospect.email && prospect.status !== "IGNORED" ? (
-                        <span className="hub-prospect-action-note">Add an email before promoting to Leads.</span>
+                      ) : prospect.status !== "IGNORED" ? (
+                        <span className="hub-prospect-action-note">No email, phone or Facebook contact found.</span>
                       ) : null}
 
                       {prospect.status === "IGNORED" ? (
