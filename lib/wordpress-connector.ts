@@ -10,6 +10,7 @@ import {
 import { prisma } from "@/lib/prisma";
 
 const CONNECTOR_CIPHER_VERSION = "v1";
+const LEGACY_CIPHER_VERSION = "legacy";
 const SIGNATURE_MAX_AGE_SECONDS = 5 * 60;
 
 export type WordPressSitePayload = {
@@ -33,6 +34,15 @@ function connectorKey() {
   return createHash("sha256")
     .update(`staark-wordpress-connector:${secret}`)
     .digest();
+}
+
+function legacyConnectorKey() {
+  const secret = process.env.WORDPRESS_CONNECTOR_SECRET || process.env.AUTH_SECRET;
+  if (!secret) {
+    throw new Error("WORDPRESS_CONNECTOR_SECRET or AUTH_SECRET is not configured");
+  }
+
+  return createHash("sha256").update(secret).digest();
 }
 
 export function normalizePairingCode(value: string) {
@@ -65,14 +75,9 @@ export function encryptSiteSecret(secret: string) {
   ].join(".");
 }
 
-export function decryptSiteSecret(value: string) {
-  const [version, ivValue, tagValue, ciphertextValue] = value.split(".");
-  if (
-    version !== CONNECTOR_CIPHER_VERSION ||
-    !ivValue ||
-    !tagValue ||
-    !ciphertextValue
-  ) {
+function decryptCurrentSiteSecret(parts: string[]) {
+  const [, ivValue, tagValue, ciphertextValue] = parts;
+  if (!ivValue || !tagValue || !ciphertextValue) {
     throw new Error("Invalid WordPress connector secret");
   }
 
@@ -87,6 +92,39 @@ export function decryptSiteSecret(value: string) {
     decipher.update(Buffer.from(ciphertextValue, "base64url")),
     decipher.final(),
   ]).toString("utf8");
+}
+
+function decryptLegacySiteSecret(parts: string[]) {
+  const [, ivValue, tagValue, ciphertextValue] = parts;
+  if (!ivValue || !tagValue || !ciphertextValue) {
+    throw new Error("Invalid legacy WordPress connector secret");
+  }
+
+  const decipher = createDecipheriv(
+    "aes-256-gcm",
+    legacyConnectorKey(),
+    Buffer.from(ivValue, "base64")
+  );
+  decipher.setAuthTag(Buffer.from(tagValue, "base64"));
+
+  return Buffer.concat([
+    decipher.update(Buffer.from(ciphertextValue, "base64")),
+    decipher.final(),
+  ]).toString("utf8");
+}
+
+export function decryptSiteSecret(value: string) {
+  const parts = value.split(".");
+
+  if (parts[0] === CONNECTOR_CIPHER_VERSION) {
+    return decryptCurrentSiteSecret(parts);
+  }
+
+  if (parts[0] === LEGACY_CIPHER_VERSION) {
+    return decryptLegacySiteSecret(parts);
+  }
+
+  throw new Error("Invalid WordPress connector secret");
 }
 
 function stringValue(value: unknown, max: number) {
