@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import type { ContactChannel } from "@/generated/prisma/client";
 
 async function requireAdmin() {
   const session = await getSession();
@@ -12,6 +13,27 @@ async function requireAdmin() {
   if (!session || session.role !== "ADMIN") {
     throw new Error("Unauthorized");
   }
+}
+
+function normalize(value: string | null | undefined) {
+  const trimmed = value?.trim();
+  return trimmed ? trimmed : null;
+}
+
+function normalizeEmail(value: string | null | undefined) {
+  return normalize(value)?.toLowerCase() ?? null;
+}
+
+function normalizePhone(value: string | null | undefined) {
+  return normalize(value);
+}
+
+function normalizeFacebook(value: string | null | undefined) {
+  return normalize(value);
+}
+
+function isContactChannel(value: unknown): value is ContactChannel {
+  return value === "EMAIL" || value === "WHATSAPP" || value === "FACEBOOK";
 }
 
 export async function ignoreProspect(formData: FormData) {
@@ -75,9 +97,14 @@ export async function addProspectToLeads(formData: FormData) {
   await requireAdmin();
 
   const prospectId = formData.get("prospectId");
+  const requestedChannel = formData.get("contactChannel");
 
   if (typeof prospectId !== "string" || !prospectId) {
     return;
+  }
+
+  if (!isContactChannel(requestedChannel)) {
+    throw new Error("Choose a valid contact channel before adding this prospect to Leads.");
   }
 
   const result = await prisma.$transaction(async (tx) => {
@@ -93,29 +120,63 @@ export async function addProspectToLeads(formData: FormData) {
       return prospect.importedLeadId;
     }
 
-    if (!prospect.email) {
-      throw new Error("An email address is required before adding this prospect to Leads.");
+    const email = normalizeEmail(prospect.email);
+    const phone = normalizePhone(prospect.googlePhone || prospect.websitePhone);
+    const facebook = normalizeFacebook(prospect.facebook);
+
+    if (requestedChannel === "EMAIL" && !email) {
+      throw new Error("This prospect has no email address.");
     }
 
-    const contact = await tx.contact.upsert({
-      where: { email: prospect.email },
-      update: {
-        company: prospect.name,
-        phone: prospect.googlePhone || prospect.websitePhone || undefined,
-      },
-      create: {
-        email: prospect.email,
-        company: prospect.name,
-        phone: prospect.googlePhone || prospect.websitePhone || undefined,
-      },
-    });
+    if (requestedChannel === "WHATSAPP" && !phone) {
+      throw new Error("This prospect has no phone number for WhatsApp.");
+    }
+
+    if (requestedChannel === "FACEBOOK" && !facebook) {
+      throw new Error("This prospect has no Facebook profile or page.");
+    }
+
+    const matches = [
+      email ? { email } : null,
+      phone ? { phone } : null,
+      facebook ? { facebook } : null,
+    ].filter(Boolean) as Array<
+      | { email: string }
+      | { phone: string }
+      | { facebook: string }
+    >;
+
+    const existingContact = matches.length
+      ? await tx.contact.findFirst({ where: { OR: matches } })
+      : null;
+
+    const contact = existingContact
+      ? await tx.contact.update({
+          where: { id: existingContact.id },
+          data: {
+            company: existingContact.company || prospect.name,
+            email: existingContact.email || email,
+            phone: existingContact.phone || phone,
+            facebook: existingContact.facebook || facebook,
+          },
+        })
+      : await tx.contact.create({
+          data: {
+            company: prospect.name,
+            email,
+            phone,
+            facebook,
+          },
+        });
 
     const lead = await tx.lead.create({
       data: {
         contactId: contact.id,
+        contactChannel: requestedChannel,
         service: "Website / digital presence",
         message: [
           `Imported from Prospects (${prospect.city || "unknown city"}).`,
+          `Preferred channel: ${requestedChannel.toLowerCase()}.`,
           prospect.website ? `Website: ${prospect.website}` : "No website detected.",
           prospect.websiteScore != null
             ? `Website score: ${prospect.websiteScore}/100.`
@@ -140,5 +201,6 @@ export async function addProspectToLeads(formData: FormData) {
 
   revalidatePath("/hub/prospects");
   revalidatePath("/hub/leads");
+  revalidatePath("/hub/contacts");
   redirect(`/hub/leads/${result}`);
 }
