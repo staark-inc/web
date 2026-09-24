@@ -21,7 +21,7 @@ export async function POST(request: Request) {
 
   try {
     const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
-    const clientId = text(body.clientId) || null;
+    let clientId = text(body.clientId) || null;
     const projectId = text(body.projectId) || null;
 
     if (clientId) {
@@ -45,6 +45,7 @@ export async function POST(request: Request) {
           { status: 400 }
         );
       }
+      clientId = project.clientId;
     }
 
     let code = generatePairingCode();
