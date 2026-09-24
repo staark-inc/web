@@ -6,7 +6,7 @@ import {
   FileText,
   FolderKanban,
   MessageSquare,
-  Timer,
+  Send,
 } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
@@ -29,7 +29,6 @@ function formatDate(date: Date) {
     year: "numeric",
   }).format(date);
 }
-
 
 type PublicWordPressReply = {
   id: string;
@@ -215,50 +214,63 @@ export default async function SupportRequestPage({
             <SupportForm request={request} options={options} />
 
             {request.wordpressTicketSync && (
-              <div style={{ marginTop: "32px", paddingTop: "24px", borderTop: "1px solid var(--hub-border, #e2e8f0)" }}>
-                <div className="hub-support-v2-panel-head">
-                  <span>WORDPRESS CLIENT</span>
-                  <h2>Public response</h2>
+              <section className="hub-wp-support-response">
+                <div className="hub-wp-support-response-head">
+                  <div className="hub-wp-support-response-icon">
+                    <MessageSquare size={16} />
+                  </div>
+                  <div>
+                    <span>WORDPRESS CLIENT</span>
+                    <h2>Public response</h2>
+                    <p>Updates sent here are returned to the connected WordPress ticket.</p>
+                  </div>
                 </div>
 
-                {publicReplies.length > 0 ? (
-                  <div className="hub-support-v2-context-list">
-                    {publicReplies.map((reply) => (
-                      <p key={reply.id}>
-                        <strong>Staark Inc. · {formatReplyDate(reply.createdAt)}</strong>
-                        <span style={{ whiteSpace: "pre-wrap" }}>{reply.body}</span>
-                      </p>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="hub-client-empty">
-                    No public response has been sent to this WordPress ticket yet.
-                  </p>
-                )}
+                <div className="hub-wp-support-response-body">
+                  {publicReplies.length > 0 ? (
+                    <div className="hub-wp-support-replies">
+                      {publicReplies.map((reply) => (
+                        <article key={reply.id} className="hub-wp-support-reply">
+                          <div className="hub-wp-support-reply-meta">
+                            <strong>Staark Inc.</strong>
+                            <time>{formatReplyDate(reply.createdAt)}</time>
+                          </div>
+                          <p>{reply.body}</p>
+                        </article>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="hub-wp-support-empty">
+                      <MessageSquare size={16} />
+                      <span>No public response has been sent yet.</span>
+                    </div>
+                  )}
 
-                <form action={replyToWordPressTicket} className="hub-client-form">
-                  <input type="hidden" name="requestId" value={request.id} />
-                  <div className="hub-client-form-field">
-                    <label htmlFor="wordpress-support-reply">Response shown to the client</label>
-                    <textarea
-                      id="wordpress-support-reply"
-                      name="reply"
-                      rows={5}
-                      maxLength={5000}
-                      required
-                      placeholder="Write the update or answer that should appear inside the client's WordPress support ticket..."
-                    />
-                  </div>
-                  <p className="hub-support-help">
-                    Sending a response sets the ticket to Waiting for client. The message is delivered on the next signed WordPress sync.
-                  </p>
-                  <div className="hub-client-form-actions">
-                    <button type="submit" className="hub-send-button">
-                      Send response to WordPress
-                    </button>
-                  </div>
-                </form>
-              </div>
+                  <form action={replyToWordPressTicket} className="hub-wp-support-form">
+                    <input type="hidden" name="requestId" value={request.id} />
+                    <div className="hub-client-form-field">
+                      <label htmlFor="wordpress-support-reply">Response shown to the client</label>
+                      <textarea
+                        id="wordpress-support-reply"
+                        name="reply"
+                        rows={5}
+                        maxLength={5000}
+                        required
+                        placeholder="Write the update or answer that should appear inside the client's WordPress support ticket..."
+                      />
+                    </div>
+                    <div className="hub-wp-support-form-footer">
+                      <p className="hub-support-help">
+                        Sending a response sets the ticket to Waiting for client and delivers it on the next signed WordPress sync.
+                      </p>
+                      <button type="submit" className="hub-send-button">
+                        <Send size={14} />
+                        Send response
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </section>
             )}
           </div>
         </section>
