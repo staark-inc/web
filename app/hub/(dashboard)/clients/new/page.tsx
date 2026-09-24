@@ -27,6 +27,10 @@ export default async function NewClientPage({ searchParams }: PageProps) {
       })
     : null;
 
+  const contactLabel = contact
+    ? contact.name ?? contact.email ?? contact.company ?? "This contact"
+    : null;
+
   return (
     <div className="hub-page">
       <div className="hub-detail-back">
@@ -42,7 +46,7 @@ export default async function NewClientPage({ searchParams }: PageProps) {
 
           <p>
             {contact
-              ? `${contact.name ?? contact.email} will be linked to this client.`
+              ? `${contactLabel} will be linked to this client.`
               : "Add a company you work with."}
           </p>
         </div>
@@ -52,7 +56,7 @@ export default async function NewClientPage({ searchParams }: PageProps) {
         <ClientForm
           contactId={contact?.id}
           defaultName={contact?.company ?? contact?.name ?? undefined}
-          defaultEmail={contact?.email}
+          defaultEmail={contact?.email ?? undefined}
         />
       </section>
     </div>
