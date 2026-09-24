@@ -116,9 +116,15 @@
 }
 
 .hub-project-wordpress-actions {
-  flex-wrap: wrap;
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
   justify-content: flex-end;
   gap: 8px;
+}
+
+.hub-project-wordpress-actions .hub-secondary-button {
+  min-width: 176px;
+  white-space: nowrap;
 }
 
 .hub-project-wordpress-code {
@@ -175,5 +181,13 @@
   .hub-project-wordpress-actions .hub-secondary-button,
   .hub-project-wordpress-site > .hub-secondary-button {
     width: 100%;
+  }
+
+  .hub-project-wordpress-actions {
+    flex-wrap: wrap;
+  }
+
+  .hub-project-wordpress-actions .hub-secondary-button {
+    min-width: 0;
   }
 }
