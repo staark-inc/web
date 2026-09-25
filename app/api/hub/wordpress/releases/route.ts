@@ -11,7 +11,7 @@ const MANIFEST_ASSET_NAME = "staark-wordpress-manifest.json";
 const GITHUB_USER_AGENT = "Staark-Hub-WordPress-Release-Endpoint";
 
 type ReleaseChannel = "stable" | "beta";
-type ReleaseKey = "core" | "theme" | "salong" | "bygg";
+type ReleaseKey = "core" | "theme" | "salong" | "bygg" | "gastfrihet";
 
 type GitHubAsset = {
   name?: unknown;
@@ -48,6 +48,8 @@ type ReleaseManifest = {
     theme?: ReleaseEntry;
     salong?: ReleaseEntry;
     bygg?: ReleaseEntry;
+    gastfrihet?: ReleaseEntry;
+    gastfrihet?: ReleaseEntry;
   };
 };
 
@@ -192,6 +194,8 @@ function normalizeRelease(value: unknown, type: ReleaseKey): ReleaseEntry | null
       theme: "staark",
       salong: "staark-salong",
       bygg: "staark-bygg",
+      gastfrihet: "staark-gastfrihet",
+      gastfrihet: "staark-gastfrihet",
     };
 
     normalized.slug =
@@ -229,8 +233,9 @@ function normalizeManifest(value: unknown, channel: ReleaseChannel): ReleaseMani
   const theme = normalizeRelease(releases.theme, "theme");
   const salong = normalizeRelease(releases.salong, "salong");
   const bygg = normalizeRelease(releases.bygg, "bygg");
+  const gastfrihet = normalizeRelease(releases.gastfrihet, "gastfrihet");
 
-  if (!core && !theme && !salong && !bygg) return null;
+  if (!core && !theme && !salong && !bygg && !gastfrihet) return null;
 
   const generatedAtValue = text(source.generatedAt, 80);
   const generatedAtDate = new Date(generatedAtValue);
@@ -247,6 +252,8 @@ function normalizeManifest(value: unknown, channel: ReleaseChannel): ReleaseMani
       ...(theme ? { theme } : {}),
       ...(salong ? { salong } : {}),
       ...(bygg ? { bygg } : {}),
+      ...(gastfrihet ? { gastfrihet } : {}),
+      ...(gastfrihet ? { gastfrihet } : {}),
     },
   };
 }
