@@ -11,6 +11,7 @@ const MANIFEST_ASSET_NAME = "staark-wordpress-manifest.json";
 const GITHUB_USER_AGENT = "Staark-Hub-WordPress-Release-Endpoint";
 
 type ReleaseChannel = "stable" | "beta";
+type ReleaseKey = "core" | "theme" | "salong" | "bygg";
 
 type GitHubAsset = {
   name?: unknown;
@@ -45,6 +46,8 @@ type ReleaseManifest = {
   releases: {
     core?: ReleaseEntry;
     theme?: ReleaseEntry;
+    salong?: ReleaseEntry;
+    bygg?: ReleaseEntry;
   };
 };
 
@@ -159,7 +162,7 @@ async function manifestUrl(channel: ReleaseChannel) {
   return betaManifestUrl();
 }
 
-function normalizeRelease(value: unknown, type: "core" | "theme"): ReleaseEntry | null {
+function normalizeRelease(value: unknown, type: ReleaseKey): ReleaseEntry | null {
   const source = asRecord(value);
   if (!source) return null;
 
@@ -184,8 +187,16 @@ function normalizeRelease(value: unknown, type: "core" | "theme"): ReleaseEntry 
     sha256,
   };
 
-  if (type === "theme") {
-    normalized.slug = text(source.slug, 120) || "staark";
+  if (type !== "core") {
+    const defaultSlugs: Record<Exclude<ReleaseKey, "core">, string> = {
+      theme: "staark",
+      salong: "staark-salong",
+      bygg: "staark-bygg",
+    };
+
+    normalized.slug =
+      text(source.slug, 120) ||
+      defaultSlugs[type as Exclude<ReleaseKey, "core">];
   }
 
   if (signature) normalized.signature = signature;
@@ -216,7 +227,10 @@ function normalizeManifest(value: unknown, channel: ReleaseChannel): ReleaseMani
 
   const core = normalizeRelease(releases.core, "core");
   const theme = normalizeRelease(releases.theme, "theme");
-  if (!core && !theme) return null;
+  const salong = normalizeRelease(releases.salong, "salong");
+  const bygg = normalizeRelease(releases.bygg, "bygg");
+
+  if (!core && !theme && !salong && !bygg) return null;
 
   const generatedAtValue = text(source.generatedAt, 80);
   const generatedAtDate = new Date(generatedAtValue);
@@ -231,6 +245,8 @@ function normalizeManifest(value: unknown, channel: ReleaseChannel): ReleaseMani
     releases: {
       ...(core ? { core } : {}),
       ...(theme ? { theme } : {}),
+      ...(salong ? { salong } : {}),
+      ...(bygg ? { bygg } : {}),
     },
   };
 }
