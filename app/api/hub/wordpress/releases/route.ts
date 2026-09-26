@@ -104,14 +104,19 @@ function validHttpsUrl(value: string) {
   }
 }
 
-async function fetchJson(url: string, revalidate = 300): Promise<unknown> {
+async function fetchJson(
+  url: string,
+  revalidate: number | null = 300
+): Promise<unknown> {
   const response = await fetch(url, {
     headers: {
       Accept: "application/json",
       "User-Agent": GITHUB_USER_AGENT,
     },
     redirect: "follow",
-    next: { revalidate },
+    ...(revalidate === null
+      ? { cache: "no-store" as const }
+      : { next: { revalidate } }),
   });
 
   if (!response.ok) {
@@ -277,7 +282,10 @@ export async function GET(request: Request) {
 
     let remoteManifest: unknown;
     try {
-      remoteManifest = await fetchJson(url, 300);
+      remoteManifest = await fetchJson(
+        url,
+        channel === "stable" ? null : 300
+      );
     } catch (error) {
       console.error(`[WORDPRESS] Could not fetch ${channel} release manifest:`, error);
       return jsonError(
