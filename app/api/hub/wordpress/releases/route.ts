@@ -49,7 +49,6 @@ type ReleaseManifest = {
     salong?: ReleaseEntry;
     bygg?: ReleaseEntry;
     gastfrihet?: ReleaseEntry;
-    gastfrihet?: ReleaseEntry;
   };
 };
 
@@ -195,7 +194,6 @@ function normalizeRelease(value: unknown, type: ReleaseKey): ReleaseEntry | null
       salong: "staark-salong",
       bygg: "staark-bygg",
       gastfrihet: "staark-gastfrihet",
-      gastfrihet: "staark-gastfrihet",
     };
 
     normalized.slug =
@@ -252,7 +250,6 @@ function normalizeManifest(value: unknown, channel: ReleaseChannel): ReleaseMani
       ...(theme ? { theme } : {}),
       ...(salong ? { salong } : {}),
       ...(bygg ? { bygg } : {}),
-      ...(gastfrihet ? { gastfrihet } : {}),
       ...(gastfrihet ? { gastfrihet } : {}),
     },
   };
