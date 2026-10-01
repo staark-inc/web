@@ -26,7 +26,27 @@ function normalizeOrigin(request: Request): string {
     return new URL(configured).origin;
   }
 
-  return new URL(request.url).origin;
+  const headers = new Headers(request.headers);
+  const forwardedProto = headers.get("x-forwarded-proto")?.split(",")[0]?.trim();
+  const forwardedHost = headers.get("x-forwarded-host")?.split(",")[0]?.trim();
+  const host = forwardedHost || headers.get("host")?.trim();
+  const requestUrl = new URL(request.url);
+  const protocol = forwardedProto || requestUrl.protocol.replace(":", "");
+
+  if (host) {
+    const candidate = new URL(`${protocol}://${host}`);
+    if (candidate.hostname !== "0.0.0.0" && candidate.hostname !== "::") {
+      return candidate.origin;
+    }
+  }
+
+  if (requestUrl.hostname !== "0.0.0.0" && requestUrl.hostname !== "::") {
+    return requestUrl.origin;
+  }
+
+  throw new Error(
+    "SAAS_PUBLIC_ORIGIN must be configured when the app is bound to 0.0.0.0.",
+  );
 }
 
 export async function POST(request: Request) {
