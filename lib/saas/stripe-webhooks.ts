@@ -1,9 +1,10 @@
+import crypto from "node:crypto";
+
 import { prisma } from "@/lib/prisma";
 
 import { getBillingPriceByLookupKey } from "./billing";
 import { resolveEntitlements } from "./entitlements";
 import {
-  hasServiceAccess,
   toDbBillingEnvironment,
   toDbBillingInterval,
   type BillingSubscriptionStatusValue,
@@ -248,10 +249,12 @@ async function syncClientEntitlements(clientId: string) {
       clientId,
       status: { in: ACCESS_STATUSES },
     },
-    orderBy: [{ environment: "desc" }, { updatedAt: "desc" }],
+    orderBy: { updatedAt: "desc" },
   });
 
-  const live = subscriptions.find((subscription) => subscription.environment === "LIVE");
+  const live = subscriptions.find(
+    (subscription) => subscription.environment === "LIVE",
+  );
   const selected = live ?? subscriptions[0] ?? null;
 
   await prisma.client.update({
@@ -263,7 +266,7 @@ async function syncClientEntitlements(clientId: string) {
         }
       : {
           saasPlanCode: null,
-          saasEntitlements: undefined,
+          saasEntitlements: {},
         },
   });
 }
@@ -380,7 +383,7 @@ async function markEventProcessed(
     ) VALUES (
       ${crypto.randomUUID()}, ${dbEnvironment}::"BillingEnvironment", ${event.id}, ${event.type}, NOW(), NOW(), NOW()
     )
-    ON CONFLICT ("stripeEventId") DO UPDATE SET
+    ON CONFLICT ("environment", "stripeEventId") DO UPDATE SET
       "processedAt" = EXCLUDED."processedAt",
       "type" = EXCLUDED."type",
       "updatedAt" = NOW()
