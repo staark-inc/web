@@ -135,7 +135,10 @@ export async function createSetupClaimFromCheckoutSession(sessionId: string) {
     throw new Error("Subscription is not eligible for setup.");
   }
 
-  if (subscription.provisioning.status !== "PENDING_SETUP") {
+  if (
+    subscription.provisioning.status !== "PENDING_SETUP" &&
+    subscription.provisioning.status !== "CLAIMED"
+  ) {
     throw new Error(
       `Provisioning cannot be claimed from status ${subscription.provisioning.status}.`,
     );
@@ -160,7 +163,10 @@ export async function createSetupClaimFromCheckoutSession(sessionId: string) {
       include: { billingSubscription: true },
     });
 
-    if (!freshProvisioning || freshProvisioning.status !== "PENDING_SETUP") {
+    if (
+      !freshProvisioning ||
+      !["PENDING_SETUP", "CLAIMED"].includes(freshProvisioning.status)
+    ) {
       throw new Error("Provisioning is no longer available for setup claim.");
     }
 
@@ -226,7 +232,10 @@ export async function consumeSetupClaimToken(token: string) {
       throw new Error("Setup claim token has expired.");
     }
 
-    if (claim.provisioning.status !== "PENDING_SETUP") {
+    if (
+      claim.provisioning.status !== "PENDING_SETUP" &&
+      claim.provisioning.status !== "CLAIMED"
+    ) {
       throw new Error(
         `Provisioning cannot be claimed from status ${claim.provisioning.status}.`,
       );

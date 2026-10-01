@@ -376,6 +376,16 @@ model SaasProvisioning {
   planCode              StaarkPlanCode
   entitlements          Json
   status                SaasProvisioningStatus @default(PENDING_SETUP)
+
+  nextOrganizationId    String?
+  nextSubscriptionId    String?
+  nextSiteId            String?                @unique
+  nextSiteKey           String?                @unique
+  nextHostname          String?                @unique
+  nextSiteUrl           String?
+  nextProvisionedAt     DateTime?
+  nextSetupExpiresAt    DateTime?
+
   requestedAt           DateTime               @default(now())
   claimedAt             DateTime?
   activatedAt           DateTime?
