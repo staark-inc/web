@@ -12,7 +12,7 @@ import type {
   StripeWebhookEvent,
 } from "./stripe-webhooks";
 
-export const SAAS_PAYMENT_GRACE_DAYS = 3 as const;
+export const SAAS_PAYMENT_GRACE_DAYS = 7 as const;
 
 function objectId(value: unknown): string | null {
   if (typeof value === "string" && value) return value;
