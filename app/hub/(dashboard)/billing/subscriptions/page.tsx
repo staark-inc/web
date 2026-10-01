@@ -3,6 +3,7 @@ import {
   Activity,
   AlertTriangle,
   ArrowLeft,
+  ArrowRight,
   ArrowUpRight,
   Building2,
   CreditCard,
@@ -296,7 +297,7 @@ export default async function SaaSSubscriptionsPage({
                   </span>
 
                   <div>
-                    <Link href={`/hub/clients/${subscription.client.id}`}>
+                    <Link href={`/hub/billing/subscriptions/${subscription.id}`}>
                       {subscription.client.name}
                     </Link>
                     <span>{subscription.client.billingEmail ?? "No billing email"}</span>
@@ -351,8 +352,9 @@ export default async function SaaSSubscriptionsPage({
                   </span>
 
                   <div>
-                    <Link href={`/hub/clients/${subscription.client.id}`}>
-                      Client
+                    <Link href={`/hub/billing/subscriptions/${subscription.id}`}>
+                      Open
+                      <ArrowRight size={12} />
                     </Link>
                     <a
                       href={stripeDashboardUrl(subscription.environment, subscription.stripeSubscriptionId)}
