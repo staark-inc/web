@@ -127,6 +127,13 @@ enum BillingSubscriptionStatus {
   PAUSED
 }
 
+enum SaasProvisioningStatus {
+  PENDING_SETUP
+  CLAIMED
+  ACTIVE
+  FAILED
+}
+
 model User {
   id                      String         @id @default(cuid())
   name                    String
@@ -299,6 +306,7 @@ model Client {
   wordpressSites       WordPressSite[]
   billingCustomers     BillingCustomer[]
   billingSubscriptions BillingSubscription[]
+  saasProvisionings    SaasProvisioning[]
 
   @@index([name])
   @@index([saasPlanCode])
@@ -348,12 +356,39 @@ model BillingSubscription {
   createdAt            DateTime                  @default(now())
   updatedAt            DateTime                  @updatedAt
 
+  provisioning SaasProvisioning?
+
   @@index([clientId])
   @@index([billingCustomerId])
   @@index([environment])
   @@index([planCode])
   @@index([status])
   @@index([currentPeriodEnd])
+}
+
+model SaasProvisioning {
+  id                    String                 @id @default(cuid())
+  clientId              String
+  client                Client                 @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  billingSubscriptionId String                 @unique
+  billingSubscription   BillingSubscription    @relation(fields: [billingSubscriptionId], references: [id], onDelete: Cascade)
+  environment           BillingEnvironment
+  planCode              StaarkPlanCode
+  entitlements          Json
+  status                SaasProvisioningStatus @default(PENDING_SETUP)
+  requestedAt           DateTime               @default(now())
+  claimedAt             DateTime?
+  activatedAt           DateTime?
+  failedAt              DateTime?
+  lastError             String?
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+
+  @@index([clientId])
+  @@index([environment])
+  @@index([planCode])
+  @@index([status])
+  @@index([requestedAt])
 }
 
 model Offer {
