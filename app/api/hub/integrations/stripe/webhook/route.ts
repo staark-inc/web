@@ -2,6 +2,7 @@ import crypto from "node:crypto";
 import { NextResponse } from "next/server";
 
 import { afterStripePaymentWebhook } from "@/lib/saas/payment-failures";
+import { afterStripeReactivationWebhook } from "@/lib/saas/reactivation-webhook";
 import {
   processStripeWebhookEvent,
   type StripeWebhookEnvironment,
@@ -126,6 +127,7 @@ export async function POST(request: Request) {
 
     if (!result.duplicate) {
       await afterStripePaymentWebhook(environment, event);
+      await afterStripeReactivationWebhook(environment, event);
     }
 
     console.log(
