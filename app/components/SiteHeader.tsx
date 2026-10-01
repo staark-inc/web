@@ -21,6 +21,10 @@ const navigation = [
     href: "/tjanster",
   },
   {
+    label: "SaaS",
+    href: "/saas",
+  },
+  {
     label: "Projekt",
     href: "/projekt",
   },
