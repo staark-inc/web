@@ -65,6 +65,18 @@ export function getBillingPrice(
   return STAARK_BILLING_PRICES[planCode][interval];
 }
 
+export function getBillingPriceByLookupKey(
+  lookupKey: string,
+): StaarkBillingPrice | null {
+  for (const plan of Object.values(STAARK_BILLING_PRICES)) {
+    for (const billingPrice of Object.values(plan)) {
+      if (billingPrice.lookupKey === lookupKey) return billingPrice;
+    }
+  }
+
+  return null;
+}
+
 export function getAnnualSavingsOre(planCode: StaarkPlanCode): number {
   const monthly = getBillingPrice(planCode, "month").unitAmountOre;
   const yearly = getBillingPrice(planCode, "year").unitAmountOre;
