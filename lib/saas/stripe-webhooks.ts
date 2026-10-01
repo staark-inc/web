@@ -195,53 +195,72 @@ async function getOrCreateBillingCustomer(
   }
 
   const dbEnvironment = toDbBillingEnvironment(environment);
-  const existing = await prisma.billingCustomer.findUnique({
-    where: { stripeCustomerId: customer.id },
-  });
-
-  if (existing) {
-    if (existing.environment !== dbEnvironment) {
-      throw new Error(
-        `Stripe Customer ${customer.id} is already linked to ${existing.environment}.`,
-      );
-    }
-    return existing;
-  }
-
   const email = customer.email?.trim() || null;
-  let client = null;
 
-  if (email) {
-    const candidates = await prisma.client.findMany({
-      where: {
-        billingEmail: email,
-        billingCustomers: {
-          none: { environment: dbEnvironment },
+  return prisma.$transaction(
+    async (tx) => {
+      const customerLockKey = `stripe-billing-customer:${dbEnvironment}:${customer.id}`;
+      await tx.$queryRaw`
+        SELECT pg_advisory_xact_lock(hashtextextended(${customerLockKey}, 0))
+      `;
+
+      const existing = await tx.billingCustomer.findUnique({
+        where: { stripeCustomerId: customer.id },
+      });
+
+      if (existing) {
+        if (existing.environment !== dbEnvironment) {
+          throw new Error(
+            `Stripe Customer ${customer.id} is already linked to ${existing.environment}.`,
+          );
+        }
+        return existing;
+      }
+
+      let client = null;
+
+      if (email) {
+        const emailLockKey = `stripe-billing-email:${dbEnvironment}:${email.toLowerCase()}`;
+        await tx.$queryRaw`
+          SELECT pg_advisory_xact_lock(hashtextextended(${emailLockKey}, 0))
+        `;
+
+        const candidates = await tx.client.findMany({
+          where: {
+            billingEmail: email,
+            billingCustomers: {
+              none: { environment: dbEnvironment },
+            },
+          },
+          take: 2,
+          orderBy: { createdAt: "asc" },
+        });
+
+        if (candidates.length === 1) client = candidates[0];
+      }
+
+      if (!client) {
+        client = await tx.client.create({
+          data: {
+            name: customer.name?.trim() || email || `Stripe ${customer.id}`,
+            billingEmail: email,
+          },
+        });
+      }
+
+      return tx.billingCustomer.create({
+        data: {
+          clientId: client.id,
+          environment: dbEnvironment,
+          stripeCustomerId: customer.id,
         },
-      },
-      take: 2,
-      orderBy: { createdAt: "asc" },
-    });
-
-    if (candidates.length === 1) client = candidates[0];
-  }
-
-  if (!client) {
-    client = await prisma.client.create({
-      data: {
-        name: customer.name?.trim() || email || `Stripe ${customer.id}`,
-        billingEmail: email,
-      },
-    });
-  }
-
-  return prisma.billingCustomer.create({
-    data: {
-      clientId: client.id,
-      environment: dbEnvironment,
-      stripeCustomerId: customer.id,
+      });
     },
-  });
+    {
+      maxWait: 5_000,
+      timeout: 10_000,
+    },
+  );
 }
 
 async function syncClientEntitlements(clientId: string) {
