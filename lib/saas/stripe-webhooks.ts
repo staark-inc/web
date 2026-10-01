@@ -200,8 +200,9 @@ async function getOrCreateBillingCustomer(
   return prisma.$transaction(
     async (tx) => {
       const customerLockKey = `stripe-billing-customer:${dbEnvironment}:${customer.id}`;
-      await tx.$queryRaw`
-        SELECT pg_advisory_xact_lock(hashtextextended(${customerLockKey}, 0))
+      await tx.$queryRaw<Array<{ acquired: number }>>`
+        SELECT 1::int AS acquired
+        FROM pg_advisory_xact_lock(hashtextextended(${customerLockKey}, 0))
       `;
 
       const existing = await tx.billingCustomer.findUnique({
@@ -221,8 +222,9 @@ async function getOrCreateBillingCustomer(
 
       if (email) {
         const emailLockKey = `stripe-billing-email:${dbEnvironment}:${email.toLowerCase()}`;
-        await tx.$queryRaw`
-          SELECT pg_advisory_xact_lock(hashtextextended(${emailLockKey}, 0))
+        await tx.$queryRaw<Array<{ acquired: number }>>`
+          SELECT 1::int AS acquired
+          FROM pg_advisory_xact_lock(hashtextextended(${emailLockKey}, 0))
         `;
 
         const candidates = await tx.client.findMany({
