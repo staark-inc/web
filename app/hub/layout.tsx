@@ -13,6 +13,7 @@ import "./lead-controls-compact.css";
 import "./operations-workspace.css";
 import "./billing-support-v2.css";
 import "./saas-subscriptions.css";
+import "./saas-subscription-detail.css";
 import "./support-wordpress.css";
 import "./settings-v2.css";
 import "./profile-v2.css";
