@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 
 import { getBillingPriceByLookupKey } from "./billing";
 import { resolveEntitlements } from "./entitlements";
+import { ensureProvisioningForSubscription } from "./provisioning";
 import {
   toDbBillingEnvironment,
   toDbBillingInterval,
@@ -394,6 +395,7 @@ export async function syncStripeSubscription(
     update: data,
   });
 
+  await ensureProvisioningForSubscription(saved);
   await syncClientEntitlements(billingCustomer.clientId);
   return saved;
 }
