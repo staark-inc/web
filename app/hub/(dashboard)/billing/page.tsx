@@ -86,14 +86,13 @@ export default async function BillingPage() {
           <span className="hub-workspace-kicker">FINANCE / CONTRACTS</span>
           <h1>Billing</h1>
           <p>
-            Follow accepted commercial terms and identify what is ready for recurring billing.
-            Payment status itself is not tracked yet.
+            Follow accepted agency contracts here. Stripe-backed SaaS subscriptions are managed in their own workspace.
           </p>
         </div>
 
-        <Link href="/hub/offers" className="hub-workspace-primary-action">
-          <FileText size={15} />
-          View offers
+        <Link href="/hub/billing/subscriptions" className="hub-workspace-primary-action">
+          <CreditCard size={15} />
+          SaaS subscriptions
         </Link>
       </header>
 
