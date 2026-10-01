@@ -89,7 +89,7 @@ export const STAARK_PLANS: Record<StaarkPlanCode, StaarkPlanDefinition> = {
 
   SAAS: {
     code: "SAAS",
-    name: "SaaS",
+    name: "Growth",
     description: "Growth tooling and integrations for one production website.",
     entitlements: {
       website: { max: 1, customDomain: true },

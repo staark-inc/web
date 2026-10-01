@@ -11,7 +11,6 @@ import {
   CircleDollarSign,
   CreditCard,
   Database,
-  ExternalLink,
   Globe2,
   HardDrive,
   KeyRound,
@@ -166,26 +165,6 @@ export default async function SaaSSubscriptionDetailPage({
           billingEmail: true,
           phone: true,
           organizationNumber: true,
-          wordpressSites: {
-            orderBy: { updatedAt: "desc" },
-            select: {
-              id: true,
-              siteId: true,
-              siteName: true,
-              siteUrl: true,
-              adminUrl: true,
-              status: true,
-              wordpressVersion: true,
-              phpVersion: true,
-              lastSeenAt: true,
-              project: {
-                select: {
-                  id: true,
-                  name: true,
-                },
-              },
-            },
-          },
         },
       },
       provisioning: {
@@ -233,7 +212,6 @@ export default async function SaaSSubscriptionDetailPage({
   const failure = paymentFailures[0] ?? null;
   const entitlements = subscription.entitlements as unknown as StaarkEntitlements;
   const provisioning = subscription.provisioning;
-  const sites = subscription.client.wordpressSites;
   const intervalLabel = subscription.interval === "MONTH" ? "month" : "year";
 
   const lifecycle = [
@@ -310,7 +288,7 @@ export default async function SaaSSubscriptionDetailPage({
         <div>
           <span><ServerCog size={14} /> Provisioning</span>
           <strong>{provisioning ? formatStatus(provisioning.status) : "Not created"}</strong>
-          <small>Website binding not linked yet</small>
+          <small>Next setup link not connected yet</small>
         </div>
       </section>
 
@@ -335,59 +313,26 @@ export default async function SaaSSubscriptionDetailPage({
           <section className="hub-saas-detail-panel">
             <div className="hub-saas-detail-panel-head">
               <div>
-                <span>02 / WEBSITE</span>
-                <h2>Provisioning & client sites</h2>
+                <span>02 / WEBSITE SETUP</span>
+                <h2>Staark Next provisioning</h2>
               </div>
               <Globe2 size={17} />
             </div>
 
             <div className="hub-saas-detail-binding">
               <div>
-                <small>Subscription website binding</small>
-                <strong>Not linked yet</strong>
+                <small>Next setup integration</small>
+                <strong>Not connected yet</strong>
                 <p>
-                  SaaS provisioning currently tracks setup state, but no WordPressSite ID is bound directly to this subscription yet.
+                  Billing and provisioning state are ready in Hub. The setup-link
+                  integration with Staark Next will attach the customer website
+                  after the Next provisioning contract is enabled.
                 </p>
               </div>
-              <span className="hub-saas-chip hub-saas-chip-neutral">Awaiting explicit binding</span>
+              <span className="hub-saas-chip hub-saas-chip-neutral">
+                Awaiting Next integration
+              </span>
             </div>
-
-            {sites.length === 0 ? (
-              <div className="hub-saas-detail-empty-inline">
-                <Globe2 size={18} />
-                <span>No WordPress sites are currently connected to this client.</span>
-              </div>
-            ) : (
-              <div className="hub-saas-detail-sites">
-                {sites.map((site) => (
-                  <article key={site.id}>
-                    <div>
-                      <strong>{site.siteName}</strong>
-                      <a href={site.siteUrl} target="_blank" rel="noreferrer">
-                        {site.siteUrl}
-                        <ExternalLink size={11} />
-                      </a>
-                    </div>
-                    <div className="hub-saas-detail-site-meta">
-                      <span>{site.status}</span>
-                      <span>WP {site.wordpressVersion ?? "—"}</span>
-                      <span>PHP {site.phpVersion ?? "—"}</span>
-                      <span>Seen {formatDate(site.lastSeenAt)}</span>
-                    </div>
-                    <div className="hub-saas-detail-site-links">
-                      {site.project && (
-                        <Link href={`/hub/projects/${site.project.id}`}>{site.project.name}</Link>
-                      )}
-                      {site.adminUrl && (
-                        <a href={site.adminUrl} target="_blank" rel="noreferrer">
-                          WP Admin <ArrowUpRight size={11} />
-                        </a>
-                      )}
-                    </div>
-                  </article>
-                ))}
-              </div>
-            )}
           </section>
 
           <section className="hub-saas-detail-panel">
