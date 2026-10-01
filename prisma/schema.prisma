@@ -384,11 +384,30 @@ model SaasProvisioning {
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
 
+  setupClaims SaasSetupClaim[]
+
   @@index([clientId])
   @@index([environment])
   @@index([planCode])
   @@index([status])
   @@index([requestedAt])
+}
+
+model SaasSetupClaim {
+  id             String           @id @default(cuid())
+  provisioningId String
+  provisioning   SaasProvisioning @relation(fields: [provisioningId], references: [id], onDelete: Cascade)
+  tokenHash      String           @unique
+  hint           String
+  expiresAt      DateTime
+  usedAt         DateTime?
+  revokedAt      DateTime?
+  createdAt      DateTime         @default(now())
+
+  @@index([provisioningId])
+  @@index([expiresAt])
+  @@index([usedAt])
+  @@index([revokedAt])
 }
 
 model Offer {
@@ -643,7 +662,7 @@ model WordPressSite {
   siteSecretEncrypted   String
   siteUrl               String
   siteName              String
-  adminUrl              String?
+  adminUrl               String?
   wordpressVersion      String?
   phpVersion            String?
   hubVersion            String?
