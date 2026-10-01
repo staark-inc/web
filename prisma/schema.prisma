@@ -104,6 +104,29 @@ enum StaarkPlanCode {
   BUSINESS
 }
 
+enum BillingEnvironment {
+  TEST
+  LIVE
+}
+
+enum BillingInterval {
+  MONTH
+  YEAR
+}
+
+enum BillingSubscriptionStatus {
+  TRIALING
+  ACTIVE
+  PAST_DUE
+  SUSPENDED
+  CANCELING
+  CANCELED
+  INCOMPLETE
+  INCOMPLETE_EXPIRED
+  UNPAID
+  PAUSED
+}
+
 model User {
   id                      String         @id @default(cuid())
   name                    String
@@ -268,16 +291,69 @@ model Client {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  contacts        Contact[]
-  leads           Lead[]
-  projects        Project[]
-  offers          Offer[]
-  supportRequests SupportRequest[]
-  wordpressSites  WordPressSite[]
+  contacts             Contact[]
+  leads                Lead[]
+  projects             Project[]
+  offers               Offer[]
+  supportRequests      SupportRequest[]
+  wordpressSites       WordPressSite[]
+  billingCustomers     BillingCustomer[]
+  billingSubscriptions BillingSubscription[]
 
   @@index([name])
   @@index([saasPlanCode])
   @@index([createdAt])
+}
+
+model BillingCustomer {
+  id               String             @id @default(cuid())
+  clientId         String
+  client           Client             @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  environment      BillingEnvironment
+  stripeCustomerId String             @unique
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  subscriptions BillingSubscription[]
+
+  @@unique([clientId, environment])
+  @@index([clientId])
+  @@index([environment])
+}
+
+model BillingSubscription {
+  id                   String                    @id @default(cuid())
+  clientId             String
+  client               Client                    @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  billingCustomerId    String
+  billingCustomer      BillingCustomer           @relation(fields: [billingCustomerId], references: [id], onDelete: Cascade)
+  environment          BillingEnvironment
+  stripeSubscriptionId String                    @unique
+  stripePriceId        String
+  stripeProductId      String?
+  planCode             StaarkPlanCode
+  interval             BillingInterval
+  currency             String                    @default("sek")
+  unitAmountOre        Int
+  taxBehavior          String                    @default("exclusive")
+  status               BillingSubscriptionStatus
+  cancelAtPeriodEnd    Boolean                   @default(false)
+  currentPeriodStart   DateTime?
+  currentPeriodEnd     DateTime?
+  trialStart           DateTime?
+  trialEnd             DateTime?
+  canceledAt           DateTime?
+  endedAt              DateTime?
+  entitlements         Json
+  createdAt            DateTime                  @default(now())
+  updatedAt            DateTime                  @updatedAt
+
+  @@index([clientId])
+  @@index([billingCustomerId])
+  @@index([environment])
+  @@index([planCode])
+  @@index([status])
+  @@index([currentPeriodEnd])
 }
 
 model Offer {
