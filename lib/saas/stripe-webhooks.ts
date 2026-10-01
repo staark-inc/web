@@ -1,5 +1,6 @@
 import crypto from "node:crypto";
 
+import type { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 
 import { getBillingPriceByLookupKey } from "./billing";
@@ -257,17 +258,29 @@ async function syncClientEntitlements(clientId: string) {
   );
   const selected = live ?? subscriptions[0] ?? null;
 
+  if (!selected) {
+    await prisma.client.update({
+      where: { id: clientId },
+      data: {
+        saasPlanCode: null,
+        saasEntitlements: {},
+      },
+    });
+    return;
+  }
+
+  if (selected.entitlements === null) {
+    throw new Error(
+      `Billing subscription ${selected.id} has a null entitlement snapshot.`,
+    );
+  }
+
   await prisma.client.update({
     where: { id: clientId },
-    data: selected
-      ? {
-          saasPlanCode: selected.planCode,
-          saasEntitlements: selected.entitlements,
-        }
-      : {
-          saasPlanCode: null,
-          saasEntitlements: {},
-        },
+    data: {
+      saasPlanCode: selected.planCode,
+      saasEntitlements: selected.entitlements as Prisma.InputJsonValue,
+    },
   });
 }
 
@@ -276,14 +289,21 @@ export async function syncStripeSubscription(
   subscription: StripeSubscription,
 ) {
   const items = subscription.items?.data ?? [];
-  if (items.length !== 1 || !items[0]?.price) {
+  if (items.length !== 1) {
     throw new Error(
       `Stripe Subscription ${subscription.id} must contain exactly one priced item.`,
     );
   }
 
   const item = items[0];
-  const stripePrice = item.price;
+  const stripePrice = item?.price;
+
+  if (!item || !stripePrice) {
+    throw new Error(
+      `Stripe Subscription ${subscription.id} must contain exactly one priced item.`,
+    );
+  }
+
   const lookupKey =
     stripePrice.lookup_key ?? subscription.metadata?.staark_lookup_key ?? null;
 
