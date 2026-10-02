@@ -24,6 +24,7 @@ export type RuntimeSiteHealth = {
     setupCompletedAt?: string | null;
 
     pageCount?: number;
+    publicAccess?: boolean;
 
     domains?: Array<{
       hostname: string;
@@ -31,6 +32,9 @@ export type RuntimeSiteHealth = {
       verified: boolean;
       primaryDomain: boolean;
       sslStatus: string;
+      blockedAt?: string | null;
+      releaseAt?: string | null;
+      releasedAt?: string | null;
     }>;
 
     usage?: {

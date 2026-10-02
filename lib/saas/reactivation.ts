@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { syncClientEntitlements } from "./access-sync";
+import { syncRuntimeSubscription } from "./runtime-subscription-sync";
 
 export class SaaSReactivationError extends Error {
   constructor(
@@ -186,6 +187,7 @@ export async function reactivateSaaSSubscription(input: {
   });
 
   await syncClientEntitlements(subscription.clientId);
+  await syncRuntimeSubscription(subscription.stripeSubscriptionId);
 
   return {
     stripeSubscriptionId: subscription.stripeSubscriptionId,

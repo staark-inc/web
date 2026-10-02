@@ -9,29 +9,9 @@ import {
   provisionNextSite,
   type SaaSSetupInput,
 } from "@/lib/saas/runtime-provisioning";
+import { isReservedPlatformSubdomain } from "@/lib/saas/platform-subdomains";
 
 export const runtime = "nodejs";
-
-const RESERVED = new Set([
-  "www",
-  "admin",
-  "api",
-  "app",
-  "mail",
-  "smtp",
-  "cdn",
-  "assets",
-  "static",
-  "status",
-  "support",
-  "billing",
-  "login",
-  "dashboard",
-  "account",
-  "staark",
-  "system",
-  "internal",
-]);
 
 function text(
   value: unknown,
@@ -68,7 +48,7 @@ function normalizeSubdomain(
     );
   }
 
-  if (RESERVED.has(subdomain)) {
+  if (isReservedPlatformSubdomain(subdomain)) {
     throw new Error(
       "This subdomain is reserved.",
     );
