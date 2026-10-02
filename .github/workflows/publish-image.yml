@@ -35,6 +35,8 @@ jobs:
           context: .
           push: true
           platforms: linux/amd64
+          build-args: |
+            DEPLOYMENT_VERSION=${{ github.sha }}
           tags: |
             ghcr.io/staark-inc/web:latest
             ghcr.io/staark-inc/web:sha-${{ github.sha }}
