@@ -1,5 +1,6 @@
 import type { StaarkEntitlements } from "@/lib/saas/plans";
 import { prisma } from "@/lib/prisma";
+import { getRuntimeSiteHealth } from "@/lib/saas/runtime-health";
 import {
   Activity,
   AlertTriangle,
@@ -178,6 +179,13 @@ export default async function SaaSSubscriptionDetailPage({
           failedAt: true,
           lastError: true,
           updatedAt: true,
+
+          nextSiteId: true,
+          nextSiteKey: true,
+          nextHostname: true,
+          nextSiteUrl: true,
+          nextProvisionedAt: true,
+
           setupClaims: {
             orderBy: { createdAt: "desc" },
             take: 5,
@@ -212,6 +220,12 @@ export default async function SaaSSubscriptionDetailPage({
   const failure = paymentFailures[0] ?? null;
   const entitlements = subscription.entitlements as unknown as StaarkEntitlements;
   const provisioning = subscription.provisioning;
+
+  const runtimeHealth =
+    await getRuntimeSiteHealth(
+      provisioning?.nextSiteId,
+    );
+
   const intervalLabel = subscription.interval === "MONTH" ? "month" : "year";
 
   const lifecycle = [
@@ -288,7 +302,10 @@ export default async function SaaSSubscriptionDetailPage({
         <div>
           <span><ServerCog size={14} /> Provisioning</span>
           <strong>{provisioning ? formatStatus(provisioning.status) : "Not created"}</strong>
-          <small>Next setup link not connected yet</small>
+          <small>
+            {provisioning?.nextHostname ??
+              "Awaiting runtime binding"}
+          </small>
         </div>
       </section>
 
@@ -319,20 +336,107 @@ export default async function SaaSSubscriptionDetailPage({
               <Globe2 size={17} />
             </div>
 
-            <div className="hub-saas-detail-binding">
-              <div>
-                <small>Next setup integration</small>
-                <strong>Not connected yet</strong>
-                <p>
-                  Billing and provisioning state are ready in Hub. The setup-link
-                  integration with Staark Next will attach the customer website
-                  after the Next provisioning contract is enabled.
-                </p>
+            {provisioning?.nextSiteId ? (
+              <>
+                <div className="hub-saas-detail-context-list">
+                  <p>
+                    <strong>Runtime</strong>
+                    <span>
+                      {!runtimeHealth?.reachable
+                        ? "Offline"
+                        : runtimeHealth.ok
+                          ? "Online"
+                          : "Degraded"}
+                    </span>
+                  </p>
+
+                  <p>
+                    <strong>Database</strong>
+                    <span>
+                      {runtimeHealth?.database?.ok
+                        ? "Healthy"
+                        : "Unavailable"}
+                    </span>
+                  </p>
+
+                  <p>
+                    <strong>Tenant</strong>
+                    <span>
+                      {runtimeHealth?.site?.exists
+                        ? "Resolved"
+                        : "Missing"}
+                    </span>
+                  </p>
+
+                  <p>
+                    <strong>Setup</strong>
+                    <span>
+                      {runtimeHealth?.site?.setupCompleted
+                        ? "Complete"
+                        : "Incomplete"}
+                    </span>
+                  </p>
+
+                  <p>
+                    <strong>Hostname</strong>
+                    <span>
+                      {runtimeHealth?.site?.domains?.find(
+                        (domain) => domain.primaryDomain,
+                      )?.hostname ??
+                        provisioning.nextHostname ??
+                        "—"}
+                    </span>
+                  </p>
+
+                  <p>
+                    <strong>Pages</strong>
+                    <span>
+                      {runtimeHealth?.site?.pageCount ?? "—"}
+                    </span>
+                  </p>
+
+                  <p>
+                    <strong>Runtime version</strong>
+                    <span>
+                      {runtimeHealth?.runtime?.releaseVersion ??
+                        "—"}
+                    </span>
+                  </p>
+
+                  <p>
+                    <strong>Last checked</strong>
+                    <span>
+                      {runtimeHealth?.checkedAt
+                        ? formatDate(
+                            new Date(runtimeHealth.checkedAt),
+                            true,
+                          )
+                        : "—"}
+                    </span>
+                  </p>
+                </div>
+
+                {provisioning.nextSiteUrl ? (
+                  <a
+                    href={provisioning.nextSiteUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hub-secondary-button"
+                  >
+                    <Globe2 size={14} />
+                    Open website
+                    <ArrowUpRight size={12} />
+                  </a>
+                ) : null}
+              </>
+            ) : (
+              <div className="hub-saas-detail-empty-inline">
+                <ServerCog size={18} />
+                <span>
+                  Runtime site has not been provisioned yet.
+                </span>
               </div>
-              <span className="hub-saas-chip hub-saas-chip-neutral">
-                Awaiting Next integration
-              </span>
-            </div>
+            )}
           </section>
 
           <section className="hub-saas-detail-panel">
