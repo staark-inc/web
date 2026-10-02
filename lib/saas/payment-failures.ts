@@ -3,6 +3,7 @@ import crypto from "node:crypto";
 import { prisma } from "@/lib/prisma";
 
 import { syncClientEntitlements } from "./access-sync";
+import { syncRuntimeSubscription } from "./runtime-subscription-sync";
 import {
   toDbBillingEnvironment,
   type BillingSubscriptionStatusValue,
@@ -270,6 +271,7 @@ export async function processDueSaaSSuspensions(now = new Date()) {
     });
 
     await syncClientEntitlements(candidate.clientId);
+    await syncRuntimeSubscription(candidate.stripeSubscriptionId);
 
     results.push({
       stripeSubscriptionId: candidate.stripeSubscriptionId,
