@@ -5,10 +5,6 @@ import {
   useState,
 } from "react";
 
-import {
-  completeSetupAction,
-} from "./actions";
-
 export default function SetupForm({
   token,
 }: {
@@ -72,10 +68,28 @@ export default function SetupForm({
     };
 
     try {
+      const response =
+        await fetch(
+          "/api/saas/setup/complete",
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+
+            body: JSON.stringify(
+              payload,
+            ),
+          },
+        );
+
       const data =
-        await completeSetupAction(payload);
+        await response.json();
 
       if (
+        !response.ok ||
         !data?.ok ||
         !data?.adminUrl
       ) {
