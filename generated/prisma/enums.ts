@@ -35,6 +35,28 @@ export const LeadStatus = {
 export type LeadStatus = (typeof LeadStatus)[keyof typeof LeadStatus]
 
 
+export const ContactChannel = {
+  EMAIL: 'EMAIL',
+  WHATSAPP: 'WHATSAPP',
+  FACEBOOK: 'FACEBOOK'
+} as const
+
+export type ContactChannel = (typeof ContactChannel)[keyof typeof ContactChannel]
+
+
+export const ProspectStatus = {
+  NO_WEBSITE: 'NO_WEBSITE',
+  BROKEN_WEBSITE: 'BROKEN_WEBSITE',
+  OLD_WEBSITE: 'OLD_WEBSITE',
+  WEAK_WEBSITE: 'WEAK_WEBSITE',
+  GOOD_WEBSITE: 'GOOD_WEBSITE',
+  IGNORED: 'IGNORED',
+  IMPORTED: 'IMPORTED'
+} as const
+
+export type ProspectStatus = (typeof ProspectStatus)[keyof typeof ProspectStatus]
+
+
 export const OfferStatus = {
   DRAFT: 'DRAFT',
   SHARED: 'SHARED',
@@ -115,3 +137,54 @@ export const ActivityKind = {
 } as const
 
 export type ActivityKind = (typeof ActivityKind)[keyof typeof ActivityKind]
+
+
+export const StaarkPlanCode = {
+  STARTER: 'STARTER',
+  SAAS: 'SAAS',
+  BUSINESS: 'BUSINESS'
+} as const
+
+export type StaarkPlanCode = (typeof StaarkPlanCode)[keyof typeof StaarkPlanCode]
+
+
+export const BillingEnvironment = {
+  TEST: 'TEST',
+  LIVE: 'LIVE'
+} as const
+
+export type BillingEnvironment = (typeof BillingEnvironment)[keyof typeof BillingEnvironment]
+
+
+export const BillingInterval = {
+  MONTH: 'MONTH',
+  YEAR: 'YEAR'
+} as const
+
+export type BillingInterval = (typeof BillingInterval)[keyof typeof BillingInterval]
+
+
+export const BillingSubscriptionStatus = {
+  TRIALING: 'TRIALING',
+  ACTIVE: 'ACTIVE',
+  PAST_DUE: 'PAST_DUE',
+  SUSPENDED: 'SUSPENDED',
+  CANCELING: 'CANCELING',
+  CANCELED: 'CANCELED',
+  INCOMPLETE: 'INCOMPLETE',
+  INCOMPLETE_EXPIRED: 'INCOMPLETE_EXPIRED',
+  UNPAID: 'UNPAID',
+  PAUSED: 'PAUSED'
+} as const
+
+export type BillingSubscriptionStatus = (typeof BillingSubscriptionStatus)[keyof typeof BillingSubscriptionStatus]
+
+
+export const SaasProvisioningStatus = {
+  PENDING_SETUP: 'PENDING_SETUP',
+  CLAIMED: 'CLAIMED',
+  ACTIVE: 'ACTIVE',
+  FAILED: 'FAILED'
+} as const
+
+export type SaasProvisioningStatus = (typeof SaasProvisioningStatus)[keyof typeof SaasProvisioningStatus]

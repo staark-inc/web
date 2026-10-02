@@ -2,6 +2,48 @@ import crypto from "node:crypto";
 
 import { prisma } from "@/lib/prisma";
 
+export type SaaSSetupInput = {
+  hostname: string;
+
+  setup: {
+    name: string;
+    email: string;
+    phone?: string;
+    locale?: string;
+
+    websiteType:
+      | "business"
+      | "salon"
+      | "restaurant"
+      | "hotel"
+      | "automotive"
+      | "portfolio"
+      | "custom";
+
+    theme:
+      | "light"
+      | "salong"
+      | "skonhet"
+      | "el"
+      | "gastfrihet"
+      | "byra"
+      | "webb"
+      | "kreator";
+
+    pages?: {
+      contact?: boolean;
+      about?: boolean;
+      services?: boolean;
+    };
+
+    owner: {
+      name: string;
+      email: string;
+      password: string;
+    };
+  };
+};
+
 type NextProvisioningResponse = {
   ok: boolean;
   error?: string;
@@ -12,49 +54,74 @@ type NextProvisioningResponse = {
   siteKey?: string;
   hostname?: string;
   siteUrl?: string;
+  adminUrl?: string;
 
-  setupUrl?: string | null;
-  setupExpiresAt?: string | null;
+  domainType?: string;
+  domainVerified?: boolean;
   setupCompleted?: boolean;
 };
 
 function getConfig() {
-  const url = process.env.STAARK_NEXT_PROVISIONING_URL?.trim();
-  const secret = process.env.STAARK_PROVISIONING_SECRET?.trim();
+  const url =
+    process.env.STAARK_NEXT_PROVISIONING_URL?.trim();
+
+  const secret =
+    process.env.STAARK_PROVISIONING_SECRET?.trim();
 
   if (!url) {
-    throw new Error("STAARK_NEXT_PROVISIONING_URL is not configured.");
+    throw new Error(
+      "STAARK_NEXT_PROVISIONING_URL is not configured.",
+    );
   }
 
   if (!secret) {
-    throw new Error("STAARK_PROVISIONING_SECRET is not configured.");
+    throw new Error(
+      "STAARK_PROVISIONING_SECRET is not configured.",
+    );
   }
 
-  return { url, secret };
+  return {
+    url,
+    secret,
+  };
 }
 
-function signBody(body: string, timestamp: string, secret: string) {
+function signBody(
+  body: string,
+  timestamp: string,
+  secret: string,
+) {
   return crypto
     .createHmac("sha256", secret)
     .update(`${timestamp}.${body}`)
     .digest("hex");
 }
 
-export async function provisionNextSite(provisioningId: string) {
-  const provisioning = await prisma.saasProvisioning.findUnique({
-    where: { id: provisioningId },
-    include: {
-      client: true,
-      billingSubscription: {
-        include: {
-          billingCustomer: true,
+export async function provisionNextSite(
+  provisioningId: string,
+  input: SaaSSetupInput,
+) {
+  const provisioning =
+    await prisma.saasProvisioning.findUnique({
+      where: {
+        id: provisioningId,
+      },
+
+      include: {
+        client: true,
+
+        billingSubscription: {
+          include: {
+            billingCustomer: true,
+          },
         },
       },
-    },
-  });
+    });
 
   if (!provisioning) {
-    throw new Error("SaaS provisioning was not found.");
+    throw new Error(
+      "SaaS provisioning was not found.",
+    );
   }
 
   if (
@@ -62,85 +129,145 @@ export async function provisionNextSite(provisioningId: string) {
     provisioning.status !== "CLAIMED"
   ) {
     throw new Error(
-      `Cannot provision Staark Next from status ${provisioning.status}.`,
+      `Cannot provision Staark runtime from status ${provisioning.status}.`,
     );
   }
 
-  const subscription = provisioning.billingSubscription;
-  const customerEmail = provisioning.client.billingEmail?.trim();
+  const subscription =
+    provisioning.billingSubscription;
+
+  const customerEmail =
+    provisioning.client.billingEmail?.trim();
 
   if (!customerEmail) {
     throw new Error(
-      "Client billing email is required before Staark Next provisioning.",
+      "Client billing email is required before provisioning.",
     );
   }
 
   const payload = {
-    hubSubscriptionId: subscription.id,
-    hubProvisioningId: provisioning.id,
-    hubClientId: provisioning.clientId,
+    hubSubscriptionId:
+      subscription.id,
 
-    environment: provisioning.environment,
+    hubProvisioningId:
+      provisioning.id,
+
+    hubClientId:
+      provisioning.clientId,
+
+    environment:
+      provisioning.environment,
 
     stripeCustomerId:
       subscription.billingCustomer.stripeCustomerId,
+
     stripeSubscriptionId:
       subscription.stripeSubscriptionId,
 
-    customerName: provisioning.client.name,
+    customerName:
+      provisioning.client.name,
+
     customerEmail,
 
-    planCode: provisioning.planCode,
-    billingInterval: subscription.interval,
-    status: subscription.status,
+    planCode:
+      provisioning.planCode,
+
+    billingInterval:
+      subscription.interval,
+
+    status:
+      subscription.status,
 
     currentPeriodStart:
-      subscription.currentPeriodStart?.toISOString() ?? null,
+      subscription.currentPeriodStart
+        ?.toISOString() ?? null,
+
     currentPeriodEnd:
-      subscription.currentPeriodEnd?.toISOString() ?? null,
+      subscription.currentPeriodEnd
+        ?.toISOString() ?? null,
+
     trialEnd:
-      subscription.trialEnd?.toISOString() ?? null,
+      subscription.trialEnd
+        ?.toISOString() ?? null,
+
     cancelAtPeriodEnd:
       subscription.cancelAtPeriodEnd,
+
+    hostname:
+      input.hostname,
+
+    domainType:
+      "platform" as const,
+
+    setup:
+      input.setup,
   };
 
-  const body = JSON.stringify(payload);
-  const timestamp = Math.floor(Date.now() / 1000).toString();
+  const body =
+    JSON.stringify(payload);
 
-  const { url, secret } = getConfig();
+  const timestamp =
+    Math.floor(
+      Date.now() / 1000,
+    ).toString();
 
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Staark-Timestamp": timestamp,
-      "X-Staark-Signature": signBody(
-        body,
-        timestamp,
-        secret,
-      ),
-    },
-    body,
-    cache: "no-store",
-  });
+  const {
+    url,
+    secret,
+  } = getConfig();
 
-  const data = (await response.json().catch(() => null)) as
-    | NextProvisioningResponse
-    | null;
+  const response =
+    await fetch(url, {
+      method: "POST",
 
-  if (!response.ok || !data?.ok) {
+      headers: {
+        "Content-Type":
+          "application/json",
+
+        "X-Staark-Timestamp":
+          timestamp,
+
+        "X-Staark-Signature":
+          signBody(
+            body,
+            timestamp,
+            secret,
+          ),
+      },
+
+      body,
+      cache: "no-store",
+    });
+
+  const data =
+    await response
+      .json()
+      .catch(() => null) as
+      | NextProvisioningResponse
+      | null;
+
+  if (
+    !response.ok ||
+    !data?.ok
+  ) {
     const message =
       data?.error ||
-      `Staark Next returned HTTP ${response.status}.`;
+      `Staark runtime returned HTTP ${response.status}.`;
 
     await prisma.saasProvisioning.update({
-      where: { id: provisioning.id },
+      where: {
+        id: provisioning.id,
+      },
+
       data: {
-        lastError: message,
+        lastError:
+          message,
       },
     });
 
-    throw new Error(message);
+    throw new Error(
+      message,
+    );
   }
 
   if (
@@ -149,52 +276,87 @@ export async function provisionNextSite(provisioningId: string) {
     !data.siteId ||
     !data.siteKey ||
     !data.hostname ||
-    !data.siteUrl
+    !data.siteUrl ||
+    !data.adminUrl ||
+    !data.setupCompleted
   ) {
     throw new Error(
-      "Staark Next returned an incomplete provisioning response.",
+      "Staark runtime returned an incomplete provisioning response.",
     );
   }
 
-  const now = new Date();
+  const now =
+    new Date();
 
   await prisma.saasProvisioning.update({
-    where: { id: provisioning.id },
+    where: {
+      id: provisioning.id,
+    },
+
     data: {
-      nextOrganizationId: data.organizationId,
-      nextSubscriptionId: data.subscriptionId,
-      nextSiteId: data.siteId,
-      nextSiteKey: data.siteKey,
-      nextHostname: data.hostname,
-      nextSiteUrl: data.siteUrl,
+      nextOrganizationId:
+        data.organizationId,
+
+      nextSubscriptionId:
+        data.subscriptionId,
+
+      nextSiteId:
+        data.siteId,
+
+      nextSiteKey:
+        data.siteKey,
+
+      nextHostname:
+        data.hostname,
+
+      nextSiteUrl:
+        data.siteUrl,
+
       nextProvisionedAt:
-        provisioning.nextProvisionedAt ?? now,
-      nextSetupExpiresAt: data.setupExpiresAt
-        ? new Date(data.setupExpiresAt)
-        : null,
+        provisioning.nextProvisionedAt ??
+        now,
 
-      status: data.setupCompleted
-        ? "ACTIVE"
-        : "CLAIMED",
+      nextSetupExpiresAt:
+        null,
 
-      activatedAt: data.setupCompleted
-        ? provisioning.activatedAt ?? now
-        : provisioning.activatedAt,
+      status:
+        "ACTIVE",
 
-      failedAt: null,
-      lastError: null,
+      activatedAt:
+        provisioning.activatedAt ??
+        now,
+
+      failedAt:
+        null,
+
+      lastError:
+        null,
     },
   });
 
   return {
-    organizationId: data.organizationId,
-    subscriptionId: data.subscriptionId,
-    siteId: data.siteId,
-    siteKey: data.siteKey,
-    hostname: data.hostname,
-    siteUrl: data.siteUrl,
-    setupUrl: data.setupUrl ?? null,
-    setupExpiresAt: data.setupExpiresAt ?? null,
-    setupCompleted: Boolean(data.setupCompleted),
+    organizationId:
+      data.organizationId,
+
+    subscriptionId:
+      data.subscriptionId,
+
+    siteId:
+      data.siteId,
+
+    siteKey:
+      data.siteKey,
+
+    hostname:
+      data.hostname,
+
+    siteUrl:
+      data.siteUrl,
+
+    adminUrl:
+      data.adminUrl,
+
+    setupCompleted:
+      true,
   };
 }

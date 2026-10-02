@@ -52,10 +52,16 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
+  Notification: 'Notification',
   Settings: 'Settings',
   Contact: 'Contact',
   Lead: 'Lead',
+  Prospect: 'Prospect',
   Client: 'Client',
+  BillingCustomer: 'BillingCustomer',
+  BillingSubscription: 'BillingSubscription',
+  SaasProvisioning: 'SaasProvisioning',
+  SaasSetupClaim: 'SaasSetupClaim',
   Offer: 'Offer',
   Project: 'Project',
   ProjectMaterial: 'ProjectMaterial',
@@ -65,7 +71,10 @@ export const ModelName = {
   SupportRequest: 'SupportRequest',
   Message: 'Message',
   MessageAttachment: 'MessageAttachment',
-  DemoDeployment: 'DemoDeployment'
+  DemoDeployment: 'DemoDeployment',
+  WordPressSite: 'WordPressSite',
+  WordPressPairingCode: 'WordPressPairingCode',
+  WordPressTicketSync: 'WordPressTicketSync'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -90,11 +99,28 @@ export const UserScalarFieldEnum = {
   email: 'email',
   passwordHash: 'passwordHash',
   role: 'role',
+  notificationPreferences: 'notificationPreferences',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const NotificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  title: 'title',
+  message: 'message',
+  href: 'href',
+  metadata: 'metadata',
+  dedupeKey: 'dedupeKey',
+  readAt: 'readAt',
+  createdAt: 'createdAt'
+} as const
+
+export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
 
 
 export const SettingsScalarFieldEnum = {
@@ -122,6 +148,7 @@ export const ContactScalarFieldEnum = {
   name: 'name',
   email: 'email',
   phone: 'phone',
+  facebook: 'facebook',
   company: 'company',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -136,6 +163,7 @@ export const LeadScalarFieldEnum = {
   service: 'service',
   budget: 'budget',
   message: 'message',
+  contactChannel: 'contactChannel',
   status: 'status',
   clientId: 'clientId',
   createdAt: 'createdAt',
@@ -143,6 +171,45 @@ export const LeadScalarFieldEnum = {
 } as const
 
 export type LeadScalarFieldEnum = (typeof LeadScalarFieldEnum)[keyof typeof LeadScalarFieldEnum]
+
+
+export const ProspectScalarFieldEnum = {
+  id: 'id',
+  placeId: 'placeId',
+  name: 'name',
+  city: 'city',
+  category: 'category',
+  address: 'address',
+  website: 'website',
+  email: 'email',
+  websitePhone: 'websitePhone',
+  googlePhone: 'googlePhone',
+  contactPage: 'contactPage',
+  contactForm: 'contactForm',
+  facebook: 'facebook',
+  instagram: 'instagram',
+  linkedin: 'linkedin',
+  rating: 'rating',
+  reviews: 'reviews',
+  status: 'status',
+  leadScore: 'leadScore',
+  websiteScore: 'websiteScore',
+  reasons: 'reasons',
+  https: 'https',
+  mobile: 'mobile',
+  copyrightYear: 'copyrightYear',
+  loadSeconds: 'loadSeconds',
+  pageTitle: 'pageTitle',
+  httpStatus: 'httpStatus',
+  googleMapsUrl: 'googleMapsUrl',
+  source: 'source',
+  scannedAt: 'scannedAt',
+  importedLeadId: 'importedLeadId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProspectScalarFieldEnum = (typeof ProspectScalarFieldEnum)[keyof typeof ProspectScalarFieldEnum]
 
 
 export const ClientScalarFieldEnum = {
@@ -153,6 +220,8 @@ export const ClientScalarFieldEnum = {
   organizationNumber: 'organizationNumber',
   billingAddress: 'billingAddress',
   notes: 'notes',
+  saasPlanCode: 'saasPlanCode',
+  saasEntitlements: 'saasEntitlements',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -160,9 +229,93 @@ export const ClientScalarFieldEnum = {
 export type ClientScalarFieldEnum = (typeof ClientScalarFieldEnum)[keyof typeof ClientScalarFieldEnum]
 
 
+export const BillingCustomerScalarFieldEnum = {
+  id: 'id',
+  clientId: 'clientId',
+  environment: 'environment',
+  stripeCustomerId: 'stripeCustomerId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BillingCustomerScalarFieldEnum = (typeof BillingCustomerScalarFieldEnum)[keyof typeof BillingCustomerScalarFieldEnum]
+
+
+export const BillingSubscriptionScalarFieldEnum = {
+  id: 'id',
+  clientId: 'clientId',
+  billingCustomerId: 'billingCustomerId',
+  environment: 'environment',
+  stripeSubscriptionId: 'stripeSubscriptionId',
+  stripePriceId: 'stripePriceId',
+  stripeProductId: 'stripeProductId',
+  planCode: 'planCode',
+  interval: 'interval',
+  currency: 'currency',
+  unitAmountOre: 'unitAmountOre',
+  taxBehavior: 'taxBehavior',
+  status: 'status',
+  cancelAtPeriodEnd: 'cancelAtPeriodEnd',
+  currentPeriodStart: 'currentPeriodStart',
+  currentPeriodEnd: 'currentPeriodEnd',
+  trialStart: 'trialStart',
+  trialEnd: 'trialEnd',
+  canceledAt: 'canceledAt',
+  endedAt: 'endedAt',
+  entitlements: 'entitlements',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BillingSubscriptionScalarFieldEnum = (typeof BillingSubscriptionScalarFieldEnum)[keyof typeof BillingSubscriptionScalarFieldEnum]
+
+
+export const SaasProvisioningScalarFieldEnum = {
+  id: 'id',
+  clientId: 'clientId',
+  billingSubscriptionId: 'billingSubscriptionId',
+  environment: 'environment',
+  planCode: 'planCode',
+  entitlements: 'entitlements',
+  status: 'status',
+  nextOrganizationId: 'nextOrganizationId',
+  nextSubscriptionId: 'nextSubscriptionId',
+  nextSiteId: 'nextSiteId',
+  nextSiteKey: 'nextSiteKey',
+  nextHostname: 'nextHostname',
+  nextSiteUrl: 'nextSiteUrl',
+  nextProvisionedAt: 'nextProvisionedAt',
+  nextSetupExpiresAt: 'nextSetupExpiresAt',
+  requestedAt: 'requestedAt',
+  claimedAt: 'claimedAt',
+  activatedAt: 'activatedAt',
+  failedAt: 'failedAt',
+  lastError: 'lastError',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SaasProvisioningScalarFieldEnum = (typeof SaasProvisioningScalarFieldEnum)[keyof typeof SaasProvisioningScalarFieldEnum]
+
+
+export const SaasSetupClaimScalarFieldEnum = {
+  id: 'id',
+  provisioningId: 'provisioningId',
+  tokenHash: 'tokenHash',
+  hint: 'hint',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  revokedAt: 'revokedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type SaasSetupClaimScalarFieldEnum = (typeof SaasSetupClaimScalarFieldEnum)[keyof typeof SaasSetupClaimScalarFieldEnum]
+
+
 export const OfferScalarFieldEnum = {
   id: 'id',
   clientId: 'clientId',
+  leadId: 'leadId',
   title: 'title',
   scope: 'scope',
   terms: 'terms',
@@ -327,6 +480,60 @@ export const DemoDeploymentScalarFieldEnum = {
 export type DemoDeploymentScalarFieldEnum = (typeof DemoDeploymentScalarFieldEnum)[keyof typeof DemoDeploymentScalarFieldEnum]
 
 
+export const WordPressSiteScalarFieldEnum = {
+  id: 'id',
+  siteId: 'siteId',
+  siteSecretEncrypted: 'siteSecretEncrypted',
+  siteUrl: 'siteUrl',
+  siteName: 'siteName',
+  adminUrl: 'adminUrl',
+  wordpressVersion: 'wordpressVersion',
+  phpVersion: 'phpVersion',
+  hubVersion: 'hubVersion',
+  theme: 'theme',
+  locale: 'locale',
+  timezone: 'timezone',
+  capabilities: 'capabilities',
+  status: 'status',
+  connectedAt: 'connectedAt',
+  lastSeenAt: 'lastSeenAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  clientId: 'clientId',
+  projectId: 'projectId'
+} as const
+
+export type WordPressSiteScalarFieldEnum = (typeof WordPressSiteScalarFieldEnum)[keyof typeof WordPressSiteScalarFieldEnum]
+
+
+export const WordPressPairingCodeScalarFieldEnum = {
+  id: 'id',
+  codeHash: 'codeHash',
+  hint: 'hint',
+  targetClientId: 'targetClientId',
+  targetProjectId: 'targetProjectId',
+  createdById: 'createdById',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  usedBySiteId: 'usedBySiteId',
+  createdAt: 'createdAt'
+} as const
+
+export type WordPressPairingCodeScalarFieldEnum = (typeof WordPressPairingCodeScalarFieldEnum)[keyof typeof WordPressPairingCodeScalarFieldEnum]
+
+
+export const WordPressTicketSyncScalarFieldEnum = {
+  id: 'id',
+  wordpressSiteId: 'wordpressSiteId',
+  localId: 'localId',
+  supportRequestId: 'supportRequestId',
+  payload: 'payload',
+  createdAt: 'createdAt'
+} as const
+
+export type WordPressTicketSyncScalarFieldEnum = (typeof WordPressTicketSyncScalarFieldEnum)[keyof typeof WordPressTicketSyncScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -341,6 +548,13 @@ export const NullableJsonNullValueInput = {
 } as const
 
 export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
