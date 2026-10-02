@@ -5,6 +5,9 @@ WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV DATABASE_URL="postgresql://staark:build-only@localhost:5432/staark"
 
+ARG DEPLOYMENT_VERSION
+ENV DEPLOYMENT_VERSION=${DEPLOYMENT_VERSION}
+
 # Prisma/PostgreSQL runtime dependency
 RUN apt-get update -y \
     && apt-get install -y openssl \

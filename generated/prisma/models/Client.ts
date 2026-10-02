@@ -32,6 +32,7 @@ export type ClientMinAggregateOutputType = {
   organizationNumber: string | null
   billingAddress: string | null
   notes: string | null
+  saasPlanCode: $Enums.StaarkPlanCode | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -44,6 +45,7 @@ export type ClientMaxAggregateOutputType = {
   organizationNumber: string | null
   billingAddress: string | null
   notes: string | null
+  saasPlanCode: $Enums.StaarkPlanCode | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -56,6 +58,8 @@ export type ClientCountAggregateOutputType = {
   organizationNumber: number
   billingAddress: number
   notes: number
+  saasPlanCode: number
+  saasEntitlements: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -70,6 +74,7 @@ export type ClientMinAggregateInputType = {
   organizationNumber?: true
   billingAddress?: true
   notes?: true
+  saasPlanCode?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -82,6 +87,7 @@ export type ClientMaxAggregateInputType = {
   organizationNumber?: true
   billingAddress?: true
   notes?: true
+  saasPlanCode?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -94,6 +100,8 @@ export type ClientCountAggregateInputType = {
   organizationNumber?: true
   billingAddress?: true
   notes?: true
+  saasPlanCode?: true
+  saasEntitlements?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -179,6 +187,8 @@ export type ClientGroupByOutputType = {
   organizationNumber: string | null
   billingAddress: string | null
   notes: string | null
+  saasPlanCode: $Enums.StaarkPlanCode | null
+  saasEntitlements: runtime.JsonValue | null
   createdAt: Date
   updatedAt: Date
   _count: ClientCountAggregateOutputType | null
@@ -212,6 +222,8 @@ export type ClientWhereInput = {
   organizationNumber?: Prisma.StringNullableFilter<"Client"> | string | null
   billingAddress?: Prisma.StringNullableFilter<"Client"> | string | null
   notes?: Prisma.StringNullableFilter<"Client"> | string | null
+  saasPlanCode?: Prisma.EnumStaarkPlanCodeNullableFilter<"Client"> | $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.JsonNullableFilter<"Client">
   createdAt?: Prisma.DateTimeFilter<"Client"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Client"> | Date | string
   contacts?: Prisma.ContactListRelationFilter
@@ -219,6 +231,10 @@ export type ClientWhereInput = {
   projects?: Prisma.ProjectListRelationFilter
   offers?: Prisma.OfferListRelationFilter
   supportRequests?: Prisma.SupportRequestListRelationFilter
+  wordpressSites?: Prisma.WordPressSiteListRelationFilter
+  billingCustomers?: Prisma.BillingCustomerListRelationFilter
+  billingSubscriptions?: Prisma.BillingSubscriptionListRelationFilter
+  saasProvisionings?: Prisma.SaasProvisioningListRelationFilter
 }
 
 export type ClientOrderByWithRelationInput = {
@@ -229,6 +245,8 @@ export type ClientOrderByWithRelationInput = {
   organizationNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   billingAddress?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  saasPlanCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  saasEntitlements?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   contacts?: Prisma.ContactOrderByRelationAggregateInput
@@ -236,6 +254,10 @@ export type ClientOrderByWithRelationInput = {
   projects?: Prisma.ProjectOrderByRelationAggregateInput
   offers?: Prisma.OfferOrderByRelationAggregateInput
   supportRequests?: Prisma.SupportRequestOrderByRelationAggregateInput
+  wordpressSites?: Prisma.WordPressSiteOrderByRelationAggregateInput
+  billingCustomers?: Prisma.BillingCustomerOrderByRelationAggregateInput
+  billingSubscriptions?: Prisma.BillingSubscriptionOrderByRelationAggregateInput
+  saasProvisionings?: Prisma.SaasProvisioningOrderByRelationAggregateInput
 }
 
 export type ClientWhereUniqueInput = Prisma.AtLeast<{
@@ -249,6 +271,8 @@ export type ClientWhereUniqueInput = Prisma.AtLeast<{
   organizationNumber?: Prisma.StringNullableFilter<"Client"> | string | null
   billingAddress?: Prisma.StringNullableFilter<"Client"> | string | null
   notes?: Prisma.StringNullableFilter<"Client"> | string | null
+  saasPlanCode?: Prisma.EnumStaarkPlanCodeNullableFilter<"Client"> | $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.JsonNullableFilter<"Client">
   createdAt?: Prisma.DateTimeFilter<"Client"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Client"> | Date | string
   contacts?: Prisma.ContactListRelationFilter
@@ -256,6 +280,10 @@ export type ClientWhereUniqueInput = Prisma.AtLeast<{
   projects?: Prisma.ProjectListRelationFilter
   offers?: Prisma.OfferListRelationFilter
   supportRequests?: Prisma.SupportRequestListRelationFilter
+  wordpressSites?: Prisma.WordPressSiteListRelationFilter
+  billingCustomers?: Prisma.BillingCustomerListRelationFilter
+  billingSubscriptions?: Prisma.BillingSubscriptionListRelationFilter
+  saasProvisionings?: Prisma.SaasProvisioningListRelationFilter
 }, "id">
 
 export type ClientOrderByWithAggregationInput = {
@@ -266,6 +294,8 @@ export type ClientOrderByWithAggregationInput = {
   organizationNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   billingAddress?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  saasPlanCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  saasEntitlements?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ClientCountOrderByAggregateInput
@@ -284,6 +314,8 @@ export type ClientScalarWhereWithAggregatesInput = {
   organizationNumber?: Prisma.StringNullableWithAggregatesFilter<"Client"> | string | null
   billingAddress?: Prisma.StringNullableWithAggregatesFilter<"Client"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"Client"> | string | null
+  saasPlanCode?: Prisma.EnumStaarkPlanCodeNullableWithAggregatesFilter<"Client"> | $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.JsonNullableWithAggregatesFilter<"Client">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Client"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Client"> | Date | string
 }
@@ -296,6 +328,8 @@ export type ClientCreateInput = {
   organizationNumber?: string | null
   billingAddress?: string | null
   notes?: string | null
+  saasPlanCode?: $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.ContactCreateNestedManyWithoutClientsInput
@@ -303,6 +337,10 @@ export type ClientCreateInput = {
   projects?: Prisma.ProjectCreateNestedManyWithoutClientInput
   offers?: Prisma.OfferCreateNestedManyWithoutClientInput
   supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutClientInput
+  wordpressSites?: Prisma.WordPressSiteCreateNestedManyWithoutClientInput
+  billingCustomers?: Prisma.BillingCustomerCreateNestedManyWithoutClientInput
+  billingSubscriptions?: Prisma.BillingSubscriptionCreateNestedManyWithoutClientInput
+  saasProvisionings?: Prisma.SaasProvisioningCreateNestedManyWithoutClientInput
 }
 
 export type ClientUncheckedCreateInput = {
@@ -313,6 +351,8 @@ export type ClientUncheckedCreateInput = {
   organizationNumber?: string | null
   billingAddress?: string | null
   notes?: string | null
+  saasPlanCode?: $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutClientsInput
@@ -320,6 +360,10 @@ export type ClientUncheckedCreateInput = {
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
   offers?: Prisma.OfferUncheckedCreateNestedManyWithoutClientInput
   supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutClientInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedCreateNestedManyWithoutClientInput
+  billingCustomers?: Prisma.BillingCustomerUncheckedCreateNestedManyWithoutClientInput
+  billingSubscriptions?: Prisma.BillingSubscriptionUncheckedCreateNestedManyWithoutClientInput
+  saasProvisionings?: Prisma.SaasProvisioningUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientUpdateInput = {
@@ -330,6 +374,8 @@ export type ClientUpdateInput = {
   organizationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  saasPlanCode?: Prisma.NullableEnumStaarkPlanCodeFieldUpdateOperationsInput | $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUpdateManyWithoutClientsNestedInput
@@ -337,6 +383,10 @@ export type ClientUpdateInput = {
   projects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
   offers?: Prisma.OfferUpdateManyWithoutClientNestedInput
   supportRequests?: Prisma.SupportRequestUpdateManyWithoutClientNestedInput
+  wordpressSites?: Prisma.WordPressSiteUpdateManyWithoutClientNestedInput
+  billingCustomers?: Prisma.BillingCustomerUpdateManyWithoutClientNestedInput
+  billingSubscriptions?: Prisma.BillingSubscriptionUpdateManyWithoutClientNestedInput
+  saasProvisionings?: Prisma.SaasProvisioningUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUncheckedUpdateInput = {
@@ -347,6 +397,8 @@ export type ClientUncheckedUpdateInput = {
   organizationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  saasPlanCode?: Prisma.NullableEnumStaarkPlanCodeFieldUpdateOperationsInput | $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUncheckedUpdateManyWithoutClientsNestedInput
@@ -354,6 +406,10 @@ export type ClientUncheckedUpdateInput = {
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
   offers?: Prisma.OfferUncheckedUpdateManyWithoutClientNestedInput
   supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutClientNestedInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedUpdateManyWithoutClientNestedInput
+  billingCustomers?: Prisma.BillingCustomerUncheckedUpdateManyWithoutClientNestedInput
+  billingSubscriptions?: Prisma.BillingSubscriptionUncheckedUpdateManyWithoutClientNestedInput
+  saasProvisionings?: Prisma.SaasProvisioningUncheckedUpdateManyWithoutClientNestedInput
 }
 
 export type ClientCreateManyInput = {
@@ -364,6 +420,8 @@ export type ClientCreateManyInput = {
   organizationNumber?: string | null
   billingAddress?: string | null
   notes?: string | null
+  saasPlanCode?: $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -376,6 +434,8 @@ export type ClientUpdateManyMutationInput = {
   organizationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  saasPlanCode?: Prisma.NullableEnumStaarkPlanCodeFieldUpdateOperationsInput | $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -388,6 +448,8 @@ export type ClientUncheckedUpdateManyInput = {
   organizationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  saasPlanCode?: Prisma.NullableEnumStaarkPlanCodeFieldUpdateOperationsInput | $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -415,6 +477,8 @@ export type ClientCountOrderByAggregateInput = {
   organizationNumber?: Prisma.SortOrder
   billingAddress?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  saasPlanCode?: Prisma.SortOrder
+  saasEntitlements?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -427,6 +491,7 @@ export type ClientMaxOrderByAggregateInput = {
   organizationNumber?: Prisma.SortOrder
   billingAddress?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  saasPlanCode?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -439,6 +504,7 @@ export type ClientMinOrderByAggregateInput = {
   organizationNumber?: Prisma.SortOrder
   billingAddress?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  saasPlanCode?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -502,6 +568,52 @@ export type ClientUpdateOneWithoutLeadsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ClientUpdateToOneWithWhereWithoutLeadsInput, Prisma.ClientUpdateWithoutLeadsInput>, Prisma.ClientUncheckedUpdateWithoutLeadsInput>
 }
 
+export type NullableEnumStaarkPlanCodeFieldUpdateOperationsInput = {
+  set?: $Enums.StaarkPlanCode | null
+}
+
+export type ClientCreateNestedOneWithoutBillingCustomersInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutBillingCustomersInput, Prisma.ClientUncheckedCreateWithoutBillingCustomersInput>
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutBillingCustomersInput
+  connect?: Prisma.ClientWhereUniqueInput
+}
+
+export type ClientUpdateOneRequiredWithoutBillingCustomersNestedInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutBillingCustomersInput, Prisma.ClientUncheckedCreateWithoutBillingCustomersInput>
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutBillingCustomersInput
+  upsert?: Prisma.ClientUpsertWithoutBillingCustomersInput
+  connect?: Prisma.ClientWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ClientUpdateToOneWithWhereWithoutBillingCustomersInput, Prisma.ClientUpdateWithoutBillingCustomersInput>, Prisma.ClientUncheckedUpdateWithoutBillingCustomersInput>
+}
+
+export type ClientCreateNestedOneWithoutBillingSubscriptionsInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutBillingSubscriptionsInput, Prisma.ClientUncheckedCreateWithoutBillingSubscriptionsInput>
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutBillingSubscriptionsInput
+  connect?: Prisma.ClientWhereUniqueInput
+}
+
+export type ClientUpdateOneRequiredWithoutBillingSubscriptionsNestedInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutBillingSubscriptionsInput, Prisma.ClientUncheckedCreateWithoutBillingSubscriptionsInput>
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutBillingSubscriptionsInput
+  upsert?: Prisma.ClientUpsertWithoutBillingSubscriptionsInput
+  connect?: Prisma.ClientWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ClientUpdateToOneWithWhereWithoutBillingSubscriptionsInput, Prisma.ClientUpdateWithoutBillingSubscriptionsInput>, Prisma.ClientUncheckedUpdateWithoutBillingSubscriptionsInput>
+}
+
+export type ClientCreateNestedOneWithoutSaasProvisioningsInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutSaasProvisioningsInput, Prisma.ClientUncheckedCreateWithoutSaasProvisioningsInput>
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutSaasProvisioningsInput
+  connect?: Prisma.ClientWhereUniqueInput
+}
+
+export type ClientUpdateOneRequiredWithoutSaasProvisioningsNestedInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutSaasProvisioningsInput, Prisma.ClientUncheckedCreateWithoutSaasProvisioningsInput>
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutSaasProvisioningsInput
+  upsert?: Prisma.ClientUpsertWithoutSaasProvisioningsInput
+  connect?: Prisma.ClientWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ClientUpdateToOneWithWhereWithoutSaasProvisioningsInput, Prisma.ClientUpdateWithoutSaasProvisioningsInput>, Prisma.ClientUncheckedUpdateWithoutSaasProvisioningsInput>
+}
+
 export type ClientCreateNestedOneWithoutOffersInput = {
   create?: Prisma.XOR<Prisma.ClientCreateWithoutOffersInput, Prisma.ClientUncheckedCreateWithoutOffersInput>
   connectOrCreate?: Prisma.ClientCreateOrConnectWithoutOffersInput
@@ -546,6 +658,22 @@ export type ClientUpdateOneWithoutSupportRequestsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ClientUpdateToOneWithWhereWithoutSupportRequestsInput, Prisma.ClientUpdateWithoutSupportRequestsInput>, Prisma.ClientUncheckedUpdateWithoutSupportRequestsInput>
 }
 
+export type ClientCreateNestedOneWithoutWordpressSitesInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutWordpressSitesInput, Prisma.ClientUncheckedCreateWithoutWordpressSitesInput>
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutWordpressSitesInput
+  connect?: Prisma.ClientWhereUniqueInput
+}
+
+export type ClientUpdateOneWithoutWordpressSitesNestedInput = {
+  create?: Prisma.XOR<Prisma.ClientCreateWithoutWordpressSitesInput, Prisma.ClientUncheckedCreateWithoutWordpressSitesInput>
+  connectOrCreate?: Prisma.ClientCreateOrConnectWithoutWordpressSitesInput
+  upsert?: Prisma.ClientUpsertWithoutWordpressSitesInput
+  disconnect?: Prisma.ClientWhereInput | boolean
+  delete?: Prisma.ClientWhereInput | boolean
+  connect?: Prisma.ClientWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ClientUpdateToOneWithWhereWithoutWordpressSitesInput, Prisma.ClientUpdateWithoutWordpressSitesInput>, Prisma.ClientUncheckedUpdateWithoutWordpressSitesInput>
+}
+
 export type ClientCreateWithoutContactsInput = {
   id?: string
   name: string
@@ -554,12 +682,18 @@ export type ClientCreateWithoutContactsInput = {
   organizationNumber?: string | null
   billingAddress?: string | null
   notes?: string | null
+  saasPlanCode?: $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   leads?: Prisma.LeadCreateNestedManyWithoutClientInput
   projects?: Prisma.ProjectCreateNestedManyWithoutClientInput
   offers?: Prisma.OfferCreateNestedManyWithoutClientInput
   supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutClientInput
+  wordpressSites?: Prisma.WordPressSiteCreateNestedManyWithoutClientInput
+  billingCustomers?: Prisma.BillingCustomerCreateNestedManyWithoutClientInput
+  billingSubscriptions?: Prisma.BillingSubscriptionCreateNestedManyWithoutClientInput
+  saasProvisionings?: Prisma.SaasProvisioningCreateNestedManyWithoutClientInput
 }
 
 export type ClientUncheckedCreateWithoutContactsInput = {
@@ -570,12 +704,18 @@ export type ClientUncheckedCreateWithoutContactsInput = {
   organizationNumber?: string | null
   billingAddress?: string | null
   notes?: string | null
+  saasPlanCode?: $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClientInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
   offers?: Prisma.OfferUncheckedCreateNestedManyWithoutClientInput
   supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutClientInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedCreateNestedManyWithoutClientInput
+  billingCustomers?: Prisma.BillingCustomerUncheckedCreateNestedManyWithoutClientInput
+  billingSubscriptions?: Prisma.BillingSubscriptionUncheckedCreateNestedManyWithoutClientInput
+  saasProvisionings?: Prisma.SaasProvisioningUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientCreateOrConnectWithoutContactsInput = {
@@ -610,6 +750,8 @@ export type ClientScalarWhereInput = {
   organizationNumber?: Prisma.StringNullableFilter<"Client"> | string | null
   billingAddress?: Prisma.StringNullableFilter<"Client"> | string | null
   notes?: Prisma.StringNullableFilter<"Client"> | string | null
+  saasPlanCode?: Prisma.EnumStaarkPlanCodeNullableFilter<"Client"> | $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.JsonNullableFilter<"Client">
   createdAt?: Prisma.DateTimeFilter<"Client"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Client"> | Date | string
 }
@@ -622,12 +764,18 @@ export type ClientCreateWithoutLeadsInput = {
   organizationNumber?: string | null
   billingAddress?: string | null
   notes?: string | null
+  saasPlanCode?: $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.ContactCreateNestedManyWithoutClientsInput
   projects?: Prisma.ProjectCreateNestedManyWithoutClientInput
   offers?: Prisma.OfferCreateNestedManyWithoutClientInput
   supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutClientInput
+  wordpressSites?: Prisma.WordPressSiteCreateNestedManyWithoutClientInput
+  billingCustomers?: Prisma.BillingCustomerCreateNestedManyWithoutClientInput
+  billingSubscriptions?: Prisma.BillingSubscriptionCreateNestedManyWithoutClientInput
+  saasProvisionings?: Prisma.SaasProvisioningCreateNestedManyWithoutClientInput
 }
 
 export type ClientUncheckedCreateWithoutLeadsInput = {
@@ -638,12 +786,18 @@ export type ClientUncheckedCreateWithoutLeadsInput = {
   organizationNumber?: string | null
   billingAddress?: string | null
   notes?: string | null
+  saasPlanCode?: $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutClientsInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
   offers?: Prisma.OfferUncheckedCreateNestedManyWithoutClientInput
   supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutClientInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedCreateNestedManyWithoutClientInput
+  billingCustomers?: Prisma.BillingCustomerUncheckedCreateNestedManyWithoutClientInput
+  billingSubscriptions?: Prisma.BillingSubscriptionUncheckedCreateNestedManyWithoutClientInput
+  saasProvisionings?: Prisma.SaasProvisioningUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientCreateOrConnectWithoutLeadsInput = {
@@ -670,12 +824,18 @@ export type ClientUpdateWithoutLeadsInput = {
   organizationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  saasPlanCode?: Prisma.NullableEnumStaarkPlanCodeFieldUpdateOperationsInput | $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUpdateManyWithoutClientsNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
   offers?: Prisma.OfferUpdateManyWithoutClientNestedInput
   supportRequests?: Prisma.SupportRequestUpdateManyWithoutClientNestedInput
+  wordpressSites?: Prisma.WordPressSiteUpdateManyWithoutClientNestedInput
+  billingCustomers?: Prisma.BillingCustomerUpdateManyWithoutClientNestedInput
+  billingSubscriptions?: Prisma.BillingSubscriptionUpdateManyWithoutClientNestedInput
+  saasProvisionings?: Prisma.SaasProvisioningUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUncheckedUpdateWithoutLeadsInput = {
@@ -686,12 +846,330 @@ export type ClientUncheckedUpdateWithoutLeadsInput = {
   organizationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  saasPlanCode?: Prisma.NullableEnumStaarkPlanCodeFieldUpdateOperationsInput | $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUncheckedUpdateManyWithoutClientsNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
   offers?: Prisma.OfferUncheckedUpdateManyWithoutClientNestedInput
   supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutClientNestedInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedUpdateManyWithoutClientNestedInput
+  billingCustomers?: Prisma.BillingCustomerUncheckedUpdateManyWithoutClientNestedInput
+  billingSubscriptions?: Prisma.BillingSubscriptionUncheckedUpdateManyWithoutClientNestedInput
+  saasProvisionings?: Prisma.SaasProvisioningUncheckedUpdateManyWithoutClientNestedInput
+}
+
+export type ClientCreateWithoutBillingCustomersInput = {
+  id?: string
+  name: string
+  billingEmail?: string | null
+  phone?: string | null
+  organizationNumber?: string | null
+  billingAddress?: string | null
+  notes?: string | null
+  saasPlanCode?: $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  contacts?: Prisma.ContactCreateNestedManyWithoutClientsInput
+  leads?: Prisma.LeadCreateNestedManyWithoutClientInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutClientInput
+  offers?: Prisma.OfferCreateNestedManyWithoutClientInput
+  supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutClientInput
+  wordpressSites?: Prisma.WordPressSiteCreateNestedManyWithoutClientInput
+  billingSubscriptions?: Prisma.BillingSubscriptionCreateNestedManyWithoutClientInput
+  saasProvisionings?: Prisma.SaasProvisioningCreateNestedManyWithoutClientInput
+}
+
+export type ClientUncheckedCreateWithoutBillingCustomersInput = {
+  id?: string
+  name: string
+  billingEmail?: string | null
+  phone?: string | null
+  organizationNumber?: string | null
+  billingAddress?: string | null
+  notes?: string | null
+  saasPlanCode?: $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutClientsInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClientInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
+  offers?: Prisma.OfferUncheckedCreateNestedManyWithoutClientInput
+  supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutClientInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedCreateNestedManyWithoutClientInput
+  billingSubscriptions?: Prisma.BillingSubscriptionUncheckedCreateNestedManyWithoutClientInput
+  saasProvisionings?: Prisma.SaasProvisioningUncheckedCreateNestedManyWithoutClientInput
+}
+
+export type ClientCreateOrConnectWithoutBillingCustomersInput = {
+  where: Prisma.ClientWhereUniqueInput
+  create: Prisma.XOR<Prisma.ClientCreateWithoutBillingCustomersInput, Prisma.ClientUncheckedCreateWithoutBillingCustomersInput>
+}
+
+export type ClientUpsertWithoutBillingCustomersInput = {
+  update: Prisma.XOR<Prisma.ClientUpdateWithoutBillingCustomersInput, Prisma.ClientUncheckedUpdateWithoutBillingCustomersInput>
+  create: Prisma.XOR<Prisma.ClientCreateWithoutBillingCustomersInput, Prisma.ClientUncheckedCreateWithoutBillingCustomersInput>
+  where?: Prisma.ClientWhereInput
+}
+
+export type ClientUpdateToOneWithWhereWithoutBillingCustomersInput = {
+  where?: Prisma.ClientWhereInput
+  data: Prisma.XOR<Prisma.ClientUpdateWithoutBillingCustomersInput, Prisma.ClientUncheckedUpdateWithoutBillingCustomersInput>
+}
+
+export type ClientUpdateWithoutBillingCustomersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  billingEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  saasPlanCode?: Prisma.NullableEnumStaarkPlanCodeFieldUpdateOperationsInput | $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contacts?: Prisma.ContactUpdateManyWithoutClientsNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutClientNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
+  offers?: Prisma.OfferUpdateManyWithoutClientNestedInput
+  supportRequests?: Prisma.SupportRequestUpdateManyWithoutClientNestedInput
+  wordpressSites?: Prisma.WordPressSiteUpdateManyWithoutClientNestedInput
+  billingSubscriptions?: Prisma.BillingSubscriptionUpdateManyWithoutClientNestedInput
+  saasProvisionings?: Prisma.SaasProvisioningUpdateManyWithoutClientNestedInput
+}
+
+export type ClientUncheckedUpdateWithoutBillingCustomersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  billingEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  saasPlanCode?: Prisma.NullableEnumStaarkPlanCodeFieldUpdateOperationsInput | $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contacts?: Prisma.ContactUncheckedUpdateManyWithoutClientsNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutClientNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
+  offers?: Prisma.OfferUncheckedUpdateManyWithoutClientNestedInput
+  supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutClientNestedInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedUpdateManyWithoutClientNestedInput
+  billingSubscriptions?: Prisma.BillingSubscriptionUncheckedUpdateManyWithoutClientNestedInput
+  saasProvisionings?: Prisma.SaasProvisioningUncheckedUpdateManyWithoutClientNestedInput
+}
+
+export type ClientCreateWithoutBillingSubscriptionsInput = {
+  id?: string
+  name: string
+  billingEmail?: string | null
+  phone?: string | null
+  organizationNumber?: string | null
+  billingAddress?: string | null
+  notes?: string | null
+  saasPlanCode?: $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  contacts?: Prisma.ContactCreateNestedManyWithoutClientsInput
+  leads?: Prisma.LeadCreateNestedManyWithoutClientInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutClientInput
+  offers?: Prisma.OfferCreateNestedManyWithoutClientInput
+  supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutClientInput
+  wordpressSites?: Prisma.WordPressSiteCreateNestedManyWithoutClientInput
+  billingCustomers?: Prisma.BillingCustomerCreateNestedManyWithoutClientInput
+  saasProvisionings?: Prisma.SaasProvisioningCreateNestedManyWithoutClientInput
+}
+
+export type ClientUncheckedCreateWithoutBillingSubscriptionsInput = {
+  id?: string
+  name: string
+  billingEmail?: string | null
+  phone?: string | null
+  organizationNumber?: string | null
+  billingAddress?: string | null
+  notes?: string | null
+  saasPlanCode?: $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutClientsInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClientInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
+  offers?: Prisma.OfferUncheckedCreateNestedManyWithoutClientInput
+  supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutClientInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedCreateNestedManyWithoutClientInput
+  billingCustomers?: Prisma.BillingCustomerUncheckedCreateNestedManyWithoutClientInput
+  saasProvisionings?: Prisma.SaasProvisioningUncheckedCreateNestedManyWithoutClientInput
+}
+
+export type ClientCreateOrConnectWithoutBillingSubscriptionsInput = {
+  where: Prisma.ClientWhereUniqueInput
+  create: Prisma.XOR<Prisma.ClientCreateWithoutBillingSubscriptionsInput, Prisma.ClientUncheckedCreateWithoutBillingSubscriptionsInput>
+}
+
+export type ClientUpsertWithoutBillingSubscriptionsInput = {
+  update: Prisma.XOR<Prisma.ClientUpdateWithoutBillingSubscriptionsInput, Prisma.ClientUncheckedUpdateWithoutBillingSubscriptionsInput>
+  create: Prisma.XOR<Prisma.ClientCreateWithoutBillingSubscriptionsInput, Prisma.ClientUncheckedCreateWithoutBillingSubscriptionsInput>
+  where?: Prisma.ClientWhereInput
+}
+
+export type ClientUpdateToOneWithWhereWithoutBillingSubscriptionsInput = {
+  where?: Prisma.ClientWhereInput
+  data: Prisma.XOR<Prisma.ClientUpdateWithoutBillingSubscriptionsInput, Prisma.ClientUncheckedUpdateWithoutBillingSubscriptionsInput>
+}
+
+export type ClientUpdateWithoutBillingSubscriptionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  billingEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  saasPlanCode?: Prisma.NullableEnumStaarkPlanCodeFieldUpdateOperationsInput | $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contacts?: Prisma.ContactUpdateManyWithoutClientsNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutClientNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
+  offers?: Prisma.OfferUpdateManyWithoutClientNestedInput
+  supportRequests?: Prisma.SupportRequestUpdateManyWithoutClientNestedInput
+  wordpressSites?: Prisma.WordPressSiteUpdateManyWithoutClientNestedInput
+  billingCustomers?: Prisma.BillingCustomerUpdateManyWithoutClientNestedInput
+  saasProvisionings?: Prisma.SaasProvisioningUpdateManyWithoutClientNestedInput
+}
+
+export type ClientUncheckedUpdateWithoutBillingSubscriptionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  billingEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  saasPlanCode?: Prisma.NullableEnumStaarkPlanCodeFieldUpdateOperationsInput | $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contacts?: Prisma.ContactUncheckedUpdateManyWithoutClientsNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutClientNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
+  offers?: Prisma.OfferUncheckedUpdateManyWithoutClientNestedInput
+  supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutClientNestedInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedUpdateManyWithoutClientNestedInput
+  billingCustomers?: Prisma.BillingCustomerUncheckedUpdateManyWithoutClientNestedInput
+  saasProvisionings?: Prisma.SaasProvisioningUncheckedUpdateManyWithoutClientNestedInput
+}
+
+export type ClientCreateWithoutSaasProvisioningsInput = {
+  id?: string
+  name: string
+  billingEmail?: string | null
+  phone?: string | null
+  organizationNumber?: string | null
+  billingAddress?: string | null
+  notes?: string | null
+  saasPlanCode?: $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  contacts?: Prisma.ContactCreateNestedManyWithoutClientsInput
+  leads?: Prisma.LeadCreateNestedManyWithoutClientInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutClientInput
+  offers?: Prisma.OfferCreateNestedManyWithoutClientInput
+  supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutClientInput
+  wordpressSites?: Prisma.WordPressSiteCreateNestedManyWithoutClientInput
+  billingCustomers?: Prisma.BillingCustomerCreateNestedManyWithoutClientInput
+  billingSubscriptions?: Prisma.BillingSubscriptionCreateNestedManyWithoutClientInput
+}
+
+export type ClientUncheckedCreateWithoutSaasProvisioningsInput = {
+  id?: string
+  name: string
+  billingEmail?: string | null
+  phone?: string | null
+  organizationNumber?: string | null
+  billingAddress?: string | null
+  notes?: string | null
+  saasPlanCode?: $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutClientsInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClientInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
+  offers?: Prisma.OfferUncheckedCreateNestedManyWithoutClientInput
+  supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutClientInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedCreateNestedManyWithoutClientInput
+  billingCustomers?: Prisma.BillingCustomerUncheckedCreateNestedManyWithoutClientInput
+  billingSubscriptions?: Prisma.BillingSubscriptionUncheckedCreateNestedManyWithoutClientInput
+}
+
+export type ClientCreateOrConnectWithoutSaasProvisioningsInput = {
+  where: Prisma.ClientWhereUniqueInput
+  create: Prisma.XOR<Prisma.ClientCreateWithoutSaasProvisioningsInput, Prisma.ClientUncheckedCreateWithoutSaasProvisioningsInput>
+}
+
+export type ClientUpsertWithoutSaasProvisioningsInput = {
+  update: Prisma.XOR<Prisma.ClientUpdateWithoutSaasProvisioningsInput, Prisma.ClientUncheckedUpdateWithoutSaasProvisioningsInput>
+  create: Prisma.XOR<Prisma.ClientCreateWithoutSaasProvisioningsInput, Prisma.ClientUncheckedCreateWithoutSaasProvisioningsInput>
+  where?: Prisma.ClientWhereInput
+}
+
+export type ClientUpdateToOneWithWhereWithoutSaasProvisioningsInput = {
+  where?: Prisma.ClientWhereInput
+  data: Prisma.XOR<Prisma.ClientUpdateWithoutSaasProvisioningsInput, Prisma.ClientUncheckedUpdateWithoutSaasProvisioningsInput>
+}
+
+export type ClientUpdateWithoutSaasProvisioningsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  billingEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  saasPlanCode?: Prisma.NullableEnumStaarkPlanCodeFieldUpdateOperationsInput | $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contacts?: Prisma.ContactUpdateManyWithoutClientsNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutClientNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
+  offers?: Prisma.OfferUpdateManyWithoutClientNestedInput
+  supportRequests?: Prisma.SupportRequestUpdateManyWithoutClientNestedInput
+  wordpressSites?: Prisma.WordPressSiteUpdateManyWithoutClientNestedInput
+  billingCustomers?: Prisma.BillingCustomerUpdateManyWithoutClientNestedInput
+  billingSubscriptions?: Prisma.BillingSubscriptionUpdateManyWithoutClientNestedInput
+}
+
+export type ClientUncheckedUpdateWithoutSaasProvisioningsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  billingEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  saasPlanCode?: Prisma.NullableEnumStaarkPlanCodeFieldUpdateOperationsInput | $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contacts?: Prisma.ContactUncheckedUpdateManyWithoutClientsNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutClientNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
+  offers?: Prisma.OfferUncheckedUpdateManyWithoutClientNestedInput
+  supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutClientNestedInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedUpdateManyWithoutClientNestedInput
+  billingCustomers?: Prisma.BillingCustomerUncheckedUpdateManyWithoutClientNestedInput
+  billingSubscriptions?: Prisma.BillingSubscriptionUncheckedUpdateManyWithoutClientNestedInput
 }
 
 export type ClientCreateWithoutOffersInput = {
@@ -702,12 +1180,18 @@ export type ClientCreateWithoutOffersInput = {
   organizationNumber?: string | null
   billingAddress?: string | null
   notes?: string | null
+  saasPlanCode?: $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.ContactCreateNestedManyWithoutClientsInput
   leads?: Prisma.LeadCreateNestedManyWithoutClientInput
   projects?: Prisma.ProjectCreateNestedManyWithoutClientInput
   supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutClientInput
+  wordpressSites?: Prisma.WordPressSiteCreateNestedManyWithoutClientInput
+  billingCustomers?: Prisma.BillingCustomerCreateNestedManyWithoutClientInput
+  billingSubscriptions?: Prisma.BillingSubscriptionCreateNestedManyWithoutClientInput
+  saasProvisionings?: Prisma.SaasProvisioningCreateNestedManyWithoutClientInput
 }
 
 export type ClientUncheckedCreateWithoutOffersInput = {
@@ -718,12 +1202,18 @@ export type ClientUncheckedCreateWithoutOffersInput = {
   organizationNumber?: string | null
   billingAddress?: string | null
   notes?: string | null
+  saasPlanCode?: $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutClientsInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClientInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
   supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutClientInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedCreateNestedManyWithoutClientInput
+  billingCustomers?: Prisma.BillingCustomerUncheckedCreateNestedManyWithoutClientInput
+  billingSubscriptions?: Prisma.BillingSubscriptionUncheckedCreateNestedManyWithoutClientInput
+  saasProvisionings?: Prisma.SaasProvisioningUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientCreateOrConnectWithoutOffersInput = {
@@ -750,12 +1240,18 @@ export type ClientUpdateWithoutOffersInput = {
   organizationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  saasPlanCode?: Prisma.NullableEnumStaarkPlanCodeFieldUpdateOperationsInput | $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUpdateManyWithoutClientsNestedInput
   leads?: Prisma.LeadUpdateManyWithoutClientNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
   supportRequests?: Prisma.SupportRequestUpdateManyWithoutClientNestedInput
+  wordpressSites?: Prisma.WordPressSiteUpdateManyWithoutClientNestedInput
+  billingCustomers?: Prisma.BillingCustomerUpdateManyWithoutClientNestedInput
+  billingSubscriptions?: Prisma.BillingSubscriptionUpdateManyWithoutClientNestedInput
+  saasProvisionings?: Prisma.SaasProvisioningUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUncheckedUpdateWithoutOffersInput = {
@@ -766,12 +1262,18 @@ export type ClientUncheckedUpdateWithoutOffersInput = {
   organizationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  saasPlanCode?: Prisma.NullableEnumStaarkPlanCodeFieldUpdateOperationsInput | $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUncheckedUpdateManyWithoutClientsNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutClientNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
   supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutClientNestedInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedUpdateManyWithoutClientNestedInput
+  billingCustomers?: Prisma.BillingCustomerUncheckedUpdateManyWithoutClientNestedInput
+  billingSubscriptions?: Prisma.BillingSubscriptionUncheckedUpdateManyWithoutClientNestedInput
+  saasProvisionings?: Prisma.SaasProvisioningUncheckedUpdateManyWithoutClientNestedInput
 }
 
 export type ClientCreateWithoutProjectsInput = {
@@ -782,12 +1284,18 @@ export type ClientCreateWithoutProjectsInput = {
   organizationNumber?: string | null
   billingAddress?: string | null
   notes?: string | null
+  saasPlanCode?: $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.ContactCreateNestedManyWithoutClientsInput
   leads?: Prisma.LeadCreateNestedManyWithoutClientInput
   offers?: Prisma.OfferCreateNestedManyWithoutClientInput
   supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutClientInput
+  wordpressSites?: Prisma.WordPressSiteCreateNestedManyWithoutClientInput
+  billingCustomers?: Prisma.BillingCustomerCreateNestedManyWithoutClientInput
+  billingSubscriptions?: Prisma.BillingSubscriptionCreateNestedManyWithoutClientInput
+  saasProvisionings?: Prisma.SaasProvisioningCreateNestedManyWithoutClientInput
 }
 
 export type ClientUncheckedCreateWithoutProjectsInput = {
@@ -798,12 +1306,18 @@ export type ClientUncheckedCreateWithoutProjectsInput = {
   organizationNumber?: string | null
   billingAddress?: string | null
   notes?: string | null
+  saasPlanCode?: $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutClientsInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClientInput
   offers?: Prisma.OfferUncheckedCreateNestedManyWithoutClientInput
   supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutClientInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedCreateNestedManyWithoutClientInput
+  billingCustomers?: Prisma.BillingCustomerUncheckedCreateNestedManyWithoutClientInput
+  billingSubscriptions?: Prisma.BillingSubscriptionUncheckedCreateNestedManyWithoutClientInput
+  saasProvisionings?: Prisma.SaasProvisioningUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientCreateOrConnectWithoutProjectsInput = {
@@ -830,12 +1344,18 @@ export type ClientUpdateWithoutProjectsInput = {
   organizationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  saasPlanCode?: Prisma.NullableEnumStaarkPlanCodeFieldUpdateOperationsInput | $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUpdateManyWithoutClientsNestedInput
   leads?: Prisma.LeadUpdateManyWithoutClientNestedInput
   offers?: Prisma.OfferUpdateManyWithoutClientNestedInput
   supportRequests?: Prisma.SupportRequestUpdateManyWithoutClientNestedInput
+  wordpressSites?: Prisma.WordPressSiteUpdateManyWithoutClientNestedInput
+  billingCustomers?: Prisma.BillingCustomerUpdateManyWithoutClientNestedInput
+  billingSubscriptions?: Prisma.BillingSubscriptionUpdateManyWithoutClientNestedInput
+  saasProvisionings?: Prisma.SaasProvisioningUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUncheckedUpdateWithoutProjectsInput = {
@@ -846,12 +1366,18 @@ export type ClientUncheckedUpdateWithoutProjectsInput = {
   organizationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  saasPlanCode?: Prisma.NullableEnumStaarkPlanCodeFieldUpdateOperationsInput | $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUncheckedUpdateManyWithoutClientsNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutClientNestedInput
   offers?: Prisma.OfferUncheckedUpdateManyWithoutClientNestedInput
   supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutClientNestedInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedUpdateManyWithoutClientNestedInput
+  billingCustomers?: Prisma.BillingCustomerUncheckedUpdateManyWithoutClientNestedInput
+  billingSubscriptions?: Prisma.BillingSubscriptionUncheckedUpdateManyWithoutClientNestedInput
+  saasProvisionings?: Prisma.SaasProvisioningUncheckedUpdateManyWithoutClientNestedInput
 }
 
 export type ClientCreateWithoutSupportRequestsInput = {
@@ -862,12 +1388,18 @@ export type ClientCreateWithoutSupportRequestsInput = {
   organizationNumber?: string | null
   billingAddress?: string | null
   notes?: string | null
+  saasPlanCode?: $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.ContactCreateNestedManyWithoutClientsInput
   leads?: Prisma.LeadCreateNestedManyWithoutClientInput
   projects?: Prisma.ProjectCreateNestedManyWithoutClientInput
   offers?: Prisma.OfferCreateNestedManyWithoutClientInput
+  wordpressSites?: Prisma.WordPressSiteCreateNestedManyWithoutClientInput
+  billingCustomers?: Prisma.BillingCustomerCreateNestedManyWithoutClientInput
+  billingSubscriptions?: Prisma.BillingSubscriptionCreateNestedManyWithoutClientInput
+  saasProvisionings?: Prisma.SaasProvisioningCreateNestedManyWithoutClientInput
 }
 
 export type ClientUncheckedCreateWithoutSupportRequestsInput = {
@@ -878,12 +1410,18 @@ export type ClientUncheckedCreateWithoutSupportRequestsInput = {
   organizationNumber?: string | null
   billingAddress?: string | null
   notes?: string | null
+  saasPlanCode?: $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutClientsInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClientInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
   offers?: Prisma.OfferUncheckedCreateNestedManyWithoutClientInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedCreateNestedManyWithoutClientInput
+  billingCustomers?: Prisma.BillingCustomerUncheckedCreateNestedManyWithoutClientInput
+  billingSubscriptions?: Prisma.BillingSubscriptionUncheckedCreateNestedManyWithoutClientInput
+  saasProvisionings?: Prisma.SaasProvisioningUncheckedCreateNestedManyWithoutClientInput
 }
 
 export type ClientCreateOrConnectWithoutSupportRequestsInput = {
@@ -910,12 +1448,18 @@ export type ClientUpdateWithoutSupportRequestsInput = {
   organizationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  saasPlanCode?: Prisma.NullableEnumStaarkPlanCodeFieldUpdateOperationsInput | $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUpdateManyWithoutClientsNestedInput
   leads?: Prisma.LeadUpdateManyWithoutClientNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
   offers?: Prisma.OfferUpdateManyWithoutClientNestedInput
+  wordpressSites?: Prisma.WordPressSiteUpdateManyWithoutClientNestedInput
+  billingCustomers?: Prisma.BillingCustomerUpdateManyWithoutClientNestedInput
+  billingSubscriptions?: Prisma.BillingSubscriptionUpdateManyWithoutClientNestedInput
+  saasProvisionings?: Prisma.SaasProvisioningUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUncheckedUpdateWithoutSupportRequestsInput = {
@@ -926,12 +1470,122 @@ export type ClientUncheckedUpdateWithoutSupportRequestsInput = {
   organizationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  saasPlanCode?: Prisma.NullableEnumStaarkPlanCodeFieldUpdateOperationsInput | $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contacts?: Prisma.ContactUncheckedUpdateManyWithoutClientsNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutClientNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
   offers?: Prisma.OfferUncheckedUpdateManyWithoutClientNestedInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedUpdateManyWithoutClientNestedInput
+  billingCustomers?: Prisma.BillingCustomerUncheckedUpdateManyWithoutClientNestedInput
+  billingSubscriptions?: Prisma.BillingSubscriptionUncheckedUpdateManyWithoutClientNestedInput
+  saasProvisionings?: Prisma.SaasProvisioningUncheckedUpdateManyWithoutClientNestedInput
+}
+
+export type ClientCreateWithoutWordpressSitesInput = {
+  id?: string
+  name: string
+  billingEmail?: string | null
+  phone?: string | null
+  organizationNumber?: string | null
+  billingAddress?: string | null
+  notes?: string | null
+  saasPlanCode?: $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  contacts?: Prisma.ContactCreateNestedManyWithoutClientsInput
+  leads?: Prisma.LeadCreateNestedManyWithoutClientInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutClientInput
+  offers?: Prisma.OfferCreateNestedManyWithoutClientInput
+  supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutClientInput
+  billingCustomers?: Prisma.BillingCustomerCreateNestedManyWithoutClientInput
+  billingSubscriptions?: Prisma.BillingSubscriptionCreateNestedManyWithoutClientInput
+  saasProvisionings?: Prisma.SaasProvisioningCreateNestedManyWithoutClientInput
+}
+
+export type ClientUncheckedCreateWithoutWordpressSitesInput = {
+  id?: string
+  name: string
+  billingEmail?: string | null
+  phone?: string | null
+  organizationNumber?: string | null
+  billingAddress?: string | null
+  notes?: string | null
+  saasPlanCode?: $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  contacts?: Prisma.ContactUncheckedCreateNestedManyWithoutClientsInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClientInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutClientInput
+  offers?: Prisma.OfferUncheckedCreateNestedManyWithoutClientInput
+  supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutClientInput
+  billingCustomers?: Prisma.BillingCustomerUncheckedCreateNestedManyWithoutClientInput
+  billingSubscriptions?: Prisma.BillingSubscriptionUncheckedCreateNestedManyWithoutClientInput
+  saasProvisionings?: Prisma.SaasProvisioningUncheckedCreateNestedManyWithoutClientInput
+}
+
+export type ClientCreateOrConnectWithoutWordpressSitesInput = {
+  where: Prisma.ClientWhereUniqueInput
+  create: Prisma.XOR<Prisma.ClientCreateWithoutWordpressSitesInput, Prisma.ClientUncheckedCreateWithoutWordpressSitesInput>
+}
+
+export type ClientUpsertWithoutWordpressSitesInput = {
+  update: Prisma.XOR<Prisma.ClientUpdateWithoutWordpressSitesInput, Prisma.ClientUncheckedUpdateWithoutWordpressSitesInput>
+  create: Prisma.XOR<Prisma.ClientCreateWithoutWordpressSitesInput, Prisma.ClientUncheckedCreateWithoutWordpressSitesInput>
+  where?: Prisma.ClientWhereInput
+}
+
+export type ClientUpdateToOneWithWhereWithoutWordpressSitesInput = {
+  where?: Prisma.ClientWhereInput
+  data: Prisma.XOR<Prisma.ClientUpdateWithoutWordpressSitesInput, Prisma.ClientUncheckedUpdateWithoutWordpressSitesInput>
+}
+
+export type ClientUpdateWithoutWordpressSitesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  billingEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  saasPlanCode?: Prisma.NullableEnumStaarkPlanCodeFieldUpdateOperationsInput | $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contacts?: Prisma.ContactUpdateManyWithoutClientsNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutClientNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
+  offers?: Prisma.OfferUpdateManyWithoutClientNestedInput
+  supportRequests?: Prisma.SupportRequestUpdateManyWithoutClientNestedInput
+  billingCustomers?: Prisma.BillingCustomerUpdateManyWithoutClientNestedInput
+  billingSubscriptions?: Prisma.BillingSubscriptionUpdateManyWithoutClientNestedInput
+  saasProvisionings?: Prisma.SaasProvisioningUpdateManyWithoutClientNestedInput
+}
+
+export type ClientUncheckedUpdateWithoutWordpressSitesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  billingEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  billingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  saasPlanCode?: Prisma.NullableEnumStaarkPlanCodeFieldUpdateOperationsInput | $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contacts?: Prisma.ContactUncheckedUpdateManyWithoutClientsNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutClientNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
+  offers?: Prisma.OfferUncheckedUpdateManyWithoutClientNestedInput
+  supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutClientNestedInput
+  billingCustomers?: Prisma.BillingCustomerUncheckedUpdateManyWithoutClientNestedInput
+  billingSubscriptions?: Prisma.BillingSubscriptionUncheckedUpdateManyWithoutClientNestedInput
+  saasProvisionings?: Prisma.SaasProvisioningUncheckedUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUpdateWithoutContactsInput = {
@@ -942,12 +1596,18 @@ export type ClientUpdateWithoutContactsInput = {
   organizationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  saasPlanCode?: Prisma.NullableEnumStaarkPlanCodeFieldUpdateOperationsInput | $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leads?: Prisma.LeadUpdateManyWithoutClientNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutClientNestedInput
   offers?: Prisma.OfferUpdateManyWithoutClientNestedInput
   supportRequests?: Prisma.SupportRequestUpdateManyWithoutClientNestedInput
+  wordpressSites?: Prisma.WordPressSiteUpdateManyWithoutClientNestedInput
+  billingCustomers?: Prisma.BillingCustomerUpdateManyWithoutClientNestedInput
+  billingSubscriptions?: Prisma.BillingSubscriptionUpdateManyWithoutClientNestedInput
+  saasProvisionings?: Prisma.SaasProvisioningUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUncheckedUpdateWithoutContactsInput = {
@@ -958,12 +1618,18 @@ export type ClientUncheckedUpdateWithoutContactsInput = {
   organizationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  saasPlanCode?: Prisma.NullableEnumStaarkPlanCodeFieldUpdateOperationsInput | $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leads?: Prisma.LeadUncheckedUpdateManyWithoutClientNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutClientNestedInput
   offers?: Prisma.OfferUncheckedUpdateManyWithoutClientNestedInput
   supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutClientNestedInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedUpdateManyWithoutClientNestedInput
+  billingCustomers?: Prisma.BillingCustomerUncheckedUpdateManyWithoutClientNestedInput
+  billingSubscriptions?: Prisma.BillingSubscriptionUncheckedUpdateManyWithoutClientNestedInput
+  saasProvisionings?: Prisma.SaasProvisioningUncheckedUpdateManyWithoutClientNestedInput
 }
 
 export type ClientUncheckedUpdateManyWithoutContactsInput = {
@@ -974,6 +1640,8 @@ export type ClientUncheckedUpdateManyWithoutContactsInput = {
   organizationNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   billingAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  saasPlanCode?: Prisma.NullableEnumStaarkPlanCodeFieldUpdateOperationsInput | $Enums.StaarkPlanCode | null
+  saasEntitlements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -989,6 +1657,10 @@ export type ClientCountOutputType = {
   projects: number
   offers: number
   supportRequests: number
+  wordpressSites: number
+  billingCustomers: number
+  billingSubscriptions: number
+  saasProvisionings: number
 }
 
 export type ClientCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -997,6 +1669,10 @@ export type ClientCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   projects?: boolean | ClientCountOutputTypeCountProjectsArgs
   offers?: boolean | ClientCountOutputTypeCountOffersArgs
   supportRequests?: boolean | ClientCountOutputTypeCountSupportRequestsArgs
+  wordpressSites?: boolean | ClientCountOutputTypeCountWordpressSitesArgs
+  billingCustomers?: boolean | ClientCountOutputTypeCountBillingCustomersArgs
+  billingSubscriptions?: boolean | ClientCountOutputTypeCountBillingSubscriptionsArgs
+  saasProvisionings?: boolean | ClientCountOutputTypeCountSaasProvisioningsArgs
 }
 
 /**
@@ -1044,6 +1720,34 @@ export type ClientCountOutputTypeCountSupportRequestsArgs<ExtArgs extends runtim
   where?: Prisma.SupportRequestWhereInput
 }
 
+/**
+ * ClientCountOutputType without action
+ */
+export type ClientCountOutputTypeCountWordpressSitesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WordPressSiteWhereInput
+}
+
+/**
+ * ClientCountOutputType without action
+ */
+export type ClientCountOutputTypeCountBillingCustomersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BillingCustomerWhereInput
+}
+
+/**
+ * ClientCountOutputType without action
+ */
+export type ClientCountOutputTypeCountBillingSubscriptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BillingSubscriptionWhereInput
+}
+
+/**
+ * ClientCountOutputType without action
+ */
+export type ClientCountOutputTypeCountSaasProvisioningsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SaasProvisioningWhereInput
+}
+
 
 export type ClientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1053,6 +1757,8 @@ export type ClientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   organizationNumber?: boolean
   billingAddress?: boolean
   notes?: boolean
+  saasPlanCode?: boolean
+  saasEntitlements?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   contacts?: boolean | Prisma.Client$contactsArgs<ExtArgs>
@@ -1060,6 +1766,10 @@ export type ClientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   projects?: boolean | Prisma.Client$projectsArgs<ExtArgs>
   offers?: boolean | Prisma.Client$offersArgs<ExtArgs>
   supportRequests?: boolean | Prisma.Client$supportRequestsArgs<ExtArgs>
+  wordpressSites?: boolean | Prisma.Client$wordpressSitesArgs<ExtArgs>
+  billingCustomers?: boolean | Prisma.Client$billingCustomersArgs<ExtArgs>
+  billingSubscriptions?: boolean | Prisma.Client$billingSubscriptionsArgs<ExtArgs>
+  saasProvisionings?: boolean | Prisma.Client$saasProvisioningsArgs<ExtArgs>
   _count?: boolean | Prisma.ClientCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["client"]>
 
@@ -1071,6 +1781,8 @@ export type ClientSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   organizationNumber?: boolean
   billingAddress?: boolean
   notes?: boolean
+  saasPlanCode?: boolean
+  saasEntitlements?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["client"]>
@@ -1083,6 +1795,8 @@ export type ClientSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   organizationNumber?: boolean
   billingAddress?: boolean
   notes?: boolean
+  saasPlanCode?: boolean
+  saasEntitlements?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["client"]>
@@ -1095,17 +1809,23 @@ export type ClientSelectScalar = {
   organizationNumber?: boolean
   billingAddress?: boolean
   notes?: boolean
+  saasPlanCode?: boolean
+  saasEntitlements?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ClientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "billingEmail" | "phone" | "organizationNumber" | "billingAddress" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["client"]>
+export type ClientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "billingEmail" | "phone" | "organizationNumber" | "billingAddress" | "notes" | "saasPlanCode" | "saasEntitlements" | "createdAt" | "updatedAt", ExtArgs["result"]["client"]>
 export type ClientInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   contacts?: boolean | Prisma.Client$contactsArgs<ExtArgs>
   leads?: boolean | Prisma.Client$leadsArgs<ExtArgs>
   projects?: boolean | Prisma.Client$projectsArgs<ExtArgs>
   offers?: boolean | Prisma.Client$offersArgs<ExtArgs>
   supportRequests?: boolean | Prisma.Client$supportRequestsArgs<ExtArgs>
+  wordpressSites?: boolean | Prisma.Client$wordpressSitesArgs<ExtArgs>
+  billingCustomers?: boolean | Prisma.Client$billingCustomersArgs<ExtArgs>
+  billingSubscriptions?: boolean | Prisma.Client$billingSubscriptionsArgs<ExtArgs>
+  saasProvisionings?: boolean | Prisma.Client$saasProvisioningsArgs<ExtArgs>
   _count?: boolean | Prisma.ClientCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ClientIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1119,6 +1839,10 @@ export type $ClientPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     projects: Prisma.$ProjectPayload<ExtArgs>[]
     offers: Prisma.$OfferPayload<ExtArgs>[]
     supportRequests: Prisma.$SupportRequestPayload<ExtArgs>[]
+    wordpressSites: Prisma.$WordPressSitePayload<ExtArgs>[]
+    billingCustomers: Prisma.$BillingCustomerPayload<ExtArgs>[]
+    billingSubscriptions: Prisma.$BillingSubscriptionPayload<ExtArgs>[]
+    saasProvisionings: Prisma.$SaasProvisioningPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1128,6 +1852,8 @@ export type $ClientPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     organizationNumber: string | null
     billingAddress: string | null
     notes: string | null
+    saasPlanCode: $Enums.StaarkPlanCode | null
+    saasEntitlements: runtime.JsonValue | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["client"]>
@@ -1529,6 +2255,10 @@ export interface Prisma__ClientClient<T, Null = never, ExtArgs extends runtime.T
   projects<T extends Prisma.Client$projectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   offers<T extends Prisma.Client$offersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$offersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   supportRequests<T extends Prisma.Client$supportRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$supportRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupportRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  wordpressSites<T extends Prisma.Client$wordpressSitesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$wordpressSitesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WordPressSitePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  billingCustomers<T extends Prisma.Client$billingCustomersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$billingCustomersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BillingCustomerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  billingSubscriptions<T extends Prisma.Client$billingSubscriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$billingSubscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BillingSubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  saasProvisionings<T extends Prisma.Client$saasProvisioningsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Client$saasProvisioningsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SaasProvisioningPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1565,6 +2295,8 @@ export interface ClientFieldRefs {
   readonly organizationNumber: Prisma.FieldRef<"Client", 'String'>
   readonly billingAddress: Prisma.FieldRef<"Client", 'String'>
   readonly notes: Prisma.FieldRef<"Client", 'String'>
+  readonly saasPlanCode: Prisma.FieldRef<"Client", 'StaarkPlanCode'>
+  readonly saasEntitlements: Prisma.FieldRef<"Client", 'Json'>
   readonly createdAt: Prisma.FieldRef<"Client", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Client", 'DateTime'>
 }
@@ -2077,6 +2809,102 @@ export type Client$supportRequestsArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.SupportRequestScalarFieldEnum | Prisma.SupportRequestScalarFieldEnum[]
+}
+
+/**
+ * Client.wordpressSites
+ */
+export type Client$wordpressSitesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WordPressSite
+   */
+  select?: Prisma.WordPressSiteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WordPressSite
+   */
+  omit?: Prisma.WordPressSiteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WordPressSiteInclude<ExtArgs> | null
+  where?: Prisma.WordPressSiteWhereInput
+  orderBy?: Prisma.WordPressSiteOrderByWithRelationInput | Prisma.WordPressSiteOrderByWithRelationInput[]
+  cursor?: Prisma.WordPressSiteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WordPressSiteScalarFieldEnum | Prisma.WordPressSiteScalarFieldEnum[]
+}
+
+/**
+ * Client.billingCustomers
+ */
+export type Client$billingCustomersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BillingCustomer
+   */
+  select?: Prisma.BillingCustomerSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BillingCustomer
+   */
+  omit?: Prisma.BillingCustomerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BillingCustomerInclude<ExtArgs> | null
+  where?: Prisma.BillingCustomerWhereInput
+  orderBy?: Prisma.BillingCustomerOrderByWithRelationInput | Prisma.BillingCustomerOrderByWithRelationInput[]
+  cursor?: Prisma.BillingCustomerWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BillingCustomerScalarFieldEnum | Prisma.BillingCustomerScalarFieldEnum[]
+}
+
+/**
+ * Client.billingSubscriptions
+ */
+export type Client$billingSubscriptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BillingSubscription
+   */
+  select?: Prisma.BillingSubscriptionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BillingSubscription
+   */
+  omit?: Prisma.BillingSubscriptionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BillingSubscriptionInclude<ExtArgs> | null
+  where?: Prisma.BillingSubscriptionWhereInput
+  orderBy?: Prisma.BillingSubscriptionOrderByWithRelationInput | Prisma.BillingSubscriptionOrderByWithRelationInput[]
+  cursor?: Prisma.BillingSubscriptionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BillingSubscriptionScalarFieldEnum | Prisma.BillingSubscriptionScalarFieldEnum[]
+}
+
+/**
+ * Client.saasProvisionings
+ */
+export type Client$saasProvisioningsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SaasProvisioning
+   */
+  select?: Prisma.SaasProvisioningSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SaasProvisioning
+   */
+  omit?: Prisma.SaasProvisioningOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SaasProvisioningInclude<ExtArgs> | null
+  where?: Prisma.SaasProvisioningWhereInput
+  orderBy?: Prisma.SaasProvisioningOrderByWithRelationInput | Prisma.SaasProvisioningOrderByWithRelationInput[]
+  cursor?: Prisma.SaasProvisioningWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SaasProvisioningScalarFieldEnum | Prisma.SaasProvisioningScalarFieldEnum[]
 }
 
 /**

@@ -41,6 +41,7 @@ export type OfferSumAggregateOutputType = {
 export type OfferMinAggregateOutputType = {
   id: string | null
   clientId: string | null
+  leadId: string | null
   title: string | null
   scope: string | null
   terms: string | null
@@ -61,6 +62,7 @@ export type OfferMinAggregateOutputType = {
 export type OfferMaxAggregateOutputType = {
   id: string | null
   clientId: string | null
+  leadId: string | null
   title: string | null
   scope: string | null
   terms: string | null
@@ -81,6 +83,7 @@ export type OfferMaxAggregateOutputType = {
 export type OfferCountAggregateOutputType = {
   id: number
   clientId: number
+  leadId: number
   title: number
   scope: number
   terms: number
@@ -115,6 +118,7 @@ export type OfferSumAggregateInputType = {
 export type OfferMinAggregateInputType = {
   id?: true
   clientId?: true
+  leadId?: true
   title?: true
   scope?: true
   terms?: true
@@ -135,6 +139,7 @@ export type OfferMinAggregateInputType = {
 export type OfferMaxAggregateInputType = {
   id?: true
   clientId?: true
+  leadId?: true
   title?: true
   scope?: true
   terms?: true
@@ -155,6 +160,7 @@ export type OfferMaxAggregateInputType = {
 export type OfferCountAggregateInputType = {
   id?: true
   clientId?: true
+  leadId?: true
   title?: true
   scope?: true
   terms?: true
@@ -262,6 +268,7 @@ export type OfferGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type OfferGroupByOutputType = {
   id: string
   clientId: string
+  leadId: string | null
   title: string
   scope: string | null
   terms: string | null
@@ -305,6 +312,7 @@ export type OfferWhereInput = {
   NOT?: Prisma.OfferWhereInput | Prisma.OfferWhereInput[]
   id?: Prisma.StringFilter<"Offer"> | string
   clientId?: Prisma.StringFilter<"Offer"> | string
+  leadId?: Prisma.StringNullableFilter<"Offer"> | string | null
   title?: Prisma.StringFilter<"Offer"> | string
   scope?: Prisma.StringNullableFilter<"Offer"> | string | null
   terms?: Prisma.StringNullableFilter<"Offer"> | string | null
@@ -321,12 +329,14 @@ export type OfferWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
+  lead?: Prisma.XOR<Prisma.LeadNullableScalarRelationFilter, Prisma.LeadWhereInput> | null
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
 }
 
 export type OfferOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
+  leadId?: Prisma.SortOrderInput | Prisma.SortOrder
   title?: Prisma.SortOrder
   scope?: Prisma.SortOrderInput | Prisma.SortOrder
   terms?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -343,6 +353,7 @@ export type OfferOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   client?: Prisma.ClientOrderByWithRelationInput
+  lead?: Prisma.LeadOrderByWithRelationInput
   project?: Prisma.ProjectOrderByWithRelationInput
 }
 
@@ -353,6 +364,7 @@ export type OfferWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.OfferWhereInput[]
   NOT?: Prisma.OfferWhereInput | Prisma.OfferWhereInput[]
   clientId?: Prisma.StringFilter<"Offer"> | string
+  leadId?: Prisma.StringNullableFilter<"Offer"> | string | null
   title?: Prisma.StringFilter<"Offer"> | string
   scope?: Prisma.StringNullableFilter<"Offer"> | string | null
   terms?: Prisma.StringNullableFilter<"Offer"> | string | null
@@ -368,12 +380,14 @@ export type OfferWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
+  lead?: Prisma.XOR<Prisma.LeadNullableScalarRelationFilter, Prisma.LeadWhereInput> | null
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
 }, "id" | "shareToken">
 
 export type OfferOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
+  leadId?: Prisma.SortOrderInput | Prisma.SortOrder
   title?: Prisma.SortOrder
   scope?: Prisma.SortOrderInput | Prisma.SortOrder
   terms?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -402,6 +416,7 @@ export type OfferScalarWhereWithAggregatesInput = {
   NOT?: Prisma.OfferScalarWhereWithAggregatesInput | Prisma.OfferScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Offer"> | string
   clientId?: Prisma.StringWithAggregatesFilter<"Offer"> | string
+  leadId?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
   title?: Prisma.StringWithAggregatesFilter<"Offer"> | string
   scope?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
   terms?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
@@ -437,12 +452,14 @@ export type OfferCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   client: Prisma.ClientCreateNestedOneWithoutOffersInput
+  lead?: Prisma.LeadCreateNestedOneWithoutOffersInput
   project?: Prisma.ProjectCreateNestedOneWithoutOfferInput
 }
 
 export type OfferUncheckedCreateInput = {
   id?: string
   clientId: string
+  leadId?: string | null
   title: string
   scope?: string | null
   terms?: string | null
@@ -479,12 +496,14 @@ export type OfferUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   client?: Prisma.ClientUpdateOneRequiredWithoutOffersNestedInput
+  lead?: Prisma.LeadUpdateOneWithoutOffersNestedInput
   project?: Prisma.ProjectUpdateOneWithoutOfferNestedInput
 }
 
 export type OfferUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   terms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -506,6 +525,7 @@ export type OfferUncheckedUpdateInput = {
 export type OfferCreateManyInput = {
   id?: string
   clientId: string
+  leadId?: string | null
   title: string
   scope?: string | null
   terms?: string | null
@@ -545,6 +565,7 @@ export type OfferUpdateManyMutationInput = {
 export type OfferUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   terms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -575,6 +596,7 @@ export type OfferOrderByRelationAggregateInput = {
 export type OfferCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
+  leadId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   scope?: Prisma.SortOrder
   terms?: Prisma.SortOrder
@@ -601,6 +623,7 @@ export type OfferAvgOrderByAggregateInput = {
 export type OfferMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
+  leadId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   scope?: Prisma.SortOrder
   terms?: Prisma.SortOrder
@@ -621,6 +644,7 @@ export type OfferMaxOrderByAggregateInput = {
 export type OfferMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
+  leadId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   scope?: Prisma.SortOrder
   terms?: Prisma.SortOrder
@@ -647,6 +671,48 @@ export type OfferSumOrderByAggregateInput = {
 export type OfferNullableScalarRelationFilter = {
   is?: Prisma.OfferWhereInput | null
   isNot?: Prisma.OfferWhereInput | null
+}
+
+export type OfferCreateNestedManyWithoutLeadInput = {
+  create?: Prisma.XOR<Prisma.OfferCreateWithoutLeadInput, Prisma.OfferUncheckedCreateWithoutLeadInput> | Prisma.OfferCreateWithoutLeadInput[] | Prisma.OfferUncheckedCreateWithoutLeadInput[]
+  connectOrCreate?: Prisma.OfferCreateOrConnectWithoutLeadInput | Prisma.OfferCreateOrConnectWithoutLeadInput[]
+  createMany?: Prisma.OfferCreateManyLeadInputEnvelope
+  connect?: Prisma.OfferWhereUniqueInput | Prisma.OfferWhereUniqueInput[]
+}
+
+export type OfferUncheckedCreateNestedManyWithoutLeadInput = {
+  create?: Prisma.XOR<Prisma.OfferCreateWithoutLeadInput, Prisma.OfferUncheckedCreateWithoutLeadInput> | Prisma.OfferCreateWithoutLeadInput[] | Prisma.OfferUncheckedCreateWithoutLeadInput[]
+  connectOrCreate?: Prisma.OfferCreateOrConnectWithoutLeadInput | Prisma.OfferCreateOrConnectWithoutLeadInput[]
+  createMany?: Prisma.OfferCreateManyLeadInputEnvelope
+  connect?: Prisma.OfferWhereUniqueInput | Prisma.OfferWhereUniqueInput[]
+}
+
+export type OfferUpdateManyWithoutLeadNestedInput = {
+  create?: Prisma.XOR<Prisma.OfferCreateWithoutLeadInput, Prisma.OfferUncheckedCreateWithoutLeadInput> | Prisma.OfferCreateWithoutLeadInput[] | Prisma.OfferUncheckedCreateWithoutLeadInput[]
+  connectOrCreate?: Prisma.OfferCreateOrConnectWithoutLeadInput | Prisma.OfferCreateOrConnectWithoutLeadInput[]
+  upsert?: Prisma.OfferUpsertWithWhereUniqueWithoutLeadInput | Prisma.OfferUpsertWithWhereUniqueWithoutLeadInput[]
+  createMany?: Prisma.OfferCreateManyLeadInputEnvelope
+  set?: Prisma.OfferWhereUniqueInput | Prisma.OfferWhereUniqueInput[]
+  disconnect?: Prisma.OfferWhereUniqueInput | Prisma.OfferWhereUniqueInput[]
+  delete?: Prisma.OfferWhereUniqueInput | Prisma.OfferWhereUniqueInput[]
+  connect?: Prisma.OfferWhereUniqueInput | Prisma.OfferWhereUniqueInput[]
+  update?: Prisma.OfferUpdateWithWhereUniqueWithoutLeadInput | Prisma.OfferUpdateWithWhereUniqueWithoutLeadInput[]
+  updateMany?: Prisma.OfferUpdateManyWithWhereWithoutLeadInput | Prisma.OfferUpdateManyWithWhereWithoutLeadInput[]
+  deleteMany?: Prisma.OfferScalarWhereInput | Prisma.OfferScalarWhereInput[]
+}
+
+export type OfferUncheckedUpdateManyWithoutLeadNestedInput = {
+  create?: Prisma.XOR<Prisma.OfferCreateWithoutLeadInput, Prisma.OfferUncheckedCreateWithoutLeadInput> | Prisma.OfferCreateWithoutLeadInput[] | Prisma.OfferUncheckedCreateWithoutLeadInput[]
+  connectOrCreate?: Prisma.OfferCreateOrConnectWithoutLeadInput | Prisma.OfferCreateOrConnectWithoutLeadInput[]
+  upsert?: Prisma.OfferUpsertWithWhereUniqueWithoutLeadInput | Prisma.OfferUpsertWithWhereUniqueWithoutLeadInput[]
+  createMany?: Prisma.OfferCreateManyLeadInputEnvelope
+  set?: Prisma.OfferWhereUniqueInput | Prisma.OfferWhereUniqueInput[]
+  disconnect?: Prisma.OfferWhereUniqueInput | Prisma.OfferWhereUniqueInput[]
+  delete?: Prisma.OfferWhereUniqueInput | Prisma.OfferWhereUniqueInput[]
+  connect?: Prisma.OfferWhereUniqueInput | Prisma.OfferWhereUniqueInput[]
+  update?: Prisma.OfferUpdateWithWhereUniqueWithoutLeadInput | Prisma.OfferUpdateWithWhereUniqueWithoutLeadInput[]
+  updateMany?: Prisma.OfferUpdateManyWithWhereWithoutLeadInput | Prisma.OfferUpdateManyWithWhereWithoutLeadInput[]
+  deleteMany?: Prisma.OfferScalarWhereInput | Prisma.OfferScalarWhereInput[]
 }
 
 export type OfferCreateNestedManyWithoutClientInput = {
@@ -691,22 +757,6 @@ export type OfferUncheckedUpdateManyWithoutClientNestedInput = {
   deleteMany?: Prisma.OfferScalarWhereInput | Prisma.OfferScalarWhereInput[]
 }
 
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type EnumOfferStatusFieldUpdateOperationsInput = {
   set?: $Enums.OfferStatus
 }
@@ -727,6 +777,98 @@ export type OfferUpdateOneWithoutProjectNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OfferUpdateToOneWithWhereWithoutProjectInput, Prisma.OfferUpdateWithoutProjectInput>, Prisma.OfferUncheckedUpdateWithoutProjectInput>
 }
 
+export type OfferCreateWithoutLeadInput = {
+  id?: string
+  title: string
+  scope?: string | null
+  terms?: string | null
+  oneTimePriceOre?: number | null
+  monthlyPriceOre?: number | null
+  includedMonths?: number
+  status?: $Enums.OfferStatus
+  shareToken?: string | null
+  sharedAt?: Date | string | null
+  viewedAt?: Date | string | null
+  decidedAt?: Date | string | null
+  termsAcceptedAt?: Date | string | null
+  termsVersion?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  client: Prisma.ClientCreateNestedOneWithoutOffersInput
+  project?: Prisma.ProjectCreateNestedOneWithoutOfferInput
+}
+
+export type OfferUncheckedCreateWithoutLeadInput = {
+  id?: string
+  clientId: string
+  title: string
+  scope?: string | null
+  terms?: string | null
+  oneTimePriceOre?: number | null
+  monthlyPriceOre?: number | null
+  includedMonths?: number
+  status?: $Enums.OfferStatus
+  shareToken?: string | null
+  sharedAt?: Date | string | null
+  viewedAt?: Date | string | null
+  decidedAt?: Date | string | null
+  termsAcceptedAt?: Date | string | null
+  termsVersion?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  project?: Prisma.ProjectUncheckedCreateNestedOneWithoutOfferInput
+}
+
+export type OfferCreateOrConnectWithoutLeadInput = {
+  where: Prisma.OfferWhereUniqueInput
+  create: Prisma.XOR<Prisma.OfferCreateWithoutLeadInput, Prisma.OfferUncheckedCreateWithoutLeadInput>
+}
+
+export type OfferCreateManyLeadInputEnvelope = {
+  data: Prisma.OfferCreateManyLeadInput | Prisma.OfferCreateManyLeadInput[]
+  skipDuplicates?: boolean
+}
+
+export type OfferUpsertWithWhereUniqueWithoutLeadInput = {
+  where: Prisma.OfferWhereUniqueInput
+  update: Prisma.XOR<Prisma.OfferUpdateWithoutLeadInput, Prisma.OfferUncheckedUpdateWithoutLeadInput>
+  create: Prisma.XOR<Prisma.OfferCreateWithoutLeadInput, Prisma.OfferUncheckedCreateWithoutLeadInput>
+}
+
+export type OfferUpdateWithWhereUniqueWithoutLeadInput = {
+  where: Prisma.OfferWhereUniqueInput
+  data: Prisma.XOR<Prisma.OfferUpdateWithoutLeadInput, Prisma.OfferUncheckedUpdateWithoutLeadInput>
+}
+
+export type OfferUpdateManyWithWhereWithoutLeadInput = {
+  where: Prisma.OfferScalarWhereInput
+  data: Prisma.XOR<Prisma.OfferUpdateManyMutationInput, Prisma.OfferUncheckedUpdateManyWithoutLeadInput>
+}
+
+export type OfferScalarWhereInput = {
+  AND?: Prisma.OfferScalarWhereInput | Prisma.OfferScalarWhereInput[]
+  OR?: Prisma.OfferScalarWhereInput[]
+  NOT?: Prisma.OfferScalarWhereInput | Prisma.OfferScalarWhereInput[]
+  id?: Prisma.StringFilter<"Offer"> | string
+  clientId?: Prisma.StringFilter<"Offer"> | string
+  leadId?: Prisma.StringNullableFilter<"Offer"> | string | null
+  title?: Prisma.StringFilter<"Offer"> | string
+  scope?: Prisma.StringNullableFilter<"Offer"> | string | null
+  terms?: Prisma.StringNullableFilter<"Offer"> | string | null
+  oneTimePriceOre?: Prisma.IntNullableFilter<"Offer"> | number | null
+  monthlyPriceOre?: Prisma.IntNullableFilter<"Offer"> | number | null
+  includedMonths?: Prisma.IntFilter<"Offer"> | number
+  status?: Prisma.EnumOfferStatusFilter<"Offer"> | $Enums.OfferStatus
+  shareToken?: Prisma.StringNullableFilter<"Offer"> | string | null
+  sharedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
+  viewedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
+  decidedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
+  termsAcceptedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
+  termsVersion?: Prisma.StringNullableFilter<"Offer"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
+}
+
 export type OfferCreateWithoutClientInput = {
   id?: string
   title: string
@@ -744,11 +886,13 @@ export type OfferCreateWithoutClientInput = {
   termsVersion?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lead?: Prisma.LeadCreateNestedOneWithoutOffersInput
   project?: Prisma.ProjectCreateNestedOneWithoutOfferInput
 }
 
 export type OfferUncheckedCreateWithoutClientInput = {
   id?: string
+  leadId?: string | null
   title: string
   scope?: string | null
   terms?: string | null
@@ -793,29 +937,6 @@ export type OfferUpdateManyWithWhereWithoutClientInput = {
   data: Prisma.XOR<Prisma.OfferUpdateManyMutationInput, Prisma.OfferUncheckedUpdateManyWithoutClientInput>
 }
 
-export type OfferScalarWhereInput = {
-  AND?: Prisma.OfferScalarWhereInput | Prisma.OfferScalarWhereInput[]
-  OR?: Prisma.OfferScalarWhereInput[]
-  NOT?: Prisma.OfferScalarWhereInput | Prisma.OfferScalarWhereInput[]
-  id?: Prisma.StringFilter<"Offer"> | string
-  clientId?: Prisma.StringFilter<"Offer"> | string
-  title?: Prisma.StringFilter<"Offer"> | string
-  scope?: Prisma.StringNullableFilter<"Offer"> | string | null
-  terms?: Prisma.StringNullableFilter<"Offer"> | string | null
-  oneTimePriceOre?: Prisma.IntNullableFilter<"Offer"> | number | null
-  monthlyPriceOre?: Prisma.IntNullableFilter<"Offer"> | number | null
-  includedMonths?: Prisma.IntFilter<"Offer"> | number
-  status?: Prisma.EnumOfferStatusFilter<"Offer"> | $Enums.OfferStatus
-  shareToken?: Prisma.StringNullableFilter<"Offer"> | string | null
-  sharedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
-  viewedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
-  decidedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
-  termsAcceptedAt?: Prisma.DateTimeNullableFilter<"Offer"> | Date | string | null
-  termsVersion?: Prisma.StringNullableFilter<"Offer"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
-}
-
 export type OfferCreateWithoutProjectInput = {
   id?: string
   title: string
@@ -834,11 +955,13 @@ export type OfferCreateWithoutProjectInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   client: Prisma.ClientCreateNestedOneWithoutOffersInput
+  lead?: Prisma.LeadCreateNestedOneWithoutOffersInput
 }
 
 export type OfferUncheckedCreateWithoutProjectInput = {
   id?: string
   clientId: string
+  leadId?: string | null
   title: string
   scope?: string | null
   terms?: string | null
@@ -890,9 +1013,93 @@ export type OfferUpdateWithoutProjectInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   client?: Prisma.ClientUpdateOneRequiredWithoutOffersNestedInput
+  lead?: Prisma.LeadUpdateOneWithoutOffersNestedInput
 }
 
 export type OfferUncheckedUpdateWithoutProjectInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  terms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  oneTimePriceOre?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  monthlyPriceOre?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  includedMonths?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  viewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  termsVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type OfferCreateManyLeadInput = {
+  id?: string
+  clientId: string
+  title: string
+  scope?: string | null
+  terms?: string | null
+  oneTimePriceOre?: number | null
+  monthlyPriceOre?: number | null
+  includedMonths?: number
+  status?: $Enums.OfferStatus
+  shareToken?: string | null
+  sharedAt?: Date | string | null
+  viewedAt?: Date | string | null
+  decidedAt?: Date | string | null
+  termsAcceptedAt?: Date | string | null
+  termsVersion?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type OfferUpdateWithoutLeadInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  terms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  oneTimePriceOre?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  monthlyPriceOre?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  includedMonths?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  viewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  termsVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  client?: Prisma.ClientUpdateOneRequiredWithoutOffersNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutOfferNestedInput
+}
+
+export type OfferUncheckedUpdateWithoutLeadInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  terms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  oneTimePriceOre?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  monthlyPriceOre?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  includedMonths?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumOfferStatusFieldUpdateOperationsInput | $Enums.OfferStatus
+  shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  viewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  termsAcceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  termsVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  project?: Prisma.ProjectUncheckedUpdateOneWithoutOfferNestedInput
+}
+
+export type OfferUncheckedUpdateManyWithoutLeadInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
@@ -914,6 +1121,7 @@ export type OfferUncheckedUpdateWithoutProjectInput = {
 
 export type OfferCreateManyClientInput = {
   id?: string
+  leadId?: string | null
   title: string
   scope?: string | null
   terms?: string | null
@@ -948,11 +1156,13 @@ export type OfferUpdateWithoutClientInput = {
   termsVersion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lead?: Prisma.LeadUpdateOneWithoutOffersNestedInput
   project?: Prisma.ProjectUpdateOneWithoutOfferNestedInput
 }
 
 export type OfferUncheckedUpdateWithoutClientInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   terms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -973,6 +1183,7 @@ export type OfferUncheckedUpdateWithoutClientInput = {
 
 export type OfferUncheckedUpdateManyWithoutClientInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  leadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   scope?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   terms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -995,6 +1206,7 @@ export type OfferUncheckedUpdateManyWithoutClientInput = {
 export type OfferSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   clientId?: boolean
+  leadId?: boolean
   title?: boolean
   scope?: boolean
   terms?: boolean
@@ -1011,12 +1223,14 @@ export type OfferSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   createdAt?: boolean
   updatedAt?: boolean
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  lead?: boolean | Prisma.Offer$leadArgs<ExtArgs>
   project?: boolean | Prisma.Offer$projectArgs<ExtArgs>
 }, ExtArgs["result"]["offer"]>
 
 export type OfferSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   clientId?: boolean
+  leadId?: boolean
   title?: boolean
   scope?: boolean
   terms?: boolean
@@ -1033,11 +1247,13 @@ export type OfferSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   createdAt?: boolean
   updatedAt?: boolean
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  lead?: boolean | Prisma.Offer$leadArgs<ExtArgs>
 }, ExtArgs["result"]["offer"]>
 
 export type OfferSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   clientId?: boolean
+  leadId?: boolean
   title?: boolean
   scope?: boolean
   terms?: boolean
@@ -1054,11 +1270,13 @@ export type OfferSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   createdAt?: boolean
   updatedAt?: boolean
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  lead?: boolean | Prisma.Offer$leadArgs<ExtArgs>
 }, ExtArgs["result"]["offer"]>
 
 export type OfferSelectScalar = {
   id?: boolean
   clientId?: boolean
+  leadId?: boolean
   title?: boolean
   scope?: boolean
   terms?: boolean
@@ -1076,27 +1294,32 @@ export type OfferSelectScalar = {
   updatedAt?: boolean
 }
 
-export type OfferOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientId" | "title" | "scope" | "terms" | "oneTimePriceOre" | "monthlyPriceOre" | "includedMonths" | "status" | "shareToken" | "sharedAt" | "viewedAt" | "decidedAt" | "termsAcceptedAt" | "termsVersion" | "createdAt" | "updatedAt", ExtArgs["result"]["offer"]>
+export type OfferOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientId" | "leadId" | "title" | "scope" | "terms" | "oneTimePriceOre" | "monthlyPriceOre" | "includedMonths" | "status" | "shareToken" | "sharedAt" | "viewedAt" | "decidedAt" | "termsAcceptedAt" | "termsVersion" | "createdAt" | "updatedAt", ExtArgs["result"]["offer"]>
 export type OfferInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  lead?: boolean | Prisma.Offer$leadArgs<ExtArgs>
   project?: boolean | Prisma.Offer$projectArgs<ExtArgs>
 }
 export type OfferIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  lead?: boolean | Prisma.Offer$leadArgs<ExtArgs>
 }
 export type OfferIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  lead?: boolean | Prisma.Offer$leadArgs<ExtArgs>
 }
 
 export type $OfferPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Offer"
   objects: {
     client: Prisma.$ClientPayload<ExtArgs>
+    lead: Prisma.$LeadPayload<ExtArgs> | null
     project: Prisma.$ProjectPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     clientId: string
+    leadId: string | null
     title: string
     scope: string | null
     terms: string | null
@@ -1507,6 +1730,7 @@ readonly fields: OfferFieldRefs;
 export interface Prisma__OfferClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   client<T extends Prisma.ClientDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientDefaultArgs<ExtArgs>>): Prisma.Prisma__ClientClient<runtime.Types.Result.GetResult<Prisma.$ClientPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  lead<T extends Prisma.Offer$leadArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Offer$leadArgs<ExtArgs>>): Prisma.Prisma__LeadClient<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   project<T extends Prisma.Offer$projectArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Offer$projectArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1539,6 +1763,7 @@ export interface Prisma__OfferClient<T, Null = never, ExtArgs extends runtime.Ty
 export interface OfferFieldRefs {
   readonly id: Prisma.FieldRef<"Offer", 'String'>
   readonly clientId: Prisma.FieldRef<"Offer", 'String'>
+  readonly leadId: Prisma.FieldRef<"Offer", 'String'>
   readonly title: Prisma.FieldRef<"Offer", 'String'>
   readonly scope: Prisma.FieldRef<"Offer", 'String'>
   readonly terms: Prisma.FieldRef<"Offer", 'String'>
@@ -1952,6 +2177,25 @@ export type OfferDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Limit how many Offers to delete.
    */
   limit?: number
+}
+
+/**
+ * Offer.lead
+ */
+export type Offer$leadArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Lead
+   */
+  select?: Prisma.LeadSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Lead
+   */
+  omit?: Prisma.LeadOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LeadInclude<ExtArgs> | null
+  where?: Prisma.LeadWhereInput
 }
 
 /**

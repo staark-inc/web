@@ -30,6 +30,7 @@ export type LeadMinAggregateOutputType = {
   service: string | null
   budget: string | null
   message: string | null
+  contactChannel: $Enums.ContactChannel | null
   status: $Enums.LeadStatus | null
   clientId: string | null
   createdAt: Date | null
@@ -42,6 +43,7 @@ export type LeadMaxAggregateOutputType = {
   service: string | null
   budget: string | null
   message: string | null
+  contactChannel: $Enums.ContactChannel | null
   status: $Enums.LeadStatus | null
   clientId: string | null
   createdAt: Date | null
@@ -54,6 +56,7 @@ export type LeadCountAggregateOutputType = {
   service: number
   budget: number
   message: number
+  contactChannel: number
   status: number
   clientId: number
   createdAt: number
@@ -68,6 +71,7 @@ export type LeadMinAggregateInputType = {
   service?: true
   budget?: true
   message?: true
+  contactChannel?: true
   status?: true
   clientId?: true
   createdAt?: true
@@ -80,6 +84,7 @@ export type LeadMaxAggregateInputType = {
   service?: true
   budget?: true
   message?: true
+  contactChannel?: true
   status?: true
   clientId?: true
   createdAt?: true
@@ -92,6 +97,7 @@ export type LeadCountAggregateInputType = {
   service?: true
   budget?: true
   message?: true
+  contactChannel?: true
   status?: true
   clientId?: true
   createdAt?: true
@@ -177,6 +183,7 @@ export type LeadGroupByOutputType = {
   service: string | null
   budget: string | null
   message: string | null
+  contactChannel: $Enums.ContactChannel
   status: $Enums.LeadStatus
   clientId: string | null
   createdAt: Date
@@ -210,12 +217,15 @@ export type LeadWhereInput = {
   service?: Prisma.StringNullableFilter<"Lead"> | string | null
   budget?: Prisma.StringNullableFilter<"Lead"> | string | null
   message?: Prisma.StringNullableFilter<"Lead"> | string | null
+  contactChannel?: Prisma.EnumContactChannelFilter<"Lead"> | $Enums.ContactChannel
   status?: Prisma.EnumLeadStatusFilter<"Lead"> | $Enums.LeadStatus
   clientId?: Prisma.StringNullableFilter<"Lead"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
   contact?: Prisma.XOR<Prisma.ContactScalarRelationFilter, Prisma.ContactWhereInput>
   client?: Prisma.XOR<Prisma.ClientNullableScalarRelationFilter, Prisma.ClientWhereInput> | null
+  prospect?: Prisma.XOR<Prisma.ProspectNullableScalarRelationFilter, Prisma.ProspectWhereInput> | null
+  offers?: Prisma.OfferListRelationFilter
 }
 
 export type LeadOrderByWithRelationInput = {
@@ -224,12 +234,15 @@ export type LeadOrderByWithRelationInput = {
   service?: Prisma.SortOrderInput | Prisma.SortOrder
   budget?: Prisma.SortOrderInput | Prisma.SortOrder
   message?: Prisma.SortOrderInput | Prisma.SortOrder
+  contactChannel?: Prisma.SortOrder
   status?: Prisma.SortOrder
   clientId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   contact?: Prisma.ContactOrderByWithRelationInput
   client?: Prisma.ClientOrderByWithRelationInput
+  prospect?: Prisma.ProspectOrderByWithRelationInput
+  offers?: Prisma.OfferOrderByRelationAggregateInput
 }
 
 export type LeadWhereUniqueInput = Prisma.AtLeast<{
@@ -241,12 +254,15 @@ export type LeadWhereUniqueInput = Prisma.AtLeast<{
   service?: Prisma.StringNullableFilter<"Lead"> | string | null
   budget?: Prisma.StringNullableFilter<"Lead"> | string | null
   message?: Prisma.StringNullableFilter<"Lead"> | string | null
+  contactChannel?: Prisma.EnumContactChannelFilter<"Lead"> | $Enums.ContactChannel
   status?: Prisma.EnumLeadStatusFilter<"Lead"> | $Enums.LeadStatus
   clientId?: Prisma.StringNullableFilter<"Lead"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
   contact?: Prisma.XOR<Prisma.ContactScalarRelationFilter, Prisma.ContactWhereInput>
   client?: Prisma.XOR<Prisma.ClientNullableScalarRelationFilter, Prisma.ClientWhereInput> | null
+  prospect?: Prisma.XOR<Prisma.ProspectNullableScalarRelationFilter, Prisma.ProspectWhereInput> | null
+  offers?: Prisma.OfferListRelationFilter
 }, "id">
 
 export type LeadOrderByWithAggregationInput = {
@@ -255,6 +271,7 @@ export type LeadOrderByWithAggregationInput = {
   service?: Prisma.SortOrderInput | Prisma.SortOrder
   budget?: Prisma.SortOrderInput | Prisma.SortOrder
   message?: Prisma.SortOrderInput | Prisma.SortOrder
+  contactChannel?: Prisma.SortOrder
   status?: Prisma.SortOrder
   clientId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -273,6 +290,7 @@ export type LeadScalarWhereWithAggregatesInput = {
   service?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
   budget?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
   message?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
+  contactChannel?: Prisma.EnumContactChannelWithAggregatesFilter<"Lead"> | $Enums.ContactChannel
   status?: Prisma.EnumLeadStatusWithAggregatesFilter<"Lead"> | $Enums.LeadStatus
   clientId?: Prisma.StringNullableWithAggregatesFilter<"Lead"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Lead"> | Date | string
@@ -284,11 +302,14 @@ export type LeadCreateInput = {
   service?: string | null
   budget?: string | null
   message?: string | null
+  contactChannel?: $Enums.ContactChannel
   status?: $Enums.LeadStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   contact: Prisma.ContactCreateNestedOneWithoutLeadsInput
   client?: Prisma.ClientCreateNestedOneWithoutLeadsInput
+  prospect?: Prisma.ProspectCreateNestedOneWithoutImportedLeadInput
+  offers?: Prisma.OfferCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateInput = {
@@ -297,10 +318,13 @@ export type LeadUncheckedCreateInput = {
   service?: string | null
   budget?: string | null
   message?: string | null
+  contactChannel?: $Enums.ContactChannel
   status?: $Enums.LeadStatus
   clientId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  prospect?: Prisma.ProspectUncheckedCreateNestedOneWithoutImportedLeadInput
+  offers?: Prisma.OfferUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUpdateInput = {
@@ -308,11 +332,14 @@ export type LeadUpdateInput = {
   service?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   budget?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactChannel?: Prisma.EnumContactChannelFieldUpdateOperationsInput | $Enums.ContactChannel
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contact?: Prisma.ContactUpdateOneRequiredWithoutLeadsNestedInput
   client?: Prisma.ClientUpdateOneWithoutLeadsNestedInput
+  prospect?: Prisma.ProspectUpdateOneWithoutImportedLeadNestedInput
+  offers?: Prisma.OfferUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateInput = {
@@ -321,10 +348,13 @@ export type LeadUncheckedUpdateInput = {
   service?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   budget?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactChannel?: Prisma.EnumContactChannelFieldUpdateOperationsInput | $Enums.ContactChannel
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  prospect?: Prisma.ProspectUncheckedUpdateOneWithoutImportedLeadNestedInput
+  offers?: Prisma.OfferUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateManyInput = {
@@ -333,6 +363,7 @@ export type LeadCreateManyInput = {
   service?: string | null
   budget?: string | null
   message?: string | null
+  contactChannel?: $Enums.ContactChannel
   status?: $Enums.LeadStatus
   clientId?: string | null
   createdAt?: Date | string
@@ -344,6 +375,7 @@ export type LeadUpdateManyMutationInput = {
   service?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   budget?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactChannel?: Prisma.EnumContactChannelFieldUpdateOperationsInput | $Enums.ContactChannel
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -355,6 +387,7 @@ export type LeadUncheckedUpdateManyInput = {
   service?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   budget?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactChannel?: Prisma.EnumContactChannelFieldUpdateOperationsInput | $Enums.ContactChannel
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -377,6 +410,7 @@ export type LeadCountOrderByAggregateInput = {
   service?: Prisma.SortOrder
   budget?: Prisma.SortOrder
   message?: Prisma.SortOrder
+  contactChannel?: Prisma.SortOrder
   status?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -389,6 +423,7 @@ export type LeadMaxOrderByAggregateInput = {
   service?: Prisma.SortOrder
   budget?: Prisma.SortOrder
   message?: Prisma.SortOrder
+  contactChannel?: Prisma.SortOrder
   status?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -401,10 +436,16 @@ export type LeadMinOrderByAggregateInput = {
   service?: Prisma.SortOrder
   budget?: Prisma.SortOrder
   message?: Prisma.SortOrder
+  contactChannel?: Prisma.SortOrder
   status?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type LeadNullableScalarRelationFilter = {
+  is?: Prisma.LeadWhereInput | null
+  isNot?: Prisma.LeadWhereInput | null
 }
 
 export type LeadCreateNestedManyWithoutContactInput = {
@@ -449,8 +490,28 @@ export type LeadUncheckedUpdateManyWithoutContactNestedInput = {
   deleteMany?: Prisma.LeadScalarWhereInput | Prisma.LeadScalarWhereInput[]
 }
 
+export type EnumContactChannelFieldUpdateOperationsInput = {
+  set?: $Enums.ContactChannel
+}
+
 export type EnumLeadStatusFieldUpdateOperationsInput = {
   set?: $Enums.LeadStatus
+}
+
+export type LeadCreateNestedOneWithoutProspectInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutProspectInput, Prisma.LeadUncheckedCreateWithoutProspectInput>
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutProspectInput
+  connect?: Prisma.LeadWhereUniqueInput
+}
+
+export type LeadUpdateOneWithoutProspectNestedInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutProspectInput, Prisma.LeadUncheckedCreateWithoutProspectInput>
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutProspectInput
+  upsert?: Prisma.LeadUpsertWithoutProspectInput
+  disconnect?: Prisma.LeadWhereInput | boolean
+  delete?: Prisma.LeadWhereInput | boolean
+  connect?: Prisma.LeadWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LeadUpdateToOneWithWhereWithoutProspectInput, Prisma.LeadUpdateWithoutProspectInput>, Prisma.LeadUncheckedUpdateWithoutProspectInput>
 }
 
 export type LeadCreateNestedManyWithoutClientInput = {
@@ -495,15 +556,34 @@ export type LeadUncheckedUpdateManyWithoutClientNestedInput = {
   deleteMany?: Prisma.LeadScalarWhereInput | Prisma.LeadScalarWhereInput[]
 }
 
+export type LeadCreateNestedOneWithoutOffersInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutOffersInput, Prisma.LeadUncheckedCreateWithoutOffersInput>
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutOffersInput
+  connect?: Prisma.LeadWhereUniqueInput
+}
+
+export type LeadUpdateOneWithoutOffersNestedInput = {
+  create?: Prisma.XOR<Prisma.LeadCreateWithoutOffersInput, Prisma.LeadUncheckedCreateWithoutOffersInput>
+  connectOrCreate?: Prisma.LeadCreateOrConnectWithoutOffersInput
+  upsert?: Prisma.LeadUpsertWithoutOffersInput
+  disconnect?: Prisma.LeadWhereInput | boolean
+  delete?: Prisma.LeadWhereInput | boolean
+  connect?: Prisma.LeadWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LeadUpdateToOneWithWhereWithoutOffersInput, Prisma.LeadUpdateWithoutOffersInput>, Prisma.LeadUncheckedUpdateWithoutOffersInput>
+}
+
 export type LeadCreateWithoutContactInput = {
   id?: string
   service?: string | null
   budget?: string | null
   message?: string | null
+  contactChannel?: $Enums.ContactChannel
   status?: $Enums.LeadStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   client?: Prisma.ClientCreateNestedOneWithoutLeadsInput
+  prospect?: Prisma.ProspectCreateNestedOneWithoutImportedLeadInput
+  offers?: Prisma.OfferCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutContactInput = {
@@ -511,10 +591,13 @@ export type LeadUncheckedCreateWithoutContactInput = {
   service?: string | null
   budget?: string | null
   message?: string | null
+  contactChannel?: $Enums.ContactChannel
   status?: $Enums.LeadStatus
   clientId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  prospect?: Prisma.ProspectUncheckedCreateNestedOneWithoutImportedLeadInput
+  offers?: Prisma.OfferUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutContactInput = {
@@ -552,10 +635,83 @@ export type LeadScalarWhereInput = {
   service?: Prisma.StringNullableFilter<"Lead"> | string | null
   budget?: Prisma.StringNullableFilter<"Lead"> | string | null
   message?: Prisma.StringNullableFilter<"Lead"> | string | null
+  contactChannel?: Prisma.EnumContactChannelFilter<"Lead"> | $Enums.ContactChannel
   status?: Prisma.EnumLeadStatusFilter<"Lead"> | $Enums.LeadStatus
   clientId?: Prisma.StringNullableFilter<"Lead"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Lead"> | Date | string
+}
+
+export type LeadCreateWithoutProspectInput = {
+  id?: string
+  service?: string | null
+  budget?: string | null
+  message?: string | null
+  contactChannel?: $Enums.ContactChannel
+  status?: $Enums.LeadStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  contact: Prisma.ContactCreateNestedOneWithoutLeadsInput
+  client?: Prisma.ClientCreateNestedOneWithoutLeadsInput
+  offers?: Prisma.OfferCreateNestedManyWithoutLeadInput
+}
+
+export type LeadUncheckedCreateWithoutProspectInput = {
+  id?: string
+  contactId: string
+  service?: string | null
+  budget?: string | null
+  message?: string | null
+  contactChannel?: $Enums.ContactChannel
+  status?: $Enums.LeadStatus
+  clientId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  offers?: Prisma.OfferUncheckedCreateNestedManyWithoutLeadInput
+}
+
+export type LeadCreateOrConnectWithoutProspectInput = {
+  where: Prisma.LeadWhereUniqueInput
+  create: Prisma.XOR<Prisma.LeadCreateWithoutProspectInput, Prisma.LeadUncheckedCreateWithoutProspectInput>
+}
+
+export type LeadUpsertWithoutProspectInput = {
+  update: Prisma.XOR<Prisma.LeadUpdateWithoutProspectInput, Prisma.LeadUncheckedUpdateWithoutProspectInput>
+  create: Prisma.XOR<Prisma.LeadCreateWithoutProspectInput, Prisma.LeadUncheckedCreateWithoutProspectInput>
+  where?: Prisma.LeadWhereInput
+}
+
+export type LeadUpdateToOneWithWhereWithoutProspectInput = {
+  where?: Prisma.LeadWhereInput
+  data: Prisma.XOR<Prisma.LeadUpdateWithoutProspectInput, Prisma.LeadUncheckedUpdateWithoutProspectInput>
+}
+
+export type LeadUpdateWithoutProspectInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  service?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  budget?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactChannel?: Prisma.EnumContactChannelFieldUpdateOperationsInput | $Enums.ContactChannel
+  status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contact?: Prisma.ContactUpdateOneRequiredWithoutLeadsNestedInput
+  client?: Prisma.ClientUpdateOneWithoutLeadsNestedInput
+  offers?: Prisma.OfferUpdateManyWithoutLeadNestedInput
+}
+
+export type LeadUncheckedUpdateWithoutProspectInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  contactId?: Prisma.StringFieldUpdateOperationsInput | string
+  service?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  budget?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactChannel?: Prisma.EnumContactChannelFieldUpdateOperationsInput | $Enums.ContactChannel
+  status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  offers?: Prisma.OfferUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadCreateWithoutClientInput = {
@@ -563,10 +719,13 @@ export type LeadCreateWithoutClientInput = {
   service?: string | null
   budget?: string | null
   message?: string | null
+  contactChannel?: $Enums.ContactChannel
   status?: $Enums.LeadStatus
   createdAt?: Date | string
   updatedAt?: Date | string
   contact: Prisma.ContactCreateNestedOneWithoutLeadsInput
+  prospect?: Prisma.ProspectCreateNestedOneWithoutImportedLeadInput
+  offers?: Prisma.OfferCreateNestedManyWithoutLeadInput
 }
 
 export type LeadUncheckedCreateWithoutClientInput = {
@@ -575,9 +734,12 @@ export type LeadUncheckedCreateWithoutClientInput = {
   service?: string | null
   budget?: string | null
   message?: string | null
+  contactChannel?: $Enums.ContactChannel
   status?: $Enums.LeadStatus
   createdAt?: Date | string
   updatedAt?: Date | string
+  prospect?: Prisma.ProspectUncheckedCreateNestedOneWithoutImportedLeadInput
+  offers?: Prisma.OfferUncheckedCreateNestedManyWithoutLeadInput
 }
 
 export type LeadCreateOrConnectWithoutClientInput = {
@@ -606,11 +768,84 @@ export type LeadUpdateManyWithWhereWithoutClientInput = {
   data: Prisma.XOR<Prisma.LeadUpdateManyMutationInput, Prisma.LeadUncheckedUpdateManyWithoutClientInput>
 }
 
+export type LeadCreateWithoutOffersInput = {
+  id?: string
+  service?: string | null
+  budget?: string | null
+  message?: string | null
+  contactChannel?: $Enums.ContactChannel
+  status?: $Enums.LeadStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  contact: Prisma.ContactCreateNestedOneWithoutLeadsInput
+  client?: Prisma.ClientCreateNestedOneWithoutLeadsInput
+  prospect?: Prisma.ProspectCreateNestedOneWithoutImportedLeadInput
+}
+
+export type LeadUncheckedCreateWithoutOffersInput = {
+  id?: string
+  contactId: string
+  service?: string | null
+  budget?: string | null
+  message?: string | null
+  contactChannel?: $Enums.ContactChannel
+  status?: $Enums.LeadStatus
+  clientId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  prospect?: Prisma.ProspectUncheckedCreateNestedOneWithoutImportedLeadInput
+}
+
+export type LeadCreateOrConnectWithoutOffersInput = {
+  where: Prisma.LeadWhereUniqueInput
+  create: Prisma.XOR<Prisma.LeadCreateWithoutOffersInput, Prisma.LeadUncheckedCreateWithoutOffersInput>
+}
+
+export type LeadUpsertWithoutOffersInput = {
+  update: Prisma.XOR<Prisma.LeadUpdateWithoutOffersInput, Prisma.LeadUncheckedUpdateWithoutOffersInput>
+  create: Prisma.XOR<Prisma.LeadCreateWithoutOffersInput, Prisma.LeadUncheckedCreateWithoutOffersInput>
+  where?: Prisma.LeadWhereInput
+}
+
+export type LeadUpdateToOneWithWhereWithoutOffersInput = {
+  where?: Prisma.LeadWhereInput
+  data: Prisma.XOR<Prisma.LeadUpdateWithoutOffersInput, Prisma.LeadUncheckedUpdateWithoutOffersInput>
+}
+
+export type LeadUpdateWithoutOffersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  service?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  budget?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactChannel?: Prisma.EnumContactChannelFieldUpdateOperationsInput | $Enums.ContactChannel
+  status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  contact?: Prisma.ContactUpdateOneRequiredWithoutLeadsNestedInput
+  client?: Prisma.ClientUpdateOneWithoutLeadsNestedInput
+  prospect?: Prisma.ProspectUpdateOneWithoutImportedLeadNestedInput
+}
+
+export type LeadUncheckedUpdateWithoutOffersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  contactId?: Prisma.StringFieldUpdateOperationsInput | string
+  service?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  budget?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactChannel?: Prisma.EnumContactChannelFieldUpdateOperationsInput | $Enums.ContactChannel
+  status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  prospect?: Prisma.ProspectUncheckedUpdateOneWithoutImportedLeadNestedInput
+}
+
 export type LeadCreateManyContactInput = {
   id?: string
   service?: string | null
   budget?: string | null
   message?: string | null
+  contactChannel?: $Enums.ContactChannel
   status?: $Enums.LeadStatus
   clientId?: string | null
   createdAt?: Date | string
@@ -622,10 +857,13 @@ export type LeadUpdateWithoutContactInput = {
   service?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   budget?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactChannel?: Prisma.EnumContactChannelFieldUpdateOperationsInput | $Enums.ContactChannel
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   client?: Prisma.ClientUpdateOneWithoutLeadsNestedInput
+  prospect?: Prisma.ProspectUpdateOneWithoutImportedLeadNestedInput
+  offers?: Prisma.OfferUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutContactInput = {
@@ -633,10 +871,13 @@ export type LeadUncheckedUpdateWithoutContactInput = {
   service?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   budget?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactChannel?: Prisma.EnumContactChannelFieldUpdateOperationsInput | $Enums.ContactChannel
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  prospect?: Prisma.ProspectUncheckedUpdateOneWithoutImportedLeadNestedInput
+  offers?: Prisma.OfferUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateManyWithoutContactInput = {
@@ -644,6 +885,7 @@ export type LeadUncheckedUpdateManyWithoutContactInput = {
   service?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   budget?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactChannel?: Prisma.EnumContactChannelFieldUpdateOperationsInput | $Enums.ContactChannel
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -656,6 +898,7 @@ export type LeadCreateManyClientInput = {
   service?: string | null
   budget?: string | null
   message?: string | null
+  contactChannel?: $Enums.ContactChannel
   status?: $Enums.LeadStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -666,10 +909,13 @@ export type LeadUpdateWithoutClientInput = {
   service?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   budget?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactChannel?: Prisma.EnumContactChannelFieldUpdateOperationsInput | $Enums.ContactChannel
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   contact?: Prisma.ContactUpdateOneRequiredWithoutLeadsNestedInput
+  prospect?: Prisma.ProspectUpdateOneWithoutImportedLeadNestedInput
+  offers?: Prisma.OfferUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateWithoutClientInput = {
@@ -678,9 +924,12 @@ export type LeadUncheckedUpdateWithoutClientInput = {
   service?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   budget?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactChannel?: Prisma.EnumContactChannelFieldUpdateOperationsInput | $Enums.ContactChannel
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  prospect?: Prisma.ProspectUncheckedUpdateOneWithoutImportedLeadNestedInput
+  offers?: Prisma.OfferUncheckedUpdateManyWithoutLeadNestedInput
 }
 
 export type LeadUncheckedUpdateManyWithoutClientInput = {
@@ -689,11 +938,41 @@ export type LeadUncheckedUpdateManyWithoutClientInput = {
   service?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   budget?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   message?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactChannel?: Prisma.EnumContactChannelFieldUpdateOperationsInput | $Enums.ContactChannel
   status?: Prisma.EnumLeadStatusFieldUpdateOperationsInput | $Enums.LeadStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type LeadCountOutputType
+ */
+
+export type LeadCountOutputType = {
+  offers: number
+}
+
+export type LeadCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  offers?: boolean | LeadCountOutputTypeCountOffersArgs
+}
+
+/**
+ * LeadCountOutputType without action
+ */
+export type LeadCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LeadCountOutputType
+   */
+  select?: Prisma.LeadCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * LeadCountOutputType without action
+ */
+export type LeadCountOutputTypeCountOffersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OfferWhereInput
+}
 
 
 export type LeadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -702,12 +981,16 @@ export type LeadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   service?: boolean
   budget?: boolean
   message?: boolean
+  contactChannel?: boolean
   status?: boolean
   clientId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
   client?: boolean | Prisma.Lead$clientArgs<ExtArgs>
+  prospect?: boolean | Prisma.Lead$prospectArgs<ExtArgs>
+  offers?: boolean | Prisma.Lead$offersArgs<ExtArgs>
+  _count?: boolean | Prisma.LeadCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["lead"]>
 
 export type LeadSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -716,6 +999,7 @@ export type LeadSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   service?: boolean
   budget?: boolean
   message?: boolean
+  contactChannel?: boolean
   status?: boolean
   clientId?: boolean
   createdAt?: boolean
@@ -730,6 +1014,7 @@ export type LeadSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   service?: boolean
   budget?: boolean
   message?: boolean
+  contactChannel?: boolean
   status?: boolean
   clientId?: boolean
   createdAt?: boolean
@@ -744,16 +1029,20 @@ export type LeadSelectScalar = {
   service?: boolean
   budget?: boolean
   message?: boolean
+  contactChannel?: boolean
   status?: boolean
   clientId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type LeadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "contactId" | "service" | "budget" | "message" | "status" | "clientId" | "createdAt" | "updatedAt", ExtArgs["result"]["lead"]>
+export type LeadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "contactId" | "service" | "budget" | "message" | "contactChannel" | "status" | "clientId" | "createdAt" | "updatedAt", ExtArgs["result"]["lead"]>
 export type LeadInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
   client?: boolean | Prisma.Lead$clientArgs<ExtArgs>
+  prospect?: boolean | Prisma.Lead$prospectArgs<ExtArgs>
+  offers?: boolean | Prisma.Lead$offersArgs<ExtArgs>
+  _count?: boolean | Prisma.LeadCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type LeadIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   contact?: boolean | Prisma.ContactDefaultArgs<ExtArgs>
@@ -769,6 +1058,8 @@ export type $LeadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     contact: Prisma.$ContactPayload<ExtArgs>
     client: Prisma.$ClientPayload<ExtArgs> | null
+    prospect: Prisma.$ProspectPayload<ExtArgs> | null
+    offers: Prisma.$OfferPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -776,6 +1067,7 @@ export type $LeadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     service: string | null
     budget: string | null
     message: string | null
+    contactChannel: $Enums.ContactChannel
     status: $Enums.LeadStatus
     clientId: string | null
     createdAt: Date
@@ -1176,6 +1468,8 @@ export interface Prisma__LeadClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   contact<T extends Prisma.ContactDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ContactDefaultArgs<ExtArgs>>): Prisma.Prisma__ContactClient<runtime.Types.Result.GetResult<Prisma.$ContactPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   client<T extends Prisma.Lead$clientArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$clientArgs<ExtArgs>>): Prisma.Prisma__ClientClient<runtime.Types.Result.GetResult<Prisma.$ClientPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  prospect<T extends Prisma.Lead$prospectArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$prospectArgs<ExtArgs>>): Prisma.Prisma__ProspectClient<runtime.Types.Result.GetResult<Prisma.$ProspectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  offers<T extends Prisma.Lead$offersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lead$offersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1210,6 +1504,7 @@ export interface LeadFieldRefs {
   readonly service: Prisma.FieldRef<"Lead", 'String'>
   readonly budget: Prisma.FieldRef<"Lead", 'String'>
   readonly message: Prisma.FieldRef<"Lead", 'String'>
+  readonly contactChannel: Prisma.FieldRef<"Lead", 'ContactChannel'>
   readonly status: Prisma.FieldRef<"Lead", 'LeadStatus'>
   readonly clientId: Prisma.FieldRef<"Lead", 'String'>
   readonly createdAt: Prisma.FieldRef<"Lead", 'DateTime'>
@@ -1631,6 +1926,49 @@ export type Lead$clientArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
    */
   include?: Prisma.ClientInclude<ExtArgs> | null
   where?: Prisma.ClientWhereInput
+}
+
+/**
+ * Lead.prospect
+ */
+export type Lead$prospectArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Prospect
+   */
+  select?: Prisma.ProspectSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Prospect
+   */
+  omit?: Prisma.ProspectOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProspectInclude<ExtArgs> | null
+  where?: Prisma.ProspectWhereInput
+}
+
+/**
+ * Lead.offers
+ */
+export type Lead$offersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Offer
+   */
+  select?: Prisma.OfferSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Offer
+   */
+  omit?: Prisma.OfferOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OfferInclude<ExtArgs> | null
+  where?: Prisma.OfferWhereInput
+  orderBy?: Prisma.OfferOrderByWithRelationInput | Prisma.OfferOrderByWithRelationInput[]
+  cursor?: Prisma.OfferWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OfferScalarFieldEnum | Prisma.OfferScalarFieldEnum[]
 }
 
 /**

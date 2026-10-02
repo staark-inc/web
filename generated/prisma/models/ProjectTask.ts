@@ -447,10 +447,6 @@ export type ProjectTaskUncheckedUpdateManyWithoutProjectNestedInput = {
   deleteMany?: Prisma.ProjectTaskScalarWhereInput | Prisma.ProjectTaskScalarWhereInput[]
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type ProjectTaskCreateWithoutProjectInput = {
   id?: string
   title: string
@@ -610,10 +606,6 @@ export type $ProjectTaskPayload<ExtArgs extends runtime.Types.Extensions.Interna
     projectId: string
     title: string
     done: boolean
-    /**
-     * *
-     *    * Manual ordering inside a project.
-     */
     position: number
     createdAt: Date
     completedAt: Date | null

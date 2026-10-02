@@ -253,6 +253,7 @@ export type ProjectWhereInput = {
   materials?: Prisma.ProjectMaterialListRelationFilter
   activities?: Prisma.ProjectActivityListRelationFilter
   supportRequests?: Prisma.SupportRequestListRelationFilter
+  wordpressSites?: Prisma.WordPressSiteListRelationFilter
   demo?: Prisma.XOR<Prisma.DemoDeploymentNullableScalarRelationFilter, Prisma.DemoDeploymentWhereInput> | null
 }
 
@@ -277,6 +278,7 @@ export type ProjectOrderByWithRelationInput = {
   materials?: Prisma.ProjectMaterialOrderByRelationAggregateInput
   activities?: Prisma.ProjectActivityOrderByRelationAggregateInput
   supportRequests?: Prisma.SupportRequestOrderByRelationAggregateInput
+  wordpressSites?: Prisma.WordPressSiteOrderByRelationAggregateInput
   demo?: Prisma.DemoDeploymentOrderByWithRelationInput
 }
 
@@ -304,6 +306,7 @@ export type ProjectWhereUniqueInput = Prisma.AtLeast<{
   materials?: Prisma.ProjectMaterialListRelationFilter
   activities?: Prisma.ProjectActivityListRelationFilter
   supportRequests?: Prisma.SupportRequestListRelationFilter
+  wordpressSites?: Prisma.WordPressSiteListRelationFilter
   demo?: Prisma.XOR<Prisma.DemoDeploymentNullableScalarRelationFilter, Prisma.DemoDeploymentWhereInput> | null
 }, "id" | "offerId">
 
@@ -363,6 +366,7 @@ export type ProjectCreateInput = {
   materials?: Prisma.ProjectMaterialCreateNestedManyWithoutProjectInput
   activities?: Prisma.ProjectActivityCreateNestedManyWithoutProjectInput
   supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutProjectInput
+  wordpressSites?: Prisma.WordPressSiteCreateNestedManyWithoutProjectInput
   demo?: Prisma.DemoDeploymentCreateNestedOneWithoutProjectInput
 }
 
@@ -384,6 +388,7 @@ export type ProjectUncheckedCreateInput = {
   materials?: Prisma.ProjectMaterialUncheckedCreateNestedManyWithoutProjectInput
   activities?: Prisma.ProjectActivityUncheckedCreateNestedManyWithoutProjectInput
   supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutProjectInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedCreateNestedManyWithoutProjectInput
   demo?: Prisma.DemoDeploymentUncheckedCreateNestedOneWithoutProjectInput
 }
 
@@ -405,6 +410,7 @@ export type ProjectUpdateInput = {
   materials?: Prisma.ProjectMaterialUpdateManyWithoutProjectNestedInput
   activities?: Prisma.ProjectActivityUpdateManyWithoutProjectNestedInput
   supportRequests?: Prisma.SupportRequestUpdateManyWithoutProjectNestedInput
+  wordpressSites?: Prisma.WordPressSiteUpdateManyWithoutProjectNestedInput
   demo?: Prisma.DemoDeploymentUpdateOneWithoutProjectNestedInput
 }
 
@@ -426,6 +432,7 @@ export type ProjectUncheckedUpdateInput = {
   materials?: Prisma.ProjectMaterialUncheckedUpdateManyWithoutProjectNestedInput
   activities?: Prisma.ProjectActivityUncheckedUpdateManyWithoutProjectNestedInput
   supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutProjectNestedInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedUpdateManyWithoutProjectNestedInput
   demo?: Prisma.DemoDeploymentUncheckedUpdateOneWithoutProjectNestedInput
 }
 
@@ -734,6 +741,22 @@ export type ProjectUpdateOneRequiredWithoutDemoNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutDemoInput, Prisma.ProjectUpdateWithoutDemoInput>, Prisma.ProjectUncheckedUpdateWithoutDemoInput>
 }
 
+export type ProjectCreateNestedOneWithoutWordpressSitesInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutWordpressSitesInput, Prisma.ProjectUncheckedCreateWithoutWordpressSitesInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutWordpressSitesInput
+  connect?: Prisma.ProjectWhereUniqueInput
+}
+
+export type ProjectUpdateOneWithoutWordpressSitesNestedInput = {
+  create?: Prisma.XOR<Prisma.ProjectCreateWithoutWordpressSitesInput, Prisma.ProjectUncheckedCreateWithoutWordpressSitesInput>
+  connectOrCreate?: Prisma.ProjectCreateOrConnectWithoutWordpressSitesInput
+  upsert?: Prisma.ProjectUpsertWithoutWordpressSitesInput
+  disconnect?: Prisma.ProjectWhereInput | boolean
+  delete?: Prisma.ProjectWhereInput | boolean
+  connect?: Prisma.ProjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProjectUpdateToOneWithWhereWithoutWordpressSitesInput, Prisma.ProjectUpdateWithoutWordpressSitesInput>, Prisma.ProjectUncheckedUpdateWithoutWordpressSitesInput>
+}
+
 export type ProjectCreateWithoutClientInput = {
   id?: string
   name: string
@@ -751,6 +774,7 @@ export type ProjectCreateWithoutClientInput = {
   materials?: Prisma.ProjectMaterialCreateNestedManyWithoutProjectInput
   activities?: Prisma.ProjectActivityCreateNestedManyWithoutProjectInput
   supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutProjectInput
+  wordpressSites?: Prisma.WordPressSiteCreateNestedManyWithoutProjectInput
   demo?: Prisma.DemoDeploymentCreateNestedOneWithoutProjectInput
 }
 
@@ -771,6 +795,7 @@ export type ProjectUncheckedCreateWithoutClientInput = {
   materials?: Prisma.ProjectMaterialUncheckedCreateNestedManyWithoutProjectInput
   activities?: Prisma.ProjectActivityUncheckedCreateNestedManyWithoutProjectInput
   supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutProjectInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedCreateNestedManyWithoutProjectInput
   demo?: Prisma.DemoDeploymentUncheckedCreateNestedOneWithoutProjectInput
 }
 
@@ -836,6 +861,7 @@ export type ProjectCreateWithoutOfferInput = {
   materials?: Prisma.ProjectMaterialCreateNestedManyWithoutProjectInput
   activities?: Prisma.ProjectActivityCreateNestedManyWithoutProjectInput
   supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutProjectInput
+  wordpressSites?: Prisma.WordPressSiteCreateNestedManyWithoutProjectInput
   demo?: Prisma.DemoDeploymentCreateNestedOneWithoutProjectInput
 }
 
@@ -856,6 +882,7 @@ export type ProjectUncheckedCreateWithoutOfferInput = {
   materials?: Prisma.ProjectMaterialUncheckedCreateNestedManyWithoutProjectInput
   activities?: Prisma.ProjectActivityUncheckedCreateNestedManyWithoutProjectInput
   supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutProjectInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedCreateNestedManyWithoutProjectInput
   demo?: Prisma.DemoDeploymentUncheckedCreateNestedOneWithoutProjectInput
 }
 
@@ -892,6 +919,7 @@ export type ProjectUpdateWithoutOfferInput = {
   materials?: Prisma.ProjectMaterialUpdateManyWithoutProjectNestedInput
   activities?: Prisma.ProjectActivityUpdateManyWithoutProjectNestedInput
   supportRequests?: Prisma.SupportRequestUpdateManyWithoutProjectNestedInput
+  wordpressSites?: Prisma.WordPressSiteUpdateManyWithoutProjectNestedInput
   demo?: Prisma.DemoDeploymentUpdateOneWithoutProjectNestedInput
 }
 
@@ -912,6 +940,7 @@ export type ProjectUncheckedUpdateWithoutOfferInput = {
   materials?: Prisma.ProjectMaterialUncheckedUpdateManyWithoutProjectNestedInput
   activities?: Prisma.ProjectActivityUncheckedUpdateManyWithoutProjectNestedInput
   supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutProjectNestedInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedUpdateManyWithoutProjectNestedInput
   demo?: Prisma.DemoDeploymentUncheckedUpdateOneWithoutProjectNestedInput
 }
 
@@ -932,6 +961,7 @@ export type ProjectCreateWithoutMaterialsInput = {
   tasks?: Prisma.ProjectTaskCreateNestedManyWithoutProjectInput
   activities?: Prisma.ProjectActivityCreateNestedManyWithoutProjectInput
   supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutProjectInput
+  wordpressSites?: Prisma.WordPressSiteCreateNestedManyWithoutProjectInput
   demo?: Prisma.DemoDeploymentCreateNestedOneWithoutProjectInput
 }
 
@@ -952,6 +982,7 @@ export type ProjectUncheckedCreateWithoutMaterialsInput = {
   tasks?: Prisma.ProjectTaskUncheckedCreateNestedManyWithoutProjectInput
   activities?: Prisma.ProjectActivityUncheckedCreateNestedManyWithoutProjectInput
   supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutProjectInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedCreateNestedManyWithoutProjectInput
   demo?: Prisma.DemoDeploymentUncheckedCreateNestedOneWithoutProjectInput
 }
 
@@ -988,6 +1019,7 @@ export type ProjectUpdateWithoutMaterialsInput = {
   tasks?: Prisma.ProjectTaskUpdateManyWithoutProjectNestedInput
   activities?: Prisma.ProjectActivityUpdateManyWithoutProjectNestedInput
   supportRequests?: Prisma.SupportRequestUpdateManyWithoutProjectNestedInput
+  wordpressSites?: Prisma.WordPressSiteUpdateManyWithoutProjectNestedInput
   demo?: Prisma.DemoDeploymentUpdateOneWithoutProjectNestedInput
 }
 
@@ -1008,6 +1040,7 @@ export type ProjectUncheckedUpdateWithoutMaterialsInput = {
   tasks?: Prisma.ProjectTaskUncheckedUpdateManyWithoutProjectNestedInput
   activities?: Prisma.ProjectActivityUncheckedUpdateManyWithoutProjectNestedInput
   supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutProjectNestedInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedUpdateManyWithoutProjectNestedInput
   demo?: Prisma.DemoDeploymentUncheckedUpdateOneWithoutProjectNestedInput
 }
 
@@ -1028,6 +1061,7 @@ export type ProjectCreateWithoutActivitiesInput = {
   tasks?: Prisma.ProjectTaskCreateNestedManyWithoutProjectInput
   materials?: Prisma.ProjectMaterialCreateNestedManyWithoutProjectInput
   supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutProjectInput
+  wordpressSites?: Prisma.WordPressSiteCreateNestedManyWithoutProjectInput
   demo?: Prisma.DemoDeploymentCreateNestedOneWithoutProjectInput
 }
 
@@ -1048,6 +1082,7 @@ export type ProjectUncheckedCreateWithoutActivitiesInput = {
   tasks?: Prisma.ProjectTaskUncheckedCreateNestedManyWithoutProjectInput
   materials?: Prisma.ProjectMaterialUncheckedCreateNestedManyWithoutProjectInput
   supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutProjectInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedCreateNestedManyWithoutProjectInput
   demo?: Prisma.DemoDeploymentUncheckedCreateNestedOneWithoutProjectInput
 }
 
@@ -1084,6 +1119,7 @@ export type ProjectUpdateWithoutActivitiesInput = {
   tasks?: Prisma.ProjectTaskUpdateManyWithoutProjectNestedInput
   materials?: Prisma.ProjectMaterialUpdateManyWithoutProjectNestedInput
   supportRequests?: Prisma.SupportRequestUpdateManyWithoutProjectNestedInput
+  wordpressSites?: Prisma.WordPressSiteUpdateManyWithoutProjectNestedInput
   demo?: Prisma.DemoDeploymentUpdateOneWithoutProjectNestedInput
 }
 
@@ -1104,6 +1140,7 @@ export type ProjectUncheckedUpdateWithoutActivitiesInput = {
   tasks?: Prisma.ProjectTaskUncheckedUpdateManyWithoutProjectNestedInput
   materials?: Prisma.ProjectMaterialUncheckedUpdateManyWithoutProjectNestedInput
   supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutProjectNestedInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedUpdateManyWithoutProjectNestedInput
   demo?: Prisma.DemoDeploymentUncheckedUpdateOneWithoutProjectNestedInput
 }
 
@@ -1124,6 +1161,7 @@ export type ProjectCreateWithoutTasksInput = {
   materials?: Prisma.ProjectMaterialCreateNestedManyWithoutProjectInput
   activities?: Prisma.ProjectActivityCreateNestedManyWithoutProjectInput
   supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutProjectInput
+  wordpressSites?: Prisma.WordPressSiteCreateNestedManyWithoutProjectInput
   demo?: Prisma.DemoDeploymentCreateNestedOneWithoutProjectInput
 }
 
@@ -1144,6 +1182,7 @@ export type ProjectUncheckedCreateWithoutTasksInput = {
   materials?: Prisma.ProjectMaterialUncheckedCreateNestedManyWithoutProjectInput
   activities?: Prisma.ProjectActivityUncheckedCreateNestedManyWithoutProjectInput
   supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutProjectInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedCreateNestedManyWithoutProjectInput
   demo?: Prisma.DemoDeploymentUncheckedCreateNestedOneWithoutProjectInput
 }
 
@@ -1180,6 +1219,7 @@ export type ProjectUpdateWithoutTasksInput = {
   materials?: Prisma.ProjectMaterialUpdateManyWithoutProjectNestedInput
   activities?: Prisma.ProjectActivityUpdateManyWithoutProjectNestedInput
   supportRequests?: Prisma.SupportRequestUpdateManyWithoutProjectNestedInput
+  wordpressSites?: Prisma.WordPressSiteUpdateManyWithoutProjectNestedInput
   demo?: Prisma.DemoDeploymentUpdateOneWithoutProjectNestedInput
 }
 
@@ -1200,6 +1240,7 @@ export type ProjectUncheckedUpdateWithoutTasksInput = {
   materials?: Prisma.ProjectMaterialUncheckedUpdateManyWithoutProjectNestedInput
   activities?: Prisma.ProjectActivityUncheckedUpdateManyWithoutProjectNestedInput
   supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutProjectNestedInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedUpdateManyWithoutProjectNestedInput
   demo?: Prisma.DemoDeploymentUncheckedUpdateOneWithoutProjectNestedInput
 }
 
@@ -1220,6 +1261,7 @@ export type ProjectCreateWithoutThreadInput = {
   materials?: Prisma.ProjectMaterialCreateNestedManyWithoutProjectInput
   activities?: Prisma.ProjectActivityCreateNestedManyWithoutProjectInput
   supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutProjectInput
+  wordpressSites?: Prisma.WordPressSiteCreateNestedManyWithoutProjectInput
   demo?: Prisma.DemoDeploymentCreateNestedOneWithoutProjectInput
 }
 
@@ -1240,6 +1282,7 @@ export type ProjectUncheckedCreateWithoutThreadInput = {
   materials?: Prisma.ProjectMaterialUncheckedCreateNestedManyWithoutProjectInput
   activities?: Prisma.ProjectActivityUncheckedCreateNestedManyWithoutProjectInput
   supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutProjectInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedCreateNestedManyWithoutProjectInput
   demo?: Prisma.DemoDeploymentUncheckedCreateNestedOneWithoutProjectInput
 }
 
@@ -1286,6 +1329,7 @@ export type ProjectCreateWithoutSupportRequestsInput = {
   tasks?: Prisma.ProjectTaskCreateNestedManyWithoutProjectInput
   materials?: Prisma.ProjectMaterialCreateNestedManyWithoutProjectInput
   activities?: Prisma.ProjectActivityCreateNestedManyWithoutProjectInput
+  wordpressSites?: Prisma.WordPressSiteCreateNestedManyWithoutProjectInput
   demo?: Prisma.DemoDeploymentCreateNestedOneWithoutProjectInput
 }
 
@@ -1306,6 +1350,7 @@ export type ProjectUncheckedCreateWithoutSupportRequestsInput = {
   tasks?: Prisma.ProjectTaskUncheckedCreateNestedManyWithoutProjectInput
   materials?: Prisma.ProjectMaterialUncheckedCreateNestedManyWithoutProjectInput
   activities?: Prisma.ProjectActivityUncheckedCreateNestedManyWithoutProjectInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedCreateNestedManyWithoutProjectInput
   demo?: Prisma.DemoDeploymentUncheckedCreateNestedOneWithoutProjectInput
 }
 
@@ -1342,6 +1387,7 @@ export type ProjectUpdateWithoutSupportRequestsInput = {
   tasks?: Prisma.ProjectTaskUpdateManyWithoutProjectNestedInput
   materials?: Prisma.ProjectMaterialUpdateManyWithoutProjectNestedInput
   activities?: Prisma.ProjectActivityUpdateManyWithoutProjectNestedInput
+  wordpressSites?: Prisma.WordPressSiteUpdateManyWithoutProjectNestedInput
   demo?: Prisma.DemoDeploymentUpdateOneWithoutProjectNestedInput
 }
 
@@ -1362,6 +1408,7 @@ export type ProjectUncheckedUpdateWithoutSupportRequestsInput = {
   tasks?: Prisma.ProjectTaskUncheckedUpdateManyWithoutProjectNestedInput
   materials?: Prisma.ProjectMaterialUncheckedUpdateManyWithoutProjectNestedInput
   activities?: Prisma.ProjectActivityUncheckedUpdateManyWithoutProjectNestedInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedUpdateManyWithoutProjectNestedInput
   demo?: Prisma.DemoDeploymentUncheckedUpdateOneWithoutProjectNestedInput
 }
 
@@ -1383,6 +1430,7 @@ export type ProjectCreateWithoutDemoInput = {
   materials?: Prisma.ProjectMaterialCreateNestedManyWithoutProjectInput
   activities?: Prisma.ProjectActivityCreateNestedManyWithoutProjectInput
   supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutProjectInput
+  wordpressSites?: Prisma.WordPressSiteCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectUncheckedCreateWithoutDemoInput = {
@@ -1403,6 +1451,7 @@ export type ProjectUncheckedCreateWithoutDemoInput = {
   materials?: Prisma.ProjectMaterialUncheckedCreateNestedManyWithoutProjectInput
   activities?: Prisma.ProjectActivityUncheckedCreateNestedManyWithoutProjectInput
   supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutProjectInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedCreateNestedManyWithoutProjectInput
 }
 
 export type ProjectCreateOrConnectWithoutDemoInput = {
@@ -1439,6 +1488,7 @@ export type ProjectUpdateWithoutDemoInput = {
   materials?: Prisma.ProjectMaterialUpdateManyWithoutProjectNestedInput
   activities?: Prisma.ProjectActivityUpdateManyWithoutProjectNestedInput
   supportRequests?: Prisma.SupportRequestUpdateManyWithoutProjectNestedInput
+  wordpressSites?: Prisma.WordPressSiteUpdateManyWithoutProjectNestedInput
 }
 
 export type ProjectUncheckedUpdateWithoutDemoInput = {
@@ -1459,6 +1509,107 @@ export type ProjectUncheckedUpdateWithoutDemoInput = {
   materials?: Prisma.ProjectMaterialUncheckedUpdateManyWithoutProjectNestedInput
   activities?: Prisma.ProjectActivityUncheckedUpdateManyWithoutProjectNestedInput
   supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutProjectNestedInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedUpdateManyWithoutProjectNestedInput
+}
+
+export type ProjectCreateWithoutWordpressSitesInput = {
+  id?: string
+  name: string
+  description?: string | null
+  status?: $Enums.ProjectStatus
+  budget?: string | null
+  liveUrl?: string | null
+  startedAt?: Date | string | null
+  dueAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  client: Prisma.ClientCreateNestedOneWithoutProjectsInput
+  offer?: Prisma.OfferCreateNestedOneWithoutProjectInput
+  thread?: Prisma.ThreadCreateNestedOneWithoutProjectsInput
+  tasks?: Prisma.ProjectTaskCreateNestedManyWithoutProjectInput
+  materials?: Prisma.ProjectMaterialCreateNestedManyWithoutProjectInput
+  activities?: Prisma.ProjectActivityCreateNestedManyWithoutProjectInput
+  supportRequests?: Prisma.SupportRequestCreateNestedManyWithoutProjectInput
+  demo?: Prisma.DemoDeploymentCreateNestedOneWithoutProjectInput
+}
+
+export type ProjectUncheckedCreateWithoutWordpressSitesInput = {
+  id?: string
+  clientId: string
+  offerId?: string | null
+  threadId?: string | null
+  name: string
+  description?: string | null
+  status?: $Enums.ProjectStatus
+  budget?: string | null
+  liveUrl?: string | null
+  startedAt?: Date | string | null
+  dueAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tasks?: Prisma.ProjectTaskUncheckedCreateNestedManyWithoutProjectInput
+  materials?: Prisma.ProjectMaterialUncheckedCreateNestedManyWithoutProjectInput
+  activities?: Prisma.ProjectActivityUncheckedCreateNestedManyWithoutProjectInput
+  supportRequests?: Prisma.SupportRequestUncheckedCreateNestedManyWithoutProjectInput
+  demo?: Prisma.DemoDeploymentUncheckedCreateNestedOneWithoutProjectInput
+}
+
+export type ProjectCreateOrConnectWithoutWordpressSitesInput = {
+  where: Prisma.ProjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutWordpressSitesInput, Prisma.ProjectUncheckedCreateWithoutWordpressSitesInput>
+}
+
+export type ProjectUpsertWithoutWordpressSitesInput = {
+  update: Prisma.XOR<Prisma.ProjectUpdateWithoutWordpressSitesInput, Prisma.ProjectUncheckedUpdateWithoutWordpressSitesInput>
+  create: Prisma.XOR<Prisma.ProjectCreateWithoutWordpressSitesInput, Prisma.ProjectUncheckedCreateWithoutWordpressSitesInput>
+  where?: Prisma.ProjectWhereInput
+}
+
+export type ProjectUpdateToOneWithWhereWithoutWordpressSitesInput = {
+  where?: Prisma.ProjectWhereInput
+  data: Prisma.XOR<Prisma.ProjectUpdateWithoutWordpressSitesInput, Prisma.ProjectUncheckedUpdateWithoutWordpressSitesInput>
+}
+
+export type ProjectUpdateWithoutWordpressSitesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+  budget?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  liveUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  client?: Prisma.ClientUpdateOneRequiredWithoutProjectsNestedInput
+  offer?: Prisma.OfferUpdateOneWithoutProjectNestedInput
+  thread?: Prisma.ThreadUpdateOneWithoutProjectsNestedInput
+  tasks?: Prisma.ProjectTaskUpdateManyWithoutProjectNestedInput
+  materials?: Prisma.ProjectMaterialUpdateManyWithoutProjectNestedInput
+  activities?: Prisma.ProjectActivityUpdateManyWithoutProjectNestedInput
+  supportRequests?: Prisma.SupportRequestUpdateManyWithoutProjectNestedInput
+  demo?: Prisma.DemoDeploymentUpdateOneWithoutProjectNestedInput
+}
+
+export type ProjectUncheckedUpdateWithoutWordpressSitesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  offerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  threadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProjectStatusFieldUpdateOperationsInput | $Enums.ProjectStatus
+  budget?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  liveUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tasks?: Prisma.ProjectTaskUncheckedUpdateManyWithoutProjectNestedInput
+  materials?: Prisma.ProjectMaterialUncheckedUpdateManyWithoutProjectNestedInput
+  activities?: Prisma.ProjectActivityUncheckedUpdateManyWithoutProjectNestedInput
+  supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutProjectNestedInput
+  demo?: Prisma.DemoDeploymentUncheckedUpdateOneWithoutProjectNestedInput
 }
 
 export type ProjectCreateManyClientInput = {
@@ -1493,6 +1644,7 @@ export type ProjectUpdateWithoutClientInput = {
   materials?: Prisma.ProjectMaterialUpdateManyWithoutProjectNestedInput
   activities?: Prisma.ProjectActivityUpdateManyWithoutProjectNestedInput
   supportRequests?: Prisma.SupportRequestUpdateManyWithoutProjectNestedInput
+  wordpressSites?: Prisma.WordPressSiteUpdateManyWithoutProjectNestedInput
   demo?: Prisma.DemoDeploymentUpdateOneWithoutProjectNestedInput
 }
 
@@ -1513,6 +1665,7 @@ export type ProjectUncheckedUpdateWithoutClientInput = {
   materials?: Prisma.ProjectMaterialUncheckedUpdateManyWithoutProjectNestedInput
   activities?: Prisma.ProjectActivityUncheckedUpdateManyWithoutProjectNestedInput
   supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutProjectNestedInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedUpdateManyWithoutProjectNestedInput
   demo?: Prisma.DemoDeploymentUncheckedUpdateOneWithoutProjectNestedInput
 }
 
@@ -1563,6 +1716,7 @@ export type ProjectUpdateWithoutThreadInput = {
   materials?: Prisma.ProjectMaterialUpdateManyWithoutProjectNestedInput
   activities?: Prisma.ProjectActivityUpdateManyWithoutProjectNestedInput
   supportRequests?: Prisma.SupportRequestUpdateManyWithoutProjectNestedInput
+  wordpressSites?: Prisma.WordPressSiteUpdateManyWithoutProjectNestedInput
   demo?: Prisma.DemoDeploymentUpdateOneWithoutProjectNestedInput
 }
 
@@ -1583,6 +1737,7 @@ export type ProjectUncheckedUpdateWithoutThreadInput = {
   materials?: Prisma.ProjectMaterialUncheckedUpdateManyWithoutProjectNestedInput
   activities?: Prisma.ProjectActivityUncheckedUpdateManyWithoutProjectNestedInput
   supportRequests?: Prisma.SupportRequestUncheckedUpdateManyWithoutProjectNestedInput
+  wordpressSites?: Prisma.WordPressSiteUncheckedUpdateManyWithoutProjectNestedInput
   demo?: Prisma.DemoDeploymentUncheckedUpdateOneWithoutProjectNestedInput
 }
 
@@ -1611,6 +1766,7 @@ export type ProjectCountOutputType = {
   materials: number
   activities: number
   supportRequests: number
+  wordpressSites: number
 }
 
 export type ProjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1618,6 +1774,7 @@ export type ProjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   materials?: boolean | ProjectCountOutputTypeCountMaterialsArgs
   activities?: boolean | ProjectCountOutputTypeCountActivitiesArgs
   supportRequests?: boolean | ProjectCountOutputTypeCountSupportRequestsArgs
+  wordpressSites?: boolean | ProjectCountOutputTypeCountWordpressSitesArgs
 }
 
 /**
@@ -1658,6 +1815,13 @@ export type ProjectCountOutputTypeCountSupportRequestsArgs<ExtArgs extends runti
   where?: Prisma.SupportRequestWhereInput
 }
 
+/**
+ * ProjectCountOutputType without action
+ */
+export type ProjectCountOutputTypeCountWordpressSitesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WordPressSiteWhereInput
+}
+
 
 export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1680,6 +1844,7 @@ export type ProjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   materials?: boolean | Prisma.Project$materialsArgs<ExtArgs>
   activities?: boolean | Prisma.Project$activitiesArgs<ExtArgs>
   supportRequests?: boolean | Prisma.Project$supportRequestsArgs<ExtArgs>
+  wordpressSites?: boolean | Prisma.Project$wordpressSitesArgs<ExtArgs>
   demo?: boolean | Prisma.Project$demoArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["project"]>
@@ -1747,6 +1912,7 @@ export type ProjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   materials?: boolean | Prisma.Project$materialsArgs<ExtArgs>
   activities?: boolean | Prisma.Project$activitiesArgs<ExtArgs>
   supportRequests?: boolean | Prisma.Project$supportRequestsArgs<ExtArgs>
+  wordpressSites?: boolean | Prisma.Project$wordpressSitesArgs<ExtArgs>
   demo?: boolean | Prisma.Project$demoArgs<ExtArgs>
   _count?: boolean | Prisma.ProjectCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1771,20 +1937,13 @@ export type $ProjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     materials: Prisma.$ProjectMaterialPayload<ExtArgs>[]
     activities: Prisma.$ProjectActivityPayload<ExtArgs>[]
     supportRequests: Prisma.$SupportRequestPayload<ExtArgs>[]
+    wordpressSites: Prisma.$WordPressSitePayload<ExtArgs>[]
     demo: Prisma.$DemoDeploymentPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     clientId: string
-    /**
-     * *
-     *    * Optional link to the accepted offer that created this project.
-     */
     offerId: string | null
-    /**
-     * *
-     *    * Optional link to the Inbox conversation with this client.
-     */
     threadId: string | null
     name: string
     description: string | null
@@ -2196,6 +2355,7 @@ export interface Prisma__ProjectClient<T, Null = never, ExtArgs extends runtime.
   materials<T extends Prisma.Project$materialsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$materialsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectMaterialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   activities<T extends Prisma.Project$activitiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$activitiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectActivityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   supportRequests<T extends Prisma.Project$supportRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$supportRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupportRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  wordpressSites<T extends Prisma.Project$wordpressSitesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$wordpressSitesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WordPressSitePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   demo<T extends Prisma.Project$demoArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Project$demoArgs<ExtArgs>>): Prisma.Prisma__DemoDeploymentClient<runtime.Types.Result.GetResult<Prisma.$DemoDeploymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2771,6 +2931,30 @@ export type Project$supportRequestsArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.SupportRequestScalarFieldEnum | Prisma.SupportRequestScalarFieldEnum[]
+}
+
+/**
+ * Project.wordpressSites
+ */
+export type Project$wordpressSitesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WordPressSite
+   */
+  select?: Prisma.WordPressSiteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WordPressSite
+   */
+  omit?: Prisma.WordPressSiteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WordPressSiteInclude<ExtArgs> | null
+  where?: Prisma.WordPressSiteWhereInput
+  orderBy?: Prisma.WordPressSiteOrderByWithRelationInput | Prisma.WordPressSiteOrderByWithRelationInput[]
+  cursor?: Prisma.WordPressSiteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WordPressSiteScalarFieldEnum | Prisma.WordPressSiteScalarFieldEnum[]
 }
 
 /**

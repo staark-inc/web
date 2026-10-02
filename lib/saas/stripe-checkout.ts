@@ -44,9 +44,32 @@ export type CreatedSaaSCheckoutSession = {
 };
 
 export function getSaaSCheckoutEnvironment(): SaaSCheckoutEnvironment {
-  return process.env.STRIPE_SAAS_CHECKOUT_ENVIRONMENT?.trim().toLowerCase() === "live"
-    ? "live"
-    : "test";
+  const value =
+    process.env.STRIPE_SAAS_CHECKOUT_ENVIRONMENT
+      ?.trim()
+      .toLowerCase();
+
+  if (value === "live") {
+    return "live";
+  }
+
+  if (value === "test") {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error(
+        "Stripe TEST mode is disabled in production.",
+      );
+    }
+
+    return "test";
+  }
+
+  if (process.env.NODE_ENV === "production") {
+    throw new Error(
+      "STRIPE_SAAS_CHECKOUT_ENVIRONMENT=live is required in production.",
+    );
+  }
+
+  return "test";
 }
 
 function getStripeSecretKey(environment: SaaSCheckoutEnvironment): string {
@@ -168,7 +191,11 @@ export async function createSaaSCheckoutSession(input: {
 
   const body = new URLSearchParams();
   body.set("mode", "subscription");
-  body.set("payment_method_collection", "if_required");
+  // A real payment method is required even during the free trial.
+  // Stripe Checkout uses it for future off-session subscription billing.
+  body.set("payment_method_collection", "always");
+  body.append("payment_method_types[]", "card");
+
   body.set("line_items[0][price]", stripePrice.id);
   body.set("line_items[0][quantity]", "1");
   body.set("client_reference_id", reference);

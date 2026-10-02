@@ -339,6 +339,7 @@ export type SupportRequestWhereInput = {
   client?: Prisma.XOR<Prisma.ClientNullableScalarRelationFilter, Prisma.ClientWhereInput> | null
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
   thread?: Prisma.XOR<Prisma.ThreadNullableScalarRelationFilter, Prisma.ThreadWhereInput> | null
+  wordpressTicketSync?: Prisma.XOR<Prisma.WordPressTicketSyncNullableScalarRelationFilter, Prisma.WordPressTicketSyncWhereInput> | null
 }
 
 export type SupportRequestOrderByWithRelationInput = {
@@ -365,6 +366,7 @@ export type SupportRequestOrderByWithRelationInput = {
   client?: Prisma.ClientOrderByWithRelationInput
   project?: Prisma.ProjectOrderByWithRelationInput
   thread?: Prisma.ThreadOrderByWithRelationInput
+  wordpressTicketSync?: Prisma.WordPressTicketSyncOrderByWithRelationInput
 }
 
 export type SupportRequestWhereUniqueInput = Prisma.AtLeast<{
@@ -394,6 +396,7 @@ export type SupportRequestWhereUniqueInput = Prisma.AtLeast<{
   client?: Prisma.XOR<Prisma.ClientNullableScalarRelationFilter, Prisma.ClientWhereInput> | null
   project?: Prisma.XOR<Prisma.ProjectNullableScalarRelationFilter, Prisma.ProjectWhereInput> | null
   thread?: Prisma.XOR<Prisma.ThreadNullableScalarRelationFilter, Prisma.ThreadWhereInput> | null
+  wordpressTicketSync?: Prisma.XOR<Prisma.WordPressTicketSyncNullableScalarRelationFilter, Prisma.WordPressTicketSyncWhereInput> | null
 }, "id" | "reference">
 
 export type SupportRequestOrderByWithAggregationInput = {
@@ -471,6 +474,7 @@ export type SupportRequestCreateInput = {
   client?: Prisma.ClientCreateNestedOneWithoutSupportRequestsInput
   project?: Prisma.ProjectCreateNestedOneWithoutSupportRequestsInput
   thread?: Prisma.ThreadCreateNestedOneWithoutSupportRequestsInput
+  wordpressTicketSync?: Prisma.WordPressTicketSyncCreateNestedOneWithoutSupportRequestInput
 }
 
 export type SupportRequestUncheckedCreateInput = {
@@ -494,6 +498,7 @@ export type SupportRequestUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   resolvedAt?: Date | string | null
+  wordpressTicketSync?: Prisma.WordPressTicketSyncUncheckedCreateNestedOneWithoutSupportRequestInput
 }
 
 export type SupportRequestUpdateInput = {
@@ -517,6 +522,7 @@ export type SupportRequestUpdateInput = {
   client?: Prisma.ClientUpdateOneWithoutSupportRequestsNestedInput
   project?: Prisma.ProjectUpdateOneWithoutSupportRequestsNestedInput
   thread?: Prisma.ThreadUpdateOneWithoutSupportRequestsNestedInput
+  wordpressTicketSync?: Prisma.WordPressTicketSyncUpdateOneWithoutSupportRequestNestedInput
 }
 
 export type SupportRequestUncheckedUpdateInput = {
@@ -540,6 +546,7 @@ export type SupportRequestUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  wordpressTicketSync?: Prisma.WordPressTicketSyncUncheckedUpdateOneWithoutSupportRequestNestedInput
 }
 
 export type SupportRequestCreateManyInput = {
@@ -695,6 +702,11 @@ export type SupportRequestSumOrderByAggregateInput = {
   timeSpentMinutes?: Prisma.SortOrder
 }
 
+export type SupportRequestScalarRelationFilter = {
+  is?: Prisma.SupportRequestWhereInput
+  isNot?: Prisma.SupportRequestWhereInput
+}
+
 export type SupportRequestCreateNestedManyWithoutClientInput = {
   create?: Prisma.XOR<Prisma.SupportRequestCreateWithoutClientInput, Prisma.SupportRequestUncheckedCreateWithoutClientInput> | Prisma.SupportRequestCreateWithoutClientInput[] | Prisma.SupportRequestUncheckedCreateWithoutClientInput[]
   connectOrCreate?: Prisma.SupportRequestCreateOrConnectWithoutClientInput | Prisma.SupportRequestCreateOrConnectWithoutClientInput[]
@@ -837,6 +849,20 @@ export type EnumSupportCoverageFieldUpdateOperationsInput = {
   set?: $Enums.SupportCoverage
 }
 
+export type SupportRequestCreateNestedOneWithoutWordpressTicketSyncInput = {
+  create?: Prisma.XOR<Prisma.SupportRequestCreateWithoutWordpressTicketSyncInput, Prisma.SupportRequestUncheckedCreateWithoutWordpressTicketSyncInput>
+  connectOrCreate?: Prisma.SupportRequestCreateOrConnectWithoutWordpressTicketSyncInput
+  connect?: Prisma.SupportRequestWhereUniqueInput
+}
+
+export type SupportRequestUpdateOneRequiredWithoutWordpressTicketSyncNestedInput = {
+  create?: Prisma.XOR<Prisma.SupportRequestCreateWithoutWordpressTicketSyncInput, Prisma.SupportRequestUncheckedCreateWithoutWordpressTicketSyncInput>
+  connectOrCreate?: Prisma.SupportRequestCreateOrConnectWithoutWordpressTicketSyncInput
+  upsert?: Prisma.SupportRequestUpsertWithoutWordpressTicketSyncInput
+  connect?: Prisma.SupportRequestWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SupportRequestUpdateToOneWithWhereWithoutWordpressTicketSyncInput, Prisma.SupportRequestUpdateWithoutWordpressTicketSyncInput>, Prisma.SupportRequestUncheckedUpdateWithoutWordpressTicketSyncInput>
+}
+
 export type SupportRequestCreateWithoutClientInput = {
   id?: string
   reference?: string | null
@@ -857,6 +883,7 @@ export type SupportRequestCreateWithoutClientInput = {
   resolvedAt?: Date | string | null
   project?: Prisma.ProjectCreateNestedOneWithoutSupportRequestsInput
   thread?: Prisma.ThreadCreateNestedOneWithoutSupportRequestsInput
+  wordpressTicketSync?: Prisma.WordPressTicketSyncCreateNestedOneWithoutSupportRequestInput
 }
 
 export type SupportRequestUncheckedCreateWithoutClientInput = {
@@ -879,6 +906,7 @@ export type SupportRequestUncheckedCreateWithoutClientInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   resolvedAt?: Date | string | null
+  wordpressTicketSync?: Prisma.WordPressTicketSyncUncheckedCreateNestedOneWithoutSupportRequestInput
 }
 
 export type SupportRequestCreateOrConnectWithoutClientInput = {
@@ -953,6 +981,7 @@ export type SupportRequestCreateWithoutProjectInput = {
   resolvedAt?: Date | string | null
   client?: Prisma.ClientCreateNestedOneWithoutSupportRequestsInput
   thread?: Prisma.ThreadCreateNestedOneWithoutSupportRequestsInput
+  wordpressTicketSync?: Prisma.WordPressTicketSyncCreateNestedOneWithoutSupportRequestInput
 }
 
 export type SupportRequestUncheckedCreateWithoutProjectInput = {
@@ -975,6 +1004,7 @@ export type SupportRequestUncheckedCreateWithoutProjectInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   resolvedAt?: Date | string | null
+  wordpressTicketSync?: Prisma.WordPressTicketSyncUncheckedCreateNestedOneWithoutSupportRequestInput
 }
 
 export type SupportRequestCreateOrConnectWithoutProjectInput = {
@@ -1023,6 +1053,7 @@ export type SupportRequestCreateWithoutThreadInput = {
   resolvedAt?: Date | string | null
   client?: Prisma.ClientCreateNestedOneWithoutSupportRequestsInput
   project?: Prisma.ProjectCreateNestedOneWithoutSupportRequestsInput
+  wordpressTicketSync?: Prisma.WordPressTicketSyncCreateNestedOneWithoutSupportRequestInput
 }
 
 export type SupportRequestUncheckedCreateWithoutThreadInput = {
@@ -1045,6 +1076,7 @@ export type SupportRequestUncheckedCreateWithoutThreadInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   resolvedAt?: Date | string | null
+  wordpressTicketSync?: Prisma.WordPressTicketSyncUncheckedCreateNestedOneWithoutSupportRequestInput
 }
 
 export type SupportRequestCreateOrConnectWithoutThreadInput = {
@@ -1071,6 +1103,114 @@ export type SupportRequestUpdateWithWhereUniqueWithoutThreadInput = {
 export type SupportRequestUpdateManyWithWhereWithoutThreadInput = {
   where: Prisma.SupportRequestScalarWhereInput
   data: Prisma.XOR<Prisma.SupportRequestUpdateManyMutationInput, Prisma.SupportRequestUncheckedUpdateManyWithoutThreadInput>
+}
+
+export type SupportRequestCreateWithoutWordpressTicketSyncInput = {
+  id?: string
+  reference?: string | null
+  requesterName?: string | null
+  requesterEmail?: string | null
+  requesterCompany?: string | null
+  requesterWebsite?: string | null
+  title: string
+  description?: string | null
+  internalNotes?: string | null
+  category?: $Enums.SupportCategory
+  priority?: $Enums.SupportPriority
+  status?: $Enums.SupportStatus
+  coverage?: $Enums.SupportCoverage
+  timeSpentMinutes?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  resolvedAt?: Date | string | null
+  client?: Prisma.ClientCreateNestedOneWithoutSupportRequestsInput
+  project?: Prisma.ProjectCreateNestedOneWithoutSupportRequestsInput
+  thread?: Prisma.ThreadCreateNestedOneWithoutSupportRequestsInput
+}
+
+export type SupportRequestUncheckedCreateWithoutWordpressTicketSyncInput = {
+  id?: string
+  clientId?: string | null
+  projectId?: string | null
+  threadId?: string | null
+  reference?: string | null
+  requesterName?: string | null
+  requesterEmail?: string | null
+  requesterCompany?: string | null
+  requesterWebsite?: string | null
+  title: string
+  description?: string | null
+  internalNotes?: string | null
+  category?: $Enums.SupportCategory
+  priority?: $Enums.SupportPriority
+  status?: $Enums.SupportStatus
+  coverage?: $Enums.SupportCoverage
+  timeSpentMinutes?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  resolvedAt?: Date | string | null
+}
+
+export type SupportRequestCreateOrConnectWithoutWordpressTicketSyncInput = {
+  where: Prisma.SupportRequestWhereUniqueInput
+  create: Prisma.XOR<Prisma.SupportRequestCreateWithoutWordpressTicketSyncInput, Prisma.SupportRequestUncheckedCreateWithoutWordpressTicketSyncInput>
+}
+
+export type SupportRequestUpsertWithoutWordpressTicketSyncInput = {
+  update: Prisma.XOR<Prisma.SupportRequestUpdateWithoutWordpressTicketSyncInput, Prisma.SupportRequestUncheckedUpdateWithoutWordpressTicketSyncInput>
+  create: Prisma.XOR<Prisma.SupportRequestCreateWithoutWordpressTicketSyncInput, Prisma.SupportRequestUncheckedCreateWithoutWordpressTicketSyncInput>
+  where?: Prisma.SupportRequestWhereInput
+}
+
+export type SupportRequestUpdateToOneWithWhereWithoutWordpressTicketSyncInput = {
+  where?: Prisma.SupportRequestWhereInput
+  data: Prisma.XOR<Prisma.SupportRequestUpdateWithoutWordpressTicketSyncInput, Prisma.SupportRequestUncheckedUpdateWithoutWordpressTicketSyncInput>
+}
+
+export type SupportRequestUpdateWithoutWordpressTicketSyncInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterCompany?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.EnumSupportCategoryFieldUpdateOperationsInput | $Enums.SupportCategory
+  priority?: Prisma.EnumSupportPriorityFieldUpdateOperationsInput | $Enums.SupportPriority
+  status?: Prisma.EnumSupportStatusFieldUpdateOperationsInput | $Enums.SupportStatus
+  coverage?: Prisma.EnumSupportCoverageFieldUpdateOperationsInput | $Enums.SupportCoverage
+  timeSpentMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  client?: Prisma.ClientUpdateOneWithoutSupportRequestsNestedInput
+  project?: Prisma.ProjectUpdateOneWithoutSupportRequestsNestedInput
+  thread?: Prisma.ThreadUpdateOneWithoutSupportRequestsNestedInput
+}
+
+export type SupportRequestUncheckedUpdateWithoutWordpressTicketSyncInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  projectId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  threadId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterCompany?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requesterWebsite?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  internalNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.EnumSupportCategoryFieldUpdateOperationsInput | $Enums.SupportCategory
+  priority?: Prisma.EnumSupportPriorityFieldUpdateOperationsInput | $Enums.SupportPriority
+  status?: Prisma.EnumSupportStatusFieldUpdateOperationsInput | $Enums.SupportStatus
+  coverage?: Prisma.EnumSupportCoverageFieldUpdateOperationsInput | $Enums.SupportCoverage
+  timeSpentMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type SupportRequestCreateManyClientInput = {
@@ -1115,6 +1255,7 @@ export type SupportRequestUpdateWithoutClientInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   project?: Prisma.ProjectUpdateOneWithoutSupportRequestsNestedInput
   thread?: Prisma.ThreadUpdateOneWithoutSupportRequestsNestedInput
+  wordpressTicketSync?: Prisma.WordPressTicketSyncUpdateOneWithoutSupportRequestNestedInput
 }
 
 export type SupportRequestUncheckedUpdateWithoutClientInput = {
@@ -1137,6 +1278,7 @@ export type SupportRequestUncheckedUpdateWithoutClientInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  wordpressTicketSync?: Prisma.WordPressTicketSyncUncheckedUpdateOneWithoutSupportRequestNestedInput
 }
 
 export type SupportRequestUncheckedUpdateManyWithoutClientInput = {
@@ -1203,6 +1345,7 @@ export type SupportRequestUpdateWithoutProjectInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   client?: Prisma.ClientUpdateOneWithoutSupportRequestsNestedInput
   thread?: Prisma.ThreadUpdateOneWithoutSupportRequestsNestedInput
+  wordpressTicketSync?: Prisma.WordPressTicketSyncUpdateOneWithoutSupportRequestNestedInput
 }
 
 export type SupportRequestUncheckedUpdateWithoutProjectInput = {
@@ -1225,6 +1368,7 @@ export type SupportRequestUncheckedUpdateWithoutProjectInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  wordpressTicketSync?: Prisma.WordPressTicketSyncUncheckedUpdateOneWithoutSupportRequestNestedInput
 }
 
 export type SupportRequestUncheckedUpdateManyWithoutProjectInput = {
@@ -1291,6 +1435,7 @@ export type SupportRequestUpdateWithoutThreadInput = {
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   client?: Prisma.ClientUpdateOneWithoutSupportRequestsNestedInput
   project?: Prisma.ProjectUpdateOneWithoutSupportRequestsNestedInput
+  wordpressTicketSync?: Prisma.WordPressTicketSyncUpdateOneWithoutSupportRequestNestedInput
 }
 
 export type SupportRequestUncheckedUpdateWithoutThreadInput = {
@@ -1313,6 +1458,7 @@ export type SupportRequestUncheckedUpdateWithoutThreadInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resolvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  wordpressTicketSync?: Prisma.WordPressTicketSyncUncheckedUpdateOneWithoutSupportRequestNestedInput
 }
 
 export type SupportRequestUncheckedUpdateManyWithoutThreadInput = {
@@ -1363,6 +1509,7 @@ export type SupportRequestSelect<ExtArgs extends runtime.Types.Extensions.Intern
   client?: boolean | Prisma.SupportRequest$clientArgs<ExtArgs>
   project?: boolean | Prisma.SupportRequest$projectArgs<ExtArgs>
   thread?: boolean | Prisma.SupportRequest$threadArgs<ExtArgs>
+  wordpressTicketSync?: boolean | Prisma.SupportRequest$wordpressTicketSyncArgs<ExtArgs>
 }, ExtArgs["result"]["supportRequest"]>
 
 export type SupportRequestSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1445,6 +1592,7 @@ export type SupportRequestInclude<ExtArgs extends runtime.Types.Extensions.Inter
   client?: boolean | Prisma.SupportRequest$clientArgs<ExtArgs>
   project?: boolean | Prisma.SupportRequest$projectArgs<ExtArgs>
   thread?: boolean | Prisma.SupportRequest$threadArgs<ExtArgs>
+  wordpressTicketSync?: boolean | Prisma.SupportRequest$wordpressTicketSyncArgs<ExtArgs>
 }
 export type SupportRequestIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   client?: boolean | Prisma.SupportRequest$clientArgs<ExtArgs>
@@ -1463,6 +1611,7 @@ export type $SupportRequestPayload<ExtArgs extends runtime.Types.Extensions.Inte
     client: Prisma.$ClientPayload<ExtArgs> | null
     project: Prisma.$ProjectPayload<ExtArgs> | null
     thread: Prisma.$ThreadPayload<ExtArgs> | null
+    wordpressTicketSync: Prisma.$WordPressTicketSyncPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1882,6 +2031,7 @@ export interface Prisma__SupportRequestClient<T, Null = never, ExtArgs extends r
   client<T extends Prisma.SupportRequest$clientArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SupportRequest$clientArgs<ExtArgs>>): Prisma.Prisma__ClientClient<runtime.Types.Result.GetResult<Prisma.$ClientPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   project<T extends Prisma.SupportRequest$projectArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SupportRequest$projectArgs<ExtArgs>>): Prisma.Prisma__ProjectClient<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   thread<T extends Prisma.SupportRequest$threadArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SupportRequest$threadArgs<ExtArgs>>): Prisma.Prisma__ThreadClient<runtime.Types.Result.GetResult<Prisma.$ThreadPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  wordpressTicketSync<T extends Prisma.SupportRequest$wordpressTicketSyncArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SupportRequest$wordpressTicketSyncArgs<ExtArgs>>): Prisma.Prisma__WordPressTicketSyncClient<runtime.Types.Result.GetResult<Prisma.$WordPressTicketSyncPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2386,6 +2536,25 @@ export type SupportRequest$threadArgs<ExtArgs extends runtime.Types.Extensions.I
    */
   include?: Prisma.ThreadInclude<ExtArgs> | null
   where?: Prisma.ThreadWhereInput
+}
+
+/**
+ * SupportRequest.wordpressTicketSync
+ */
+export type SupportRequest$wordpressTicketSyncArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WordPressTicketSync
+   */
+  select?: Prisma.WordPressTicketSyncSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WordPressTicketSync
+   */
+  omit?: Prisma.WordPressTicketSyncOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WordPressTicketSyncInclude<ExtArgs> | null
+  where?: Prisma.WordPressTicketSyncWhereInput
 }
 
 /**

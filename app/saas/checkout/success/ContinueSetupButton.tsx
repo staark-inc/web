@@ -18,74 +18,49 @@ export default function ContinueSetupButton({
     setError(null);
 
     try {
-      const tokenResponse = await fetch(
-        "/api/saas/setup/claim-token",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
-          body: JSON.stringify({
-            sessionId,
-          }),
-        },
-      );
+      const response =
+        await fetch(
+          "/api/saas/setup/claim-token",
+          {
+            method: "POST",
 
-      const tokenData =
-        await tokenResponse.json();
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+
+            body: JSON.stringify({
+              sessionId,
+            }),
+          },
+        );
+
+      const data =
+        await response.json();
 
       if (
-        !tokenResponse.ok ||
-        !tokenData?.token
+        !response.ok ||
+        !data?.token
       ) {
         throw new Error(
-          tokenData?.error ||
+          data?.error ||
             "Kunde inte starta installationen.",
         );
       }
 
-      const claimResponse = await fetch(
-        "/api/saas/setup/claim",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
-          body: JSON.stringify({
-            token: tokenData.token,
-          }),
-        },
+      const url =
+        new URL(
+          "/saas/setup",
+          window.location.origin,
+        );
+
+      url.searchParams.set(
+        "token",
+        data.token,
       );
 
-      const claimData =
-        await claimResponse.json();
-
-      if (!claimResponse.ok) {
-        throw new Error(
-          claimData?.error ||
-            "Kunde inte skapa webbplatsen.",
-        );
-      }
-
-      if (
-        claimData?.next?.setupCompleted
-      ) {
-        window.location.assign(
-          claimData.next.siteUrl,
-        );
-        return;
-      }
-
-      if (!claimData?.setupUrl) {
-        throw new Error(
-          "Staark Next returnerade ingen setup-länk.",
-        );
-      }
-
       window.location.assign(
-        claimData.setupUrl,
+        url.toString(),
       );
     } catch (err) {
       setError(
@@ -93,6 +68,7 @@ export default function ContinueSetupButton({
           ? err.message
           : "Något gick fel.",
       );
+
       setLoading(false);
     }
   }
@@ -114,7 +90,8 @@ export default function ContinueSetupButton({
         <p
           style={{
             marginTop: 12,
-            color: "var(--v2-danger, #c33)",
+            color:
+              "var(--v2-danger, #c33)",
           }}
         >
           {error}

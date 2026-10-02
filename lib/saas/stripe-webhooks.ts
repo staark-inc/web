@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { getBillingPriceByLookupKey } from "./billing";
 import { resolveEntitlements } from "./entitlements";
 import { ensureProvisioningForSubscription } from "./provisioning";
+import { syncRuntimeSubscription } from "./runtime-subscription-sync";
 import {
   toDbBillingEnvironment,
   toDbBillingInterval,
@@ -397,6 +398,13 @@ export async function syncStripeSubscription(
 
   await ensureProvisioningForSubscription(saved);
   await syncClientEntitlements(billingCustomer.clientId);
+
+  // Runtime mirror may not exist before onboarding.
+  // In that case the endpoint safely returns skipped=true.
+  await syncRuntimeSubscription(
+    saved.stripeSubscriptionId,
+  );
+
   return saved;
 }
 

@@ -23,6 +23,11 @@ export * from './enums';
  */
 export type User = Prisma.UserModel
 /**
+ * Model Notification
+ * 
+ */
+export type Notification = Prisma.NotificationModel
+/**
  * Model Settings
  * 
  */
@@ -38,10 +43,35 @@ export type Contact = Prisma.ContactModel
  */
 export type Lead = Prisma.LeadModel
 /**
+ * Model Prospect
+ * 
+ */
+export type Prospect = Prisma.ProspectModel
+/**
  * Model Client
  * 
  */
 export type Client = Prisma.ClientModel
+/**
+ * Model BillingCustomer
+ * 
+ */
+export type BillingCustomer = Prisma.BillingCustomerModel
+/**
+ * Model BillingSubscription
+ * 
+ */
+export type BillingSubscription = Prisma.BillingSubscriptionModel
+/**
+ * Model SaasProvisioning
+ * 
+ */
+export type SaasProvisioning = Prisma.SaasProvisioningModel
+/**
+ * Model SaasSetupClaim
+ * 
+ */
+export type SaasSetupClaim = Prisma.SaasSetupClaimModel
 /**
  * Model Offer
  * 
@@ -92,3 +122,18 @@ export type MessageAttachment = Prisma.MessageAttachmentModel
  * 
  */
 export type DemoDeployment = Prisma.DemoDeploymentModel
+/**
+ * Model WordPressSite
+ * 
+ */
+export type WordPressSite = Prisma.WordPressSiteModel
+/**
+ * Model WordPressPairingCode
+ * 
+ */
+export type WordPressPairingCode = Prisma.WordPressPairingCodeModel
+/**
+ * Model WordPressTicketSync
+ * 
+ */
+export type WordPressTicketSync = Prisma.WordPressTicketSyncModel

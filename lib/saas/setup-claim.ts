@@ -273,3 +273,98 @@ export async function consumeSetupClaimToken(token: string) {
     };
   });
 }
+
+export async function inspectSetupClaimToken(token: string) {
+  if (
+    !token.startsWith(CLAIM_PREFIX) ||
+    token.length < CLAIM_PREFIX.length + 20
+  ) {
+    throw new Error("Invalid setup claim token.");
+  }
+
+  const tokenHash = hashSetupClaimToken(token);
+
+  const claim = await prisma.saasSetupClaim.findUnique({
+    where: { tokenHash },
+    include: {
+      provisioning: {
+        include: {
+          billingSubscription: true,
+          client: true,
+        },
+      },
+    },
+  });
+
+  if (!claim) {
+    throw new Error("Setup claim token is invalid.");
+  }
+
+  if (claim.revokedAt) {
+    throw new Error("Setup claim token has been revoked.");
+  }
+
+  if (claim.usedAt) {
+    throw new Error("Setup claim token has already been used.");
+  }
+
+  if (claim.expiresAt.getTime() <= Date.now()) {
+    throw new Error("Setup claim token has expired.");
+  }
+
+  if (
+    claim.provisioning.status !== "PENDING_SETUP" &&
+    claim.provisioning.status !== "CLAIMED"
+  ) {
+    throw new Error(
+      `Provisioning cannot be completed from status ${claim.provisioning.status}.`,
+    );
+  }
+
+  if (
+    !shouldProvisionSubscription(
+      claim.provisioning.billingSubscription.status,
+    )
+  ) {
+    throw new Error(
+      "Subscription is not eligible for setup.",
+    );
+  }
+
+  return {
+    claimId: claim.id,
+    provisioningId: claim.provisioningId,
+    clientId: claim.provisioning.clientId,
+    clientName: claim.provisioning.client.name,
+    billingEmail:
+      claim.provisioning.client.billingEmail,
+    planCode: claim.provisioning.planCode,
+    environment: claim.provisioning.environment,
+    expiresAt: claim.expiresAt,
+  };
+}
+
+export async function markSetupClaimTokenUsed(
+  token: string,
+) {
+  const tokenHash =
+    hashSetupClaimToken(token);
+
+  const result =
+    await prisma.saasSetupClaim.updateMany({
+      where: {
+        tokenHash,
+        usedAt: null,
+        revokedAt: null,
+      },
+      data: {
+        usedAt: new Date(),
+      },
+    });
+
+  if (result.count !== 1) {
+    throw new Error(
+      "Setup claim could not be completed.",
+    );
+  }
+}
