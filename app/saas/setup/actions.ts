@@ -8,7 +8,7 @@ import {
 import {
   provisionNextSite,
   type SaaSSetupInput,
-} from "@/lib/saas/next-provisioning";
+} from "@/lib/saas/runtime-provisioning";
 
 const RESERVED = new Set([
   "www",
