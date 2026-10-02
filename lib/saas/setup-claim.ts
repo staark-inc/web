@@ -350,21 +350,54 @@ export async function markSetupClaimTokenUsed(
   const tokenHash =
     hashSetupClaimToken(token);
 
-  const result =
-    await prisma.saasSetupClaim.updateMany({
-      where: {
-        tokenHash,
-        usedAt: null,
-        revokedAt: null,
-      },
-      data: {
-        usedAt: new Date(),
-      },
+  await prisma.$transaction(async (tx) => {
+    const lockKey =
+      `saas-setup-claim-token:${tokenHash}`;
+
+    await tx.$queryRaw<Array<{ acquired: number }>>`
+      SELECT 1::int AS acquired
+      FROM pg_advisory_xact_lock(hashtextextended(${lockKey}, 0))
+    `;
+
+    const claim =
+      await tx.saasSetupClaim.findUnique({
+        where: { tokenHash },
+        include: {
+          provisioning: {
+            select: {
+              id: true,
+              claimedAt: true,
+            },
+          },
+        },
+      });
+
+    if (
+      !claim ||
+      claim.usedAt ||
+      claim.revokedAt
+    ) {
+      throw new Error(
+        "Setup claim could not be completed.",
+      );
+    }
+
+    const now = new Date();
+
+    await tx.saasSetupClaim.update({
+      where: { id: claim.id },
+      data: { usedAt: now },
     });
 
-  if (result.count !== 1) {
-    throw new Error(
-      "Setup claim could not be completed.",
-    );
-  }
+    if (!claim.provisioning.claimedAt) {
+      await tx.saasProvisioning.update({
+        where: {
+          id: claim.provisioningId,
+        },
+        data: {
+          claimedAt: now,
+        },
+      });
+    }
+  });
 }
