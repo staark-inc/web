@@ -3,6 +3,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   output: "standalone",
 
+  deploymentId: process.env.DEPLOYMENT_VERSION || undefined,
+
   allowedDevOrigins: ["192.168.0.10", "dev.staarkinc.com"],
 
   poweredByHeader: false,
