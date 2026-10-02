@@ -396,6 +396,35 @@ export default async function SaaSSubscriptionDetailPage({
                   </p>
 
                   <p>
+                    <strong>Public access</strong>
+                    <span>
+                      {runtimeHealth?.site?.publicAccess === false
+                        ? "Blocked"
+                        : runtimeHealth?.site?.publicAccess === true
+                          ? "Online"
+                          : "—"}
+                    </span>
+                  </p>
+
+                  <p>
+                    <strong>Reserved until</strong>
+                    <span>
+                      {runtimeHealth?.site?.domains?.find(
+                        (domain) => domain.primaryDomain,
+                      )?.releaseAt
+                        ? formatDate(
+                            new Date(
+                              runtimeHealth.site.domains.find(
+                                (domain) => domain.primaryDomain,
+                              )!.releaseAt!,
+                            ),
+                            true,
+                          )
+                        : "—"}
+                    </span>
+                  </p>
+
+                  <p>
                     <strong>Pages</strong>
                     <span>
                       {runtimeHealth?.site?.pageCount ?? "—"}
