@@ -226,13 +226,20 @@ export default async function SaaSSubscriptionDetailPage({
       provisioning?.nextSiteId,
     );
 
+  const claimedAt =
+    provisioning?.claimedAt ??
+    provisioning?.setupClaims.find(
+      (claim) => claim.usedAt instanceof Date,
+    )?.usedAt ??
+    null;
+
   const intervalLabel = subscription.interval === "MONTH" ? "month" : "year";
 
   const lifecycle = [
     { label: "Subscription created", date: subscription.createdAt },
     { label: "Trial started", date: subscription.trialStart },
     { label: "Provisioning requested", date: provisioning?.requestedAt },
-    { label: "Setup claimed", date: provisioning?.claimedAt },
+    { label: "Setup claimed", date: claimedAt },
     { label: "Site activated", date: provisioning?.activatedAt },
     { label: "Current period started", date: subscription.currentPeriodStart },
     { label: "Payment failure detected", date: failure?.firstFailedAt },
@@ -528,7 +535,7 @@ export default async function SaaSSubscriptionDetailPage({
                 <div className="hub-saas-detail-context-list">
                   <p><strong>Status</strong><span>{formatStatus(provisioning.status)}</span></p>
                   <p><strong>Requested</strong><span>{formatDate(provisioning.requestedAt, true)}</span></p>
-                  <p><strong>Claimed</strong><span>{formatDate(provisioning.claimedAt, true)}</span></p>
+                  <p><strong>Claimed</strong><span>{formatDate(claimedAt, true)}</span></p>
                   <p><strong>Activated</strong><span>{formatDate(provisioning.activatedAt, true)}</span></p>
                   <p><strong>Failed</strong><span>{formatDate(provisioning.failedAt, true)}</span></p>
                   <p><strong>Last error</strong><span>{provisioning.lastError ?? "—"}</span></p>
