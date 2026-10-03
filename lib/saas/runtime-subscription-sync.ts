@@ -62,7 +62,6 @@ export async function syncRuntimeSubscription(
         status: true,
         currentPeriodStart: true,
         currentPeriodEnd: true,
-        trialEnd: true,
         cancelAtPeriodEnd: true,
       },
     });
@@ -87,10 +86,6 @@ export async function syncRuntimeSubscription(
 
     currentPeriodEnd:
       subscription.currentPeriodEnd
-        ?.toISOString() ?? null,
-
-    trialEnd:
-      subscription.trialEnd
         ?.toISOString() ?? null,
 
     cancelAtPeriodEnd:

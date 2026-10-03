@@ -2,7 +2,6 @@ import crypto from "node:crypto";
 
 import {
   getBillingPrice,
-  STAARK_TRIAL_DAYS,
   type BillingInterval,
 } from "./billing";
 import type { StaarkPlanCode } from "./plans";
@@ -40,7 +39,6 @@ export type CreatedSaaSCheckoutSession = {
   interval: BillingInterval;
   priceId: string;
   lookupKey: string;
-  trialDays: number;
 };
 
 export function getSaaSCheckoutEnvironment(): SaaSCheckoutEnvironment {
@@ -191,8 +189,8 @@ export async function createSaaSCheckoutSession(input: {
 
   const body = new URLSearchParams();
   body.set("mode", "subscription");
-  // A real payment method is required even during the free trial.
-  // Stripe Checkout uses it for future off-session subscription billing.
+  // A real payment method is required because the subscription starts
+  // immediately and the first invoice is charged during Checkout.
   body.set("payment_method_collection", "always");
   body.append("payment_method_types[]", "card");
 
@@ -204,12 +202,6 @@ export async function createSaaSCheckoutSession(input: {
   body.set("billing_address_collection", "required");
   body.set("tax_id_collection[enabled]", "true");
   body.set("locale", "sv");
-  body.set("subscription_data[trial_period_days]", String(STAARK_TRIAL_DAYS));
-  body.set(
-    "subscription_data[trial_settings][end_behavior][missing_payment_method]",
-    "pause",
-  );
-
   if (process.env.STRIPE_AUTOMATIC_TAX?.trim().toLowerCase() === "true") {
     body.set("automatic_tax[enabled]", "true");
   }
@@ -220,7 +212,6 @@ export async function createSaaSCheckoutSession(input: {
     staark_interval: input.interval,
     staark_lookup_key: expected.lookupKey,
     staark_environment: environment,
-    staark_trial_days: String(STAARK_TRIAL_DAYS),
   } as const;
 
   for (const [key, value] of Object.entries(metadata)) {
@@ -252,6 +243,5 @@ export async function createSaaSCheckoutSession(input: {
     interval: input.interval,
     priceId: stripePrice.id,
     lookupKey: expected.lookupKey,
-    trialDays: STAARK_TRIAL_DAYS,
   };
 }

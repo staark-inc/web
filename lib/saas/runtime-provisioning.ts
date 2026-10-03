@@ -191,10 +191,6 @@ export async function provisionNextSite(
       subscription.currentPeriodEnd
         ?.toISOString() ?? null,
 
-    trialEnd:
-      subscription.trialEnd
-        ?.toISOString() ?? null,
-
     cancelAtPeriodEnd:
       subscription.cancelAtPeriodEnd,
 

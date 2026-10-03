@@ -20,12 +20,11 @@ export default async function SaaSCheckoutSuccessPage({
           <span>STAARK SAAS</span>
 
           <h1>
-            Din provperiod har startat.
+            Din prenumeration är aktiv.
           </h1>
 
           <p>
-            Tack. Din 14-dagars
-            provperiod är registrerad.
+            Tack. Betalningen är registrerad.
             Nästa steg är att konfigurera
             din webbplats.
           </p>
