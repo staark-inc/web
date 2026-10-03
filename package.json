@@ -14,7 +14,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@google-analytics/data": "^7.1.0",

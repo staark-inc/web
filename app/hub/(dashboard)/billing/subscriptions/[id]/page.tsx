@@ -147,8 +147,6 @@ export default async function SaaSSubscriptionDetailPage({
       cancelAtPeriodEnd: true,
       currentPeriodStart: true,
       currentPeriodEnd: true,
-      trialStart: true,
-      trialEnd: true,
       canceledAt: true,
       endedAt: true,
       entitlements: true,
@@ -237,7 +235,6 @@ export default async function SaaSSubscriptionDetailPage({
 
   const lifecycle = [
     { label: "Subscription created", date: subscription.createdAt },
-    { label: "Trial started", date: subscription.trialStart },
     { label: "Provisioning requested", date: provisioning?.requestedAt },
     { label: "Setup claimed", date: claimedAt },
     { label: "Site activated", date: provisioning?.activatedAt },
@@ -304,7 +301,7 @@ export default async function SaaSSubscriptionDetailPage({
         <div>
           <span><CalendarClock size={14} /> Period end</span>
           <strong>{formatDate(subscription.currentPeriodEnd)}</strong>
-          <small>{subscription.trialEnd ? `Trial ${formatDate(subscription.trialEnd)}` : "No active trial"}</small>
+          <small>{subscription.cancelAtPeriodEnd ? "Ends at period end" : "Recurring billing"}</small>
         </div>
         <div>
           <span><ServerCog size={14} /> Provisioning</span>

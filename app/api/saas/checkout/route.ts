@@ -75,7 +75,6 @@ export async function POST(request: Request) {
       environment: session.environment satisfies SaaSCheckoutEnvironment,
       planCode: session.planCode,
       interval: session.interval,
-      trialDays: session.trialDays,
     });
   } catch (error) {
     console.error("[SAAS CHECKOUT] Could not create checkout session:", error);

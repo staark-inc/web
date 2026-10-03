@@ -4,7 +4,6 @@ import { useState } from "react";
 
 import {
   STAARK_BILLING_PRICES,
-  STAARK_TRIAL_DAYS,
   formatBillingAmount,
   type BillingInterval,
 } from "@/lib/saas/billing";
@@ -54,8 +53,8 @@ export default function SaaSPage() {
           <span className="v2-pill">STAARK SAAS</span>
           <h1>En webbplats. Rätt verktyg för varje steg.</h1>
           <p>
-            Alla planer gäller en produktionswebbplats och inkluderar en
-            {` ${STAARK_TRIAL_DAYS}`}-dagars provperiod.
+            Alla planer gäller en produktionswebbplats med hosting,
+            SSL och löpande drift från första dagen.
           </p>
 
           <div className="v2-actions" role="group" aria-label="Billing interval">
@@ -130,7 +129,7 @@ export default function SaaSPage() {
                   disabled={loadingPlan !== null}
                   onClick={() => startCheckout(planCode)}
                 >
-                  {busy ? "Öppnar Stripe..." : `Starta ${STAARK_TRIAL_DAYS} dagar gratis`}
+                  {busy ? "Öppnar Stripe..." : `Välj ${plan.name}`}
                 </button>
               </article>
             );

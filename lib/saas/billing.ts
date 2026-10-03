@@ -13,7 +13,6 @@ export type StaarkBillingPrice = {
   taxBehavior: BillingTaxBehavior;
 };
 
-export const STAARK_TRIAL_DAYS = 14 as const;
 export const STAARK_BILLING_CURRENCY: BillingCurrency = "sek";
 export const STAARK_TAX_BEHAVIOR: BillingTaxBehavior = "exclusive";
 
