@@ -9,7 +9,12 @@ import {
   provisionNextSite,
   type SaaSSetupInput,
 } from "@/lib/saas/runtime-provisioning";
-import { isReservedPlatformSubdomain } from "@/lib/saas/platform-subdomains";
+import {
+  fallbackPlatformHostname,
+  normalizeCustomHostname,
+  normalizeDomainMode,
+  normalizePlatformSubdomain,
+} from "@/lib/saas/domain-choice";
 
 export const runtime = "nodejs";
 
@@ -27,34 +32,6 @@ function email(
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
     value,
   );
-}
-
-function normalizeSubdomain(
-  value: unknown,
-): string {
-  const subdomain =
-    text(value).toLowerCase();
-
-  if (
-    subdomain.length < 3 ||
-    subdomain.length > 63 ||
-    subdomain.includes("--") ||
-    !/^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(
-      subdomain,
-    )
-  ) {
-    throw new Error(
-      "Subdomain must contain 3-63 lowercase letters, numbers or dashes.",
-    );
-  }
-
-  if (isReservedPlatformSubdomain(subdomain)) {
-    throw new Error(
-      "This subdomain is reserved.",
-    );
-  }
-
-  return subdomain;
 }
 
 export async function POST(
@@ -128,10 +105,26 @@ export async function POST(
       );
     }
 
-    const subdomain =
-      normalizeSubdomain(
-        body.subdomain,
+    const domainMode =
+      normalizeDomainMode(
+        body.domainMode,
       );
+
+    const platformHostname =
+      domainMode === "platform"
+        ? `${normalizePlatformSubdomain(
+            body.subdomain,
+          )}.staark.app`
+        : fallbackPlatformHostname(
+            claim.provisioningId,
+          );
+
+    const customHostname =
+      domainMode === "custom"
+        ? normalizeCustomHostname(
+            body.customDomain,
+          )
+        : null;
 
     const websiteType =
       text(body.websiteType) as
@@ -141,14 +134,13 @@ export async function POST(
       text(body.theme) as
         SaaSSetupInput["setup"]["theme"];
 
-    const hostname =
-      `${subdomain}.staark.app`;
-
     const result =
       await provisionNextSite(
         claim.provisioningId,
         {
-          hostname,
+          domainMode,
+          platformHostname,
+          customHostname,
 
           setup: {
             name:
@@ -211,6 +203,15 @@ export async function POST(
 
       hostname:
         result.hostname,
+
+      platformHostname:
+        result.platformHostname,
+
+      customHostname:
+        result.customHostname,
+
+      customDomainPending:
+        result.customDomainPending,
     });
   } catch (error) {
     console.error(
