@@ -16,6 +16,9 @@ export default function SetupForm({
   const [error, setError] =
     useState<string | null>(null);
 
+  const [domainMode, setDomainMode] =
+    useState<"platform" | "custom">("platform");
+
   async function submit(
     event: FormEvent<HTMLFormElement>,
   ) {
@@ -39,8 +42,17 @@ export default function SetupForm({
       phone:
         form.get("phone"),
 
+      domainMode,
+
       subdomain:
-        form.get("subdomain"),
+        domainMode === "platform"
+          ? form.get("subdomain")
+          : null,
+
+      customDomain:
+        domainMode === "custom"
+          ? form.get("customDomain")
+          : null,
 
       websiteType:
         form.get("websiteType"),
@@ -165,28 +177,74 @@ export default function SetupForm({
             />
           </label>
 
-          <label className="saas-setup-field saas-setup-field-wide">
+          <div className="saas-setup-field saas-setup-field-wide">
             <span>Webbadress</span>
 
-            <div className="saas-domain-input">
-              <input
-                name="subdomain"
-                placeholder="mittforetag"
-                minLength={3}
-                maxLength={63}
-                required
-              />
+            <div className="saas-domain-choice" role="radiogroup" aria-label="Webbadress">
+              <label className={domainMode === "platform" ? "is-selected" : ""}>
+                <input
+                  type="radio"
+                  name="domainMode"
+                  value="platform"
+                  checked={domainMode === "platform"}
+                  onChange={() => setDomainMode("platform")}
+                />
+                <div>
+                  <strong>Staark-adress</strong>
+                  <span>Snabbast att komma igång. SSL och routing är klara direkt.</span>
+                </div>
+              </label>
 
-              <strong>
-                .staark.app
-              </strong>
+              <label className={domainMode === "custom" ? "is-selected" : ""}>
+                <input
+                  type="radio"
+                  name="domainMode"
+                  value="custom"
+                  checked={domainMode === "custom"}
+                  onChange={() => setDomainMode("custom")}
+                />
+                <div>
+                  <strong>Jag har en egen domän</strong>
+                  <span>Vi skapar webbplatsen direkt och hjälper dig koppla DNS.</span>
+                </div>
+              </label>
             </div>
 
-            <small>
-              Du kan koppla en egen domän
-              senare.
-            </small>
-          </label>
+            {domainMode === "platform" ? (
+              <>
+                <div className="saas-domain-input">
+                  <input
+                    name="subdomain"
+                    placeholder="mittforetag"
+                    minLength={3}
+                    maxLength={63}
+                    required
+                  />
+
+                  <strong>.staark.app</strong>
+                </div>
+
+                <small>
+                  Exempel: mittforetag.staark.app
+                </small>
+              </>
+            ) : (
+              <>
+                <input
+                  name="customDomain"
+                  placeholder="mittforetag.se"
+                  inputMode="url"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  required
+                />
+
+                <small>
+                  Skriv bara domännamnet. Vi skapar även en teknisk Staark-adress som fallback tills DNS är verifierad.
+                </small>
+              </>
+            )}
+          </div>
 
           <label className="saas-setup-field">
             <span>Typ av webbplats</span>
