@@ -3,7 +3,9 @@ import crypto from "node:crypto";
 import { prisma } from "@/lib/prisma";
 
 export type SaaSSetupInput = {
-  hostname: string;
+  domainMode: "platform" | "custom";
+  platformHostname: string;
+  customHostname?: string | null;
 
   setup: {
     name: string;
@@ -58,6 +60,9 @@ type NextProvisioningResponse = {
 
   domainType?: string;
   domainVerified?: boolean;
+  platformHostname?: string;
+  customHostname?: string | null;
+  customDomainPending?: boolean;
   setupCompleted?: boolean;
 };
 
@@ -194,10 +199,19 @@ export async function provisionNextSite(
       subscription.cancelAtPeriodEnd,
 
     hostname:
-      input.hostname,
+      input.platformHostname,
 
     domainType:
       "platform" as const,
+
+    domainMode:
+      input.domainMode,
+
+    platformHostname:
+      input.platformHostname,
+
+    customHostname:
+      input.customHostname ?? null,
 
     setup:
       input.setup,
@@ -349,6 +363,20 @@ export async function provisionNextSite(
 
     hostname:
       data.hostname,
+
+    platformHostname:
+      data.platformHostname ??
+      input.platformHostname,
+
+    customHostname:
+      data.customHostname ??
+      input.customHostname ??
+      null,
+
+    customDomainPending:
+      Boolean(
+        data.customDomainPending,
+      ),
 
     siteUrl:
       data.siteUrl,
