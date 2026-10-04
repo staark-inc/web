@@ -15,7 +15,8 @@
     "start": "next start",
     "lint": "eslint",
     "postinstall": "prisma generate",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:news": "node --experimental-strip-types --test test/news-*.test.ts"
   },
   "dependencies": {
     "@google-analytics/data": "^7.1.0",
@@ -32,7 +33,10 @@
     "nodemailer": "^10.0.1",
     "pg": "^8.23.0",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
+    "sharp": "^0.35.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

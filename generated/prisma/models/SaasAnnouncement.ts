@@ -29,6 +29,11 @@ export type SaasAnnouncementMinAggregateOutputType = {
   title: string | null
   summary: string | null
   body: string | null
+  bodyFormat: string | null
+  ctaLabel: string | null
+  ctaUrl: string | null
+  coverImageUrl: string | null
+  pinned: boolean | null
   kind: string | null
   audiencePlan: $Enums.StaarkPlanCode | null
   published: boolean | null
@@ -42,6 +47,11 @@ export type SaasAnnouncementMaxAggregateOutputType = {
   title: string | null
   summary: string | null
   body: string | null
+  bodyFormat: string | null
+  ctaLabel: string | null
+  ctaUrl: string | null
+  coverImageUrl: string | null
+  pinned: boolean | null
   kind: string | null
   audiencePlan: $Enums.StaarkPlanCode | null
   published: boolean | null
@@ -55,6 +65,11 @@ export type SaasAnnouncementCountAggregateOutputType = {
   title: number
   summary: number
   body: number
+  bodyFormat: number
+  ctaLabel: number
+  ctaUrl: number
+  coverImageUrl: number
+  pinned: number
   kind: number
   audiencePlan: number
   published: number
@@ -70,6 +85,11 @@ export type SaasAnnouncementMinAggregateInputType = {
   title?: true
   summary?: true
   body?: true
+  bodyFormat?: true
+  ctaLabel?: true
+  ctaUrl?: true
+  coverImageUrl?: true
+  pinned?: true
   kind?: true
   audiencePlan?: true
   published?: true
@@ -83,6 +103,11 @@ export type SaasAnnouncementMaxAggregateInputType = {
   title?: true
   summary?: true
   body?: true
+  bodyFormat?: true
+  ctaLabel?: true
+  ctaUrl?: true
+  coverImageUrl?: true
+  pinned?: true
   kind?: true
   audiencePlan?: true
   published?: true
@@ -96,6 +121,11 @@ export type SaasAnnouncementCountAggregateInputType = {
   title?: true
   summary?: true
   body?: true
+  bodyFormat?: true
+  ctaLabel?: true
+  ctaUrl?: true
+  coverImageUrl?: true
+  pinned?: true
   kind?: true
   audiencePlan?: true
   published?: true
@@ -182,6 +212,11 @@ export type SaasAnnouncementGroupByOutputType = {
   title: string
   summary: string
   body: string
+  bodyFormat: string
+  ctaLabel: string | null
+  ctaUrl: string | null
+  coverImageUrl: string | null
+  pinned: boolean
   kind: string
   audiencePlan: $Enums.StaarkPlanCode | null
   published: boolean
@@ -216,6 +251,11 @@ export type SaasAnnouncementWhereInput = {
   title?: Prisma.StringFilter<"SaasAnnouncement"> | string
   summary?: Prisma.StringFilter<"SaasAnnouncement"> | string
   body?: Prisma.StringFilter<"SaasAnnouncement"> | string
+  bodyFormat?: Prisma.StringFilter<"SaasAnnouncement"> | string
+  ctaLabel?: Prisma.StringNullableFilter<"SaasAnnouncement"> | string | null
+  ctaUrl?: Prisma.StringNullableFilter<"SaasAnnouncement"> | string | null
+  coverImageUrl?: Prisma.StringNullableFilter<"SaasAnnouncement"> | string | null
+  pinned?: Prisma.BoolFilter<"SaasAnnouncement"> | boolean
   kind?: Prisma.StringFilter<"SaasAnnouncement"> | string
   audiencePlan?: Prisma.EnumStaarkPlanCodeNullableFilter<"SaasAnnouncement"> | $Enums.StaarkPlanCode | null
   published?: Prisma.BoolFilter<"SaasAnnouncement"> | boolean
@@ -229,6 +269,11 @@ export type SaasAnnouncementOrderByWithRelationInput = {
   title?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   body?: Prisma.SortOrder
+  bodyFormat?: Prisma.SortOrder
+  ctaLabel?: Prisma.SortOrderInput | Prisma.SortOrder
+  ctaUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  coverImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  pinned?: Prisma.SortOrder
   kind?: Prisma.SortOrder
   audiencePlan?: Prisma.SortOrderInput | Prisma.SortOrder
   published?: Prisma.SortOrder
@@ -245,6 +290,11 @@ export type SaasAnnouncementWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"SaasAnnouncement"> | string
   summary?: Prisma.StringFilter<"SaasAnnouncement"> | string
   body?: Prisma.StringFilter<"SaasAnnouncement"> | string
+  bodyFormat?: Prisma.StringFilter<"SaasAnnouncement"> | string
+  ctaLabel?: Prisma.StringNullableFilter<"SaasAnnouncement"> | string | null
+  ctaUrl?: Prisma.StringNullableFilter<"SaasAnnouncement"> | string | null
+  coverImageUrl?: Prisma.StringNullableFilter<"SaasAnnouncement"> | string | null
+  pinned?: Prisma.BoolFilter<"SaasAnnouncement"> | boolean
   kind?: Prisma.StringFilter<"SaasAnnouncement"> | string
   audiencePlan?: Prisma.EnumStaarkPlanCodeNullableFilter<"SaasAnnouncement"> | $Enums.StaarkPlanCode | null
   published?: Prisma.BoolFilter<"SaasAnnouncement"> | boolean
@@ -258,6 +308,11 @@ export type SaasAnnouncementOrderByWithAggregationInput = {
   title?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   body?: Prisma.SortOrder
+  bodyFormat?: Prisma.SortOrder
+  ctaLabel?: Prisma.SortOrderInput | Prisma.SortOrder
+  ctaUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  coverImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  pinned?: Prisma.SortOrder
   kind?: Prisma.SortOrder
   audiencePlan?: Prisma.SortOrderInput | Prisma.SortOrder
   published?: Prisma.SortOrder
@@ -277,6 +332,11 @@ export type SaasAnnouncementScalarWhereWithAggregatesInput = {
   title?: Prisma.StringWithAggregatesFilter<"SaasAnnouncement"> | string
   summary?: Prisma.StringWithAggregatesFilter<"SaasAnnouncement"> | string
   body?: Prisma.StringWithAggregatesFilter<"SaasAnnouncement"> | string
+  bodyFormat?: Prisma.StringWithAggregatesFilter<"SaasAnnouncement"> | string
+  ctaLabel?: Prisma.StringNullableWithAggregatesFilter<"SaasAnnouncement"> | string | null
+  ctaUrl?: Prisma.StringNullableWithAggregatesFilter<"SaasAnnouncement"> | string | null
+  coverImageUrl?: Prisma.StringNullableWithAggregatesFilter<"SaasAnnouncement"> | string | null
+  pinned?: Prisma.BoolWithAggregatesFilter<"SaasAnnouncement"> | boolean
   kind?: Prisma.StringWithAggregatesFilter<"SaasAnnouncement"> | string
   audiencePlan?: Prisma.EnumStaarkPlanCodeNullableWithAggregatesFilter<"SaasAnnouncement"> | $Enums.StaarkPlanCode | null
   published?: Prisma.BoolWithAggregatesFilter<"SaasAnnouncement"> | boolean
@@ -290,6 +350,11 @@ export type SaasAnnouncementCreateInput = {
   title: string
   summary: string
   body: string
+  bodyFormat?: string
+  ctaLabel?: string | null
+  ctaUrl?: string | null
+  coverImageUrl?: string | null
+  pinned?: boolean
   kind?: string
   audiencePlan?: $Enums.StaarkPlanCode | null
   published?: boolean
@@ -303,6 +368,11 @@ export type SaasAnnouncementUncheckedCreateInput = {
   title: string
   summary: string
   body: string
+  bodyFormat?: string
+  ctaLabel?: string | null
+  ctaUrl?: string | null
+  coverImageUrl?: string | null
+  pinned?: boolean
   kind?: string
   audiencePlan?: $Enums.StaarkPlanCode | null
   published?: boolean
@@ -316,6 +386,11 @@ export type SaasAnnouncementUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.StringFieldUpdateOperationsInput | string
+  bodyFormat?: Prisma.StringFieldUpdateOperationsInput | string
+  ctaLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ctaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   kind?: Prisma.StringFieldUpdateOperationsInput | string
   audiencePlan?: Prisma.NullableEnumStaarkPlanCodeFieldUpdateOperationsInput | $Enums.StaarkPlanCode | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -329,6 +404,11 @@ export type SaasAnnouncementUncheckedUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.StringFieldUpdateOperationsInput | string
+  bodyFormat?: Prisma.StringFieldUpdateOperationsInput | string
+  ctaLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ctaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   kind?: Prisma.StringFieldUpdateOperationsInput | string
   audiencePlan?: Prisma.NullableEnumStaarkPlanCodeFieldUpdateOperationsInput | $Enums.StaarkPlanCode | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -342,6 +422,11 @@ export type SaasAnnouncementCreateManyInput = {
   title: string
   summary: string
   body: string
+  bodyFormat?: string
+  ctaLabel?: string | null
+  ctaUrl?: string | null
+  coverImageUrl?: string | null
+  pinned?: boolean
   kind?: string
   audiencePlan?: $Enums.StaarkPlanCode | null
   published?: boolean
@@ -355,6 +440,11 @@ export type SaasAnnouncementUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.StringFieldUpdateOperationsInput | string
+  bodyFormat?: Prisma.StringFieldUpdateOperationsInput | string
+  ctaLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ctaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   kind?: Prisma.StringFieldUpdateOperationsInput | string
   audiencePlan?: Prisma.NullableEnumStaarkPlanCodeFieldUpdateOperationsInput | $Enums.StaarkPlanCode | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -368,6 +458,11 @@ export type SaasAnnouncementUncheckedUpdateManyInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   summary?: Prisma.StringFieldUpdateOperationsInput | string
   body?: Prisma.StringFieldUpdateOperationsInput | string
+  bodyFormat?: Prisma.StringFieldUpdateOperationsInput | string
+  ctaLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ctaUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   kind?: Prisma.StringFieldUpdateOperationsInput | string
   audiencePlan?: Prisma.NullableEnumStaarkPlanCodeFieldUpdateOperationsInput | $Enums.StaarkPlanCode | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -381,6 +476,11 @@ export type SaasAnnouncementCountOrderByAggregateInput = {
   title?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   body?: Prisma.SortOrder
+  bodyFormat?: Prisma.SortOrder
+  ctaLabel?: Prisma.SortOrder
+  ctaUrl?: Prisma.SortOrder
+  coverImageUrl?: Prisma.SortOrder
+  pinned?: Prisma.SortOrder
   kind?: Prisma.SortOrder
   audiencePlan?: Prisma.SortOrder
   published?: Prisma.SortOrder
@@ -394,6 +494,11 @@ export type SaasAnnouncementMaxOrderByAggregateInput = {
   title?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   body?: Prisma.SortOrder
+  bodyFormat?: Prisma.SortOrder
+  ctaLabel?: Prisma.SortOrder
+  ctaUrl?: Prisma.SortOrder
+  coverImageUrl?: Prisma.SortOrder
+  pinned?: Prisma.SortOrder
   kind?: Prisma.SortOrder
   audiencePlan?: Prisma.SortOrder
   published?: Prisma.SortOrder
@@ -407,6 +512,11 @@ export type SaasAnnouncementMinOrderByAggregateInput = {
   title?: Prisma.SortOrder
   summary?: Prisma.SortOrder
   body?: Prisma.SortOrder
+  bodyFormat?: Prisma.SortOrder
+  ctaLabel?: Prisma.SortOrder
+  ctaUrl?: Prisma.SortOrder
+  coverImageUrl?: Prisma.SortOrder
+  pinned?: Prisma.SortOrder
   kind?: Prisma.SortOrder
   audiencePlan?: Prisma.SortOrder
   published?: Prisma.SortOrder
@@ -422,6 +532,11 @@ export type SaasAnnouncementSelect<ExtArgs extends runtime.Types.Extensions.Inte
   title?: boolean
   summary?: boolean
   body?: boolean
+  bodyFormat?: boolean
+  ctaLabel?: boolean
+  ctaUrl?: boolean
+  coverImageUrl?: boolean
+  pinned?: boolean
   kind?: boolean
   audiencePlan?: boolean
   published?: boolean
@@ -435,6 +550,11 @@ export type SaasAnnouncementSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   title?: boolean
   summary?: boolean
   body?: boolean
+  bodyFormat?: boolean
+  ctaLabel?: boolean
+  ctaUrl?: boolean
+  coverImageUrl?: boolean
+  pinned?: boolean
   kind?: boolean
   audiencePlan?: boolean
   published?: boolean
@@ -448,6 +568,11 @@ export type SaasAnnouncementSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   title?: boolean
   summary?: boolean
   body?: boolean
+  bodyFormat?: boolean
+  ctaLabel?: boolean
+  ctaUrl?: boolean
+  coverImageUrl?: boolean
+  pinned?: boolean
   kind?: boolean
   audiencePlan?: boolean
   published?: boolean
@@ -461,6 +586,11 @@ export type SaasAnnouncementSelectScalar = {
   title?: boolean
   summary?: boolean
   body?: boolean
+  bodyFormat?: boolean
+  ctaLabel?: boolean
+  ctaUrl?: boolean
+  coverImageUrl?: boolean
+  pinned?: boolean
   kind?: boolean
   audiencePlan?: boolean
   published?: boolean
@@ -469,7 +599,7 @@ export type SaasAnnouncementSelectScalar = {
   updatedAt?: boolean
 }
 
-export type SaasAnnouncementOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "summary" | "body" | "kind" | "audiencePlan" | "published" | "publishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["saasAnnouncement"]>
+export type SaasAnnouncementOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "summary" | "body" | "bodyFormat" | "ctaLabel" | "ctaUrl" | "coverImageUrl" | "pinned" | "kind" | "audiencePlan" | "published" | "publishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["saasAnnouncement"]>
 
 export type $SaasAnnouncementPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "SaasAnnouncement"
@@ -479,6 +609,11 @@ export type $SaasAnnouncementPayload<ExtArgs extends runtime.Types.Extensions.In
     title: string
     summary: string
     body: string
+    bodyFormat: string
+    ctaLabel: string | null
+    ctaUrl: string | null
+    coverImageUrl: string | null
+    pinned: boolean
     kind: string
     audiencePlan: $Enums.StaarkPlanCode | null
     published: boolean
@@ -912,6 +1047,11 @@ export interface SaasAnnouncementFieldRefs {
   readonly title: Prisma.FieldRef<"SaasAnnouncement", 'String'>
   readonly summary: Prisma.FieldRef<"SaasAnnouncement", 'String'>
   readonly body: Prisma.FieldRef<"SaasAnnouncement", 'String'>
+  readonly bodyFormat: Prisma.FieldRef<"SaasAnnouncement", 'String'>
+  readonly ctaLabel: Prisma.FieldRef<"SaasAnnouncement", 'String'>
+  readonly ctaUrl: Prisma.FieldRef<"SaasAnnouncement", 'String'>
+  readonly coverImageUrl: Prisma.FieldRef<"SaasAnnouncement", 'String'>
+  readonly pinned: Prisma.FieldRef<"SaasAnnouncement", 'Boolean'>
   readonly kind: Prisma.FieldRef<"SaasAnnouncement", 'String'>
   readonly audiencePlan: Prisma.FieldRef<"SaasAnnouncement", 'StaarkPlanCode'>
   readonly published: Prisma.FieldRef<"SaasAnnouncement", 'Boolean'>

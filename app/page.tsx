@@ -174,6 +174,11 @@ export default function Page() {
         </div>
       </section>
 
+      <section className="home-platform-intro" aria-label="Staark Platform">
+        <div><span className="home-platform-badge">Nyhet</span><strong>Staark Platform</strong><p>Din webbplats, dina förfrågningar och rätt verktyg för att växa – på ett ställe.</p></div>
+        <Link href="/saas">Upptäck plattformen <ArrowRight size={17} /></Link>
+      </section>
+
       {/* =====================================================
           QUICK TRUST
       ===================================================== */}

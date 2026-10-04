@@ -263,6 +263,7 @@ export async function POST(
           },
 
           orderBy: [
+            { pinned: "desc" },
             {
               publishedAt:
                 "desc",
@@ -288,6 +289,11 @@ export async function POST(
 
             body:
               true,
+            bodyFormat: true,
+            ctaLabel: true,
+            ctaUrl: true,
+            coverImageUrl: true,
+            pinned: true,
 
             kind:
               true,

@@ -426,6 +426,11 @@ model SaasAnnouncement {
   title        String
   summary      String
   body         String
+  bodyFormat   String        @default("plain")
+  ctaLabel     String?
+  ctaUrl       String?
+  coverImageUrl String?
+  pinned       Boolean       @default(false)
   kind         String        @default("announcement")
   audiencePlan StaarkPlanCode?
   published    Boolean       @default(false)
@@ -747,4 +752,11 @@ model WordPressTicketSync {
   @@unique([wordpressSiteId, localId])
   @@index([wordpressSiteId])
   @@index([createdAt])
+}
+model SaasAnnouncementAsset {
+  id        String   @id @default(cuid())
+  data      Bytes
+  width     Int
+  height    Int
+  createdAt DateTime @default(now())
 }

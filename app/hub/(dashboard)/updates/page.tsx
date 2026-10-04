@@ -1,3 +1,5 @@
+import NewsAction from "@/components/news/NewsAction";
+import { NEWS_KINDS } from "@/lib/news-policy";
 import Link from "next/link";
 import {
   BellRing,
@@ -24,6 +26,8 @@ type SearchParams =
   Promise<{
     state?: string;
     status?: string;
+    q?: string;
+    kind?: string;
   }>;
 
 function formatDate(
@@ -65,6 +69,8 @@ function audienceLabel(
 function kindLabel(
   value: string,
 ) {
+  if (value === "fix") return "Fix";
+  if (value === "improvement") return "Improvement";
   if (value === "feature") {
     return "Feature";
   }
@@ -133,6 +139,9 @@ export default async function UpdatesPage({
       ? (params.status as Filter)
       : "ALL";
 
+  const query = (params.q ?? "").trim().slice(0, 140);
+  const selectedKind = NEWS_KINDS.includes(params.kind as typeof NEWS_KINDS[number]) ? params.kind : "";
+
   const allUpdates =
     await prisma
       .saasAnnouncement
@@ -162,6 +171,8 @@ export default async function UpdatesPage({
   const updates =
     allUpdates.filter(
       (update) => {
+        if (query && !`${update.title} ${update.summary}`.toLowerCase().includes(query.toLowerCase())) return false;
+        if (selectedKind && update.kind !== selectedKind) return false;
         if (
           active ===
           "PUBLISHED"
@@ -204,7 +215,7 @@ export default async function UpdatesPage({
       <header className="hub-workspace-head">
         <div>
           <span className="hub-workspace-kicker">
-            SAAS / COMMUNICATION
+            PLATFORM / COMMUNICATION
           </span>
 
           <h1>
@@ -216,13 +227,13 @@ export default async function UpdatesPage({
           </p>
         </div>
 
-        <a
-          href="#new-update"
+        <Link
+          href="/hub/updates/new"
           className="hub-workspace-primary-action"
         >
           <Plus size={15} />
           New update
-        </a>
+        </Link>
       </header>
 
       <section
@@ -323,159 +334,12 @@ export default async function UpdatesPage({
         </div>
       ) : null}
 
-      <section
-        id="new-update"
-        className="hub-updates-compose"
-      >
-        <details
-          open={
-            allUpdates.length ===
-            0
-          }
-        >
-          <summary>
-            <div>
-              <strong>
-                Create an update
-              </strong>
-
-              <span>
-                Draft first, publish when ready.
-              </span>
-            </div>
-
-            <span className="hub-updates-compose-toggle">
-              <Plus size={14} />
-              New update
-            </span>
-          </summary>
-
-          <div className="hub-updates-compose-body">
-            <form
-              action="/api/hub/updates"
-              method="post"
-              className="hub-updates-form"
-            >
-              <input
-                type="hidden"
-                name="action"
-                value="save"
-              />
-
-              <div className="hub-updates-form-grid hub-updates-form-grid-wide">
-                <label>
-                  <span>
-                    Title
-                  </span>
-
-                  <input
-                    name="title"
-                    required
-                    maxLength={140}
-                    placeholder="New analytics dashboard"
-                  />
-                </label>
-
-                <label>
-                  <span>
-                    Audience
-                  </span>
-
-                  <select
-                    name="audiencePlan"
-                    defaultValue=""
-                  >
-                    <option value="">
-                      All plans
-                    </option>
-
-                    <option value="STARTER">
-                      Starter
-                    </option>
-
-                    <option value="SAAS">
-                      Growth
-                    </option>
-
-                    <option value="BUSINESS">
-                      Business
-                    </option>
-                  </select>
-                </label>
-              </div>
-
-              <div className="hub-updates-form-grid hub-updates-form-grid-type">
-                <label>
-                  <span>
-                    Type
-                  </span>
-
-                  <select
-                    name="kind"
-                    defaultValue="feature"
-                  >
-                    <option value="feature">
-                      Feature
-                    </option>
-
-                    <option value="announcement">
-                      Announcement
-                    </option>
-
-                    <option value="maintenance">
-                      Maintenance
-                    </option>
-
-                    <option value="security">
-                      Security
-                    </option>
-                  </select>
-                </label>
-
-                <label>
-                  <span>
-                    Short summary
-                  </span>
-
-                  <input
-                    name="summary"
-                    required
-                    maxLength={240}
-                    placeholder="Short text shown on the tenant dashboard."
-                  />
-                </label>
-              </div>
-
-              <label>
-                <span>
-                  Full update
-                </span>
-
-                <textarea
-                  name="body"
-                  required
-                  rows={5}
-                  maxLength={6000}
-                  placeholder="Explain what changed and what the customer needs to know."
-                />
-              </label>
-
-              <div className="hub-updates-form-actions">
-                <small>
-                  Updates stay private until published.
-                </small>
-
-                <button
-                  type="submit"
-                  className="hub-updates-primary-button"
-                >
-                  Save draft
-                </button>
-              </div>
-            </form>
-          </div>
-        </details>
-      </section>
+      <form className="news-search" method="get">
+        <input type="hidden" name="status" value={active} />
+        <label><span>Search updates</span><input name="q" defaultValue={query} placeholder="Title or summary…" /></label>
+        <label><span>Type</span><select name="kind" defaultValue={selectedKind}><option value="">All types</option>{NEWS_KINDS.map(kind => <option key={kind} value={kind}>{kindLabel(kind)}</option>)}</select></label>
+        <button className="hub-updates-primary-button">Filter</button>
+      </form>
 
       <nav
         className="hub-workspace-filters"
@@ -485,12 +349,7 @@ export default async function UpdatesPage({
           (value) => (
             <Link
               key={value}
-              href={
-                value ===
-                "ALL"
-                  ? "/hub/updates"
-                  : `/hub/updates?status=${value}`
-              }
+              href={`/hub/updates?${new URLSearchParams({ status: value, q: query, kind: selectedKind ?? "" })}`}
               className={
                 active === value
                   ? "hub-workspace-filter-active"
@@ -565,7 +424,7 @@ export default async function UpdatesPage({
                   <div>
                     <div className="hub-updates-title-line">
                       <strong>
-                        {update.title}
+                        {update.pinned ? "📌 " : ""}{update.title}
                       </strong>
 
                       <span
@@ -622,214 +481,9 @@ export default async function UpdatesPage({
                 </div>
 
                 <div className="hub-updates-row-actions">
-                  <details className="hub-updates-edit">
-                    <summary>
-                      Edit
-                    </summary>
-
-                    <div className="hub-updates-edit-panel">
-                      <div className="hub-updates-edit-head">
-                        <div>
-                          <small>
-                            EDIT UPDATE
-                          </small>
-
-                          <strong>
-                            {update.title}
-                          </strong>
-                        </div>
-                      </div>
-
-                      <form
-                        action="/api/hub/updates"
-                        method="post"
-                        className="hub-updates-form"
-                      >
-                        <input
-                          type="hidden"
-                          name="action"
-                          value="save"
-                        />
-
-                        <input
-                          type="hidden"
-                          name="id"
-                          value={update.id}
-                        />
-
-                        <div className="hub-updates-form-grid">
-                          <label>
-                            <span>
-                              Title
-                            </span>
-
-                            <input
-                              name="title"
-                              required
-                              defaultValue={
-                                update.title
-                              }
-                            />
-                          </label>
-
-                          <label>
-                            <span>
-                              Audience
-                            </span>
-
-                            <select
-                              name="audiencePlan"
-                              defaultValue={
-                                update.audiencePlan ??
-                                ""
-                              }
-                            >
-                              <option value="">
-                                All plans
-                              </option>
-
-                              <option value="STARTER">
-                                Starter
-                              </option>
-
-                              <option value="SAAS">
-                                Growth
-                              </option>
-
-                              <option value="BUSINESS">
-                                Business
-                              </option>
-                            </select>
-                          </label>
-                        </div>
-
-                        <div className="hub-updates-form-grid">
-                          <label>
-                            <span>
-                              Type
-                            </span>
-
-                            <select
-                              name="kind"
-                              defaultValue={
-                                update.kind
-                              }
-                            >
-                              <option value="feature">
-                                Feature
-                              </option>
-
-                              <option value="announcement">
-                                Announcement
-                              </option>
-
-                              <option value="maintenance">
-                                Maintenance
-                              </option>
-
-                              <option value="security">
-                                Security
-                              </option>
-                            </select>
-                          </label>
-
-                          <label>
-                            <span>
-                              Summary
-                            </span>
-
-                            <input
-                              name="summary"
-                              required
-                              defaultValue={
-                                update.summary
-                              }
-                            />
-                          </label>
-                        </div>
-
-                        <label>
-                          <span>
-                            Full update
-                          </span>
-
-                          <textarea
-                            name="body"
-                            required
-                            rows={6}
-                            defaultValue={
-                              update.body
-                            }
-                          />
-                        </label>
-
-                        <div className="hub-updates-form-actions">
-                          <span />
-
-                          <button
-                            type="submit"
-                            className="hub-updates-primary-button"
-                          >
-                            Save changes
-                          </button>
-                        </div>
-                      </form>
-                    </div>
-                  </details>
-
-                  <form
-                    action="/api/hub/updates"
-                    method="post"
-                  >
-                    <input
-                      type="hidden"
-                      name="action"
-                      value="toggle"
-                    />
-
-                    <input
-                      type="hidden"
-                      name="id"
-                      value={update.id}
-                    />
-
-                    <button
-                      type="submit"
-                      className={
-                        update.published
-                          ? "hub-updates-button hub-updates-button-unpublish"
-                          : "hub-updates-button hub-updates-button-publish"
-                      }
-                    >
-                      {update.published
-                        ? "Unpublish"
-                        : "Publish"}
-                    </button>
-                  </form>
-
-                  <form
-                    action="/api/hub/updates"
-                    method="post"
-                  >
-                    <input
-                      type="hidden"
-                      name="action"
-                      value="delete"
-                    />
-
-                    <input
-                      type="hidden"
-                      name="id"
-                      value={update.id}
-                    />
-
-                    <button
-                      type="submit"
-                      className="hub-updates-delete"
-                    >
-                      Delete
-                    </button>
-                  </form>
+                  <Link className="hub-updates-button" href={`/hub/updates/${update.id}`}>Edit & preview</Link>
+                  <NewsAction id={update.id} title={update.title} action={update.published ? "unpublish" : "publish"} />
+                  <NewsAction id={update.id} title={update.title} action="delete" />
                 </div>
               </article>
             ),
