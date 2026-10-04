@@ -50,7 +50,7 @@ export default function SaaSPage() {
     <main className="v2-page">
       <section className="v2-hero">
         <div className="v2-hero-copy">
-          <span className="v2-pill">STAARK SAAS</span>
+          <span className="v2-pill">STAARK PLATFORM</span>
           <h1>En webbplats. Rätt verktyg för varje steg.</h1>
           <p>
             Alla planer gäller en produktionswebbplats med hosting,

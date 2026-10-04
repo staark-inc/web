@@ -1,296 +1,126 @@
 import { NextResponse } from "next/server";
-
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-
+import { NewsInputError, parseNewsInput } from "@/lib/news-policy";
+import {
+  newsPublicOrigin,
+  newsSameOrigin,
+  readNewsBody,
+} from "@/lib/news-request";
 export const runtime = "nodejs";
 
-function field(
-  form: FormData,
-  name: string,
-): string {
-  const value =
-    form.get(name);
-
-  return typeof value === "string"
-    ? value.trim()
-    : "";
-}
-
-function redirect(
-  request: Request,
-  state: string,
-) {
-  const forwardedHost =
-    request.headers
-      .get("x-forwarded-host")
-      ?.split(",")[0]
-      ?.trim() ||
-    request.headers
-      .get("host")
-      ?.split(",")[0]
-      ?.trim();
-
-  if (!forwardedHost) {
-    throw new Error(
-      "Could not determine public Hub host.",
-    );
-  }
-
-  const forwardedProto =
-    request.headers
-      .get("x-forwarded-proto")
-      ?.split(",")[0]
-      ?.trim()
-      .toLowerCase();
-
-  const protocol =
-    process.env.NODE_ENV === "production"
-      ? "https"
-      : forwardedProto === "https" ||
-          forwardedProto === "http"
-        ? forwardedProto
-        : "http";
-
-  const url =
-    new URL(
-      `/hub/updates?state=${encodeURIComponent(
-        state,
-      )}`,
-      `${protocol}://${forwardedHost}`,
-    );
-
-  return NextResponse.redirect(
-    url,
-    303,
-  );
-}
-
-export async function POST(
-  request: Request,
-) {
-  const session =
-    await getSession();
-
-  if (
-    !session ||
-    session.role !== "ADMIN"
-  ) {
-    return NextResponse.json(
-      {
-        error:
-          "Unauthorized",
-      },
-      {
-        status: 401,
-      },
-    );
-  }
-
+export async function POST(request: Request) {
+  const session = await getSession();
+  if (!session || session.role !== "ADMIN")
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!newsSameOrigin(request))
+    return NextResponse.json({ error: "Invalid origin." }, { status: 403 });
+  const wantsJson = request.headers.get("accept")?.includes("application/json");
+  const result = (
+    state: string,
+    data: Record<string, unknown> = {},
+    status = 200,
+  ) =>
+    wantsJson
+      ? NextResponse.json({ ok: status < 400, ...data }, { status })
+      : NextResponse.redirect(
+          new URL(
+            `/hub/updates?state=${encodeURIComponent(state)}`,
+            newsPublicOrigin(request),
+          ),
+          303,
+        );
   try {
-    const form =
-      await request.formData();
-
-    const action =
-      field(
-        form,
-        "action",
-      ) || "save";
-
-    const id =
-      field(
-        form,
-        "id",
-      );
-
-    if (
-      action === "delete"
-    ) {
-      if (!id) {
-        throw new Error(
-          "Announcement id is required.",
-        );
+    const bytes = await readNewsBody(request, 128 * 1024);
+    const form = await new Response(Buffer.from(bytes), {
+      headers: { "content-type": request.headers.get("content-type") || "" },
+    }).formData();
+    const text = (key: string) =>
+      typeof form.get(key) === "string" ? String(form.get(key)).trim() : "";
+    const action = text("action") || "save",
+      id = text("id");
+    if (!["save", "delete", "publish", "unpublish", "toggle"].includes(action))
+      throw new NewsInputError("Invalid action.");
+    if (action !== "save") {
+      if (!id) throw new NewsInputError("Announcement id is required.");
+      if (action === "delete") {
+        await prisma.saasAnnouncement.delete({ where: { id } });
+        return result("deleted");
       }
-
-      await prisma
-        .saasAnnouncement
-        .delete({
-          where: {
-            id,
-          },
-        });
-
-      return redirect(
-        request,
-        "deleted",
-      );
-    }
-
-    if (
-      action === "toggle"
-    ) {
-      if (!id) {
-        throw new Error(
-          "Announcement id is required.",
-        );
-      }
-
-      const current =
-        await prisma
-          .saasAnnouncement
-          .findUnique({
-            where: {
-              id,
-            },
-
-            select: {
-              published:
-                true,
-            },
-          });
-
-      if (!current) {
-        throw new Error(
-          "Announcement was not found.",
-        );
-      }
-
+      const current = await prisma.saasAnnouncement.findUnique({
+        where: { id },
+      });
+      if (!current) throw new NewsInputError("Announcement was not found.");
       const published =
-        !current.published;
-
-      await prisma
-        .saasAnnouncement
-        .update({
-          where: {
-            id,
-          },
-
-          data: {
-            published,
-
-            publishedAt:
-              published
-                ? new Date()
-                : null,
-          },
-        });
-
-      return redirect(
-        request,
-        published
-          ? "published"
-          : "unpublished",
-      );
-    }
-
-    const title =
-      field(
-        form,
-        "title",
-      );
-
-    const summary =
-      field(
-        form,
-        "summary",
-      );
-
-    const body =
-      field(
-        form,
-        "body",
-      );
-
-    const kind =
-      field(
-        form,
-        "kind",
-      ) ||
-      "announcement";
-
-    const audienceRaw =
-      field(
-        form,
-        "audiencePlan",
-      );
-
-    const audiencePlan =
-      audienceRaw === "STARTER" ||
-      audienceRaw === "SAAS" ||
-      audienceRaw === "BUSINESS"
-        ? audienceRaw
-        : null;
-
-    if (!title) {
-      throw new Error(
-        "Title is required.",
-      );
-    }
-
-    if (!summary) {
-      throw new Error(
-        "Summary is required.",
-      );
-    }
-
-    if (!body) {
-      throw new Error(
-        "Body is required.",
-      );
-    }
-
-    if (id) {
-      await prisma
-        .saasAnnouncement
-        .update({
-          where: {
-            id,
-          },
-
-          data: {
-            title,
-            summary,
-            body,
-            kind,
-            audiencePlan,
-          },
-        });
-
-      return redirect(
-        request,
-        "saved",
-      );
-    }
-
-    await prisma
-      .saasAnnouncement
-      .create({
+        action === "toggle" ? !current.published : action === "publish";
+      const changed = await prisma.saasAnnouncement.updateMany({
+        where: { id, updatedAt: current.updatedAt },
         data: {
-          title,
-          summary,
-          body,
-          kind,
-          audiencePlan,
-          published:
-            false,
+          published,
+          publishedAt: published ? (current.publishedAt ?? new Date()) : null,
         },
       });
-
-    return redirect(
-      request,
-      "created",
-    );
+      if (!changed.count)
+        return result(
+          "error:Update changed. Reload and try again.",
+          { error: "Update changed. Reload and try again." },
+          409,
+        );
+      return result(published ? "published" : "unpublished");
+    }
+    const parsed = parseNewsInput(form);
+    const data = {
+      ...parsed,
+      audiencePlan: parsed.audiencePlan as
+        | "STARTER"
+        | "SAAS"
+        | "BUSINESS"
+        | null,
+    };
+    if (id) {
+      const expected = text("updatedAt");
+      const version = new Date(expected);
+      if (!expected || Number.isNaN(version.getTime()))
+        throw new NewsInputError("Reload the editor before saving.");
+      const saved = await prisma.$transaction(async (tx) => {
+        const changed = await tx.saasAnnouncement.updateMany({
+          where: { id, updatedAt: version },
+          data,
+        });
+        if (!changed.count) return null;
+        return tx.saasAnnouncement.findUniqueOrThrow({
+          where: { id },
+          select: { id: true, updatedAt: true },
+        });
+      });
+      if (!saved)
+        return result(
+          "error:Another session changed this update. Reload before saving.",
+          {
+            error:
+              "Another session changed this update. Your text is kept here; copy it before reloading.",
+          },
+          409,
+        );
+      return result("saved", {
+        id: saved.id,
+        updatedAt: saved.updatedAt.toISOString(),
+      });
+    }
+    const saved = await prisma.saasAnnouncement.create({
+      data: { ...data, published: false },
+      select: { id: true, updatedAt: true },
+    });
+    return result("created", {
+      id: saved.id,
+      updatedAt: saved.updatedAt.toISOString(),
+    });
   } catch (error) {
-    console.error(
-      "[HUB UPDATES]",
-      error,
-    );
-
-    return redirect(
-      request,
-      error instanceof Error
-        ? `error:${error.message}`
-        : "error",
-    );
+    console.error("[HUB UPDATES]", error);
+    const message =
+      error instanceof NewsInputError
+        ? error.message
+        : "The update could not be saved.";
+    return result(`error:${message}`, { error: message }, 400);
   }
 }

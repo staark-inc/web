@@ -421,7 +421,8 @@ export const ModelName = {
   DemoDeployment: 'DemoDeployment',
   WordPressSite: 'WordPressSite',
   WordPressPairingCode: 'WordPressPairingCode',
-  WordPressTicketSync: 'WordPressTicketSync'
+  WordPressTicketSync: 'WordPressTicketSync',
+  SaasAnnouncementAsset: 'SaasAnnouncementAsset'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -437,7 +438,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "notification" | "settings" | "contact" | "lead" | "prospect" | "client" | "billingCustomer" | "billingSubscription" | "saasProvisioning" | "saasSetupClaim" | "saasAnnouncement" | "offer" | "project" | "projectMaterial" | "projectActivity" | "projectTask" | "thread" | "supportRequest" | "message" | "messageAttachment" | "demoDeployment" | "wordPressSite" | "wordPressPairingCode" | "wordPressTicketSync"
+    modelProps: "user" | "notification" | "settings" | "contact" | "lead" | "prospect" | "client" | "billingCustomer" | "billingSubscription" | "saasProvisioning" | "saasSetupClaim" | "saasAnnouncement" | "offer" | "project" | "projectMaterial" | "projectActivity" | "projectTask" | "thread" | "supportRequest" | "message" | "messageAttachment" | "demoDeployment" | "wordPressSite" | "wordPressPairingCode" | "wordPressTicketSync" | "saasAnnouncementAsset"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2291,6 +2292,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    SaasAnnouncementAsset: {
+      payload: Prisma.$SaasAnnouncementAssetPayload<ExtArgs>
+      fields: Prisma.SaasAnnouncementAssetFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SaasAnnouncementAssetFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaasAnnouncementAssetPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SaasAnnouncementAssetFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaasAnnouncementAssetPayload>
+        }
+        findFirst: {
+          args: Prisma.SaasAnnouncementAssetFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaasAnnouncementAssetPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SaasAnnouncementAssetFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaasAnnouncementAssetPayload>
+        }
+        findMany: {
+          args: Prisma.SaasAnnouncementAssetFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaasAnnouncementAssetPayload>[]
+        }
+        create: {
+          args: Prisma.SaasAnnouncementAssetCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaasAnnouncementAssetPayload>
+        }
+        createMany: {
+          args: Prisma.SaasAnnouncementAssetCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SaasAnnouncementAssetCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaasAnnouncementAssetPayload>[]
+        }
+        delete: {
+          args: Prisma.SaasAnnouncementAssetDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaasAnnouncementAssetPayload>
+        }
+        update: {
+          args: Prisma.SaasAnnouncementAssetUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaasAnnouncementAssetPayload>
+        }
+        deleteMany: {
+          args: Prisma.SaasAnnouncementAssetDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SaasAnnouncementAssetUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SaasAnnouncementAssetUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaasAnnouncementAssetPayload>[]
+        }
+        upsert: {
+          args: Prisma.SaasAnnouncementAssetUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaasAnnouncementAssetPayload>
+        }
+        aggregate: {
+          args: Prisma.SaasAnnouncementAssetAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSaasAnnouncementAsset>
+        }
+        groupBy: {
+          args: Prisma.SaasAnnouncementAssetGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SaasAnnouncementAssetGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SaasAnnouncementAssetCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SaasAnnouncementAssetCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2554,6 +2629,11 @@ export const SaasAnnouncementScalarFieldEnum = {
   title: 'title',
   summary: 'summary',
   body: 'body',
+  bodyFormat: 'bodyFormat',
+  ctaLabel: 'ctaLabel',
+  ctaUrl: 'ctaUrl',
+  coverImageUrl: 'coverImageUrl',
+  pinned: 'pinned',
   kind: 'kind',
   audiencePlan: 'audiencePlan',
   published: 'published',
@@ -2785,6 +2865,17 @@ export const WordPressTicketSyncScalarFieldEnum = {
 } as const
 
 export type WordPressTicketSyncScalarFieldEnum = (typeof WordPressTicketSyncScalarFieldEnum)[keyof typeof WordPressTicketSyncScalarFieldEnum]
+
+
+export const SaasAnnouncementAssetScalarFieldEnum = {
+  id: 'id',
+  data: 'data',
+  width: 'width',
+  height: 'height',
+  createdAt: 'createdAt'
+} as const
+
+export type SaasAnnouncementAssetScalarFieldEnum = (typeof SaasAnnouncementAssetScalarFieldEnum)[keyof typeof SaasAnnouncementAssetScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -3359,6 +3450,7 @@ export type GlobalOmitConfig = {
   wordPressSite?: Prisma.WordPressSiteOmit
   wordPressPairingCode?: Prisma.WordPressPairingCodeOmit
   wordPressTicketSync?: Prisma.WordPressTicketSyncOmit
+  saasAnnouncementAsset?: Prisma.SaasAnnouncementAssetOmit
 }
 
 /* Types for Logging */

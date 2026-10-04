@@ -75,7 +75,8 @@ export const ModelName = {
   DemoDeployment: 'DemoDeployment',
   WordPressSite: 'WordPressSite',
   WordPressPairingCode: 'WordPressPairingCode',
-  WordPressTicketSync: 'WordPressTicketSync'
+  WordPressTicketSync: 'WordPressTicketSync',
+  SaasAnnouncementAsset: 'SaasAnnouncementAsset'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -318,6 +319,11 @@ export const SaasAnnouncementScalarFieldEnum = {
   title: 'title',
   summary: 'summary',
   body: 'body',
+  bodyFormat: 'bodyFormat',
+  ctaLabel: 'ctaLabel',
+  ctaUrl: 'ctaUrl',
+  coverImageUrl: 'coverImageUrl',
+  pinned: 'pinned',
   kind: 'kind',
   audiencePlan: 'audiencePlan',
   published: 'published',
@@ -549,6 +555,17 @@ export const WordPressTicketSyncScalarFieldEnum = {
 } as const
 
 export type WordPressTicketSyncScalarFieldEnum = (typeof WordPressTicketSyncScalarFieldEnum)[keyof typeof WordPressTicketSyncScalarFieldEnum]
+
+
+export const SaasAnnouncementAssetScalarFieldEnum = {
+  id: 'id',
+  data: 'data',
+  width: 'width',
+  height: 'height',
+  createdAt: 'createdAt'
+} as const
+
+export type SaasAnnouncementAssetScalarFieldEnum = (typeof SaasAnnouncementAssetScalarFieldEnum)[keyof typeof SaasAnnouncementAssetScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -142,3 +142,8 @@ export type WordPressPairingCode = Prisma.WordPressPairingCodeModel
  *
  */
 export type WordPressTicketSync = Prisma.WordPressTicketSyncModel
+/**
+ * Model SaasAnnouncementAsset
+ *
+ */
+export type SaasAnnouncementAsset = Prisma.SaasAnnouncementAssetModel

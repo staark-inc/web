@@ -21,7 +21,8 @@ const navigation = [
     href: "/tjanster",
   },
   {
-    label: "SaaS",
+    label: "Staark Platform",
+    badge: "Nyhet",
     href: "/saas",
   },
   {
@@ -90,6 +91,7 @@ export default function SiteHeader() {
             onClick={() => setMenuOpen(false)}
           >
             {item.label}
+            {"badge" in item && item.badge ? <span className="v2-nav-new">{item.badge}</span> : null}
           </Link>
         ))}
 
