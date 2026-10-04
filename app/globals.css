@@ -3666,3 +3666,64 @@ footer {
     flex-direction: column;
   }
 }
+
+/* SaaS subscription recovery operations */
+.hub-saas-ops {
+  display: grid;
+  gap: 8px;
+}
+
+.hub-saas-ops__buttons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.hub-saas-ops__buttons button {
+  cursor: pointer;
+}
+
+.hub-saas-ops__buttons button:disabled {
+  cursor: wait;
+  opacity: .6;
+}
+
+.hub-saas-ops__result {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 9px;
+  font-size: 12px;
+}
+
+.hub-saas-ops__result-success {
+  color: #15803d;
+}
+
+.hub-saas-ops__result-error {
+  color: #b91c1c;
+}
+
+.hub-saas-ops__result a {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+@media (max-width: 760px) {
+  .hub-saas-ops,
+  .hub-saas-ops__buttons {
+    width: 100%;
+  }
+
+  .hub-saas-ops__buttons {
+    justify-content: flex-start;
+  }
+
+  .hub-saas-ops__result {
+    justify-content: flex-start;
+  }
+}

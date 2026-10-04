@@ -133,6 +133,10 @@ export async function syncRuntimeSubscription(
       | {
           ok?: boolean;
           error?: string;
+          skipped?: boolean;
+          reason?: string;
+          publicAccess?: boolean;
+          status?: string;
         }
       | null;
 
@@ -145,4 +149,15 @@ export async function syncRuntimeSubscription(
         `Runtime returned HTTP ${response.status}.`,
     );
   }
+
+  return {
+    ok: true as const,
+    skipped: data.skipped === true,
+    reason: data.reason ?? null,
+    publicAccess:
+      typeof data.publicAccess === "boolean"
+        ? data.publicAccess
+        : null,
+    status: data.status ?? null,
+  };
 }

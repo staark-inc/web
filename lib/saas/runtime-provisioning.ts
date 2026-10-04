@@ -270,6 +270,12 @@ export async function provisionNextSite(
       },
 
       data: {
+        status:
+          "FAILED",
+
+        failedAt:
+          new Date(),
+
         lastError:
           message,
       },

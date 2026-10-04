@@ -401,3 +401,187 @@ export async function markSetupClaimTokenUsed(
     }
   });
 }
+
+/**
+ * Create a fresh setup claim from the internal Hub.
+ *
+ * This intentionally does not replay the previous setup payload because
+ * owner passwords and other sensitive setup data are not persisted.
+ * Instead, an authenticated Hub operator gets a new one-time setup link.
+ */
+export async function createAdminSetupClaim(
+  provisioningId: string,
+) {
+  const provisioning =
+    await prisma.saasProvisioning.findUnique({
+      where: {
+        id: provisioningId,
+      },
+
+      include: {
+        billingSubscription: true,
+      },
+    });
+
+  if (!provisioning) {
+    throw new Error(
+      "SaaS provisioning was not found.",
+    );
+  }
+
+  if (
+    provisioning.status === "ACTIVE"
+  ) {
+    throw new Error(
+      "Provisioning is already active.",
+    );
+  }
+
+  if (
+    provisioning.status !== "PENDING_SETUP" &&
+    provisioning.status !== "CLAIMED" &&
+    provisioning.status !== "FAILED"
+  ) {
+    throw new Error(
+      `Provisioning cannot be retried from status ${provisioning.status}.`,
+    );
+  }
+
+  if (
+    !shouldProvisionSubscription(
+      provisioning.billingSubscription.status,
+    )
+  ) {
+    throw new Error(
+      "Subscription is not eligible for provisioning.",
+    );
+  }
+
+  const token =
+    generateSetupClaimToken();
+
+  const tokenHash =
+    hashSetupClaimToken(token);
+
+  const expiresAt =
+    new Date(
+      Date.now() +
+        SAAS_SETUP_CLAIM_TTL_MINUTES *
+          60 *
+          1000,
+    );
+
+  const claim =
+    await prisma.$transaction(
+      async (tx) => {
+        const lockKey =
+          `saas-admin-setup-retry:${provisioning.id}`;
+
+        await tx.$queryRaw<
+          Array<{ acquired: number }>
+        >`
+          SELECT 1::int AS acquired
+          FROM pg_advisory_xact_lock(
+            hashtextextended(${lockKey}, 0)
+          )
+        `;
+
+        const fresh =
+          await tx.saasProvisioning.findUnique({
+            where: {
+              id: provisioning.id,
+            },
+
+            include: {
+              billingSubscription: true,
+            },
+          });
+
+        if (!fresh) {
+          throw new Error(
+            "SaaS provisioning was not found.",
+          );
+        }
+
+        if (
+          fresh.status === "ACTIVE"
+        ) {
+          throw new Error(
+            "Provisioning is already active.",
+          );
+        }
+
+        if (
+          !shouldProvisionSubscription(
+            fresh.billingSubscription.status,
+          )
+        ) {
+          throw new Error(
+            "Subscription is no longer eligible for provisioning.",
+          );
+        }
+
+        await tx.saasSetupClaim.updateMany({
+          where: {
+            provisioningId:
+              fresh.id,
+
+            usedAt:
+              null,
+
+            revokedAt:
+              null,
+          },
+
+          data: {
+            revokedAt:
+              new Date(),
+          },
+        });
+
+        await tx.saasProvisioning.update({
+          where: {
+            id:
+              fresh.id,
+          },
+
+          data: {
+            status:
+              "PENDING_SETUP",
+
+            failedAt:
+              null,
+
+            lastError:
+              null,
+
+            nextSetupExpiresAt:
+              expiresAt,
+          },
+        });
+
+        return tx.saasSetupClaim.create({
+          data: {
+            provisioningId:
+              fresh.id,
+
+            tokenHash,
+            hint:
+              token.slice(-6),
+
+            expiresAt,
+          },
+        });
+      },
+    );
+
+  return {
+    token,
+    expiresAt:
+      claim.expiresAt,
+
+    provisioningId:
+      provisioning.id,
+  };
+}
+

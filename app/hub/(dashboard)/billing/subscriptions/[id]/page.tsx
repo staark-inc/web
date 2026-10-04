@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import SubscriptionOpsActions from "./SubscriptionOpsActions";
 
 export const dynamic = "force-dynamic";
 
@@ -271,6 +272,18 @@ export default async function SaaSSubscriptionDetailPage({
         </div>
 
         <div className="hub-saas-detail-head-actions">
+          <SubscriptionOpsActions
+            subscriptionId={subscription.id}
+            canRetryProvisioning={
+              subscription.provisioning?.status !== "ACTIVE" &&
+              (
+                subscription.status === "TRIALING" ||
+                subscription.status === "ACTIVE" ||
+                subscription.status === "PAST_DUE" ||
+                subscription.status === "CANCELING"
+              )
+            }
+          />
           <Link href={`/hub/clients/${subscription.client.id}`} className="hub-secondary-button">
             <Building2 size={14} />
             Client
