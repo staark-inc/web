@@ -1,28 +1,29 @@
 import type { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 
-import type { BillingSubscriptionStatusValue } from "./subscriptions";
-
-const ACCESS_STATUSES: BillingSubscriptionStatusValue[] = [
-  "TRIALING",
-  "ACTIVE",
-  "PAST_DUE",
-  "CANCELING",
-];
+import {
+  hasServiceAccess,
+  type BillingSubscriptionStatusValue,
+} from "./subscriptions";
 
 export async function syncClientEntitlements(clientId: string) {
   const subscriptions = await prisma.billingSubscription.findMany({
     where: {
       clientId,
-      status: { in: ACCESS_STATUSES },
     },
     orderBy: { updatedAt: "desc" },
   });
 
-  const live = subscriptions.find(
+  const accessible = subscriptions.filter((subscription) =>
+    hasServiceAccess(
+      subscription.status as BillingSubscriptionStatusValue,
+    ),
+  );
+
+  const live = accessible.find(
     (subscription) => subscription.environment === "LIVE",
   );
-  const selected = live ?? subscriptions[0] ?? null;
+  const selected = live ?? accessible[0] ?? null;
 
   if (!selected) {
     await prisma.client.update({

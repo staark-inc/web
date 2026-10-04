@@ -43,10 +43,84 @@ export function createSubscriptionSnapshot(
   };
 }
 
-export function hasServiceAccess(status: BillingSubscriptionStatusValue): boolean {
-  return status === "TRIALING" || status === "ACTIVE" || status === "PAST_DUE" || status === "CANCELING";
+export type SubscriptionAccessPolicy = {
+  serviceAccess: boolean;
+  billingWarning: boolean;
+  suspended: boolean;
+  terminal: boolean;
+};
+
+export function getSubscriptionAccessPolicy(
+  status: BillingSubscriptionStatusValue,
+): SubscriptionAccessPolicy {
+  switch (status) {
+    case "TRIALING":
+    case "ACTIVE":
+    case "CANCELING":
+      return {
+        serviceAccess: true,
+        billingWarning: false,
+        suspended: false,
+        terminal: false,
+      };
+
+    case "PAST_DUE":
+      return {
+        serviceAccess: true,
+        billingWarning: true,
+        suspended: false,
+        terminal: false,
+      };
+
+    case "SUSPENDED":
+    case "UNPAID":
+    case "PAUSED":
+      return {
+        serviceAccess: false,
+        billingWarning: true,
+        suspended: true,
+        terminal: false,
+      };
+
+    case "INCOMPLETE":
+      return {
+        serviceAccess: false,
+        billingWarning: true,
+        suspended: false,
+        terminal: false,
+      };
+
+    case "CANCELED":
+    case "INCOMPLETE_EXPIRED":
+      return {
+        serviceAccess: false,
+        billingWarning: false,
+        suspended: true,
+        terminal: true,
+      };
+  }
 }
 
-export function isTerminalSubscriptionStatus(status: BillingSubscriptionStatusValue): boolean {
-  return status === "CANCELED" || status === "INCOMPLETE_EXPIRED";
+export function hasServiceAccess(
+  status: BillingSubscriptionStatusValue,
+): boolean {
+  return getSubscriptionAccessPolicy(status).serviceAccess;
+}
+
+export function hasBillingWarning(
+  status: BillingSubscriptionStatusValue,
+): boolean {
+  return getSubscriptionAccessPolicy(status).billingWarning;
+}
+
+export function isSuspendedSubscriptionStatus(
+  status: BillingSubscriptionStatusValue,
+): boolean {
+  return getSubscriptionAccessPolicy(status).suspended;
+}
+
+export function isTerminalSubscriptionStatus(
+  status: BillingSubscriptionStatusValue,
+): boolean {
+  return getSubscriptionAccessPolicy(status).terminal;
 }

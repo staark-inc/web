@@ -8,6 +8,7 @@ import { resolveEntitlements } from "./entitlements";
 import { ensureProvisioningForSubscription } from "./provisioning";
 import { syncRuntimeSubscription } from "./runtime-subscription-sync";
 import {
+  hasServiceAccess,
   toDbBillingEnvironment,
   toDbBillingInterval,
   type BillingSubscriptionStatusValue,
@@ -59,13 +60,6 @@ type StripeSubscription = {
   metadata?: Record<string, string> | null;
   items?: { data?: StripeSubscriptionItem[] } | null;
 };
-
-const ACCESS_STATUSES: BillingSubscriptionStatusValue[] = [
-  "TRIALING",
-  "ACTIVE",
-  "PAST_DUE",
-  "CANCELING",
-];
 
 function getStripeSecretKey(environment: StripeWebhookEnvironment): string {
   const secret =
@@ -271,15 +265,20 @@ async function syncClientEntitlements(clientId: string) {
   const subscriptions = await prisma.billingSubscription.findMany({
     where: {
       clientId,
-      status: { in: ACCESS_STATUSES },
     },
     orderBy: { updatedAt: "desc" },
   });
 
-  const live = subscriptions.find(
+  const accessible = subscriptions.filter((subscription) =>
+    hasServiceAccess(
+      subscription.status as BillingSubscriptionStatusValue,
+    ),
+  );
+
+  const live = accessible.find(
     (subscription) => subscription.environment === "LIVE",
   );
-  const selected = live ?? subscriptions[0] ?? null;
+  const selected = live ?? accessible[0] ?? null;
 
   if (!selected) {
     await prisma.client.update({

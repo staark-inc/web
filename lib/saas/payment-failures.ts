@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { syncClientEntitlements } from "./access-sync";
 import { syncRuntimeSubscription } from "./runtime-subscription-sync";
 import {
+  hasServiceAccess,
   toDbBillingEnvironment,
   type BillingSubscriptionStatusValue,
 } from "./subscriptions";
@@ -134,11 +135,8 @@ export async function afterStripePaymentWebhook(
   if (!state) return;
 
   if (state.suspendedAt) {
-    await prisma.billingSubscription.update({
-      where: { id: subscription.id },
-      data: { status: "SUSPENDED" },
-    });
-    await syncClientEntitlements(subscription.clientId);
+    // A paid invoice after suspension must be handled by the
+    // dedicated reactivation flow. Never write SUSPENDED again here.
     return;
   }
 
@@ -146,6 +144,9 @@ export async function afterStripePaymentWebhook(
     DELETE FROM "SaasPaymentFailureState"
     WHERE "billingSubscriptionId" = ${subscription.id}
   `;
+
+  await syncClientEntitlements(subscription.clientId);
+  await syncRuntimeSubscription(stripeSubscriptionId);
 }
 
 type DueSuspensionRow = {
@@ -287,11 +288,8 @@ export async function processDueSaaSSuspensions(now = new Date()) {
   };
 }
 
-export function hasBillingAccessStatus(status: BillingSubscriptionStatusValue) {
-  return (
-    status === "TRIALING" ||
-    status === "ACTIVE" ||
-    status === "PAST_DUE" ||
-    status === "CANCELING"
-  );
+export function hasBillingAccessStatus(
+  status: BillingSubscriptionStatusValue,
+) {
+  return hasServiceAccess(status);
 }
