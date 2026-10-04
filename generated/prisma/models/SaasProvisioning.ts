@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums"
-import type * as Prisma from "../internal/prismaNamespace"
+import type * as $Enums from "../enums.ts"
+import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
  * Model SaasProvisioning
@@ -20,8 +20,18 @@ export type SaasProvisioningModel = runtime.Types.Result.DefaultSelection<Prisma
 
 export type AggregateSaasProvisioning = {
   _count: SaasProvisioningCountAggregateOutputType | null
+  _avg: SaasProvisioningAvgAggregateOutputType | null
+  _sum: SaasProvisioningSumAggregateOutputType | null
   _min: SaasProvisioningMinAggregateOutputType | null
   _max: SaasProvisioningMaxAggregateOutputType | null
+}
+
+export type SaasProvisioningAvgAggregateOutputType = {
+  runtimeProvisionVersion: number | null
+}
+
+export type SaasProvisioningSumAggregateOutputType = {
+  runtimeProvisionVersion: bigint | null
 }
 
 export type SaasProvisioningMinAggregateOutputType = {
@@ -39,6 +49,7 @@ export type SaasProvisioningMinAggregateOutputType = {
   nextSiteUrl: string | null
   nextProvisionedAt: Date | null
   nextSetupExpiresAt: Date | null
+  runtimeProvisionVersion: bigint | null
   requestedAt: Date | null
   claimedAt: Date | null
   activatedAt: Date | null
@@ -63,6 +74,7 @@ export type SaasProvisioningMaxAggregateOutputType = {
   nextSiteUrl: string | null
   nextProvisionedAt: Date | null
   nextSetupExpiresAt: Date | null
+  runtimeProvisionVersion: bigint | null
   requestedAt: Date | null
   claimedAt: Date | null
   activatedAt: Date | null
@@ -88,6 +100,7 @@ export type SaasProvisioningCountAggregateOutputType = {
   nextSiteUrl: number
   nextProvisionedAt: number
   nextSetupExpiresAt: number
+  runtimeProvisionVersion: number
   requestedAt: number
   claimedAt: number
   activatedAt: number
@@ -98,6 +111,14 @@ export type SaasProvisioningCountAggregateOutputType = {
   _all: number
 }
 
+
+export type SaasProvisioningAvgAggregateInputType = {
+  runtimeProvisionVersion?: true
+}
+
+export type SaasProvisioningSumAggregateInputType = {
+  runtimeProvisionVersion?: true
+}
 
 export type SaasProvisioningMinAggregateInputType = {
   id?: true
@@ -114,6 +135,7 @@ export type SaasProvisioningMinAggregateInputType = {
   nextSiteUrl?: true
   nextProvisionedAt?: true
   nextSetupExpiresAt?: true
+  runtimeProvisionVersion?: true
   requestedAt?: true
   claimedAt?: true
   activatedAt?: true
@@ -138,6 +160,7 @@ export type SaasProvisioningMaxAggregateInputType = {
   nextSiteUrl?: true
   nextProvisionedAt?: true
   nextSetupExpiresAt?: true
+  runtimeProvisionVersion?: true
   requestedAt?: true
   claimedAt?: true
   activatedAt?: true
@@ -163,6 +186,7 @@ export type SaasProvisioningCountAggregateInputType = {
   nextSiteUrl?: true
   nextProvisionedAt?: true
   nextSetupExpiresAt?: true
+  runtimeProvisionVersion?: true
   requestedAt?: true
   claimedAt?: true
   activatedAt?: true
@@ -211,6 +235,18 @@ export type SaasProvisioningAggregateArgs<ExtArgs extends runtime.Types.Extensio
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: SaasProvisioningAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: SaasProvisioningSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: SaasProvisioningMinAggregateInputType
@@ -241,6 +277,8 @@ export type SaasProvisioningGroupByArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   _count?: SaasProvisioningCountAggregateInputType | true
+  _avg?: SaasProvisioningAvgAggregateInputType
+  _sum?: SaasProvisioningSumAggregateInputType
   _min?: SaasProvisioningMinAggregateInputType
   _max?: SaasProvisioningMaxAggregateInputType
 }
@@ -261,6 +299,7 @@ export type SaasProvisioningGroupByOutputType = {
   nextSiteUrl: string | null
   nextProvisionedAt: Date | null
   nextSetupExpiresAt: Date | null
+  runtimeProvisionVersion: bigint
   requestedAt: Date
   claimedAt: Date | null
   activatedAt: Date | null
@@ -269,6 +308,8 @@ export type SaasProvisioningGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   _count: SaasProvisioningCountAggregateOutputType | null
+  _avg: SaasProvisioningAvgAggregateOutputType | null
+  _sum: SaasProvisioningSumAggregateOutputType | null
   _min: SaasProvisioningMinAggregateOutputType | null
   _max: SaasProvisioningMaxAggregateOutputType | null
 }
@@ -307,6 +348,7 @@ export type SaasProvisioningWhereInput = {
   nextSiteUrl?: Prisma.StringNullableFilter<"SaasProvisioning"> | string | null
   nextProvisionedAt?: Prisma.DateTimeNullableFilter<"SaasProvisioning"> | Date | string | null
   nextSetupExpiresAt?: Prisma.DateTimeNullableFilter<"SaasProvisioning"> | Date | string | null
+  runtimeProvisionVersion?: Prisma.BigIntFilter<"SaasProvisioning"> | bigint | number
   requestedAt?: Prisma.DateTimeFilter<"SaasProvisioning"> | Date | string
   claimedAt?: Prisma.DateTimeNullableFilter<"SaasProvisioning"> | Date | string | null
   activatedAt?: Prisma.DateTimeNullableFilter<"SaasProvisioning"> | Date | string | null
@@ -335,6 +377,7 @@ export type SaasProvisioningOrderByWithRelationInput = {
   nextSiteUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   nextProvisionedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   nextSetupExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  runtimeProvisionVersion?: Prisma.SortOrder
   requestedAt?: Prisma.SortOrder
   claimedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   activatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -366,6 +409,7 @@ export type SaasProvisioningWhereUniqueInput = Prisma.AtLeast<{
   nextSiteUrl?: Prisma.StringNullableFilter<"SaasProvisioning"> | string | null
   nextProvisionedAt?: Prisma.DateTimeNullableFilter<"SaasProvisioning"> | Date | string | null
   nextSetupExpiresAt?: Prisma.DateTimeNullableFilter<"SaasProvisioning"> | Date | string | null
+  runtimeProvisionVersion?: Prisma.BigIntFilter<"SaasProvisioning"> | bigint | number
   requestedAt?: Prisma.DateTimeFilter<"SaasProvisioning"> | Date | string
   claimedAt?: Prisma.DateTimeNullableFilter<"SaasProvisioning"> | Date | string | null
   activatedAt?: Prisma.DateTimeNullableFilter<"SaasProvisioning"> | Date | string | null
@@ -394,6 +438,7 @@ export type SaasProvisioningOrderByWithAggregationInput = {
   nextSiteUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   nextProvisionedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   nextSetupExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  runtimeProvisionVersion?: Prisma.SortOrder
   requestedAt?: Prisma.SortOrder
   claimedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   activatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -402,8 +447,10 @@ export type SaasProvisioningOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.SaasProvisioningCountOrderByAggregateInput
+  _avg?: Prisma.SaasProvisioningAvgOrderByAggregateInput
   _max?: Prisma.SaasProvisioningMaxOrderByAggregateInput
   _min?: Prisma.SaasProvisioningMinOrderByAggregateInput
+  _sum?: Prisma.SaasProvisioningSumOrderByAggregateInput
 }
 
 export type SaasProvisioningScalarWhereWithAggregatesInput = {
@@ -425,6 +472,7 @@ export type SaasProvisioningScalarWhereWithAggregatesInput = {
   nextSiteUrl?: Prisma.StringNullableWithAggregatesFilter<"SaasProvisioning"> | string | null
   nextProvisionedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SaasProvisioning"> | Date | string | null
   nextSetupExpiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SaasProvisioning"> | Date | string | null
+  runtimeProvisionVersion?: Prisma.BigIntWithAggregatesFilter<"SaasProvisioning"> | bigint | number
   requestedAt?: Prisma.DateTimeWithAggregatesFilter<"SaasProvisioning"> | Date | string
   claimedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SaasProvisioning"> | Date | string | null
   activatedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"SaasProvisioning"> | Date | string | null
@@ -448,6 +496,7 @@ export type SaasProvisioningCreateInput = {
   nextSiteUrl?: string | null
   nextProvisionedAt?: Date | string | null
   nextSetupExpiresAt?: Date | string | null
+  runtimeProvisionVersion?: bigint | number
   requestedAt?: Date | string
   claimedAt?: Date | string | null
   activatedAt?: Date | string | null
@@ -476,6 +525,7 @@ export type SaasProvisioningUncheckedCreateInput = {
   nextSiteUrl?: string | null
   nextProvisionedAt?: Date | string | null
   nextSetupExpiresAt?: Date | string | null
+  runtimeProvisionVersion?: bigint | number
   requestedAt?: Date | string
   claimedAt?: Date | string | null
   activatedAt?: Date | string | null
@@ -500,6 +550,7 @@ export type SaasProvisioningUpdateInput = {
   nextSiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nextProvisionedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextSetupExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  runtimeProvisionVersion?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   claimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -528,6 +579,7 @@ export type SaasProvisioningUncheckedUpdateInput = {
   nextSiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nextProvisionedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextSetupExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  runtimeProvisionVersion?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   claimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -554,6 +606,7 @@ export type SaasProvisioningCreateManyInput = {
   nextSiteUrl?: string | null
   nextProvisionedAt?: Date | string | null
   nextSetupExpiresAt?: Date | string | null
+  runtimeProvisionVersion?: bigint | number
   requestedAt?: Date | string
   claimedAt?: Date | string | null
   activatedAt?: Date | string | null
@@ -577,6 +630,7 @@ export type SaasProvisioningUpdateManyMutationInput = {
   nextSiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nextProvisionedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextSetupExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  runtimeProvisionVersion?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   claimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -602,6 +656,7 @@ export type SaasProvisioningUncheckedUpdateManyInput = {
   nextSiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nextProvisionedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextSetupExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  runtimeProvisionVersion?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   claimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -642,6 +697,7 @@ export type SaasProvisioningCountOrderByAggregateInput = {
   nextSiteUrl?: Prisma.SortOrder
   nextProvisionedAt?: Prisma.SortOrder
   nextSetupExpiresAt?: Prisma.SortOrder
+  runtimeProvisionVersion?: Prisma.SortOrder
   requestedAt?: Prisma.SortOrder
   claimedAt?: Prisma.SortOrder
   activatedAt?: Prisma.SortOrder
@@ -649,6 +705,10 @@ export type SaasProvisioningCountOrderByAggregateInput = {
   lastError?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type SaasProvisioningAvgOrderByAggregateInput = {
+  runtimeProvisionVersion?: Prisma.SortOrder
 }
 
 export type SaasProvisioningMaxOrderByAggregateInput = {
@@ -666,6 +726,7 @@ export type SaasProvisioningMaxOrderByAggregateInput = {
   nextSiteUrl?: Prisma.SortOrder
   nextProvisionedAt?: Prisma.SortOrder
   nextSetupExpiresAt?: Prisma.SortOrder
+  runtimeProvisionVersion?: Prisma.SortOrder
   requestedAt?: Prisma.SortOrder
   claimedAt?: Prisma.SortOrder
   activatedAt?: Prisma.SortOrder
@@ -690,6 +751,7 @@ export type SaasProvisioningMinOrderByAggregateInput = {
   nextSiteUrl?: Prisma.SortOrder
   nextProvisionedAt?: Prisma.SortOrder
   nextSetupExpiresAt?: Prisma.SortOrder
+  runtimeProvisionVersion?: Prisma.SortOrder
   requestedAt?: Prisma.SortOrder
   claimedAt?: Prisma.SortOrder
   activatedAt?: Prisma.SortOrder
@@ -697,6 +759,10 @@ export type SaasProvisioningMinOrderByAggregateInput = {
   lastError?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type SaasProvisioningSumOrderByAggregateInput = {
+  runtimeProvisionVersion?: Prisma.SortOrder
 }
 
 export type SaasProvisioningScalarRelationFilter = {
@@ -810,6 +876,7 @@ export type SaasProvisioningCreateWithoutClientInput = {
   nextSiteUrl?: string | null
   nextProvisionedAt?: Date | string | null
   nextSetupExpiresAt?: Date | string | null
+  runtimeProvisionVersion?: bigint | number
   requestedAt?: Date | string
   claimedAt?: Date | string | null
   activatedAt?: Date | string | null
@@ -836,6 +903,7 @@ export type SaasProvisioningUncheckedCreateWithoutClientInput = {
   nextSiteUrl?: string | null
   nextProvisionedAt?: Date | string | null
   nextSetupExpiresAt?: Date | string | null
+  runtimeProvisionVersion?: bigint | number
   requestedAt?: Date | string
   claimedAt?: Date | string | null
   activatedAt?: Date | string | null
@@ -891,6 +959,7 @@ export type SaasProvisioningScalarWhereInput = {
   nextSiteUrl?: Prisma.StringNullableFilter<"SaasProvisioning"> | string | null
   nextProvisionedAt?: Prisma.DateTimeNullableFilter<"SaasProvisioning"> | Date | string | null
   nextSetupExpiresAt?: Prisma.DateTimeNullableFilter<"SaasProvisioning"> | Date | string | null
+  runtimeProvisionVersion?: Prisma.BigIntFilter<"SaasProvisioning"> | bigint | number
   requestedAt?: Prisma.DateTimeFilter<"SaasProvisioning"> | Date | string
   claimedAt?: Prisma.DateTimeNullableFilter<"SaasProvisioning"> | Date | string | null
   activatedAt?: Prisma.DateTimeNullableFilter<"SaasProvisioning"> | Date | string | null
@@ -914,6 +983,7 @@ export type SaasProvisioningCreateWithoutBillingSubscriptionInput = {
   nextSiteUrl?: string | null
   nextProvisionedAt?: Date | string | null
   nextSetupExpiresAt?: Date | string | null
+  runtimeProvisionVersion?: bigint | number
   requestedAt?: Date | string
   claimedAt?: Date | string | null
   activatedAt?: Date | string | null
@@ -940,6 +1010,7 @@ export type SaasProvisioningUncheckedCreateWithoutBillingSubscriptionInput = {
   nextSiteUrl?: string | null
   nextProvisionedAt?: Date | string | null
   nextSetupExpiresAt?: Date | string | null
+  runtimeProvisionVersion?: bigint | number
   requestedAt?: Date | string
   claimedAt?: Date | string | null
   activatedAt?: Date | string | null
@@ -980,6 +1051,7 @@ export type SaasProvisioningUpdateWithoutBillingSubscriptionInput = {
   nextSiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nextProvisionedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextSetupExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  runtimeProvisionVersion?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   claimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1006,6 +1078,7 @@ export type SaasProvisioningUncheckedUpdateWithoutBillingSubscriptionInput = {
   nextSiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nextProvisionedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextSetupExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  runtimeProvisionVersion?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   claimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1030,6 +1103,7 @@ export type SaasProvisioningCreateWithoutSetupClaimsInput = {
   nextSiteUrl?: string | null
   nextProvisionedAt?: Date | string | null
   nextSetupExpiresAt?: Date | string | null
+  runtimeProvisionVersion?: bigint | number
   requestedAt?: Date | string
   claimedAt?: Date | string | null
   activatedAt?: Date | string | null
@@ -1057,6 +1131,7 @@ export type SaasProvisioningUncheckedCreateWithoutSetupClaimsInput = {
   nextSiteUrl?: string | null
   nextProvisionedAt?: Date | string | null
   nextSetupExpiresAt?: Date | string | null
+  runtimeProvisionVersion?: bigint | number
   requestedAt?: Date | string
   claimedAt?: Date | string | null
   activatedAt?: Date | string | null
@@ -1096,6 +1171,7 @@ export type SaasProvisioningUpdateWithoutSetupClaimsInput = {
   nextSiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nextProvisionedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextSetupExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  runtimeProvisionVersion?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   claimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1123,6 +1199,7 @@ export type SaasProvisioningUncheckedUpdateWithoutSetupClaimsInput = {
   nextSiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nextProvisionedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextSetupExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  runtimeProvisionVersion?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   claimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1147,6 +1224,7 @@ export type SaasProvisioningCreateManyClientInput = {
   nextSiteUrl?: string | null
   nextProvisionedAt?: Date | string | null
   nextSetupExpiresAt?: Date | string | null
+  runtimeProvisionVersion?: bigint | number
   requestedAt?: Date | string
   claimedAt?: Date | string | null
   activatedAt?: Date | string | null
@@ -1170,6 +1248,7 @@ export type SaasProvisioningUpdateWithoutClientInput = {
   nextSiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nextProvisionedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextSetupExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  runtimeProvisionVersion?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   claimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1196,6 +1275,7 @@ export type SaasProvisioningUncheckedUpdateWithoutClientInput = {
   nextSiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nextProvisionedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextSetupExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  runtimeProvisionVersion?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   claimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1221,6 +1301,7 @@ export type SaasProvisioningUncheckedUpdateManyWithoutClientInput = {
   nextSiteUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nextProvisionedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   nextSetupExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  runtimeProvisionVersion?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   requestedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   claimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   activatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1277,6 +1358,7 @@ export type SaasProvisioningSelect<ExtArgs extends runtime.Types.Extensions.Inte
   nextSiteUrl?: boolean
   nextProvisionedAt?: boolean
   nextSetupExpiresAt?: boolean
+  runtimeProvisionVersion?: boolean
   requestedAt?: boolean
   claimedAt?: boolean
   activatedAt?: boolean
@@ -1306,6 +1388,7 @@ export type SaasProvisioningSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   nextSiteUrl?: boolean
   nextProvisionedAt?: boolean
   nextSetupExpiresAt?: boolean
+  runtimeProvisionVersion?: boolean
   requestedAt?: boolean
   claimedAt?: boolean
   activatedAt?: boolean
@@ -1333,6 +1416,7 @@ export type SaasProvisioningSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   nextSiteUrl?: boolean
   nextProvisionedAt?: boolean
   nextSetupExpiresAt?: boolean
+  runtimeProvisionVersion?: boolean
   requestedAt?: boolean
   claimedAt?: boolean
   activatedAt?: boolean
@@ -1360,6 +1444,7 @@ export type SaasProvisioningSelectScalar = {
   nextSiteUrl?: boolean
   nextProvisionedAt?: boolean
   nextSetupExpiresAt?: boolean
+  runtimeProvisionVersion?: boolean
   requestedAt?: boolean
   claimedAt?: boolean
   activatedAt?: boolean
@@ -1369,7 +1454,7 @@ export type SaasProvisioningSelectScalar = {
   updatedAt?: boolean
 }
 
-export type SaasProvisioningOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientId" | "billingSubscriptionId" | "environment" | "planCode" | "entitlements" | "status" | "nextOrganizationId" | "nextSubscriptionId" | "nextSiteId" | "nextSiteKey" | "nextHostname" | "nextSiteUrl" | "nextProvisionedAt" | "nextSetupExpiresAt" | "requestedAt" | "claimedAt" | "activatedAt" | "failedAt" | "lastError" | "createdAt" | "updatedAt", ExtArgs["result"]["saasProvisioning"]>
+export type SaasProvisioningOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientId" | "billingSubscriptionId" | "environment" | "planCode" | "entitlements" | "status" | "nextOrganizationId" | "nextSubscriptionId" | "nextSiteId" | "nextSiteKey" | "nextHostname" | "nextSiteUrl" | "nextProvisionedAt" | "nextSetupExpiresAt" | "runtimeProvisionVersion" | "requestedAt" | "claimedAt" | "activatedAt" | "failedAt" | "lastError" | "createdAt" | "updatedAt", ExtArgs["result"]["saasProvisioning"]>
 export type SaasProvisioningInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
   billingSubscription?: boolean | Prisma.BillingSubscriptionDefaultArgs<ExtArgs>
@@ -1408,6 +1493,7 @@ export type $SaasProvisioningPayload<ExtArgs extends runtime.Types.Extensions.In
     nextSiteUrl: string | null
     nextProvisionedAt: Date | null
     nextSetupExpiresAt: Date | null
+    runtimeProvisionVersion: bigint
     requestedAt: Date
     claimedAt: Date | null
     activatedAt: Date | null
@@ -1856,6 +1942,7 @@ export interface SaasProvisioningFieldRefs {
   readonly nextSiteUrl: Prisma.FieldRef<"SaasProvisioning", 'String'>
   readonly nextProvisionedAt: Prisma.FieldRef<"SaasProvisioning", 'DateTime'>
   readonly nextSetupExpiresAt: Prisma.FieldRef<"SaasProvisioning", 'DateTime'>
+  readonly runtimeProvisionVersion: Prisma.FieldRef<"SaasProvisioning", 'BigInt'>
   readonly requestedAt: Prisma.FieldRef<"SaasProvisioning", 'DateTime'>
   readonly claimedAt: Prisma.FieldRef<"SaasProvisioning", 'DateTime'>
   readonly activatedAt: Prisma.FieldRef<"SaasProvisioning", 'DateTime'>

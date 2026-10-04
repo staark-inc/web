@@ -1,6 +1,9 @@
-import crypto from "node:crypto";
-
 import { prisma } from "@/lib/prisma";
+
+import {
+  controlPath,
+  signControlRequest,
+} from "./control-protocol";
 
 export type SaaSSetupInput = {
   hostname: string;
@@ -86,17 +89,6 @@ function getConfig() {
   };
 }
 
-function signBody(
-  body: string,
-  timestamp: string,
-  secret: string,
-) {
-  return crypto
-    .createHmac("sha256", secret)
-    .update(`${timestamp}.${body}`)
-    .digest("hex");
-}
-
 export async function provisionNextSite(
   provisioningId: string,
   input: SaaSSetupInput,
@@ -132,6 +124,34 @@ export async function provisionNextSite(
       `Cannot provision Staark runtime from status ${provisioning.status}.`,
     );
   }
+
+  const sequenceState =
+    await prisma
+      .saasProvisioning
+      .update({
+        where: {
+          id:
+            provisioning.id,
+        },
+
+        data: {
+          runtimeProvisionVersion: {
+            increment: 1,
+          },
+        },
+
+        select: {
+          runtimeProvisionVersion:
+            true,
+        },
+      });
+
+  const sequence =
+    sequenceState
+      .runtimeProvisionVersion;
+
+  const eventId =
+    `provision:${provisioning.id}:${sequence}`;
 
   const subscription =
     provisioning.billingSubscription;
@@ -206,15 +226,27 @@ export async function provisionNextSite(
   const body =
     JSON.stringify(payload);
 
-  const timestamp =
-    Math.floor(
-      Date.now() / 1000,
-    ).toString();
-
   const {
     url,
     secret,
   } = getConfig();
+
+  const signed =
+    signControlRequest({
+      method:
+        "POST",
+
+      path:
+        controlPath(url),
+
+      body,
+
+      eventId,
+
+      sequence,
+
+      secret,
+    });
 
   const response =
     await fetch(url, {
@@ -224,15 +256,7 @@ export async function provisionNextSite(
         "Content-Type":
           "application/json",
 
-        "X-Staark-Timestamp":
-          timestamp,
-
-        "X-Staark-Signature":
-          signBody(
-            body,
-            timestamp,
-            secret,
-          ),
+        ...signed,
       },
 
       body,

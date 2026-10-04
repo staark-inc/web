@@ -17,8 +17,8 @@
 
 import * as runtime from "@prisma/client/runtime/index-browser"
 
-export type * from '../models'
-export type * from './prismaNamespace'
+export type * from '../models.ts'
+export type * from './prismaNamespace.ts'
 
 export const Decimal = runtime.Decimal
 
@@ -265,6 +265,7 @@ export const BillingSubscriptionScalarFieldEnum = {
   canceledAt: 'canceledAt',
   endedAt: 'endedAt',
   entitlements: 'entitlements',
+  runtimeSyncVersion: 'runtimeSyncVersion',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -288,6 +289,7 @@ export const SaasProvisioningScalarFieldEnum = {
   nextSiteUrl: 'nextSiteUrl',
   nextProvisionedAt: 'nextProvisionedAt',
   nextSetupExpiresAt: 'nextSetupExpiresAt',
+  runtimeProvisionVersion: 'runtimeProvisionVersion',
   requestedAt: 'requestedAt',
   claimedAt: 'claimedAt',
   activatedAt: 'activatedAt',

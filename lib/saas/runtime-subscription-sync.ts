@@ -1,15 +1,20 @@
-import crypto from "node:crypto";
-
 import { prisma } from "@/lib/prisma";
+
+import {
+  controlPath,
+  signControlRequest,
+} from "./control-protocol";
 
 function config() {
   const base =
-    process.env.STAARK_RUNTIME_INTERNAL_URL
+    process.env
+      .STAARK_RUNTIME_INTERNAL_URL
       ?.trim()
       .replace(/\/+$/, "");
 
   const secret =
-    process.env.STAARK_PROVISIONING_SECRET
+    process.env
+      .STAARK_PROVISIONING_SECRET
       ?.trim();
 
   if (!base) {
@@ -27,52 +32,103 @@ function config() {
   return {
     url:
       `${base}/api/staark/subscription/sync`,
+
     secret,
   };
 }
 
-function sign(
-  body: string,
-  timestamp: string,
-  secret: string,
+async function reserveRuntimeSync(
+  stripeSubscriptionId: string,
 ) {
-  return crypto
-    .createHmac(
-      "sha256",
-      secret,
-    )
-    .update(
-      `${timestamp}.${body}`,
-    )
-    .digest("hex");
+  return prisma.$transaction(
+    async (tx) => {
+      const current =
+        await tx
+          .billingSubscription
+          .findUnique({
+            where: {
+              stripeSubscriptionId,
+            },
+
+            select: {
+              id: true,
+            },
+          });
+
+      if (!current) {
+        return null;
+      }
+
+      /*
+       * Atomic increment is the ordering source of truth.
+       *
+       * Concurrent sends may reach Runtime in reverse network order, but
+       * Runtime will only apply the greatest sequence.
+       */
+      return tx
+        .billingSubscription
+        .update({
+          where: {
+            id:
+              current.id,
+          },
+
+          data: {
+            runtimeSyncVersion: {
+              increment: 1,
+            },
+          },
+
+          select: {
+            stripeSubscriptionId:
+              true,
+
+            planCode:
+              true,
+
+            status:
+              true,
+
+            currentPeriodStart:
+              true,
+
+            currentPeriodEnd:
+              true,
+
+            cancelAtPeriodEnd:
+              true,
+
+            runtimeSyncVersion:
+              true,
+          },
+        });
+    },
+  );
 }
 
 export async function syncRuntimeSubscription(
   stripeSubscriptionId: string,
 ) {
   const subscription =
-    await prisma.billingSubscription.findUnique({
-      where: {
-        stripeSubscriptionId,
-      },
-
-      select: {
-        stripeSubscriptionId: true,
-        planCode: true,
-        status: true,
-        currentPeriodStart: true,
-        currentPeriodEnd: true,
-        cancelAtPeriodEnd: true,
-      },
-    });
+    await reserveRuntimeSync(
+      stripeSubscriptionId,
+    );
 
   if (!subscription) {
     return;
   }
 
+  const sequence =
+    subscription
+      .runtimeSyncVersion;
+
+  const eventId =
+    `subscription:${subscription.stripeSubscriptionId}:${sequence}`;
+
   const payload = {
     stripeSubscriptionId:
-      subscription.stripeSubscriptionId,
+      subscription
+        .stripeSubscriptionId,
 
     planCode:
       subscription.planCode,
@@ -81,55 +137,74 @@ export async function syncRuntimeSubscription(
       subscription.status,
 
     currentPeriodStart:
-      subscription.currentPeriodStart
-        ?.toISOString() ?? null,
+      subscription
+        .currentPeriodStart
+        ?.toISOString() ??
+      null,
 
     currentPeriodEnd:
-      subscription.currentPeriodEnd
-        ?.toISOString() ?? null,
+      subscription
+        .currentPeriodEnd
+        ?.toISOString() ??
+      null,
 
     cancelAtPeriodEnd:
-      subscription.cancelAtPeriodEnd,
+      subscription
+        .cancelAtPeriodEnd,
   };
 
   const body =
     JSON.stringify(payload);
 
-  const timestamp =
-    Math.floor(
-      Date.now() / 1000,
-    ).toString();
-
-  const { url, secret } =
+  const {
+    url,
+    secret,
+  } =
     config();
 
-  const response =
-    await fetch(url, {
-      method: "POST",
+  const signed =
+    signControlRequest({
+      method:
+        "POST",
 
-      headers: {
-        "Content-Type":
-          "application/json",
-
-        "X-Staark-Timestamp":
-          timestamp,
-
-        "X-Staark-Signature":
-          sign(
-            body,
-            timestamp,
-            secret,
-          ),
-      },
+      path:
+        controlPath(url),
 
       body,
-      cache: "no-store",
+
+      eventId,
+
+      sequence,
+
+      secret,
     });
+
+  const response =
+    await fetch(
+      url,
+      {
+        method:
+          "POST",
+
+        headers: {
+          "Content-Type":
+            "application/json",
+
+          ...signed,
+        },
+
+        body,
+        cache:
+          "no-store",
+      },
+    );
 
   const data =
     await response
       .json()
-      .catch(() => null) as
+      .catch(
+        () => null,
+      ) as
       | {
           ok?: boolean;
           error?: string;
@@ -151,13 +226,33 @@ export async function syncRuntimeSubscription(
   }
 
   return {
-    ok: true as const,
-    skipped: data.skipped === true,
-    reason: data.reason ?? null,
+    ok:
+      true as const,
+
+    skipped:
+      data.skipped ===
+      true,
+
+    reason:
+      data.reason ??
+      null,
+
     publicAccess:
-      typeof data.publicAccess === "boolean"
+      typeof data.publicAccess ===
+        "boolean"
         ? data.publicAccess
         : null,
-    status: data.status ?? null,
+
+    status:
+      data.status ??
+      null,
+
+    protocol:
+      2 as const,
+
+    eventId,
+
+    sequence:
+      sequence.toString(),
   };
 }

@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums"
-import type * as Prisma from "../internal/prismaNamespace"
+import type * as $Enums from "../enums.ts"
+import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
  * Model BillingSubscription
@@ -28,10 +28,12 @@ export type AggregateBillingSubscription = {
 
 export type BillingSubscriptionAvgAggregateOutputType = {
   unitAmountOre: number | null
+  runtimeSyncVersion: number | null
 }
 
 export type BillingSubscriptionSumAggregateOutputType = {
   unitAmountOre: number | null
+  runtimeSyncVersion: bigint | null
 }
 
 export type BillingSubscriptionMinAggregateOutputType = {
@@ -55,6 +57,7 @@ export type BillingSubscriptionMinAggregateOutputType = {
   trialEnd: Date | null
   canceledAt: Date | null
   endedAt: Date | null
+  runtimeSyncVersion: bigint | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -80,6 +83,7 @@ export type BillingSubscriptionMaxAggregateOutputType = {
   trialEnd: Date | null
   canceledAt: Date | null
   endedAt: Date | null
+  runtimeSyncVersion: bigint | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -106,6 +110,7 @@ export type BillingSubscriptionCountAggregateOutputType = {
   canceledAt: number
   endedAt: number
   entitlements: number
+  runtimeSyncVersion: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -114,10 +119,12 @@ export type BillingSubscriptionCountAggregateOutputType = {
 
 export type BillingSubscriptionAvgAggregateInputType = {
   unitAmountOre?: true
+  runtimeSyncVersion?: true
 }
 
 export type BillingSubscriptionSumAggregateInputType = {
   unitAmountOre?: true
+  runtimeSyncVersion?: true
 }
 
 export type BillingSubscriptionMinAggregateInputType = {
@@ -141,6 +148,7 @@ export type BillingSubscriptionMinAggregateInputType = {
   trialEnd?: true
   canceledAt?: true
   endedAt?: true
+  runtimeSyncVersion?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -166,6 +174,7 @@ export type BillingSubscriptionMaxAggregateInputType = {
   trialEnd?: true
   canceledAt?: true
   endedAt?: true
+  runtimeSyncVersion?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -192,6 +201,7 @@ export type BillingSubscriptionCountAggregateInputType = {
   canceledAt?: true
   endedAt?: true
   entitlements?: true
+  runtimeSyncVersion?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -305,6 +315,7 @@ export type BillingSubscriptionGroupByOutputType = {
   canceledAt: Date | null
   endedAt: Date | null
   entitlements: runtime.JsonValue
+  runtimeSyncVersion: bigint
   createdAt: Date
   updatedAt: Date
   _count: BillingSubscriptionCountAggregateOutputType | null
@@ -354,6 +365,7 @@ export type BillingSubscriptionWhereInput = {
   canceledAt?: Prisma.DateTimeNullableFilter<"BillingSubscription"> | Date | string | null
   endedAt?: Prisma.DateTimeNullableFilter<"BillingSubscription"> | Date | string | null
   entitlements?: Prisma.JsonFilter<"BillingSubscription">
+  runtimeSyncVersion?: Prisma.BigIntFilter<"BillingSubscription"> | bigint | number
   createdAt?: Prisma.DateTimeFilter<"BillingSubscription"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"BillingSubscription"> | Date | string
   client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
@@ -383,6 +395,7 @@ export type BillingSubscriptionOrderByWithRelationInput = {
   canceledAt?: Prisma.SortOrderInput | Prisma.SortOrder
   endedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   entitlements?: Prisma.SortOrder
+  runtimeSyncVersion?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   client?: Prisma.ClientOrderByWithRelationInput
@@ -415,6 +428,7 @@ export type BillingSubscriptionWhereUniqueInput = Prisma.AtLeast<{
   canceledAt?: Prisma.DateTimeNullableFilter<"BillingSubscription"> | Date | string | null
   endedAt?: Prisma.DateTimeNullableFilter<"BillingSubscription"> | Date | string | null
   entitlements?: Prisma.JsonFilter<"BillingSubscription">
+  runtimeSyncVersion?: Prisma.BigIntFilter<"BillingSubscription"> | bigint | number
   createdAt?: Prisma.DateTimeFilter<"BillingSubscription"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"BillingSubscription"> | Date | string
   client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
@@ -444,6 +458,7 @@ export type BillingSubscriptionOrderByWithAggregationInput = {
   canceledAt?: Prisma.SortOrderInput | Prisma.SortOrder
   endedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   entitlements?: Prisma.SortOrder
+  runtimeSyncVersion?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.BillingSubscriptionCountOrderByAggregateInput
@@ -478,6 +493,7 @@ export type BillingSubscriptionScalarWhereWithAggregatesInput = {
   canceledAt?: Prisma.DateTimeNullableWithAggregatesFilter<"BillingSubscription"> | Date | string | null
   endedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"BillingSubscription"> | Date | string | null
   entitlements?: Prisma.JsonWithAggregatesFilter<"BillingSubscription">
+  runtimeSyncVersion?: Prisma.BigIntWithAggregatesFilter<"BillingSubscription"> | bigint | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"BillingSubscription"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"BillingSubscription"> | Date | string
 }
@@ -502,6 +518,7 @@ export type BillingSubscriptionCreateInput = {
   canceledAt?: Date | string | null
   endedAt?: Date | string | null
   entitlements: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  runtimeSyncVersion?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
   client: Prisma.ClientCreateNestedOneWithoutBillingSubscriptionsInput
@@ -531,6 +548,7 @@ export type BillingSubscriptionUncheckedCreateInput = {
   canceledAt?: Date | string | null
   endedAt?: Date | string | null
   entitlements: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  runtimeSyncVersion?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
   provisioning?: Prisma.SaasProvisioningUncheckedCreateNestedOneWithoutBillingSubscriptionInput
@@ -556,6 +574,7 @@ export type BillingSubscriptionUpdateInput = {
   canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   entitlements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  runtimeSyncVersion?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   client?: Prisma.ClientUpdateOneRequiredWithoutBillingSubscriptionsNestedInput
@@ -585,6 +604,7 @@ export type BillingSubscriptionUncheckedUpdateInput = {
   canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   entitlements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  runtimeSyncVersion?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   provisioning?: Prisma.SaasProvisioningUncheckedUpdateOneWithoutBillingSubscriptionNestedInput
@@ -612,6 +632,7 @@ export type BillingSubscriptionCreateManyInput = {
   canceledAt?: Date | string | null
   endedAt?: Date | string | null
   entitlements: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  runtimeSyncVersion?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -636,6 +657,7 @@ export type BillingSubscriptionUpdateManyMutationInput = {
   canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   entitlements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  runtimeSyncVersion?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -662,6 +684,7 @@ export type BillingSubscriptionUncheckedUpdateManyInput = {
   canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   entitlements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  runtimeSyncVersion?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -698,12 +721,14 @@ export type BillingSubscriptionCountOrderByAggregateInput = {
   canceledAt?: Prisma.SortOrder
   endedAt?: Prisma.SortOrder
   entitlements?: Prisma.SortOrder
+  runtimeSyncVersion?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type BillingSubscriptionAvgOrderByAggregateInput = {
   unitAmountOre?: Prisma.SortOrder
+  runtimeSyncVersion?: Prisma.SortOrder
 }
 
 export type BillingSubscriptionMaxOrderByAggregateInput = {
@@ -727,6 +752,7 @@ export type BillingSubscriptionMaxOrderByAggregateInput = {
   trialEnd?: Prisma.SortOrder
   canceledAt?: Prisma.SortOrder
   endedAt?: Prisma.SortOrder
+  runtimeSyncVersion?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -752,12 +778,14 @@ export type BillingSubscriptionMinOrderByAggregateInput = {
   trialEnd?: Prisma.SortOrder
   canceledAt?: Prisma.SortOrder
   endedAt?: Prisma.SortOrder
+  runtimeSyncVersion?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type BillingSubscriptionSumOrderByAggregateInput = {
   unitAmountOre?: Prisma.SortOrder
+  runtimeSyncVersion?: Prisma.SortOrder
 }
 
 export type BillingSubscriptionScalarRelationFilter = {
@@ -861,6 +889,14 @@ export type EnumBillingSubscriptionStatusFieldUpdateOperationsInput = {
   set?: $Enums.BillingSubscriptionStatus
 }
 
+export type BigIntFieldUpdateOperationsInput = {
+  set?: bigint | number
+  increment?: bigint | number
+  decrement?: bigint | number
+  multiply?: bigint | number
+  divide?: bigint | number
+}
+
 export type BillingSubscriptionCreateNestedOneWithoutProvisioningInput = {
   create?: Prisma.XOR<Prisma.BillingSubscriptionCreateWithoutProvisioningInput, Prisma.BillingSubscriptionUncheckedCreateWithoutProvisioningInput>
   connectOrCreate?: Prisma.BillingSubscriptionCreateOrConnectWithoutProvisioningInput
@@ -895,6 +931,7 @@ export type BillingSubscriptionCreateWithoutClientInput = {
   canceledAt?: Date | string | null
   endedAt?: Date | string | null
   entitlements: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  runtimeSyncVersion?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
   billingCustomer: Prisma.BillingCustomerCreateNestedOneWithoutSubscriptionsInput
@@ -922,6 +959,7 @@ export type BillingSubscriptionUncheckedCreateWithoutClientInput = {
   canceledAt?: Date | string | null
   endedAt?: Date | string | null
   entitlements: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  runtimeSyncVersion?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
   provisioning?: Prisma.SaasProvisioningUncheckedCreateNestedOneWithoutBillingSubscriptionInput
@@ -978,6 +1016,7 @@ export type BillingSubscriptionScalarWhereInput = {
   canceledAt?: Prisma.DateTimeNullableFilter<"BillingSubscription"> | Date | string | null
   endedAt?: Prisma.DateTimeNullableFilter<"BillingSubscription"> | Date | string | null
   entitlements?: Prisma.JsonFilter<"BillingSubscription">
+  runtimeSyncVersion?: Prisma.BigIntFilter<"BillingSubscription"> | bigint | number
   createdAt?: Prisma.DateTimeFilter<"BillingSubscription"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"BillingSubscription"> | Date | string
 }
@@ -1002,6 +1041,7 @@ export type BillingSubscriptionCreateWithoutBillingCustomerInput = {
   canceledAt?: Date | string | null
   endedAt?: Date | string | null
   entitlements: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  runtimeSyncVersion?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
   client: Prisma.ClientCreateNestedOneWithoutBillingSubscriptionsInput
@@ -1029,6 +1069,7 @@ export type BillingSubscriptionUncheckedCreateWithoutBillingCustomerInput = {
   canceledAt?: Date | string | null
   endedAt?: Date | string | null
   entitlements: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  runtimeSyncVersion?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
   provisioning?: Prisma.SaasProvisioningUncheckedCreateNestedOneWithoutBillingSubscriptionInput
@@ -1080,6 +1121,7 @@ export type BillingSubscriptionCreateWithoutProvisioningInput = {
   canceledAt?: Date | string | null
   endedAt?: Date | string | null
   entitlements: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  runtimeSyncVersion?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
   client: Prisma.ClientCreateNestedOneWithoutBillingSubscriptionsInput
@@ -1108,6 +1150,7 @@ export type BillingSubscriptionUncheckedCreateWithoutProvisioningInput = {
   canceledAt?: Date | string | null
   endedAt?: Date | string | null
   entitlements: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  runtimeSyncVersion?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1148,6 +1191,7 @@ export type BillingSubscriptionUpdateWithoutProvisioningInput = {
   canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   entitlements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  runtimeSyncVersion?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   client?: Prisma.ClientUpdateOneRequiredWithoutBillingSubscriptionsNestedInput
@@ -1176,6 +1220,7 @@ export type BillingSubscriptionUncheckedUpdateWithoutProvisioningInput = {
   canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   entitlements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  runtimeSyncVersion?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1201,6 +1246,7 @@ export type BillingSubscriptionCreateManyClientInput = {
   canceledAt?: Date | string | null
   endedAt?: Date | string | null
   entitlements: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  runtimeSyncVersion?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1225,6 +1271,7 @@ export type BillingSubscriptionUpdateWithoutClientInput = {
   canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   entitlements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  runtimeSyncVersion?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   billingCustomer?: Prisma.BillingCustomerUpdateOneRequiredWithoutSubscriptionsNestedInput
@@ -1252,6 +1299,7 @@ export type BillingSubscriptionUncheckedUpdateWithoutClientInput = {
   canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   entitlements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  runtimeSyncVersion?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   provisioning?: Prisma.SaasProvisioningUncheckedUpdateOneWithoutBillingSubscriptionNestedInput
@@ -1278,6 +1326,7 @@ export type BillingSubscriptionUncheckedUpdateManyWithoutClientInput = {
   canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   entitlements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  runtimeSyncVersion?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1303,6 +1352,7 @@ export type BillingSubscriptionCreateManyBillingCustomerInput = {
   canceledAt?: Date | string | null
   endedAt?: Date | string | null
   entitlements: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  runtimeSyncVersion?: bigint | number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1327,6 +1377,7 @@ export type BillingSubscriptionUpdateWithoutBillingCustomerInput = {
   canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   entitlements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  runtimeSyncVersion?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   client?: Prisma.ClientUpdateOneRequiredWithoutBillingSubscriptionsNestedInput
@@ -1354,6 +1405,7 @@ export type BillingSubscriptionUncheckedUpdateWithoutBillingCustomerInput = {
   canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   entitlements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  runtimeSyncVersion?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   provisioning?: Prisma.SaasProvisioningUncheckedUpdateOneWithoutBillingSubscriptionNestedInput
@@ -1380,6 +1432,7 @@ export type BillingSubscriptionUncheckedUpdateManyWithoutBillingCustomerInput = 
   canceledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   endedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   entitlements?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  runtimeSyncVersion?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1408,6 +1461,7 @@ export type BillingSubscriptionSelect<ExtArgs extends runtime.Types.Extensions.I
   canceledAt?: boolean
   endedAt?: boolean
   entitlements?: boolean
+  runtimeSyncVersion?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
@@ -1437,6 +1491,7 @@ export type BillingSubscriptionSelectCreateManyAndReturn<ExtArgs extends runtime
   canceledAt?: boolean
   endedAt?: boolean
   entitlements?: boolean
+  runtimeSyncVersion?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
@@ -1465,6 +1520,7 @@ export type BillingSubscriptionSelectUpdateManyAndReturn<ExtArgs extends runtime
   canceledAt?: boolean
   endedAt?: boolean
   entitlements?: boolean
+  runtimeSyncVersion?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
@@ -1493,11 +1549,12 @@ export type BillingSubscriptionSelectScalar = {
   canceledAt?: boolean
   endedAt?: boolean
   entitlements?: boolean
+  runtimeSyncVersion?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type BillingSubscriptionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientId" | "billingCustomerId" | "environment" | "stripeSubscriptionId" | "stripePriceId" | "stripeProductId" | "planCode" | "interval" | "currency" | "unitAmountOre" | "taxBehavior" | "status" | "cancelAtPeriodEnd" | "currentPeriodStart" | "currentPeriodEnd" | "trialStart" | "trialEnd" | "canceledAt" | "endedAt" | "entitlements" | "createdAt" | "updatedAt", ExtArgs["result"]["billingSubscription"]>
+export type BillingSubscriptionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clientId" | "billingCustomerId" | "environment" | "stripeSubscriptionId" | "stripePriceId" | "stripeProductId" | "planCode" | "interval" | "currency" | "unitAmountOre" | "taxBehavior" | "status" | "cancelAtPeriodEnd" | "currentPeriodStart" | "currentPeriodEnd" | "trialStart" | "trialEnd" | "canceledAt" | "endedAt" | "entitlements" | "runtimeSyncVersion" | "createdAt" | "updatedAt", ExtArgs["result"]["billingSubscription"]>
 export type BillingSubscriptionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
   billingCustomer?: boolean | Prisma.BillingCustomerDefaultArgs<ExtArgs>
@@ -1541,6 +1598,7 @@ export type $BillingSubscriptionPayload<ExtArgs extends runtime.Types.Extensions
     canceledAt: Date | null
     endedAt: Date | null
     entitlements: runtime.JsonValue
+    runtimeSyncVersion: bigint
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["billingSubscription"]>
@@ -1990,6 +2048,7 @@ export interface BillingSubscriptionFieldRefs {
   readonly canceledAt: Prisma.FieldRef<"BillingSubscription", 'DateTime'>
   readonly endedAt: Prisma.FieldRef<"BillingSubscription", 'DateTime'>
   readonly entitlements: Prisma.FieldRef<"BillingSubscription", 'Json'>
+  readonly runtimeSyncVersion: Prisma.FieldRef<"BillingSubscription", 'BigInt'>
   readonly createdAt: Prisma.FieldRef<"BillingSubscription", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"BillingSubscription", 'DateTime'>
 }

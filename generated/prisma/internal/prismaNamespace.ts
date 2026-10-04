@@ -16,10 +16,10 @@
  */
 
 import * as runtime from "@prisma/client/runtime/client"
-import type * as Prisma from "../models"
-import { type PrismaClient } from "./class"
+import type * as Prisma from "../models.ts"
+import { type PrismaClient } from "./class.ts"
 
-export type * from '../models'
+export type * from '../models.ts'
 
 export type DMMF = typeof runtime.DMMF
 
@@ -2575,6 +2575,7 @@ export const BillingSubscriptionScalarFieldEnum = {
   canceledAt: 'canceledAt',
   endedAt: 'endedAt',
   entitlements: 'entitlements',
+  runtimeSyncVersion: 'runtimeSyncVersion',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2598,6 +2599,7 @@ export const SaasProvisioningScalarFieldEnum = {
   nextSiteUrl: 'nextSiteUrl',
   nextProvisionedAt: 'nextProvisionedAt',
   nextSetupExpiresAt: 'nextSetupExpiresAt',
+  runtimeProvisionVersion: 'runtimeProvisionVersion',
   requestedAt: 'requestedAt',
   claimedAt: 'claimedAt',
   activatedAt: 'activatedAt',
@@ -3118,6 +3120,20 @@ export type EnumBillingSubscriptionStatusFieldRefInput<$PrismaModel> = FieldRefI
  * Reference to a field of type 'BillingSubscriptionStatus[]'
  */
 export type ListEnumBillingSubscriptionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BillingSubscriptionStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'BigInt'
+ */
+export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
+    
+
+
+/**
+ * Reference to a field of type 'BigInt[]'
+ */
+export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
     
 
 

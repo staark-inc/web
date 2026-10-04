@@ -353,6 +353,7 @@ model BillingSubscription {
   canceledAt           DateTime?
   endedAt              DateTime?
   entitlements         Json
+  runtimeSyncVersion   BigInt                    @default(0)
   createdAt            DateTime                  @default(now())
   updatedAt            DateTime                  @updatedAt
 
@@ -385,6 +386,7 @@ model SaasProvisioning {
   nextSiteUrl           String?
   nextProvisionedAt     DateTime?
   nextSetupExpiresAt    DateTime?
+  runtimeProvisionVersion BigInt               @default(0)
 
   requestedAt           DateTime               @default(now())
   claimedAt             DateTime?
