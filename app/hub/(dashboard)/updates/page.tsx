@@ -1,17 +1,34 @@
 import Link from "next/link";
+import {
+  BellRing,
+  FilePenLine,
+  Megaphone,
+  Plus,
+  Radio,
+} from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
-type Filter = "all" | "published" | "drafts";
+const FILTERS = [
+  "ALL",
+  "PUBLISHED",
+  "DRAFT",
+] as const;
 
-type SearchParams = Promise<{
-  state?: string;
-  filter?: string;
-}>;
+type Filter =
+  (typeof FILTERS)[number];
 
-function formatDate(value: Date | null): string {
+type SearchParams =
+  Promise<{
+    state?: string;
+    status?: string;
+  }>;
+
+function formatDate(
+  value: Date | null,
+) {
   if (!value) {
     return "Not published";
   }
@@ -19,13 +36,18 @@ function formatDate(value: Date | null): string {
   return new Intl.DateTimeFormat(
     "sv-SE",
     {
-      dateStyle: "medium",
-      timeStyle: "short",
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     },
   ).format(value);
 }
 
-function audienceLabel(value: string | null): string {
+function audienceLabel(
+  value: string | null,
+) {
   if (!value) {
     return "All plans";
   }
@@ -40,7 +62,9 @@ function audienceLabel(value: string | null): string {
   );
 }
 
-function kindLabel(value: string): string {
+function kindLabel(
+  value: string,
+) {
   if (value === "feature") {
     return "Feature";
   }
@@ -56,10 +80,9 @@ function kindLabel(value: string): string {
   return "Announcement";
 }
 
-function stateMessage(state?: string): {
-  tone: "success" | "error";
-  text: string;
-} | null {
+function stateMessage(
+  state?: string,
+) {
   if (!state) {
     return null;
   }
@@ -73,13 +96,19 @@ function stateMessage(state?: string): {
     };
   }
 
-  const messages: Record<string, string> = {
-    published: "Update published successfully.",
-    unpublished: "Update moved back to drafts.",
-    deleted: "Update deleted.",
-    created: "Draft created.",
-    saved: "Changes saved.",
-  };
+  const messages:
+    Record<string, string> = {
+      created:
+        "Draft created.",
+      saved:
+        "Changes saved.",
+      published:
+        "Update published.",
+      unpublished:
+        "Update moved back to draft.",
+      deleted:
+        "Update deleted.",
+    };
 
   return {
     tone: "success",
@@ -87,12 +116,6 @@ function stateMessage(state?: string): {
       messages[state] ??
       "Changes saved.",
   };
-}
-
-function filterHref(filter: Filter): string {
-  return filter === "all"
-    ? "/hub/updates"
-    : `/hub/updates?filter=${filter}`;
 }
 
 export default async function UpdatesPage({
@@ -103,27 +126,33 @@ export default async function UpdatesPage({
   const params =
     await searchParams;
 
-  const filter: Filter =
-    params.filter === "published" ||
-    params.filter === "drafts"
-      ? params.filter
-      : "all";
+  const active: Filter =
+    FILTERS.includes(
+      params.status as Filter,
+    )
+      ? (params.status as Filter)
+      : "ALL";
 
   const allUpdates =
-    await prisma.saasAnnouncement.findMany({
-      orderBy: [
-        {
-          publishedAt: "desc",
-        },
-        {
-          createdAt: "desc",
-        },
-      ],
-    });
+    await prisma
+      .saasAnnouncement
+      .findMany({
+        orderBy: [
+          {
+            publishedAt:
+              "desc",
+          },
+          {
+            createdAt:
+              "desc",
+          },
+        ],
+      });
 
   const publishedCount =
     allUpdates.filter(
-      (update) => update.published,
+      (update) =>
+        update.published,
     ).length;
 
   const draftCount =
@@ -131,552 +160,682 @@ export default async function UpdatesPage({
     publishedCount;
 
   const updates =
-    allUpdates.filter((update) => {
-      if (filter === "published") {
-        return update.published;
-      }
+    allUpdates.filter(
+      (update) => {
+        if (
+          active ===
+          "PUBLISHED"
+        ) {
+          return update.published;
+        }
 
-      if (filter === "drafts") {
-        return !update.published;
-      }
+        if (
+          active ===
+          "DRAFT"
+        ) {
+          return !update.published;
+        }
 
-      return true;
-    });
+        return true;
+      },
+    );
+
+  const countFor = (
+    value: Filter,
+  ) => {
+    if (value === "PUBLISHED") {
+      return publishedCount;
+    }
+
+    if (value === "DRAFT") {
+      return draftCount;
+    }
+
+    return allUpdates.length;
+  };
 
   const notice =
-    stateMessage(params.state);
+    stateMessage(
+      params.state,
+    );
 
   return (
-    <div className="space-y-6">
-      <header className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
+    <div className="hub-page hub-updates-page">
+      <header className="hub-workspace-head">
         <div>
-          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400">
-            SaaS communication
-          </p>
+          <span className="hub-workspace-kicker">
+            SAAS / COMMUNICATION
+          </span>
 
-          <h1 className="mt-1 text-3xl font-semibold tracking-[-0.035em] text-slate-950 sm:text-4xl">
+          <h1>
             News & Updates
           </h1>
 
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
-            Publish product news, feature releases and important service announcements directly to your customers.
+          <p>
+            Publish product news, feature releases and service announcements directly to tenant dashboards.
           </p>
         </div>
 
-        <div className="grid grid-cols-3 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="px-5 py-3.5">
-            <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400">
-              Total
-            </span>
+        <a
+          href="#new-update"
+          className="hub-workspace-primary-action"
+        >
+          <Plus size={15} />
+          New update
+        </a>
+      </header>
 
-            <strong className="mt-1 block text-xl text-slate-950">
+      <section
+        className="hub-workspace-stats hub-updates-stats"
+        aria-label="News overview"
+      >
+        <div className="hub-workspace-stat">
+          <span className="hub-workspace-stat-icon">
+            <Megaphone size={16} />
+          </span>
+
+          <div>
+            <small>
+              Total updates
+            </small>
+
+            <strong>
               {allUpdates.length}
             </strong>
-          </div>
 
-          <div className="border-l border-slate-100 px-5 py-3.5">
-            <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400">
-              Live
+            <span>
+              All announcements
             </span>
-
-            <strong className="mt-1 block text-xl text-emerald-700">
-              {publishedCount}
-            </strong>
-          </div>
-
-          <div className="border-l border-slate-100 px-5 py-3.5">
-            <span className="block text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400">
-              Drafts
-            </span>
-
-            <strong className="mt-1 block text-xl text-slate-700">
-              {draftCount}
-            </strong>
           </div>
         </div>
-      </header>
+
+        <div className="hub-workspace-stat">
+          <span className="hub-workspace-stat-icon hub-workspace-stat-icon-good">
+            <Radio size={16} />
+          </span>
+
+          <div>
+            <small>
+              Published
+            </small>
+
+            <strong>
+              {publishedCount}
+            </strong>
+
+            <span>
+              Visible to tenants
+            </span>
+          </div>
+        </div>
+
+        <div className="hub-workspace-stat">
+          <span className="hub-workspace-stat-icon hub-workspace-stat-icon-info">
+            <FilePenLine size={16} />
+          </span>
+
+          <div>
+            <small>
+              Drafts
+            </small>
+
+            <strong>
+              {draftCount}
+            </strong>
+
+            <span>
+              Waiting for review
+            </span>
+          </div>
+        </div>
+
+        <div className="hub-workspace-stat">
+          <span className="hub-workspace-stat-icon hub-workspace-stat-icon-value">
+            <BellRing size={16} />
+          </span>
+
+          <div>
+            <small>
+              Audience
+            </small>
+
+            <strong>
+              All plans
+            </strong>
+
+            <span>
+              Or target one package
+            </span>
+          </div>
+        </div>
+      </section>
 
       {notice ? (
         <div
-          className={`rounded-xl border px-4 py-3 text-sm font-medium ${
-            notice.tone === "error"
-              ? "border-red-200 bg-red-50 text-red-800"
-              : "border-emerald-200 bg-emerald-50 text-emerald-800"
-          }`}
+          className={
+            notice.tone ===
+            "error"
+              ? "hub-updates-notice hub-updates-notice-error"
+              : "hub-updates-notice hub-updates-notice-success"
+          }
         >
           {notice.text}
         </div>
       ) : null}
 
-      <details
-        className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
-        open={allUpdates.length === 0}
+      <section
+        id="new-update"
+        className="hub-updates-compose"
       >
-        <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 marker:hidden">
-          <div>
-            <strong className="block text-sm font-semibold text-slate-950">
-              Create an update
-            </strong>
+        <details
+          open={
+            allUpdates.length ===
+            0
+          }
+        >
+          <summary>
+            <div>
+              <strong>
+                Create an update
+              </strong>
 
-            <span className="mt-0.5 block text-xs text-slate-500">
-              Write now, review as a draft, publish when ready.
-            </span>
-          </div>
-
-          <span className="flex h-9 items-center rounded-xl bg-slate-950 px-4 text-sm font-semibold text-white transition group-open:bg-slate-100 group-open:text-slate-700">
-            <span className="group-open:hidden">
-              + New update
-            </span>
-
-            <span className="hidden group-open:inline">
-              Close
-            </span>
-          </span>
-        </summary>
-
-        <div className="border-t border-slate-100 p-5">
-          <form
-            action="/api/hub/updates"
-            method="post"
-            className="grid gap-4"
-          >
-            <input
-              type="hidden"
-              name="action"
-              value="save"
-            />
-
-            <div className="grid gap-4 lg:grid-cols-[minmax(0,1.4fr)_minmax(260px,.6fr)]">
-              <label className="grid gap-1.5 text-sm font-medium text-slate-700">
-                Title
-
-                <input
-                  name="title"
-                  required
-                  maxLength={140}
-                  className="rounded-xl border border-slate-200 px-3 py-2.5 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-50"
-                  placeholder="What's new?"
-                />
-              </label>
-
-              <label className="grid gap-1.5 text-sm font-medium text-slate-700">
-                Audience
-
-                <select
-                  name="audiencePlan"
-                  className="rounded-xl border border-slate-200 px-3 py-2.5 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-50"
-                  defaultValue=""
-                >
-                  <option value="">
-                    All plans
-                  </option>
-
-                  <option value="STARTER">
-                    Starter
-                  </option>
-
-                  <option value="SAAS">
-                    Growth
-                  </option>
-
-                  <option value="BUSINESS">
-                    Business
-                  </option>
-                </select>
-              </label>
+              <span>
+                Draft first, publish when ready.
+              </span>
             </div>
 
-            <div className="grid gap-4 lg:grid-cols-[260px_minmax(0,1fr)]">
-              <label className="grid gap-1.5 text-sm font-medium text-slate-700">
-                Type
+            <span className="hub-updates-compose-toggle">
+              <Plus size={14} />
+              New update
+            </span>
+          </summary>
 
-                <select
-                  name="kind"
-                  defaultValue="feature"
-                  className="rounded-xl border border-slate-200 px-3 py-2.5 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-50"
-                >
-                  <option value="feature">
-                    Feature
-                  </option>
-
-                  <option value="announcement">
-                    Announcement
-                  </option>
-
-                  <option value="maintenance">
-                    Maintenance
-                  </option>
-
-                  <option value="security">
-                    Security
-                  </option>
-                </select>
-              </label>
-
-              <label className="grid gap-1.5 text-sm font-medium text-slate-700">
-                Short summary
-
-                <input
-                  name="summary"
-                  required
-                  maxLength={240}
-                  className="rounded-xl border border-slate-200 px-3 py-2.5 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-50"
-                  placeholder="One sentence customers will see in the dashboard."
-                />
-              </label>
-            </div>
-
-            <label className="grid gap-1.5 text-sm font-medium text-slate-700">
-              Full update
-
-              <textarea
-                name="body"
-                required
-                rows={5}
-                maxLength={6000}
-                className="resize-y rounded-xl border border-slate-200 px-3 py-2.5 leading-6 outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-50"
-                placeholder="Explain what changed and anything the customer needs to know."
+          <div className="hub-updates-compose-body">
+            <form
+              action="/api/hub/updates"
+              method="post"
+              className="hub-updates-form"
+            >
+              <input
+                type="hidden"
+                name="action"
+                value="save"
               />
-            </label>
 
-            <div className="flex items-center justify-between gap-4 border-t border-slate-100 pt-4">
-              <span className="hidden text-xs text-slate-400 sm:block">
-                Nothing goes live until you publish it.
+              <div className="hub-updates-form-grid hub-updates-form-grid-wide">
+                <label>
+                  <span>
+                    Title
+                  </span>
+
+                  <input
+                    name="title"
+                    required
+                    maxLength={140}
+                    placeholder="New analytics dashboard"
+                  />
+                </label>
+
+                <label>
+                  <span>
+                    Audience
+                  </span>
+
+                  <select
+                    name="audiencePlan"
+                    defaultValue=""
+                  >
+                    <option value="">
+                      All plans
+                    </option>
+
+                    <option value="STARTER">
+                      Starter
+                    </option>
+
+                    <option value="SAAS">
+                      Growth
+                    </option>
+
+                    <option value="BUSINESS">
+                      Business
+                    </option>
+                  </select>
+                </label>
+              </div>
+
+              <div className="hub-updates-form-grid hub-updates-form-grid-type">
+                <label>
+                  <span>
+                    Type
+                  </span>
+
+                  <select
+                    name="kind"
+                    defaultValue="feature"
+                  >
+                    <option value="feature">
+                      Feature
+                    </option>
+
+                    <option value="announcement">
+                      Announcement
+                    </option>
+
+                    <option value="maintenance">
+                      Maintenance
+                    </option>
+
+                    <option value="security">
+                      Security
+                    </option>
+                  </select>
+                </label>
+
+                <label>
+                  <span>
+                    Short summary
+                  </span>
+
+                  <input
+                    name="summary"
+                    required
+                    maxLength={240}
+                    placeholder="Short text shown on the tenant dashboard."
+                  />
+                </label>
+              </div>
+
+              <label>
+                <span>
+                  Full update
+                </span>
+
+                <textarea
+                  name="body"
+                  required
+                  rows={5}
+                  maxLength={6000}
+                  placeholder="Explain what changed and what the customer needs to know."
+                />
+              </label>
+
+              <div className="hub-updates-form-actions">
+                <small>
+                  Updates stay private until published.
+                </small>
+
+                <button
+                  type="submit"
+                  className="hub-updates-primary-button"
+                >
+                  Save draft
+                </button>
+              </div>
+            </form>
+          </div>
+        </details>
+      </section>
+
+      <nav
+        className="hub-workspace-filters"
+        aria-label="Update filters"
+      >
+        {FILTERS.map(
+          (value) => (
+            <Link
+              key={value}
+              href={
+                value ===
+                "ALL"
+                  ? "/hub/updates"
+                  : `/hub/updates?status=${value}`
+              }
+              className={
+                active === value
+                  ? "hub-workspace-filter-active"
+                  : undefined
+              }
+              aria-current={
+                active === value
+                  ? "page"
+                  : undefined
+              }
+            >
+              <span>
+                {value === "ALL"
+                  ? "All"
+                  : value ===
+                      "PUBLISHED"
+                    ? "Published"
+                    : "Drafts"}
               </span>
 
-              <button
-                type="submit"
-                className="ml-auto rounded-xl bg-slate-950 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
+              <strong>
+                {countFor(
+                  value,
+                )}
+              </strong>
+            </Link>
+          ),
+        )}
+      </nav>
+
+      {updates.length === 0 ? (
+        <div className="hub-empty-state">
+          <Megaphone size={28} />
+
+          <h2>
+            {active ===
+            "PUBLISHED"
+              ? "No published updates"
+              : active ===
+                  "DRAFT"
+                ? "No drafts"
+                : "No updates yet"}
+          </h2>
+
+          <p>
+            {active ===
+            "ALL"
+              ? "Create your first customer announcement."
+              : "Choose another filter to see more updates."}
+          </p>
+        </div>
+      ) : (
+        <section
+          className="hub-updates-list"
+          aria-label="News and updates"
+        >
+          {updates.map(
+            (update) => (
+              <article
+                key={update.id}
+                className="hub-updates-row"
               >
-                Save as draft
-              </button>
-            </div>
-          </form>
-        </div>
-      </details>
-
-      <section>
-        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h2 className="text-lg font-semibold tracking-tight text-slate-950">
-              Published & drafts
-            </h2>
-
-            <p className="mt-0.5 text-xs text-slate-500">
-              Manage everything customers can see from one place.
-            </p>
-          </div>
-
-          <nav
-            className="inline-flex w-fit rounded-xl border border-slate-200 bg-white p-1"
-            aria-label="Filter updates"
-          >
-            {([
-              ["all", "All", allUpdates.length],
-              ["published", "Published", publishedCount],
-              ["drafts", "Drafts", draftCount],
-            ] as const).map(
-              ([value, label, count]) => (
-                <Link
-                  key={value}
-                  href={filterHref(value)}
-                  className={`rounded-lg px-3 py-1.5 text-xs font-semibold no-underline transition ${
-                    filter === value
-                      ? "bg-slate-950 text-white"
-                      : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
-                  }`}
-                >
-                  {label}
+                <div className="hub-updates-row-main">
                   <span
-                    className={`ml-1.5 ${
-                      filter === value
-                        ? "text-slate-300"
-                        : "text-slate-400"
-                    }`}
+                    className={`hub-updates-kind hub-updates-kind-${update.kind}`}
                   >
-                    {count}
+                    <Megaphone
+                      size={15}
+                    />
                   </span>
-                </Link>
-              ),
-            )}
-          </nav>
-        </div>
 
-        <div className="grid gap-3">
-          {updates.map((update) => (
-            <article
-              key={update.id}
-              className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
-            >
-              <div className="p-5">
-                <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                  <div className="min-w-0">
-                    <div className="mb-3 flex flex-wrap items-center gap-2">
+                  <div>
+                    <div className="hub-updates-title-line">
+                      <strong>
+                        {update.title}
+                      </strong>
+
                       <span
-                        className={`rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.08em] ${
+                        className={
                           update.published
-                            ? "bg-emerald-50 text-emerald-700"
-                            : "bg-slate-100 text-slate-600"
-                        }`}
+                            ? "hub-updates-status hub-updates-status-published"
+                            : "hub-updates-status hub-updates-status-draft"
+                        }
                       >
                         {update.published
                           ? "Published"
                           : "Draft"}
                       </span>
-
-                      <span className="rounded-full bg-blue-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.08em] text-blue-700">
-                        {audienceLabel(
-                          update.audiencePlan,
-                        )}
-                      </span>
-
-                      <span className="rounded-full bg-slate-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.08em] text-slate-500">
-                        {kindLabel(
-                          update.kind,
-                        )}
-                      </span>
-
-                      <span className="text-xs text-slate-400">
-                        {formatDate(
-                          update.publishedAt,
-                        )}
-                      </span>
                     </div>
 
-                    <h3 className="truncate text-[17px] font-semibold tracking-tight text-slate-950">
-                      {update.title}
-                    </h3>
-
-                    <p className="mt-1 max-w-3xl text-sm leading-6 text-slate-500">
+                    <p>
                       {update.summary}
                     </p>
                   </div>
+                </div>
 
-                  <div className="flex flex-wrap items-center gap-2 lg:flex-none">
-                    <details className="group/edit">
-                      <summary className="cursor-pointer list-none rounded-xl border border-slate-200 px-3.5 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 marker:hidden">
-                        Edit
-                      </summary>
+                <div className="hub-updates-row-meta">
+                  <small>
+                    Audience
+                  </small>
 
-                      <div className="fixed inset-0 z-40 bg-slate-950/20 backdrop-blur-[1px]" />
+                  <strong>
+                    {audienceLabel(
+                      update.audiencePlan,
+                    )}
+                  </strong>
 
-                      <div className="fixed inset-x-4 top-1/2 z-50 mx-auto max-h-[calc(100vh-40px)] max-w-3xl -translate-y-1/2 overflow-y-auto rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl sm:inset-x-8">
-                        <div className="mb-5 flex items-start justify-between gap-4">
-                          <div>
-                            <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">
-                              Edit update
+                  <span>
+                    {kindLabel(
+                      update.kind,
+                    )}
+                  </span>
+                </div>
+
+                <div className="hub-updates-row-date">
+                  <small>
+                    {update.published
+                      ? "Published"
+                      : "Created"}
+                  </small>
+
+                  <strong>
+                    {formatDate(
+                      update.published
+                        ? update.publishedAt
+                        : update.createdAt,
+                    )}
+                  </strong>
+                </div>
+
+                <div className="hub-updates-row-actions">
+                  <details className="hub-updates-edit">
+                    <summary>
+                      Edit
+                    </summary>
+
+                    <div className="hub-updates-edit-panel">
+                      <div className="hub-updates-edit-head">
+                        <div>
+                          <small>
+                            EDIT UPDATE
+                          </small>
+
+                          <strong>
+                            {update.title}
+                          </strong>
+                        </div>
+                      </div>
+
+                      <form
+                        action="/api/hub/updates"
+                        method="post"
+                        className="hub-updates-form"
+                      >
+                        <input
+                          type="hidden"
+                          name="action"
+                          value="save"
+                        />
+
+                        <input
+                          type="hidden"
+                          name="id"
+                          value={update.id}
+                        />
+
+                        <div className="hub-updates-form-grid">
+                          <label>
+                            <span>
+                              Title
                             </span>
 
-                            <h3 className="mt-1 text-xl font-semibold text-slate-950">
-                              {update.title}
-                            </h3>
-                          </div>
-
-                          <span className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-500">
-                            Close with browser back or save
-                          </span>
-                        </div>
-
-                        <form
-                          action="/api/hub/updates"
-                          method="post"
-                          className="grid gap-4"
-                        >
-                          <input
-                            type="hidden"
-                            name="action"
-                            value="save"
-                          />
-
-                          <input
-                            type="hidden"
-                            name="id"
-                            value={update.id}
-                          />
-
-                          <div className="grid gap-4 md:grid-cols-2">
-                            <label className="grid gap-1.5 text-sm font-medium text-slate-700">
-                              Title
-
-                              <input
-                                name="title"
-                                required
-                                defaultValue={update.title}
-                                className="rounded-xl border border-slate-200 px-3 py-2.5 outline-none focus:border-blue-400"
-                              />
-                            </label>
-
-                            <label className="grid gap-1.5 text-sm font-medium text-slate-700">
-                              Audience
-
-                              <select
-                                name="audiencePlan"
-                                defaultValue={
-                                  update.audiencePlan ??
-                                  ""
-                                }
-                                className="rounded-xl border border-slate-200 px-3 py-2.5 outline-none focus:border-blue-400"
-                              >
-                                <option value="">
-                                  All plans
-                                </option>
-
-                                <option value="STARTER">
-                                  Starter
-                                </option>
-
-                                <option value="SAAS">
-                                  Growth
-                                </option>
-
-                                <option value="BUSINESS">
-                                  Business
-                                </option>
-                              </select>
-                            </label>
-                          </div>
-
-                          <div className="grid gap-4 md:grid-cols-2">
-                            <label className="grid gap-1.5 text-sm font-medium text-slate-700">
-                              Type
-
-                              <select
-                                name="kind"
-                                defaultValue={update.kind}
-                                className="rounded-xl border border-slate-200 px-3 py-2.5 outline-none focus:border-blue-400"
-                              >
-                                <option value="feature">
-                                  Feature
-                                </option>
-
-                                <option value="announcement">
-                                  Announcement
-                                </option>
-
-                                <option value="maintenance">
-                                  Maintenance
-                                </option>
-
-                                <option value="security">
-                                  Security
-                                </option>
-                              </select>
-                            </label>
-
-                            <label className="grid gap-1.5 text-sm font-medium text-slate-700">
-                              Summary
-
-                              <input
-                                name="summary"
-                                required
-                                defaultValue={update.summary}
-                                className="rounded-xl border border-slate-200 px-3 py-2.5 outline-none focus:border-blue-400"
-                              />
-                            </label>
-                          </div>
-
-                          <label className="grid gap-1.5 text-sm font-medium text-slate-700">
-                            Full update
-
-                            <textarea
-                              name="body"
+                            <input
+                              name="title"
                               required
-                              rows={6}
-                              defaultValue={update.body}
-                              className="resize-y rounded-xl border border-slate-200 px-3 py-2.5 leading-6 outline-none focus:border-blue-400"
+                              defaultValue={
+                                update.title
+                              }
                             />
                           </label>
 
-                          <div className="flex justify-end border-t border-slate-100 pt-4">
-                            <button
-                              type="submit"
-                              className="rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-800"
+                          <label>
+                            <span>
+                              Audience
+                            </span>
+
+                            <select
+                              name="audiencePlan"
+                              defaultValue={
+                                update.audiencePlan ??
+                                ""
+                              }
                             >
-                              Save changes
-                            </button>
-                          </div>
-                        </form>
-                      </div>
-                    </details>
+                              <option value="">
+                                All plans
+                              </option>
 
-                    <form
-                      action="/api/hub/updates"
-                      method="post"
+                              <option value="STARTER">
+                                Starter
+                              </option>
+
+                              <option value="SAAS">
+                                Growth
+                              </option>
+
+                              <option value="BUSINESS">
+                                Business
+                              </option>
+                            </select>
+                          </label>
+                        </div>
+
+                        <div className="hub-updates-form-grid">
+                          <label>
+                            <span>
+                              Type
+                            </span>
+
+                            <select
+                              name="kind"
+                              defaultValue={
+                                update.kind
+                              }
+                            >
+                              <option value="feature">
+                                Feature
+                              </option>
+
+                              <option value="announcement">
+                                Announcement
+                              </option>
+
+                              <option value="maintenance">
+                                Maintenance
+                              </option>
+
+                              <option value="security">
+                                Security
+                              </option>
+                            </select>
+                          </label>
+
+                          <label>
+                            <span>
+                              Summary
+                            </span>
+
+                            <input
+                              name="summary"
+                              required
+                              defaultValue={
+                                update.summary
+                              }
+                            />
+                          </label>
+                        </div>
+
+                        <label>
+                          <span>
+                            Full update
+                          </span>
+
+                          <textarea
+                            name="body"
+                            required
+                            rows={6}
+                            defaultValue={
+                              update.body
+                            }
+                          />
+                        </label>
+
+                        <div className="hub-updates-form-actions">
+                          <span />
+
+                          <button
+                            type="submit"
+                            className="hub-updates-primary-button"
+                          >
+                            Save changes
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </details>
+
+                  <form
+                    action="/api/hub/updates"
+                    method="post"
+                  >
+                    <input
+                      type="hidden"
+                      name="action"
+                      value="toggle"
+                    />
+
+                    <input
+                      type="hidden"
+                      name="id"
+                      value={update.id}
+                    />
+
+                    <button
+                      type="submit"
+                      className={
+                        update.published
+                          ? "hub-updates-button hub-updates-button-unpublish"
+                          : "hub-updates-button hub-updates-button-publish"
+                      }
                     >
-                      <input
-                        type="hidden"
-                        name="action"
-                        value="toggle"
-                      />
+                      {update.published
+                        ? "Unpublish"
+                        : "Publish"}
+                    </button>
+                  </form>
 
-                      <input
-                        type="hidden"
-                        name="id"
-                        value={update.id}
-                      />
+                  <form
+                    action="/api/hub/updates"
+                    method="post"
+                  >
+                    <input
+                      type="hidden"
+                      name="action"
+                      value="delete"
+                    />
 
-                      <button
-                        type="submit"
-                        className={`rounded-xl px-3.5 py-2 text-sm font-semibold transition ${
-                          update.published
-                            ? "bg-amber-50 text-amber-800 hover:bg-amber-100"
-                            : "bg-emerald-600 text-white hover:bg-emerald-700"
-                        }`}
-                      >
-                        {update.published
-                          ? "Unpublish"
-                          : "Publish"}
-                      </button>
-                    </form>
+                    <input
+                      type="hidden"
+                      name="id"
+                      value={update.id}
+                    />
 
-                    <form
-                      action="/api/hub/updates"
-                      method="post"
+                    <button
+                      type="submit"
+                      className="hub-updates-delete"
                     >
-                      <input
-                        type="hidden"
-                        name="action"
-                        value="delete"
-                      />
-
-                      <input
-                        type="hidden"
-                        name="id"
-                        value={update.id}
-                      />
-
-                      <button
-                        type="submit"
-                        className="rounded-xl px-3 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50"
-                      >
-                        Delete
-                      </button>
-                    </form>
-                  </div>
+                      Delete
+                    </button>
+                  </form>
                 </div>
-              </div>
-            </article>
-          ))}
-
-          {!updates.length ? (
-            <div className="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center">
-              <strong className="block text-sm font-semibold text-slate-800">
-                {filter === "published"
-                  ? "Nothing published yet"
-                  : filter === "drafts"
-                    ? "No drafts waiting"
-                    : "No updates yet"}
-              </strong>
-
-              <span className="mt-1 block text-sm text-slate-500">
-                {filter === "all"
-                  ? "Create your first announcement above."
-                  : "Try another filter to see your other updates."}
-              </span>
-            </div>
-          ) : null}
-        </div>
-      </section>
+              </article>
+            ),
+          )}
+        </section>
+      )}
     </div>
   );
 }

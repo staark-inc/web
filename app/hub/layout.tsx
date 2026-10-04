@@ -11,6 +11,7 @@ import "./contacts-workspace.css";
 import "./leads-workspace-polish.css";
 import "./lead-controls-compact.css";
 import "./operations-workspace.css";
+import "./updates-workspace.css";
 import "./billing-support-v2.css";
 import "./saas-subscriptions.css";
 import "./saas-subscription-detail.css";
