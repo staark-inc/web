@@ -16,6 +16,7 @@ import {
   CreditCard,
   LifeBuoy,
   Sparkles,
+  Newspaper,
 } from "lucide-react";
 
 type HubNavProps = {
@@ -63,6 +64,10 @@ export default function HubNav({
   const isSupport =
     pathname === "/hub/support" ||
     pathname.startsWith("/hub/support/");
+
+  const isUpdates =
+    pathname === "/hub/updates" ||
+    pathname.startsWith("/hub/updates/");
 
   return (
     <nav className="hub-nav">
@@ -197,6 +202,18 @@ export default function HubNav({
       </Link>
 
       <div className="hub-nav-section-label">Operations</div>
+
+      <Link
+        href="/hub/updates"
+        aria-label="News & Updates"
+        data-tooltip="News & Updates"
+        className={`hub-nav-item hub-compact-tooltip ${
+          isUpdates ? "hub-nav-item-active" : ""
+        }`}
+      >
+        <Newspaper size={17} />
+        <span>News & Updates</span>
+      </Link>
 
       <Link
         href="/hub/billing"

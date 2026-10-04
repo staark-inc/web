@@ -62,6 +62,7 @@ export const ModelName = {
   BillingSubscription: 'BillingSubscription',
   SaasProvisioning: 'SaasProvisioning',
   SaasSetupClaim: 'SaasSetupClaim',
+  SaasAnnouncement: 'SaasAnnouncement',
   Offer: 'Offer',
   Project: 'Project',
   ProjectMaterial: 'ProjectMaterial',
@@ -310,6 +311,22 @@ export const SaasSetupClaimScalarFieldEnum = {
 } as const
 
 export type SaasSetupClaimScalarFieldEnum = (typeof SaasSetupClaimScalarFieldEnum)[keyof typeof SaasSetupClaimScalarFieldEnum]
+
+
+export const SaasAnnouncementScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  summary: 'summary',
+  body: 'body',
+  kind: 'kind',
+  audiencePlan: 'audiencePlan',
+  published: 'published',
+  publishedAt: 'publishedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SaasAnnouncementScalarFieldEnum = (typeof SaasAnnouncementScalarFieldEnum)[keyof typeof SaasAnnouncementScalarFieldEnum]
 
 
 export const OfferScalarFieldEnum = {

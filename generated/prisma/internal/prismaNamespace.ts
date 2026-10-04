@@ -408,6 +408,7 @@ export const ModelName = {
   BillingSubscription: 'BillingSubscription',
   SaasProvisioning: 'SaasProvisioning',
   SaasSetupClaim: 'SaasSetupClaim',
+  SaasAnnouncement: 'SaasAnnouncement',
   Offer: 'Offer',
   Project: 'Project',
   ProjectMaterial: 'ProjectMaterial',
@@ -436,7 +437,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "notification" | "settings" | "contact" | "lead" | "prospect" | "client" | "billingCustomer" | "billingSubscription" | "saasProvisioning" | "saasSetupClaim" | "offer" | "project" | "projectMaterial" | "projectActivity" | "projectTask" | "thread" | "supportRequest" | "message" | "messageAttachment" | "demoDeployment" | "wordPressSite" | "wordPressPairingCode" | "wordPressTicketSync"
+    modelProps: "user" | "notification" | "settings" | "contact" | "lead" | "prospect" | "client" | "billingCustomer" | "billingSubscription" | "saasProvisioning" | "saasSetupClaim" | "saasAnnouncement" | "offer" | "project" | "projectMaterial" | "projectActivity" | "projectTask" | "thread" | "supportRequest" | "message" | "messageAttachment" | "demoDeployment" | "wordPressSite" | "wordPressPairingCode" | "wordPressTicketSync"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1251,6 +1252,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.SaasSetupClaimCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.SaasSetupClaimCountAggregateOutputType> | number
+        }
+      }
+    }
+    SaasAnnouncement: {
+      payload: Prisma.$SaasAnnouncementPayload<ExtArgs>
+      fields: Prisma.SaasAnnouncementFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SaasAnnouncementFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaasAnnouncementPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SaasAnnouncementFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaasAnnouncementPayload>
+        }
+        findFirst: {
+          args: Prisma.SaasAnnouncementFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaasAnnouncementPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SaasAnnouncementFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaasAnnouncementPayload>
+        }
+        findMany: {
+          args: Prisma.SaasAnnouncementFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaasAnnouncementPayload>[]
+        }
+        create: {
+          args: Prisma.SaasAnnouncementCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaasAnnouncementPayload>
+        }
+        createMany: {
+          args: Prisma.SaasAnnouncementCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SaasAnnouncementCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaasAnnouncementPayload>[]
+        }
+        delete: {
+          args: Prisma.SaasAnnouncementDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaasAnnouncementPayload>
+        }
+        update: {
+          args: Prisma.SaasAnnouncementUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaasAnnouncementPayload>
+        }
+        deleteMany: {
+          args: Prisma.SaasAnnouncementDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SaasAnnouncementUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SaasAnnouncementUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaasAnnouncementPayload>[]
+        }
+        upsert: {
+          args: Prisma.SaasAnnouncementUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SaasAnnouncementPayload>
+        }
+        aggregate: {
+          args: Prisma.SaasAnnouncementAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSaasAnnouncement>
+        }
+        groupBy: {
+          args: Prisma.SaasAnnouncementGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SaasAnnouncementGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SaasAnnouncementCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SaasAnnouncementCountAggregateOutputType> | number
         }
       }
     }
@@ -2474,6 +2549,22 @@ export const SaasSetupClaimScalarFieldEnum = {
 export type SaasSetupClaimScalarFieldEnum = (typeof SaasSetupClaimScalarFieldEnum)[keyof typeof SaasSetupClaimScalarFieldEnum]
 
 
+export const SaasAnnouncementScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  summary: 'summary',
+  body: 'body',
+  kind: 'kind',
+  audiencePlan: 'audiencePlan',
+  published: 'published',
+  publishedAt: 'publishedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SaasAnnouncementScalarFieldEnum = (typeof SaasAnnouncementScalarFieldEnum)[keyof typeof SaasAnnouncementScalarFieldEnum]
+
+
 export const OfferScalarFieldEnum = {
   id: 'id',
   clientId: 'clientId',
@@ -3254,6 +3345,7 @@ export type GlobalOmitConfig = {
   billingSubscription?: Prisma.BillingSubscriptionOmit
   saasProvisioning?: Prisma.SaasProvisioningOmit
   saasSetupClaim?: Prisma.SaasSetupClaimOmit
+  saasAnnouncement?: Prisma.SaasAnnouncementOmit
   offer?: Prisma.OfferOmit
   project?: Prisma.ProjectOmit
   projectMaterial?: Prisma.ProjectMaterialOmit
