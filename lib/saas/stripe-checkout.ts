@@ -170,6 +170,102 @@ export async function resolveStripePrice(
   return stripePrice;
 }
 
+export async function createSaaSBillingPortalSession(input: {
+  environment: SaaSCheckoutEnvironment;
+  customerId: string;
+  returnUrl: string;
+}): Promise<{
+  id: string;
+  url: string;
+}> {
+  const customerId =
+    input.customerId.trim();
+
+  if (!customerId.startsWith("cus_")) {
+    throw new Error(
+      "Invalid Stripe customer id.",
+    );
+  }
+
+  const returnUrl =
+    input.returnUrl.trim();
+
+  if (!returnUrl) {
+    throw new Error(
+      "Billing portal return URL is required.",
+    );
+  }
+
+  const body =
+    new URLSearchParams();
+
+  body.set(
+    "customer",
+    customerId,
+  );
+
+  body.set(
+    "return_url",
+    returnUrl,
+  );
+
+  const configuration =
+    input.environment === "live"
+      ? process.env
+          .STRIPE_PORTAL_CONFIGURATION_ID
+          ?.trim()
+      : process.env
+          .STRIPE_TEST_PORTAL_CONFIGURATION_ID
+          ?.trim();
+
+  if (configuration) {
+    body.set(
+      "configuration",
+      configuration,
+    );
+  }
+
+  const session =
+    await stripeRequest<{
+      id?: string;
+      url?: string | null;
+      error?: {
+        message?: string;
+      };
+    }>(
+      input.environment,
+      "/v1/billing_portal/sessions",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/x-www-form-urlencoded",
+        },
+
+        body,
+      },
+    );
+
+  if (
+    !session.id ||
+    !session.url
+  ) {
+    throw new Error(
+      "Stripe Billing Portal Session was created without an id or URL.",
+    );
+  }
+
+  return {
+    id:
+      session.id,
+
+    url:
+      session.url,
+  };
+}
+
+
 export async function createSaaSCheckoutSession(input: {
   planCode: StaarkPlanCode;
   interval: BillingInterval;
