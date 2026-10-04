@@ -21,13 +21,47 @@ function redirect(
   request: Request,
   state: string,
 ) {
-  return NextResponse.redirect(
+  const forwardedHost =
+    request.headers
+      .get("x-forwarded-host")
+      ?.split(",")[0]
+      ?.trim() ||
+    request.headers
+      .get("host")
+      ?.split(",")[0]
+      ?.trim();
+
+  if (!forwardedHost) {
+    throw new Error(
+      "Could not determine public Hub host.",
+    );
+  }
+
+  const forwardedProto =
+    request.headers
+      .get("x-forwarded-proto")
+      ?.split(",")[0]
+      ?.trim()
+      .toLowerCase();
+
+  const protocol =
+    process.env.NODE_ENV === "production"
+      ? "https"
+      : forwardedProto === "https" ||
+          forwardedProto === "http"
+        ? forwardedProto
+        : "http";
+
+  const url =
     new URL(
       `/hub/updates?state=${encodeURIComponent(
         state,
       )}`,
-      request.url,
-    ),
+      `${protocol}://${forwardedHost}`,
+    );
+
+  return NextResponse.redirect(
+    url,
     303,
   );
 }
