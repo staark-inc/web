@@ -17,6 +17,7 @@ import {
   LifeBuoy,
   Sparkles,
   Newspaper,
+  Package,
 } from "lucide-react";
 
 type HubNavProps = {
@@ -57,9 +58,13 @@ export default function HubNav({
     pathname === "/hub/offers" ||
     pathname.startsWith("/hub/offers/");
 
+  const isSaasSubscriptions =
+    pathname === "/hub/billing/subscriptions" ||
+    pathname.startsWith("/hub/billing/subscriptions/");
+
   const isBilling =
-    pathname === "/hub/billing" ||
-    pathname.startsWith("/hub/billing/");
+    !isSaasSubscriptions &&
+    (pathname === "/hub/billing" || pathname.startsWith("/hub/billing/"));
 
   const isSupport =
     pathname === "/hub/support" ||
@@ -82,6 +87,8 @@ export default function HubNav({
         <LayoutDashboard size={17} />
         <span>Overview</span>
       </Link>
+
+      <div className="hub-nav-section-label">Communication</div>
 
       <Link
         href="/hub/inbox"
@@ -110,18 +117,18 @@ export default function HubNav({
         <span>Sent</span>
       </Link>
 
-      <div className="hub-nav-section-label">Customers</div>
+      <div className="hub-nav-section-label">Sales</div>
 
       <Link
-        href="/hub/contacts"
-        aria-label="Contacts"
-        data-tooltip="Contacts"
+        href="/hub/prospects"
+        aria-label="Prospects"
+        data-tooltip="Prospects"
         className={`hub-nav-item hub-compact-tooltip ${
-          isContacts ? "hub-nav-item-active" : ""
+          isProspects ? "hub-nav-item-active" : ""
         }`}
       >
-        <UsersRound size={17} />
-        <span>Contacts</span>
+        <Search size={17} />
+        <span>Prospects</span>
       </Link>
 
       <Link
@@ -137,18 +144,6 @@ export default function HubNav({
         {showCounts && newLeadCount > 0 && (
           <span className="hub-nav-count">{newLeadCount > 99 ? "99+" : newLeadCount}</span>
         )}
-      </Link>
-
-      <Link
-        href="/hub/prospects"
-        aria-label="Prospects"
-        data-tooltip="Prospects"
-        className={`hub-nav-item hub-compact-tooltip ${
-          isProspects ? "hub-nav-item-active" : ""
-        }`}
-      >
-        <Search size={17} />
-        <span>Prospects</span>
       </Link>
 
       <Link
@@ -175,7 +170,19 @@ export default function HubNav({
         <span>Clients</span>
       </Link>
 
-      <div className="hub-nav-section-label">Work</div>
+      <Link
+        href="/hub/contacts"
+        aria-label="Contacts"
+        data-tooltip="Contacts"
+        className={`hub-nav-item hub-compact-tooltip ${
+          isContacts ? "hub-nav-item-active" : ""
+        }`}
+      >
+        <UsersRound size={17} />
+        <span>Contacts</span>
+      </Link>
+
+      <div className="hub-nav-section-label">Delivery</div>
 
       <Link
         href="/hub/projects"
@@ -201,19 +208,21 @@ export default function HubNav({
         <span>Offers</span>
       </Link>
 
-      <div className="hub-nav-section-label">Operations</div>
+      <div className="hub-nav-section-label">SaaS</div>
 
       <Link
-        href="/hub/updates"
-        aria-label="News & Updates"
-        data-tooltip="News & Updates"
+        href="/hub/billing/subscriptions"
+        aria-label="Subscriptions"
+        data-tooltip="Subscriptions"
         className={`hub-nav-item hub-compact-tooltip ${
-          isUpdates ? "hub-nav-item-active" : ""
+          isSaasSubscriptions ? "hub-nav-item-active" : ""
         }`}
       >
-        <Newspaper size={17} />
-        <span>News & Updates</span>
+        <Package size={17} />
+        <span>Subscriptions</span>
       </Link>
+
+      <div className="hub-nav-section-label">Operations</div>
 
       <Link
         href="/hub/billing"
@@ -237,6 +246,18 @@ export default function HubNav({
       >
         <LifeBuoy size={17} />
         <span>Support</span>
+      </Link>
+
+      <Link
+        href="/hub/updates"
+        aria-label="News & Updates"
+        data-tooltip="News & Updates"
+        className={`hub-nav-item hub-compact-tooltip ${
+          isUpdates ? "hub-nav-item-active" : ""
+        }`}
+      >
+        <Newspaper size={17} />
+        <span>News & Updates</span>
       </Link>
 
       <div className="hub-nav-section-label">Account</div>
