@@ -5,6 +5,10 @@ import {
   type BillingInterval,
 } from "./billing";
 import type { StaarkPlanCode } from "./plans";
+import {
+  getStripePromotionCodeId,
+  type SaaSPromotionCode,
+} from "./promotions";
 
 export type SaaSCheckoutEnvironment = "test" | "live";
 
@@ -39,6 +43,7 @@ export type CreatedSaaSCheckoutSession = {
   interval: BillingInterval;
   priceId: string;
   lookupKey: string;
+  promotionCode?: SaaSPromotionCode;
 };
 
 export function getSaaSCheckoutEnvironment(): SaaSCheckoutEnvironment {
@@ -270,6 +275,7 @@ export async function createSaaSCheckoutSession(input: {
   planCode: StaarkPlanCode;
   interval: BillingInterval;
   origin: string;
+  promotionCode?: SaaSPromotionCode;
 }): Promise<CreatedSaaSCheckoutSession> {
   const environment = getSaaSCheckoutEnvironment();
   const expected = getBillingPrice(input.planCode, input.interval);
@@ -298,6 +304,14 @@ export async function createSaaSCheckoutSession(input: {
   body.set("billing_address_collection", "required");
   body.set("tax_id_collection[enabled]", "true");
   body.set("locale", "sv");
+
+  if (input.promotionCode) {
+    body.set(
+      "discounts[0][promotion_code]",
+      getStripePromotionCodeId(input.promotionCode),
+    );
+  }
+
   if (process.env.STRIPE_AUTOMATIC_TAX?.trim().toLowerCase() === "true") {
     body.set("automatic_tax[enabled]", "true");
   }
@@ -308,7 +322,13 @@ export async function createSaaSCheckoutSession(input: {
     staark_interval: input.interval,
     staark_lookup_key: expected.lookupKey,
     staark_environment: environment,
-  } as const;
+    ...(input.promotionCode
+      ? {
+          staark_promotion_code:
+            input.promotionCode,
+        }
+      : {}),
+  };
 
   for (const [key, value] of Object.entries(metadata)) {
     body.set(`metadata[${key}]`, value);
@@ -339,5 +359,11 @@ export async function createSaaSCheckoutSession(input: {
     interval: input.interval,
     priceId: stripePrice.id,
     lookupKey: expected.lookupKey,
+    ...(input.promotionCode
+      ? {
+          promotionCode:
+            input.promotionCode,
+        }
+      : {}),
   };
 }

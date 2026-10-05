@@ -14,6 +14,7 @@ const PLAN_ORDER: StaarkPlanCode[] = ["STARTER", "SAAS", "BUSINESS"];
 export default function SaaSPage() {
   const [interval, setInterval] = useState<BillingInterval>("month");
   const [loadingPlan, setLoadingPlan] = useState<StaarkPlanCode | null>(null);
+  const [promotionCode, setPromotionCode] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   async function startCheckout(planCode: StaarkPlanCode) {
@@ -24,7 +25,19 @@ export default function SaaSPage() {
       const response = await fetch("/api/saas/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ planCode, interval }),
+        body: JSON.stringify({
+          planCode,
+          interval,
+          ...(planCode === "SAAS" &&
+          promotionCode.trim()
+            ? {
+                promotionCode:
+                  promotionCode
+                    .trim()
+                    .toUpperCase(),
+              }
+            : {}),
+        }),
       });
 
       const data = (await response.json().catch(() => null)) as
@@ -118,6 +131,38 @@ export default function SaaSPage() {
                   <li>Performance: {plan.entitlements.performance}</li>
                   <li>SEO: {plan.entitlements.seo}</li>
                 </ul>
+
+                {planCode === "SAAS" ? (
+                  <div className="saas-promotion">
+                    <label htmlFor="saas-promotion-code">
+                      Rabattkod
+                    </label>
+
+                    <input
+                      id="saas-promotion-code"
+                      type="text"
+                      value={promotionCode}
+                      onChange={(event) =>
+                        setPromotionCode(
+                          event.target.value.toUpperCase(),
+                        )
+                      }
+                      placeholder={
+                        interval === "month"
+                          ? "GROWTH15"
+                          : "GROWTH25"
+                      }
+                      autoComplete="off"
+                      spellCheck={false}
+                    />
+
+                    <small>
+                      {interval === "month"
+                        ? "GROWTH15 ger 15% rabatt i tre månader."
+                        : "GROWTH25 ger 25% rabatt på första årsbetalningen."}
+                    </small>
+                  </div>
+                ) : null}
 
                 <button
                   type="button"

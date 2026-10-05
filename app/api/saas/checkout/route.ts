@@ -6,6 +6,10 @@ import {
 } from "@/lib/saas/stripe-checkout";
 import type { BillingInterval } from "@/lib/saas/billing";
 import type { StaarkPlanCode } from "@/lib/saas/plans";
+import {
+  isPromotionEligible,
+  normalizeSaaSPromotionCode,
+} from "@/lib/saas/promotions";
 
 export const runtime = "nodejs";
 
@@ -51,7 +55,11 @@ function normalizeOrigin(request: Request): string {
 
 export async function POST(request: Request) {
   const body = (await request.json().catch(() => null)) as
-    | { planCode?: unknown; interval?: unknown }
+    | {
+        planCode?: unknown;
+        interval?: unknown;
+        promotionCode?: unknown;
+      }
     | null;
 
   if (!body || !isPlanCode(body.planCode) || !isBillingInterval(body.interval)) {
@@ -61,11 +69,56 @@ export async function POST(request: Request) {
     );
   }
 
+  const rawPromotionCode =
+    typeof body.promotionCode === "string"
+      ? body.promotionCode.trim()
+      : "";
+
+  const promotionCode =
+    normalizeSaaSPromotionCode(
+      rawPromotionCode,
+    );
+
+  if (
+    rawPromotionCode &&
+    !promotionCode
+  ) {
+    return NextResponse.json(
+      {
+        error:
+          "Ogiltig rabattkod.",
+      },
+      { status: 400 },
+    );
+  }
+
+  if (
+    promotionCode &&
+    !isPromotionEligible(
+      promotionCode,
+      body.planCode,
+      body.interval,
+    )
+  ) {
+    return NextResponse.json(
+      {
+        error:
+          promotionCode === "GROWTH15"
+            ? "GROWTH15 gäller endast Growth med månadsbetalning."
+            : "GROWTH25 gäller endast Growth med årsbetalning.",
+      },
+      { status: 400 },
+    );
+  }
+
   try {
     const session = await createSaaSCheckoutSession({
       planCode: body.planCode,
       interval: body.interval,
       origin: normalizeOrigin(request),
+      ...(promotionCode
+        ? { promotionCode }
+        : {}),
     });
 
     return NextResponse.json({
@@ -75,6 +128,12 @@ export async function POST(request: Request) {
       environment: session.environment satisfies SaaSCheckoutEnvironment,
       planCode: session.planCode,
       interval: session.interval,
+      ...(session.promotionCode
+        ? {
+            promotionCode:
+              session.promotionCode,
+          }
+        : {}),
     });
   } catch (error) {
     console.error("[SAAS CHECKOUT] Could not create checkout session:", error);
