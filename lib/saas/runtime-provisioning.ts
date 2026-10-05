@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { createAdminNotification } from "@/lib/notifications";
 
 import {
   controlPath,
@@ -303,6 +304,21 @@ export async function provisionNextSite(
         lastError:
           message,
       },
+    });
+
+    await createAdminNotification({
+      type: "saas.provisioning_failed",
+      title: "SaaS provisioning failed",
+      message: `${provisioning.client.name}: ${message}`,
+      href: `/hub/saas/subscriptions/${subscription.id}`,
+      preference: "billing",
+      metadata: {
+        billingSubscriptionId: subscription.id,
+        provisioningId: provisioning.id,
+        environment: provisioning.environment,
+        planCode: provisioning.planCode,
+      },
+      dedupeKey: `saas:provisioning-failed:${provisioning.id}:${sequence.toString()}`,
     });
 
     throw new Error(
