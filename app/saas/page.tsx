@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 import {
   STAARK_BILLING_PRICES,
@@ -11,11 +12,41 @@ import { STAARK_PLANS, type StaarkPlanCode } from "@/lib/saas/plans";
 
 const PLAN_ORDER: StaarkPlanCode[] = ["STARTER", "SAAS", "BUSINESS"];
 
-export default function SaaSPage() {
-  const [interval, setInterval] = useState<BillingInterval>("month");
-  const [loadingPlan, setLoadingPlan] = useState<StaarkPlanCode | null>(null);
-  const [promotionCode, setPromotionCode] = useState("");
-  const [error, setError] = useState<string | null>(null);
+function SaaSPageContent() {
+  const searchParams = useSearchParams();
+
+  const billingParam =
+    searchParams.get("billing");
+
+  const promoParam =
+    searchParams.get("promo")
+      ?.trim()
+      .toUpperCase();
+
+  const initialInterval: BillingInterval =
+    billingParam === "year"
+      ? "year"
+      : "month";
+
+  const initialPromotionCode =
+    promoParam === "GROWTH15" ||
+    promoParam === "GROWTH25"
+      ? promoParam
+      : "";
+
+  const [interval, setInterval] =
+    useState<BillingInterval>(
+      initialInterval,
+    );
+
+  const [loadingPlan, setLoadingPlan] =
+    useState<StaarkPlanCode | null>(null);
+
+  const [promotionCode, setPromotionCode] =
+    useState(initialPromotionCode);
+
+  const [error, setError] =
+    useState<string | null>(null);
 
   async function startCheckout(planCode: StaarkPlanCode) {
     setLoadingPlan(planCode);
@@ -299,5 +330,13 @@ export default function SaaSPage() {
         </div>
       </section>
     </main>
+  );
+}
+
+export default function SaaSPage() {
+  return (
+    <Suspense fallback={null}>
+      <SaaSPageContent />
+    </Suspense>
   );
 }
