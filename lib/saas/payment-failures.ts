@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 
 import { prisma } from "@/lib/prisma";
+import { createAdminNotification } from "@/lib/notifications";
 
 import { syncClientEntitlements } from "./access-sync";
 import { syncRuntimeSubscription } from "./runtime-subscription-sync";
@@ -80,6 +81,11 @@ export async function afterStripePaymentWebhook(
       clientId: true,
       environment: true,
       status: true,
+      client: {
+        select: {
+          name: true,
+        },
+      },
     },
   });
 
@@ -120,6 +126,22 @@ export async function afterStripePaymentWebhook(
         "lastInvoiceId" = EXCLUDED."lastInvoiceId",
         "updatedAt" = NOW()
     `;
+
+    await createAdminNotification({
+      type: "billing.payment_failed",
+      title: "SaaS payment failed",
+      message: `${subscription.client.name} has a failed Stripe payment. Grace period ends in ${SAAS_PAYMENT_GRACE_DAYS} days.`,
+      href: `/hub/saas/subscriptions/${subscription.id}`,
+      preference: "billing",
+      metadata: {
+        billingSubscriptionId: subscription.id,
+        stripeSubscriptionId,
+        environment,
+        invoiceId,
+        graceEndsAt: graceEndsAt.toISOString(),
+      },
+      dedupeKey: `stripe:${environment}:payment-failed:${event.id}`,
+    });
 
     return;
   }
@@ -273,6 +295,32 @@ export async function processDueSaaSSuspensions(now = new Date()) {
 
     await syncClientEntitlements(candidate.clientId);
     await syncRuntimeSubscription(candidate.stripeSubscriptionId);
+
+    const suspendedSubscription = await prisma.billingSubscription.findUnique({
+      where: { id: candidate.billingSubscriptionId },
+      select: {
+        client: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    await createAdminNotification({
+      type: "billing.subscription_suspended",
+      title: "SaaS subscription suspended",
+      message: `${suspendedSubscription?.client.name ?? "A SaaS customer"} was suspended after the payment grace period expired.`,
+      href: `/hub/saas/subscriptions/${candidate.billingSubscriptionId}`,
+      preference: "billing",
+      metadata: {
+        billingSubscriptionId: candidate.billingSubscriptionId,
+        stripeSubscriptionId: candidate.stripeSubscriptionId,
+        environment: candidate.environment,
+        graceEndsAt: candidate.graceEndsAt.toISOString(),
+      },
+      dedupeKey: `saas:suspended:${candidate.billingSubscriptionId}:${candidate.graceEndsAt.toISOString()}`,
+    });
 
     results.push({
       stripeSubscriptionId: candidate.stripeSubscriptionId,
