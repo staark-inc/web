@@ -17,6 +17,10 @@ import {
   LifeBuoy,
   Sparkles,
   Newspaper,
+  Package,
+  Globe2,
+  Layers3,
+  ServerCog,
 } from "lucide-react";
 
 type HubNavProps = {
@@ -57,6 +61,20 @@ export default function HubNav({
     pathname === "/hub/offers" ||
     pathname.startsWith("/hub/offers/");
 
+  const isSaas = pathname === "/hub/saas";
+  const isSaasSubscriptions =
+    pathname === "/hub/saas/subscriptions" ||
+    pathname.startsWith("/hub/saas/subscriptions/");
+  const isSaasSites =
+    pathname === "/hub/saas/sites" ||
+    pathname.startsWith("/hub/saas/sites/");
+  const isSaasPlans =
+    pathname === "/hub/saas/plans" ||
+    pathname.startsWith("/hub/saas/plans/");
+  const isSaasProvisioning =
+    pathname === "/hub/saas/provisioning" ||
+    pathname.startsWith("/hub/saas/provisioning/");
+
   const isBilling =
     pathname === "/hub/billing" ||
     pathname.startsWith("/hub/billing/");
@@ -82,6 +100,8 @@ export default function HubNav({
         <LayoutDashboard size={17} />
         <span>Overview</span>
       </Link>
+
+      <div className="hub-nav-section-label">Communication</div>
 
       <Link
         href="/hub/inbox"
@@ -110,18 +130,18 @@ export default function HubNav({
         <span>Sent</span>
       </Link>
 
-      <div className="hub-nav-section-label">Customers</div>
+      <div className="hub-nav-section-label">Sales</div>
 
       <Link
-        href="/hub/contacts"
-        aria-label="Contacts"
-        data-tooltip="Contacts"
+        href="/hub/prospects"
+        aria-label="Prospects"
+        data-tooltip="Prospects"
         className={`hub-nav-item hub-compact-tooltip ${
-          isContacts ? "hub-nav-item-active" : ""
+          isProspects ? "hub-nav-item-active" : ""
         }`}
       >
-        <UsersRound size={17} />
-        <span>Contacts</span>
+        <Search size={17} />
+        <span>Prospects</span>
       </Link>
 
       <Link
@@ -137,18 +157,6 @@ export default function HubNav({
         {showCounts && newLeadCount > 0 && (
           <span className="hub-nav-count">{newLeadCount > 99 ? "99+" : newLeadCount}</span>
         )}
-      </Link>
-
-      <Link
-        href="/hub/prospects"
-        aria-label="Prospects"
-        data-tooltip="Prospects"
-        className={`hub-nav-item hub-compact-tooltip ${
-          isProspects ? "hub-nav-item-active" : ""
-        }`}
-      >
-        <Search size={17} />
-        <span>Prospects</span>
       </Link>
 
       <Link
@@ -175,7 +183,19 @@ export default function HubNav({
         <span>Clients</span>
       </Link>
 
-      <div className="hub-nav-section-label">Work</div>
+      <Link
+        href="/hub/contacts"
+        aria-label="Contacts"
+        data-tooltip="Contacts"
+        className={`hub-nav-item hub-compact-tooltip ${
+          isContacts ? "hub-nav-item-active" : ""
+        }`}
+      >
+        <UsersRound size={17} />
+        <span>Contacts</span>
+      </Link>
+
+      <div className="hub-nav-section-label">Delivery</div>
 
       <Link
         href="/hub/projects"
@@ -201,19 +221,63 @@ export default function HubNav({
         <span>Offers</span>
       </Link>
 
-      <div className="hub-nav-section-label">Operations</div>
+      <div className="hub-nav-section-label">SaaS</div>
 
       <Link
-        href="/hub/updates"
-        aria-label="News & Updates"
-        data-tooltip="News & Updates"
+        href="/hub/saas"
+        aria-label="SaaS overview"
+        data-tooltip="SaaS overview"
+        className={`hub-nav-item hub-compact-tooltip ${isSaas ? "hub-nav-item-active" : ""}`}
+      >
+        <LayoutDashboard size={17} />
+        <span>Overview</span>
+      </Link>
+
+      <Link
+        href="/hub/saas/subscriptions"
+        aria-label="Subscriptions"
+        data-tooltip="Subscriptions"
         className={`hub-nav-item hub-compact-tooltip ${
-          isUpdates ? "hub-nav-item-active" : ""
+          isSaasSubscriptions ? "hub-nav-item-active" : ""
         }`}
       >
-        <Newspaper size={17} />
-        <span>News & Updates</span>
+        <Package size={17} />
+        <span>Subscriptions</span>
       </Link>
+
+      <Link
+        href="/hub/saas/sites"
+        aria-label="Sites"
+        data-tooltip="Sites"
+        className={`hub-nav-item hub-compact-tooltip ${isSaasSites ? "hub-nav-item-active" : ""}`}
+      >
+        <Globe2 size={17} />
+        <span>Sites</span>
+      </Link>
+
+      <Link
+        href="/hub/saas/plans"
+        aria-label="Plans"
+        data-tooltip="Plans"
+        className={`hub-nav-item hub-compact-tooltip ${isSaasPlans ? "hub-nav-item-active" : ""}`}
+      >
+        <Layers3 size={17} />
+        <span>Plans</span>
+      </Link>
+
+      <Link
+        href="/hub/saas/provisioning"
+        aria-label="Provisioning"
+        data-tooltip="Provisioning"
+        className={`hub-nav-item hub-compact-tooltip ${
+          isSaasProvisioning ? "hub-nav-item-active" : ""
+        }`}
+      >
+        <ServerCog size={17} />
+        <span>Provisioning</span>
+      </Link>
+
+      <div className="hub-nav-section-label">Operations</div>
 
       <Link
         href="/hub/billing"
@@ -237,6 +301,18 @@ export default function HubNav({
       >
         <LifeBuoy size={17} />
         <span>Support</span>
+      </Link>
+
+      <Link
+        href="/hub/updates"
+        aria-label="News & Updates"
+        data-tooltip="News & Updates"
+        className={`hub-nav-item hub-compact-tooltip ${
+          isUpdates ? "hub-nav-item-active" : ""
+        }`}
+      >
+        <Newspaper size={17} />
+        <span>News & Updates</span>
       </Link>
 
       <div className="hub-nav-section-label">Account</div>

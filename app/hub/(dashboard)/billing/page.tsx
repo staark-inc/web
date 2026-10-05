@@ -90,7 +90,7 @@ export default async function BillingPage() {
           </p>
         </div>
 
-        <Link href="/hub/billing/subscriptions" className="hub-workspace-primary-action">
+        <Link href="/hub/saas/subscriptions" className="hub-workspace-primary-action">
           <CreditCard size={15} />
           SaaS subscriptions
         </Link>
