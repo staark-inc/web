@@ -3805,3 +3805,201 @@ footer {
     padding: 5px 0;
   }
 }
+
+/* =========================================================
+   STAARK PLATFORM — GROWTH LAUNCH OFFER
+========================================================= */
+
+.saas-promotion {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid #dbeafe;
+  border-radius: 14px;
+  background:
+    linear-gradient(
+      145deg,
+      #f8fbff 0%,
+      #eff6ff 100%
+    );
+}
+
+.saas-promotion--active {
+  border-color: #93c5fd;
+  background:
+    linear-gradient(
+      145deg,
+      #f0f9ff 0%,
+      #eff6ff 100%
+    );
+  box-shadow:
+    0 8px 24px rgba(59, 130, 246, .08);
+}
+
+.saas-promotion__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.saas-promotion__head > div {
+  display: grid;
+  gap: 5px;
+}
+
+.saas-promotion__eyebrow {
+  color: var(--v2-blue);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .1em;
+}
+
+.saas-promotion__head strong {
+  color: var(--v2-ink);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.saas-promotion__discount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  min-width: 48px;
+  min-height: 30px;
+  padding-inline: 9px;
+  border-radius: 999px;
+  background: var(--v2-blue);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.saas-promotion__label {
+  color: var(--v2-ink);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.saas-promotion__field {
+  position: relative;
+  width: 100%;
+}
+
+.saas-promotion__field input {
+  width: 100%;
+  height: 48px;
+  padding: 0 44px 0 14px;
+  border: 1px solid #bfdbfe;
+  border-radius: 9px;
+  outline: none;
+  background: #fff;
+  color: var(--v2-ink);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  transition:
+    border-color .18s ease,
+    box-shadow .18s ease;
+}
+
+.saas-promotion__field input::placeholder {
+  color: #94a3b8;
+  opacity: 1;
+}
+
+.saas-promotion__field input:focus {
+  border-color: var(--v2-blue);
+  box-shadow:
+    0 0 0 3px rgba(59, 130, 246, .12);
+}
+
+.saas-promotion__check {
+  position: absolute;
+  top: 50%;
+  right: 13px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background: #dcfce7;
+  color: #15803d;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.saas-promotion__help {
+  color: #64748b;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.saas-promotion__success {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 12px;
+  border: 1px solid #bbf7d0;
+  border-radius: 9px;
+  background: #f0fdf4;
+}
+
+.saas-promotion__success > span {
+  display: grid;
+  place-items: center;
+  flex: 0 0 26px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #dcfce7;
+  color: #15803d;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.saas-promotion__success > div {
+  display: grid;
+  gap: 2px;
+}
+
+.saas-promotion__success strong {
+  color: #166534;
+  font-size: 12px;
+}
+
+.saas-promotion__success small {
+  color: #15803d;
+  font-size: 11px;
+}
+
+.v2-price--promotion {
+  position: relative;
+  flex-wrap: wrap;
+}
+
+.v2-price--promotion .saas-price-original {
+  width: 100%;
+  color: #94a3b8;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.v2-price--promotion strong {
+  color: var(--v2-blue);
+}
+
+@media (max-width: 640px) {
+  .saas-promotion {
+    padding: 16px;
+  }
+
+  .saas-promotion__head {
+    gap: 10px;
+  }
+}

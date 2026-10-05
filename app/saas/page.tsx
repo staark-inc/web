@@ -106,6 +106,35 @@ export default function SaaSPage() {
             const price = STAARK_BILLING_PRICES[planCode][interval];
             const busy = loadingPlan === planCode;
 
+            const normalizedPromotionCode =
+              promotionCode.trim().toUpperCase();
+
+            const expectedPromotionCode =
+              interval === "month"
+                ? "GROWTH15"
+                : "GROWTH25";
+
+            const promotionApplied =
+              planCode === "SAAS" &&
+              normalizedPromotionCode ===
+                expectedPromotionCode;
+
+            const promotionPercent =
+              interval === "month"
+                ? 15
+                : 25;
+
+            const discountedAmountOre =
+              Math.round(
+                price.unitAmountOre *
+                  (1 - promotionPercent / 100),
+              );
+
+            const promotionMessage =
+              interval === "month"
+                ? "15% rabatt i tre månader"
+                : "25% rabatt på första årsbetalningen";
+
             return (
               <article
                 key={planCode}
@@ -118,9 +147,34 @@ export default function SaaSPage() {
 
                 <p className="pricing-description">{plan.description}</p>
 
-                <div className="v2-price">
-                  <strong>{formatBillingAmount(price.unitAmountOre)}</strong>
-                  <small>{interval === "month" ? "/ mån" : "/ år"}</small>
+                <div
+                  className={`v2-price ${
+                    promotionApplied
+                      ? "v2-price--promotion"
+                      : ""
+                  }`}
+                >
+                  {promotionApplied ? (
+                    <span className="saas-price-original">
+                      {formatBillingAmount(
+                        price.unitAmountOre,
+                      )}
+                    </span>
+                  ) : null}
+
+                  <strong>
+                    {formatBillingAmount(
+                      promotionApplied
+                        ? discountedAmountOre
+                        : price.unitAmountOre,
+                    )}
+                  </strong>
+
+                  <small>
+                    {interval === "month"
+                      ? "/ mån"
+                      : "/ år"}
+                  </small>
                 </div>
 
                 <ul>
@@ -133,33 +187,96 @@ export default function SaaSPage() {
                 </ul>
 
                 {planCode === "SAAS" ? (
-                  <div className="saas-promotion">
-                    <label htmlFor="saas-promotion-code">
+                  <div
+                    className={`saas-promotion ${
+                      promotionApplied
+                        ? "saas-promotion--active"
+                        : ""
+                    }`}
+                  >
+                    <div className="saas-promotion__head">
+                      <div>
+                        <span className="saas-promotion__eyebrow">
+                          LANSERINGSERBJUDANDE
+                        </span>
+
+                        <strong>
+                          {promotionMessage}
+                        </strong>
+                      </div>
+
+                      <span className="saas-promotion__discount">
+                        -{promotionPercent}%
+                      </span>
+                    </div>
+
+                    {promotionApplied ? (
+                      <div className="saas-promotion__success">
+                        <span aria-hidden>✓</span>
+                        <div>
+                          <strong>
+                            Rabatt aktiverad
+                          </strong>
+                          <small>
+                            {interval === "month"
+                              ? `${formatBillingAmount(
+                                  discountedAmountOre,
+                                )}/mån i tre månader`
+                              : `${formatBillingAmount(
+                                  discountedAmountOre,
+                                )} första året`}
+                          </small>
+                        </div>
+                      </div>
+                    ) : null}
+
+                    <label
+                      className="saas-promotion__label"
+                      htmlFor="saas-promotion-code"
+                    >
                       Rabattkod
                     </label>
 
-                    <input
-                      id="saas-promotion-code"
-                      type="text"
-                      value={promotionCode}
-                      onChange={(event) =>
-                        setPromotionCode(
-                          event.target.value.toUpperCase(),
-                        )
-                      }
-                      placeholder={
-                        interval === "month"
-                          ? "GROWTH15"
-                          : "GROWTH25"
-                      }
-                      autoComplete="off"
-                      spellCheck={false}
-                    />
+                    <div className="saas-promotion__field">
+                      <input
+                        id="saas-promotion-code"
+                        type="text"
+                        value={promotionCode}
+                        onChange={(event) =>
+                          setPromotionCode(
+                            event.target.value.toUpperCase(),
+                          )
+                        }
+                        placeholder={
+                          expectedPromotionCode
+                        }
+                        autoComplete="off"
+                        spellCheck={false}
+                        aria-describedby="saas-promotion-help"
+                      />
 
-                    <small>
-                      {interval === "month"
-                        ? "GROWTH15 ger 15% rabatt i tre månader."
-                        : "GROWTH25 ger 25% rabatt på första årsbetalningen."}
+                      {promotionApplied ? (
+                        <span
+                          className="saas-promotion__check"
+                          aria-label="Giltig rabattkod"
+                        >
+                          ✓
+                        </span>
+                      ) : null}
+                    </div>
+
+                    <small
+                      id="saas-promotion-help"
+                      className="saas-promotion__help"
+                    >
+                      {normalizedPromotionCode &&
+                      !promotionApplied
+                        ? `För ${
+                            interval === "month"
+                              ? "månadsbetalning"
+                              : "årsbetalning"
+                          } används ${expectedPromotionCode}.`
+                        : `Använd ${expectedPromotionCode} — ${promotionMessage}.`}
                     </small>
                   </div>
                 ) : null}
