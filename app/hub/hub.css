@@ -7022,3 +7022,55 @@
 }
 
 /* HUB CSS CLEANUP B: migrated legacy owner rules */
+
+
+/* === HUB SIDEBAR SCROLL V2 === */
+.hub-sidebar {
+  overflow: hidden;
+}
+
+.hub-sidebar .hub-brand,
+.hub-sidebar .hub-compose-button,
+.hub-sidebar-bottom {
+  flex: 0 0 auto;
+}
+
+.hub-sidebar .hub-nav {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, .14) transparent;
+}
+
+.hub-sidebar .hub-nav::-webkit-scrollbar {
+  width: 5px;
+}
+
+.hub-sidebar .hub-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.hub-sidebar .hub-nav::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .14);
+}
+
+.hub-sidebar .hub-nav-section-label {
+  margin-top: 16px;
+}
+
+.hub-sidebar .hub-nav-item {
+  min-height: 38px;
+}
+
+.hub-sidebar-bottom {
+  position: relative;
+  z-index: 2;
+  margin-top: 10px;
+  padding-top: 8px;
+  background: #101114;
+}
+/* === HUB SIDEBAR SCROLL V2 END === */
