@@ -6,7 +6,7 @@ export default function SaaSPlansPage() {
   const plans = Object.values(STAARK_PLANS);
 
   return (
-    <div className="hub-page">
+    <div className="hub-page hub-saas-workspace-page hub-saas-plans-page">
       <header className="hub-workspace-head">
         <div>
           <span className="hub-workspace-kicker">SAAS / PLANS</span>

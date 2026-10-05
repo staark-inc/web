@@ -42,7 +42,7 @@ export default async function SaaSProvisioningPage() {
   const attention = rows.filter((row) => row.status === "FAILED" || row.status === "PENDING_SETUP").length;
 
   return (
-    <div className="hub-page">
+    <div className="hub-page hub-saas-workspace-page hub-saas-provisioning-page">
       <header className="hub-workspace-head">
         <div>
           <span className="hub-workspace-kicker">SAAS / PROVISIONING</span>

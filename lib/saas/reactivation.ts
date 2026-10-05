@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { createAdminNotification } from "@/lib/notifications";
 import { syncClientEntitlements } from "./access-sync";
 import { syncRuntimeSubscription } from "./runtime-subscription-sync";
 
@@ -101,6 +102,11 @@ export async function reactivateSaaSSubscription(input: {
       clientId: true,
       environment: true,
       stripeSubscriptionId: true,
+      client: {
+        select: {
+          name: true,
+        },
+      },
     },
   });
 
@@ -188,6 +194,21 @@ export async function reactivateSaaSSubscription(input: {
 
   await syncClientEntitlements(subscription.clientId);
   await syncRuntimeSubscription(subscription.stripeSubscriptionId);
+
+  await createAdminNotification({
+    type: "billing.subscription_reactivated",
+    title: "SaaS subscription reactivated",
+    message: `${subscription.client.name} is active again after payment recovery.`,
+    href: `/hub/saas/subscriptions/${subscription.id}`,
+    preference: "billing",
+    metadata: {
+      billingSubscriptionId: subscription.id,
+      stripeSubscriptionId: subscription.stripeSubscriptionId,
+      environment: subscription.environment,
+      paidInvoiceId: invoice.id,
+    },
+    dedupeKey: `saas:reactivated:${subscription.id}:${invoice.id}`,
+  });
 
   return {
     stripeSubscriptionId: subscription.stripeSubscriptionId,

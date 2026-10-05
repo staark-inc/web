@@ -79,7 +79,7 @@ export default async function SaaSOverviewPage() {
   ];
 
   return (
-    <div className="hub-page">
+    <div className="hub-page hub-saas-workspace-page hub-saas-overview-page">
       <header className="hub-workspace-head">
         <div>
           <span className="hub-workspace-kicker">SAAS / CONTROL PLANE</span>

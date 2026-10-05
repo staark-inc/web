@@ -27,7 +27,7 @@ export default async function SaaSSitesPage() {
   });
 
   return (
-    <div className="hub-page">
+    <div className="hub-page hub-saas-workspace-page hub-saas-sites-page">
       <header className="hub-workspace-head">
         <div>
           <span className="hub-workspace-kicker">SAAS / SITES</span>
