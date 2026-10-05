@@ -47,7 +47,7 @@ export default function SaaSPlansPage() {
             <div className="hub-billing-v2-project">
               <small>Growth</small>
               <strong>{plan.entitlements.seo} SEO</strong>
-              <span>{plan.entitlements.analytics} analytics · {plan.entitlements.automations} automations</span>
+              <span>{plan.entitlements.integrations.analytics} analytics · {plan.entitlements.automations} automations</span>
             </div>
             <div className="hub-billing-v2-tail">
               <span><Check size={13} /> {plan.entitlements.support} support</span>
