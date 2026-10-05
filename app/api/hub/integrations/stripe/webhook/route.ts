@@ -1,6 +1,9 @@
 import crypto from "node:crypto";
 import { NextResponse } from "next/server";
 
+import { createAdminNotification } from "@/lib/notifications";
+import { prisma } from "@/lib/prisma";
+
 import { afterStripePaymentWebhook } from "@/lib/saas/payment-failures";
 import { afterStripeReactivationWebhook } from "@/lib/saas/reactivation-webhook";
 import {
@@ -128,6 +131,61 @@ export async function POST(request: Request) {
     if (!result.duplicate) {
       await afterStripePaymentWebhook(environment, event);
       await afterStripeReactivationWebhook(environment, event);
+
+      if (
+        event.type === "customer.subscription.deleted" ||
+        event.type === "customer.subscription.updated"
+      ) {
+        const object = event.data?.object;
+        const stripeSubscriptionId =
+          object && typeof object.id === "string"
+            ? object.id
+            : null;
+
+        if (stripeSubscriptionId) {
+          const subscription = await prisma.billingSubscription.findUnique({
+            where: { stripeSubscriptionId },
+            select: {
+              id: true,
+              status: true,
+              client: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          });
+
+          if (
+            subscription &&
+            (
+              subscription.status === "CANCELED" ||
+              subscription.status === "UNPAID" ||
+              subscription.status === "INCOMPLETE" ||
+              subscription.status === "INCOMPLETE_EXPIRED"
+            )
+          ) {
+            await createAdminNotification({
+              type: "billing.subscription_problem",
+              title:
+                subscription.status === "CANCELED"
+                  ? "SaaS subscription canceled"
+                  : "SaaS subscription needs attention",
+              message: `${subscription.client.name} is now ${subscription.status.toLowerCase().replaceAll("_", " ")} in Stripe.`,
+              href: `/hub/saas/subscriptions/${subscription.id}`,
+              preference: "billing",
+              metadata: {
+                billingSubscriptionId: subscription.id,
+                stripeSubscriptionId,
+                status: subscription.status,
+                environment,
+                stripeEventId: event.id,
+              },
+              dedupeKey: `stripe:${environment}:subscription:${event.id}`,
+            });
+          }
+        }
+      }
     }
 
     console.log(
@@ -144,6 +202,27 @@ export async function POST(request: Request) {
       `[STRIPE:${environment.toUpperCase()}] Failed ${event.type} (${event.id}):`,
       error,
     );
+
+    try {
+      await createAdminNotification({
+        type: "billing.webhook_failed",
+        title: "Stripe webhook processing failed",
+        message:
+          error instanceof Error
+            ? `${event.type}: ${error.message}`
+            : `Stripe event ${event.type} could not be processed.`,
+        href: "/hub/saas",
+        preference: "billing",
+        metadata: {
+          stripeEventId: event.id,
+          eventType: event.type,
+          environment,
+        },
+        dedupeKey: `stripe:${environment}:webhook-error:${event.id}`,
+      });
+    } catch (notificationError) {
+      console.error("[STRIPE] Could not create webhook failure notification:", notificationError);
+    }
 
     return NextResponse.json(
       {
