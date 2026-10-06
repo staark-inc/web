@@ -100,7 +100,6 @@ export default function ProjektPage() {
                   <Link
                     href={`/projekt/${project.slug}`}
                     className="flex items-center align-center gap-4"
-                    style={{ textDecoration: "none", color: "#3b82f6!important" }}
                   >
                     Se projektet {project.title}
                     <ArrowRight size={15} />
