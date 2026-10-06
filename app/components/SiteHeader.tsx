@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
   Code2,
@@ -43,6 +43,27 @@ export default function SiteHeader() {
   const pathname = usePathname();
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuButton = useRef<HTMLButtonElement>(null);
+  const navigationRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+        menuButton.current?.focus();
+      }
+    };
+    const mobile = window.matchMedia("(max-width: 900px)");
+    if (mobile.matches) navigationRef.current?.querySelector<HTMLAnchorElement>("a")?.focus();
+    const onResize = () => { if (!mobile.matches) setMenuOpen(false); };
+    mobile.addEventListener("change", onResize);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      mobile.removeEventListener("change", onResize);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [menuOpen]);
 
   const isActive = (href: string) => {
     if (href === "/") {
@@ -74,6 +95,8 @@ export default function SiteHeader() {
 
       {/* DESKTOP + MOBILE NAV */}
       <nav
+        id="site-navigation"
+        ref={navigationRef}
         className={`v2-nav ${
           menuOpen ? "open" : ""
         }`}
@@ -88,6 +111,7 @@ export default function SiteHeader() {
                 ? "v2-nav-active"
                 : ""
             }
+            aria-current={isActive(item.href) ? "page" : undefined}
             onClick={() => setMenuOpen(false)}
           >
             {item.label}
@@ -128,6 +152,7 @@ export default function SiteHeader() {
 
       {/* MOBILE MENU */}
       <button
+        ref={menuButton}
         type="button"
         className="v2-menu"
         onClick={() => setMenuOpen((current) => !current)}
@@ -137,6 +162,7 @@ export default function SiteHeader() {
             : "Öppna meny"
         }
         aria-expanded={menuOpen}
+        aria-controls="site-navigation"
       >
         {menuOpen ? (
           <X size={24} />

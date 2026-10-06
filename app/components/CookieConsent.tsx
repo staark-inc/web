@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore, type KeyboardEvent } from "react";
 import { BarChart3, Check, Settings2, ShieldCheck, X } from "lucide-react";
 import {
   getStoredConsent,
+  CONSENT_CHANGE_EVENT,
   OPEN_COOKIE_SETTINGS_EVENT,
   rejectAnalytics,
   saveConsent,
@@ -13,9 +14,28 @@ import {
   updateGoogleConsent,
 } from "@/lib/consent";
 
+function subscribeConsent(callback: () => void) {
+  window.addEventListener(CONSENT_CHANGE_EVENT, callback);
+  window.addEventListener("storage", callback);
+  return () => {
+    window.removeEventListener(CONSENT_CHANGE_EVENT, callback);
+    window.removeEventListener("storage", callback);
+  };
+}
+const readConsent = () => getStoredConsent()?.analytics ?? null;
+const serverConsent = () => null;
+const subscribeHydration = () => () => {};
+const clientHydrated = () => true;
+const serverHydrated = () => false;
+
 export default function CookieConsent() {
   const pathname = usePathname();
-  const [visible, setVisible] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [sessionChoice, setSessionChoice] = useState<boolean | null>(null);
+  const storedAnalytics = useSyncExternalStore(subscribeConsent, readConsent, serverConsent);
+  const hydrated = useSyncExternalStore(subscribeHydration, clientHydrated, serverHydrated);
+  const consent = storedAnalytics ?? sessionChoice;
+  const dialogRef = useRef<HTMLElement>(null);
   const [customizing, setCustomizing] = useState(false);
   const [analytics, setAnalytics] = useState(false);
 
@@ -23,59 +43,90 @@ export default function CookieConsent() {
     pathname === "/hub" || pathname.startsWith("/hub/") ||
     pathname === "/offert" || pathname.startsWith("/offert/");
 
+  const visible = hydrated && !excluded && (settingsOpen || consent === null);
+
   useEffect(() => {
     setGoogleConsentDefaults();
-    const stored = getStoredConsent();
-    if (stored) {
-      setAnalytics(stored.analytics);
-      updateGoogleConsent(stored.analytics);
-    } else {
-      setVisible(true);
-    }
-
-    const open = () => {
-      setAnalytics(getStoredConsent()?.analytics ?? false);
-      setCustomizing(true);
-      setVisible(true);
-    };
-    window.addEventListener(OPEN_COOKIE_SETTINGS_EVENT, open);
-    return () => window.removeEventListener(OPEN_COOKIE_SETTINGS_EVENT, open);
   }, []);
 
   useEffect(() => {
-    if (excluded) {
-      // If a visitor navigates from the public site to a private offer URL,
-      // deny analytics even if the Google tag was already loaded earlier.
-      updateGoogleConsent(false);
-      setVisible(false);
+    updateGoogleConsent(!excluded && consent === true);
+  }, [excluded, consent]);
+
+  useEffect(() => {
+    const open = () => {
+      if (excluded) return;
+      setAnalytics(consent === true);
+      setCustomizing(true);
+      setSettingsOpen(true);
+    };
+    window.addEventListener(OPEN_COOKIE_SETTINGS_EVENT, open);
+    return () => window.removeEventListener(OPEN_COOKIE_SETTINGS_EVENT, open);
+  }, [excluded, consent]);
+
+  useEffect(() => {
+    if (!visible) return;
+    const dialog = dialogRef.current;
+    const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    dialog?.focus();
+    const keepFocusInside = (event: FocusEvent) => {
+      if (event.target instanceof Node && !dialog?.contains(event.target)) dialog?.focus();
+    };
+    document.addEventListener("focusin", keepFocusInside);
+    return () => {
+      document.removeEventListener("focusin", keepFocusInside);
+      document.body.style.overflow = previousOverflow;
+      if (previousFocus?.isConnected) previousFocus.focus();
+    };
+  }, [visible]);
+
+  function onDialogKeyDown(event: KeyboardEvent<HTMLElement>) {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      if (consent !== null) setSettingsOpen(false);
+      else setCustomizing(false);
       return;
     }
+    if (event.key !== "Tab") return;
+    const elements = [...(dialogRef.current?.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), input:not([disabled]), [tabindex="0"]',
+    ) ?? [])].filter((element) => element.getClientRects().length > 0);
+    const first = elements[0];
+    const last = elements[elements.length - 1];
+    if (!first) { event.preventDefault(); return; }
+    if (event.shiftKey && (document.activeElement === first || document.activeElement === dialogRef.current)) {
+      event.preventDefault(); last.focus();
+    } else if (!event.shiftKey && (document.activeElement === last || document.activeElement === dialogRef.current)) {
+      event.preventDefault(); first.focus();
+    }
+  }
 
-    const stored = getStoredConsent();
-    updateGoogleConsent(stored?.analytics === true);
-    if (!stored) setVisible(true);
-  }, [excluded]);
-
-  if (excluded || !visible) return null;
+  if (!visible) return null;
 
   const acceptAll = () => {
     saveConsent(true);
+    setSessionChoice(true);
     setAnalytics(true);
-    setVisible(false);
+    setSettingsOpen(false);
   };
   const rejectAll = () => {
     rejectAnalytics();
+    setSessionChoice(false);
     setAnalytics(false);
-    setVisible(false);
+    setSettingsOpen(false);
   };
   const saveSelection = () => {
-    analytics ? saveConsent(true) : rejectAnalytics();
-    setVisible(false);
+    if (analytics) saveConsent(true);
+    else rejectAnalytics();
+    setSessionChoice(analytics);
+    setSettingsOpen(false);
   };
 
   return (
     <div className="cookie-consent-backdrop">
-      <section className="cookie-consent" role="dialog" aria-modal="true" aria-labelledby="cookie-consent-title">
+      <section ref={dialogRef} tabIndex={-1} onKeyDown={onDialogKeyDown} className="cookie-consent" role="dialog" aria-modal="true" aria-labelledby="cookie-consent-title">
         <div className="cookie-consent-heading">
           <span className="cookie-consent-icon"><ShieldCheck size={20} /></span>
           <div>
