@@ -98,6 +98,7 @@ try {
   assert.equal(missingResponse.status(), 404);
   await page.getByRole("heading", { name: "Sidan kunde inte hittas" }).waitFor();
   await page.getByRole("link", { name: "Till startsidan", exact: true }).click();
+  await page.waitForURL((url) => url.pathname === "/");
   assert.equal(new URL(page.url()).pathname, "/");
   if (process.env.CHECK_ERROR_FIXTURE === "1") {
     await page.goto(`${origin}/a11y-error-fixture`);
@@ -106,7 +107,8 @@ try {
     await page.getByRole("button", { name: "Försök igen", exact: true }).click();
     await page.getByRole("heading", { name: "Något gick fel", exact: true }).waitFor();
     await page.getByRole("link", { name: "Till startsidan", exact: true }).click();
-    assert.equal(new URL(page.url()).pathname, "/");
+    await page.waitForURL((url) => url.pathname === "/");
+  assert.equal(new URL(page.url()).pathname, "/");
   }
   await context.close();
   console.log("Public website browser checks passed (mobile focus, consent, SaaS SSR/pricing, mocked checkout/contact).");
