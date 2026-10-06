@@ -13,6 +13,9 @@ export default function robots(): MetadataRoute.Robots {
       disallow: [
         "/api/",
         "/hub/",
+        "/offert/",
+        "/saas/setup",
+        "/saas/checkout/",
       ],
     },
 

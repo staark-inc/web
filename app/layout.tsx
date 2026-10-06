@@ -78,6 +78,10 @@ export const metadata: Metadata = {
     locale: "sv_SE",
     type: "website",
   },
+
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 const globalJsonLd = {

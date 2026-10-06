@@ -3,8 +3,13 @@ import type { MetadataRoute } from "next";
 import { posts } from "./data/posts";
 import { projects } from "./data/projects";
 import { services } from "./data/services";
+import sitemapDates from "./data/sitemap-dates.json";
 
 import { absoluteUrl } from "@/lib/seo";
+
+function lastModified(route: string) {
+  return (sitemapDates as Record<string, string>)[route];
+}
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes = [
@@ -63,11 +68,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
       changeFrequency: "weekly" as const,
     },
+    { route: "/saas", priority: 0.8, changeFrequency: "monthly" as const },
   ];
 
   const staticPages: MetadataRoute.Sitemap =
     staticRoutes.map((page) => ({
       url: absoluteUrl(page.route),
+      lastModified: lastModified(page.route),
       changeFrequency: page.changeFrequency,
       priority: page.priority,
     }));
@@ -75,6 +82,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const servicePages: MetadataRoute.Sitemap =
     services.map((service) => ({
       url: absoluteUrl(`/tjanster/${service.slug}`),
+      lastModified: lastModified("/tjanster/[slug]"),
       changeFrequency: "monthly",
       priority: 0.8,
     }));
@@ -82,6 +90,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const projectPages: MetadataRoute.Sitemap =
     projects.map((project) => ({
       url: absoluteUrl(`/projekt/${project.slug}`),
+      lastModified: lastModified("/projekt/[slug]"),
       changeFrequency: "monthly",
       priority: 0.7,
       images: project.image
