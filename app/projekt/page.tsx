@@ -26,14 +26,14 @@ export const metadata: Metadata = {
 
 export default function ProjektPage() {
   return (
-    <div className="v2-page">
+    <div className="site-page">
       <StandaloneLayout>
 
         {/* HERO */}
-        <section className="v2-hero">
-          <div className="v2-hero-copy">
+        <section className="site-hero">
+          <div className="site-hero-copy">
 
-            <span className="v2-pill">
+            <span className="site-pill">
               VÅRA PROJEKT
             </span>
 
@@ -51,9 +51,9 @@ export default function ProjektPage() {
         </section>
 
         {/* PROJECTS */}
-        <section className="v2-section v2-portfolio">
+        <section className="site-section site-portfolio">
 
-          <div className="v2-section-header">
+          <div className="site-section-header">
             <span>UTVALDA PROJEKT</span>
 
             <h2>
@@ -66,12 +66,12 @@ export default function ProjektPage() {
             </p>
           </div>
 
-          <div className="v2-project-grid">
+          <div className="site-project-grid">
 
             {projects.map((project) => (
               <article
                 key={project.slug}
-                className="v2-project"
+                className="site-project"
               >
 
                 <Image
@@ -83,7 +83,7 @@ export default function ProjektPage() {
 
                 <div>
 
-                  <div className="v2-project-tags flex mb-4 gap-3">
+                  <div className="site-project-tags flex mb-4 gap-3">
                     {project.tags.map((tag) => (
                       <span key={tag}>
                         {tag}
@@ -102,7 +102,7 @@ export default function ProjektPage() {
                     className="flex items-center align-center gap-4"
                     style={{ textDecoration: "none", color: "#3b82f6!important" }}
                   >
-                    Se projekt
+                    Se projektet {project.title}
                     <ArrowRight size={15} />
                   </Link>
 
@@ -115,9 +115,9 @@ export default function ProjektPage() {
         </section>
 
         {/* CTA */}
-        <section className="v2-section">
+        <section className="site-section">
 
-          <div className="v2-section-header centered">
+          <div className="site-section-header centered">
 
             <span>DITT PROJEKT</span>
 
@@ -130,10 +130,10 @@ export default function ProjektPage() {
               skapa så återkommer vi med ett förslag.
             </p>
 
-            <div className="v2-actions">
+            <div className="site-actions">
               <Link
                 href="/kontakt"
-                className="v2-button v2-button-primary"
+                className="site-button site-button-primary"
               >
                 Starta ett projekt
                 <ArrowRight size={18} />

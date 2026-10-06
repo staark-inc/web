@@ -15,7 +15,7 @@
 .saas-setup-card {
   padding: 36px;
   background: #fff;
-  border: 1px solid var(--v2-line);
+  border: 1px solid var(--site-line);
   border-radius: 18px;
   box-shadow: 0 10px 35px rgba(15, 23, 42, 0.045);
 }
@@ -35,7 +35,7 @@
 
 .saas-setup-card-head p {
   margin: 0;
-  color: var(--v2-muted);
+  color: var(--site-muted);
   font-size: 14px;
   line-height: 1.6;
 }
@@ -48,7 +48,7 @@
   place-items: center;
   border-radius: 10px;
   background: rgba(59, 130, 246, 0.1);
-  color: var(--v2-blue);
+  color: var(--site-blue);
   font-size: 12px;
   font-weight: 800;
 }
@@ -70,13 +70,13 @@
 }
 
 .saas-setup-field > span {
-  color: var(--v2-ink);
+  color: var(--site-ink);
   font-size: 13px;
   font-weight: 700;
 }
 
 .saas-setup-field > small {
-  color: var(--v2-muted);
+  color: var(--site-muted);
   font-size: 12px;
 }
 
@@ -86,7 +86,7 @@
   height: 50px;
   padding: 0 15px;
 
-  color: var(--v2-ink);
+  color: var(--site-ink);
   background: #fff;
 
   border: 1px solid #d9dee7;
@@ -113,7 +113,7 @@
 
 .saas-setup-field input:focus,
 .saas-setup-field select:focus {
-  border-color: var(--v2-blue);
+  border-color: var(--site-blue);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, .12);
 }
 
@@ -141,7 +141,7 @@
 
 .saas-domain-choice label:hover,
 .saas-domain-choice label.is-selected {
-  border-color: var(--v2-blue);
+  border-color: var(--site-blue);
   background: #fbfdff;
 }
 
@@ -154,7 +154,7 @@
   height: 17px;
   flex: 0 0 17px;
   margin-top: 2px;
-  accent-color: var(--v2-blue);
+  accent-color: var(--site-blue);
 }
 
 .saas-domain-choice div {
@@ -164,12 +164,12 @@
 }
 
 .saas-domain-choice strong {
-  color: var(--v2-ink);
+  color: var(--site-ink);
   font-size: 14px;
 }
 
 .saas-domain-choice span {
-  color: var(--v2-muted);
+  color: var(--site-muted);
   font-size: 12px;
   line-height: 1.45;
 }
@@ -190,7 +190,7 @@
 }
 
 .saas-domain-input:focus-within {
-  border-color: var(--v2-blue);
+  border-color: var(--site-blue);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, .12);
 }
 
@@ -210,7 +210,7 @@
   color: #374151;
   background: #f8fafc;
 
-  border-left: 1px solid var(--v2-line);
+  border-left: 1px solid var(--site-line);
 
   font-size: 14px;
   white-space: nowrap;
@@ -259,7 +259,7 @@
 
   margin: 2px 0 0;
 
-  accent-color: var(--v2-blue);
+  accent-color: var(--site-blue);
 }
 
 .saas-page-options div {
@@ -273,7 +273,7 @@
 }
 
 .saas-page-options span {
-  color: var(--v2-muted);
+  color: var(--site-muted);
   font-size: 12px;
   line-height: 1.45;
 }
@@ -300,7 +300,7 @@
 
   background: #f8fafc;
 
-  border: 1px solid var(--v2-line);
+  border: 1px solid var(--site-line);
   border-radius: 16px;
 }
 
@@ -315,17 +315,17 @@
 }
 
 .saas-setup-submit span {
-  color: var(--v2-muted);
+  color: var(--site-muted);
   font-size: 13px;
 }
 
-.saas-setup-submit .v2-button {
+.saas-setup-submit .site-button {
   min-width: 210px;
   border: 0;
   cursor: pointer;
 }
 
-.saas-setup-submit .v2-button:disabled {
+.saas-setup-submit .site-button:disabled {
   opacity: .6;
   cursor: wait;
 }
@@ -367,7 +367,7 @@
     padding: 22px;
   }
 
-  .saas-setup-submit .v2-button {
+  .saas-setup-submit .site-button {
     width: 100%;
   }
 }

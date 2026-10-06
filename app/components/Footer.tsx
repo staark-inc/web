@@ -29,6 +29,7 @@ const serviceLinks = [
 ];
 
 const companyLinks = [
+  { label: "Blogg", href: "/blog" },
   {
     label: "Om oss",
     href: "/om-oss",

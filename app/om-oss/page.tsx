@@ -65,7 +65,7 @@ const values = [
 
 export default function OmOssPage() {
   return (
-    <div className="v2-page">
+    <div className="site-page">
 
       <StandaloneLayout>
 
@@ -73,11 +73,11 @@ export default function OmOssPage() {
             HERO
         ===================================================== */}
 
-        <section className="v2-hero">
+        <section className="site-hero">
 
-          <div className="v2-hero-copy">
+          <div className="site-hero-copy">
 
-            <span className="v2-pill">
+            <span className="site-pill">
               OM STAARK INC.
             </span>
 
@@ -91,11 +91,11 @@ export default function OmOssPage() {
               med personlig kontakt genom hela processen.
             </p>
 
-            <div className="v2-actions">
+            <div className="site-actions">
 
               <Link
                 href="/kontakt"
-                className="v2-button v2-button-primary"
+                className="site-button site-button-primary"
               >
                 Få kostnadsfri offert
 
@@ -104,7 +104,7 @@ export default function OmOssPage() {
 
               <Link
                 href="/projekt"
-                className="v2-button v2-button-light"
+                className="site-button site-button-light"
               >
                 Se våra projekt
               </Link>
@@ -120,7 +120,7 @@ export default function OmOssPage() {
             STORY
         ===================================================== */}
 
-        <section className="v2-section about-story">
+        <section className="site-section about-story">
 
           <div className="about-story-image">
 
@@ -138,7 +138,7 @@ export default function OmOssPage() {
 
           <div className="about-story-content">
 
-            <div className="v2-section-header">
+            <div className="site-section-header">
 
               <span>
                 VÅR IDÉ
@@ -179,9 +179,9 @@ export default function OmOssPage() {
             VALUES
         ===================================================== */}
 
-        <section className="v2-section">
+        <section className="site-section">
 
-          <div className="v2-section-header centered">
+          <div className="site-section-header centered">
 
             <span>
               SÅ ARBETAR VI
@@ -234,7 +234,7 @@ export default function OmOssPage() {
             LOCAL
         ===================================================== */}
 
-        <section className="v2-section v2-portfolio">
+        <section className="site-section site-portfolio">
 
           <div className="about-local">
 
@@ -292,9 +292,9 @@ export default function OmOssPage() {
             CTA
         ===================================================== */}
 
-        <section className="v2-section v2-pricing">
+        <section className="site-section site-pricing">
 
-          <div className="v2-section-header centered">
+          <div className="site-section-header centered">
 
             <span>
               NÄSTA STEG
@@ -310,11 +310,11 @@ export default function OmOssPage() {
             </p>
 
 
-            <div className="v2-actions">
+            <div className="site-actions">
 
               <Link
                 href="/kontakt"
-                className="v2-button v2-button-primary"
+                className="site-button site-button-primary"
               >
                 Få kostnadsfri offert
 

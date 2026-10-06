@@ -118,16 +118,16 @@ export default async function ProjectPage({ params }: Props) {
   };
 
   return (
-    <div className="v2-page">
+    <div className="site-page">
       <SeoJsonLd data={projectJsonLd} />
       <StandaloneLayout>
 
         {/* HERO */}
-        <section className="v2-section">
+        <section className="site-section">
 
           <Link
             href="/projekt"
-            className="flex items-center gap-2 text-[var(--v2-blue)]"
+            className="flex items-center gap-2 text-[var(--site-blue)]"
             style={{
               marginTop: 0,
               marginBottom: 40,
@@ -137,7 +137,7 @@ export default async function ProjectPage({ params }: Props) {
             Alla projekt
           </Link>
 
-          <div className="v2-section-header">
+          <div className="site-section-header">
             <span>{project.category}</span>
 
             <h1>{project.title}</h1>
@@ -164,20 +164,20 @@ export default async function ProjectPage({ params }: Props) {
               width: "100%",
               height: "auto",
               borderRadius: "16px",
-              border: "1px solid var(--v2-line)",
+              border: "1px solid var(--site-line)",
             }}
           />
         </section>
 
         {/* CASE STUDY */}
-        <section className="v2-section v2-portfolio">
+        <section className="site-section site-portfolio">
 
           <div className="project-case-grid">
 
             {/* SERVICES */}
             <aside>
 
-              <div className="v2-section-header">
+              <div className="site-section-header">
                 <span>TJÄNSTER</span>
               </div>
 
@@ -189,7 +189,7 @@ export default async function ProjectPage({ params }: Props) {
                   >
                     <Check
                       size={18}
-                      className="text-[var(--v2-blue)]"
+                      className="text-[var(--site-blue)]"
                     />
 
                     <span>{service}</span>
@@ -202,7 +202,7 @@ export default async function ProjectPage({ params }: Props) {
             {/* STORY */}
             <div className="project-story">
 
-              <div className="v2-section-header">
+              <div className="site-section-header">
                 <span>UTMANINGEN</span>
 
                 <h2>
@@ -212,7 +212,7 @@ export default async function ProjectPage({ params }: Props) {
                 <p>{project.challenge}</p>
               </div>
 
-              <div className="v2-section-header">
+              <div className="site-section-header">
                 <span>LÖSNINGEN</span>
 
                 <h2>
@@ -222,7 +222,7 @@ export default async function ProjectPage({ params }: Props) {
                 <p>{project.solution}</p>
               </div>
 
-              <div className="v2-section-header">
+              <div className="site-section-header">
                 <span>RESULTATET</span>
 
                 <h2>
@@ -239,9 +239,9 @@ export default async function ProjectPage({ params }: Props) {
         </section>
 
         {relatedLinks.length > 0 ? (
-          <section className="v2-section v2-services">
+          <section className="site-section site-services">
 
-            <div className="v2-section-header centered">
+            <div className="site-section-header centered">
               <span>RELATERAT TILL PROJEKTET</span>
 
               <h2>
@@ -254,11 +254,11 @@ export default async function ProjectPage({ params }: Props) {
               </p>
             </div>
 
-            <div className="v2-service-grid">
+            <div className="site-service-grid">
               {relatedLinks.map((link) => (
                 <article
                   key={link.href}
-                  className="v2-service-card"
+                  className="site-service-card"
                 >
                   <span className="service-benefit-label">
                     {link.label}
@@ -270,9 +270,9 @@ export default async function ProjectPage({ params }: Props) {
 
                   <Link
                     href={link.href}
-                    className="v2-text-link"
+                    className="site-text-link"
                   >
-                    Läs mer
+                    Läs mer om {link.title.toLowerCase()}
                     <ArrowRight size={15} />
                   </Link>
                 </article>
@@ -283,9 +283,9 @@ export default async function ProjectPage({ params }: Props) {
         ) : null}
 
         {/* CTA */}
-        <section className="v2-section">
+        <section className="site-section">
 
-          <div className="v2-section-header centered">
+          <div className="site-section-header centered">
 
             <span>DITT PROJEKT</span>
 
@@ -298,11 +298,11 @@ export default async function ProjectPage({ params }: Props) {
               Vi hjälper dig från idé till färdig webbplats.
             </p>
 
-            <div className="v2-actions">
+            <div className="site-actions">
 
               <Link
                 href="/kontakt"
-                className="v2-button v2-button-primary"
+                className="site-button site-button-primary"
               >
                 Starta ett projekt
                 <ArrowRight size={18} />

@@ -471,7 +471,7 @@ export default function SetupForm({
 
         <button
           type="submit"
-          className="v2-button v2-button-primary"
+          className="site-button site-button-primary"
           disabled={loading}
         >
           {loading

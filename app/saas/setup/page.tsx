@@ -19,9 +19,9 @@ export default async function SaaSSetupPage({
 
   if (!token) {
     return (
-      <main className="v2-page">
-        <section className="v2-section">
-          <div className="v2-section-header centered">
+      <main className="site-page">
+        <section className="site-section">
+          <div className="site-section-header centered">
             <span>STAARK SAAS</span>
 
             <h1>
@@ -35,7 +35,7 @@ export default async function SaaSSetupPage({
 
             <Link
               href="/saas"
-              className="v2-button"
+              className="site-button"
             >
               Till SaaS
             </Link>
@@ -46,9 +46,9 @@ export default async function SaaSSetupPage({
   }
 
   return (
-    <main className="v2-page">
-      <section className="v2-section">
-        <div className="v2-section-header centered">
+    <main className="site-page">
+      <section className="site-section">
+        <div className="site-section-header centered">
           <span>
             STAARK SAAS
           </span>

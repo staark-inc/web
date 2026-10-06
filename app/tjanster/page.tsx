@@ -143,17 +143,17 @@ const services = [
 
 export default function TjansterPage() {
   return (
-    <div className="v2-page">
+    <div className="site-page">
       <StandaloneLayout>
 
         {/* =====================================================
             HERO
         ===================================================== */}
 
-        <section className="v2-hero">
-          <div className="v2-hero-copy">
+        <section className="site-hero">
+          <div className="site-hero-copy">
 
-            <span className="v2-pill">
+            <span className="site-pill">
               VÅRA TJÄNSTER
             </span>
 
@@ -166,11 +166,11 @@ export default function TjansterPage() {
               samlat på ett ställe.
             </p>
 
-            <div className="v2-actions">
+            <div className="site-actions">
 
               <Link
                 href="/kontakt"
-                className="v2-button v2-button-primary"
+                className="site-button site-button-primary"
               >
                 Få kostnadsfri offert
 
@@ -179,7 +179,7 @@ export default function TjansterPage() {
 
               <Link
                 href="/priser"
-                className="v2-button v2-button-light"
+                className="site-button site-button-light"
               >
                 Se priser
               </Link>
@@ -194,7 +194,7 @@ export default function TjansterPage() {
             QUICK TRUST
         ===================================================== */}
 
-        <section className="v2-proof">
+        <section className="site-proof">
 
           <div>
             <Check size={20} />
@@ -227,9 +227,9 @@ export default function TjansterPage() {
             SERVICES
         ===================================================== */}
 
-        <section className="v2-section v2-services">
+        <section className="site-section site-services">
 
-          <div className="v2-section-header centered">
+          <div className="site-section-header centered">
 
             <span>
               VAD VI GÖR
@@ -247,7 +247,7 @@ export default function TjansterPage() {
           </div>
 
 
-          <div className="v2-service-grid">
+          <div className="site-service-grid">
 
             {services.map((service) => {
               const Icon = service.icon;
@@ -255,14 +255,14 @@ export default function TjansterPage() {
               return (
                 <article
                   key={service.slug}
-                  className="v2-service-card"
+                  className="site-service-card"
                 >
 
-                  <div className="v2-icon">
+                  <div className="site-icon">
 
                     <Icon
                       size={24}
-                      className="text-[var(--v2-blue)]"
+                      className="text-[var(--site-blue)]"
                     />
 
                   </div>
@@ -285,7 +285,7 @@ export default function TjansterPage() {
 
                         <Check
                           size={16}
-                          className="text-[var(--v2-blue)]"
+                          className="text-[var(--site-blue)]"
                         />
 
                         {feature}
@@ -298,9 +298,9 @@ export default function TjansterPage() {
 
                   <Link
                     href={`/tjanster/${service.slug}`}
-                    className="v2-text-link flex items-center gap-2"
+                    className="site-text-link flex items-center gap-2"
                   >
-                    Läs mer
+                    Läs mer om {service.title.toLowerCase()}
 
                     <ArrowRight size={15} />
                   </Link>
@@ -318,9 +318,9 @@ export default function TjansterPage() {
             FINAL CTA
         ===================================================== */}
 
-        <section className="v2-section v2-pricing">
+        <section className="site-section site-pricing">
 
-          <div className="v2-section-header centered">
+          <div className="site-section-header centered">
 
             <span>
               NÄSTA STEG
@@ -336,11 +336,11 @@ export default function TjansterPage() {
             </p>
 
 
-            <div className="v2-actions">
+            <div className="site-actions">
 
               <Link
                 href="/kontakt"
-                className="v2-button v2-button-primary"
+                className="site-button site-button-primary"
               >
                 Få kostnadsfri offert
 

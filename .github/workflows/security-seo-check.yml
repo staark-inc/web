@@ -2,7 +2,7 @@ name: Security and SEO checks
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, fix/public-website-ssr-contact-accessibility]
 
 permissions:
   contents: read

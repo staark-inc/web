@@ -57,7 +57,7 @@ export default function SupportRequestForm() {
         <span>SUPPORTÄRENDE SKAPAT</span>
         <h2>Tack — vi har fått ditt ärende.</h2>
         <p>Ditt ärendenummer är <strong>{reference}</strong>. Spara numret om du behöver hänvisa till ärendet senare.</p>
-        <button type="button" className="v2-button v2-button-primary" onClick={() => { setReference(""); setStatus("idle"); }}>
+        <button type="button" className="site-button site-button-primary" onClick={() => { setReference(""); setStatus("idle"); }}>
           Skapa ett nytt ärende
         </button>
       </div>
@@ -93,7 +93,7 @@ export default function SupportRequestForm() {
         <Link href="/integritetspolicy">integritetspolicy</Link>.
       </p>
 
-      <button type="submit" className="v2-button v2-button-primary public-support-submit" disabled={status === "sending"}>
+      <button type="submit" className="site-button site-button-primary public-support-submit" disabled={status === "sending"}>
         {status === "sending" ? "Skickar..." : "Skicka supportärende"}<LifeBuoy size={17} />
       </button>
     </form>

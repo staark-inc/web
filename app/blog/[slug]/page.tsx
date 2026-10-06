@@ -151,7 +151,7 @@ export default async function BlogPostPage({
   };
 
   return (
-    <div className="v2-page">
+    <div className="site-page">
       <SeoJsonLd data={articleJsonLd} />
       <StandaloneLayout>
 
@@ -252,7 +252,7 @@ export default async function BlogPostPage({
                   marginBottom: 64,
                 }}
               >
-                <div className="v2-section-header">
+                <div className="site-section-header">
                   <span>RELATERAT INNEHÅLL</span>
 
                   <h2>
@@ -265,11 +265,11 @@ export default async function BlogPostPage({
                   </p>
                 </div>
 
-                <div className="v2-service-grid">
+                <div className="site-service-grid">
                   {relatedLinks.map((link) => (
                     <article
                       key={link.href}
-                      className="v2-service-card"
+                      className="site-service-card"
                     >
                       <span className="service-benefit-label">
                         {link.label}
@@ -281,9 +281,9 @@ export default async function BlogPostPage({
 
                       <Link
                         href={link.href}
-                        className="v2-text-link"
+                        className="site-text-link"
                       >
-                        Läs mer
+                        Läs mer om {link.title.toLowerCase()}
                         <ArrowRight size={15} />
                       </Link>
                     </article>
@@ -312,7 +312,7 @@ export default async function BlogPostPage({
 
                 <Link
                   href="/kontakt"
-                  className="v2-button v2-button-primary"
+                  className="site-button site-button-primary"
                 >
                   Få kostnadsfri offert
                   <ArrowRight size={17} />
@@ -320,7 +320,7 @@ export default async function BlogPostPage({
 
                 <Link
                   href="/tjanster"
-                  className="v2-button v2-button-light"
+                  className="site-button site-button-light"
                 >
                   Våra tjänster
                 </Link>
