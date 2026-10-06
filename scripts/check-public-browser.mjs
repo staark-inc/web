@@ -21,7 +21,7 @@ try {
   await dialog.getByRole("button", { name: "Avvisa alla" }).click();
   await dialog.waitFor({ state: "hidden" });
 
-  const menu = page.getByRole("button", { name: "Öppna meny" });
+  const menu = page.locator('button[aria-controls="site-navigation"]');
   await menu.click();
   assert.equal(await menu.getAttribute("aria-expanded"), "true");
   assert.equal(await page.locator("#site-navigation a").first().evaluate((element) => element === document.activeElement), true);
