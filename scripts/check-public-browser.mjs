@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { chromium } from "playwright";
+import AxeBuilder from "@axe-core/playwright";
 
 const origin = process.env.SEO_CHECK_URL || "http://127.0.0.1:3000";
 const browser = await chromium.launch({ headless: true });
@@ -9,6 +10,11 @@ try {
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto(origin);
+  async function checkContrast() {
+    const results = await new AxeBuilder({ page }).withRules(["color-contrast"]).analyze();
+    assert.deepEqual(results.violations.map((v) => ({ id: v.id, nodes: v.nodes.map((n) => ({ target: n.target, summary: n.failureSummary })) })), [], `Contrast violations: ${page.url()}`);
+  }
+  await checkContrast();
   const dialog = page.getByRole("dialog");
   await dialog.waitFor();
   assert.equal(await dialog.evaluate((element) => element.contains(document.activeElement)), true);
@@ -81,7 +87,30 @@ try {
   assert.equal(await staticPage.getByRole("heading", { level: 1 }).count(), 1);
   assert.equal(await staticPage.locator(".site-package").count(), 3);
   assert.equal(await staticPage.getByText("Rabatt aktiverad", { exact: true }).count(), 1);
-  await noJs.close(); await context.close();
+  await noJs.close();
+  const sitemap = await (await context.request.get(`${origin}/sitemap.xml`)).text();
+  const paths = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname);
+  for (const path of [...paths, "/integritetspolicy", "/kakor", "/allmanna-villkor", "/contrast-check-missing-page"]) {
+    await page.goto(`${origin}${path}`);
+    await checkContrast();
+  }
+  const missingResponse = await page.goto(`${origin}/contrast-check-missing-page`);
+  assert.equal(missingResponse.status(), 404);
+  await page.getByRole("heading", { name: "Sidan kunde inte hittas" }).waitFor();
+  await page.getByRole("link", { name: "Till startsidan", exact: true }).click();
+  await page.waitForURL((url) => url.pathname === "/");
+  assert.equal(new URL(page.url()).pathname, "/");
+  if (process.env.CHECK_ERROR_FIXTURE === "1") {
+    await page.goto(`${origin}/a11y-error-fixture`);
+    await page.getByRole("heading", { name: "Något gick fel", exact: true }).waitFor();
+    await checkContrast();
+    await page.getByRole("button", { name: "Försök igen", exact: true }).click();
+    await page.getByRole("heading", { name: "Något gick fel", exact: true }).waitFor();
+    await page.getByRole("link", { name: "Till startsidan", exact: true }).click();
+    await page.waitForURL((url) => url.pathname === "/");
+  assert.equal(new URL(page.url()).pathname, "/");
+  }
+  await context.close();
   console.log("Public website browser checks passed (mobile focus, consent, SaaS SSR/pricing, mocked checkout/contact).");
 } finally {
   await browser.close();

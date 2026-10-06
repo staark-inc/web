@@ -10,7 +10,7 @@
 .site-page {
   --site-ink: #111827;
   --site-muted: #4b5563;
-  --site-blue: #3b82f6;
+  --site-blue: #1d4ed8;
   --site-line: #e5e7eb;
   background: #fff;
   color: var(--site-ink);
@@ -3635,7 +3635,7 @@ footer {
 
 .public-support-form input::placeholder,
 .public-support-form textarea::placeholder {
-  color: #7a7e84 !important;
+  color: #59616d !important;
   opacity: 1;
 }
 
@@ -3658,7 +3658,7 @@ footer {
 
 .public-support-form input::placeholder,
 .public-support-form textarea::placeholder {
-  color: #7a7e84 !important;
+  color: #59616d !important;
   opacity: 1;
 }
 
@@ -3923,7 +3923,7 @@ footer {
 }
 
 .saas-promotion__field input::placeholder {
-  color: #94a3b8;
+  color: #596579;
   opacity: 1;
 }
 
@@ -4000,7 +4000,7 @@ footer {
 
 .site-price--promotion .saas-price-original {
   width: 100%;
-  color: #94a3b8;
+  color: #596579;
   font-size: 14px;
   font-weight: 600;
   text-decoration: line-through;
@@ -4026,3 +4026,10 @@ footer {
   .site-button { transition:none; }
   .site-button:hover { transform:none; }
 }
+
+.site-error-shell { min-height:70vh; display:grid; place-items:center; padding:64px 24px; text-align:center; }
+.site-error-content { width:min(680px,100%); }
+.site-error-code { display:block; color:var(--site-blue); font-size:clamp(64px,15vw,120px); font-weight:800; line-height:1; margin-bottom:24px; }
+.site-error-content h1 { font-size:clamp(26px,4vw,40px); line-height:1.2; }
+.site-error-content p { color:var(--site-muted); line-height:1.7; margin:24px 0; }
+.site-error-content .site-actions { justify-content:center; flex-wrap:wrap; }
