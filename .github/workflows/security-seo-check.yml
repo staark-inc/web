@@ -26,6 +26,13 @@ jobs:
       - run: npm run test:security-seo
       - run: npm run test:news
       - run: npm run test:public-website
+      - name: Add CI-only error fixture
+        run: |
+          mkdir -p app/a11y-error-fixture
+          cat > app/a11y-error-fixture/page.tsx <<'EOF'
+          export const dynamic = "force-dynamic";
+          export default function ErrorFixture() { throw new Error("CI error boundary fixture"); }
+          EOF
       - run: npm run build
       - run: npm run typecheck
       - run: npx playwright install --with-deps chromium
@@ -41,4 +48,4 @@ jobs:
             sleep 1
           done
           npm run check:security-seo
-          npm run check:public-browser
+          CHECK_ERROR_FIXTURE=1 npm run check:public-browser
