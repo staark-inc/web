@@ -7,7 +7,7 @@ export default function ClientFaqItem({
   question,
   answer,
   index,
-  className = "v2-faq-item",
+  className = "site-faq-item",
 }: {
   question: string;
   answer: string;

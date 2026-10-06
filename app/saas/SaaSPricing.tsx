@@ -75,15 +75,15 @@ export default function SaaSPricing({
   }
 
   return (
-    <section className="v2-section v2-pricing" aria-label="Paket och priser">
-      <div className="v2-section-header centered">
-          <div className="v2-actions" role="group" aria-label="Betalningsperiod">
+    <section className="site-section site-pricing" aria-label="Paket och priser">
+      <div className="site-section-header centered">
+          <div className="site-actions" role="group" aria-label="Betalningsperiod">
             <button
               type="button"
               className={
                 interval === "month"
-                  ? "v2-button v2-button-primary"
-                  : "v2-button v2-button-outline"
+                  ? "site-button site-button-primary"
+                  : "site-button site-button-outline"
               }
               aria-pressed={interval === "month"}
               onClick={() => setInterval("month")}
@@ -94,8 +94,8 @@ export default function SaaSPricing({
               type="button"
               className={
                 interval === "year"
-                  ? "v2-button v2-button-primary"
-                  : "v2-button v2-button-outline"
+                  ? "site-button site-button-primary"
+                  : "site-button site-button-outline"
               }
               aria-pressed={interval === "year"}
               onClick={() => setInterval("year")}
@@ -106,7 +106,7 @@ export default function SaaSPricing({
 
           {error ? <p role="alert">{error}</p> : null}
       </div>
-        <div className="v2-package-grid">
+        <div className="site-package-grid">
           {PLAN_ORDER.map((planCode) => {
             const plan = STAARK_PLANS[planCode];
             const price = STAARK_BILLING_PRICES[planCode][interval];
@@ -144,9 +144,9 @@ export default function SaaSPricing({
             return (
               <article
                 key={planCode}
-                className={`v2-package ${planCode === "SAAS" ? "featured" : ""}`}
+                className={`site-package ${planCode === "SAAS" ? "featured" : ""}`}
               >
-                <div className="v2-package-head">
+                <div className="site-package-head">
                   <h2>{plan.name}</h2>
                   {planCode === "SAAS" ? <span>REKOMMENDERAD</span> : null}
                 </div>
@@ -154,9 +154,9 @@ export default function SaaSPricing({
                 <p className="pricing-description">{plan.description}</p>
 
                 <div
-                  className={`v2-price ${
+                  className={`site-price ${
                     promotionApplied
-                      ? "v2-price--promotion"
+                      ? "site-price--promotion"
                       : ""
                   }`}
                 >
@@ -291,8 +291,8 @@ export default function SaaSPricing({
                   type="button"
                   className={
                     planCode === "SAAS"
-                      ? "v2-button v2-button-primary"
-                      : "v2-button v2-button-outline"
+                      ? "site-button site-button-primary"
+                      : "site-button site-button-outline"
                   }
                   disabled={loadingPlan !== null}
                   onClick={() => startCheckout(planCode)}

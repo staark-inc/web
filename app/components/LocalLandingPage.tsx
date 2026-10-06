@@ -158,36 +158,36 @@ export default function LocalLandingPage({
   };
 
   return (
-    <div className="v2-page">
+    <div className="site-page">
       <SeoJsonLd data={localJsonLd} />
       <StandaloneLayout>
-        <section className="v2-hero">
-          <div className="v2-hero-copy">
-            <span className="v2-pill">
+        <section className="site-hero">
+          <div className="site-hero-copy">
+            <span className="site-pill">
               WEBBYRÅ I {city.toUpperCase()}
             </span>
             <h1>{title}</h1>
             <p>{description}</p>
-            <div className="v2-actions">
-              <Link href="/kontakt" className="v2-button v2-button-primary">
+            <div className="site-actions">
+              <Link href="/kontakt" className="site-button site-button-primary">
                 Få kostnadsfri offert
                 <ArrowRight size={18} />
               </Link>
-              <Link href="/projekt" className="v2-button v2-button-light">
+              <Link href="/projekt" className="site-button site-button-light">
                 Se våra projekt
               </Link>
             </div>
           </div>
         </section>
 
-        <section className="v2-proof">
+        <section className="site-proof">
           <div><Check size={20} /><span>Personlig kontakt</span></div>
           <div><Check size={20} /><span>Mobilanpassat från start</span></div>
           <div><Check size={20} /><span>SEO & prestanda i fokus</span></div>
         </section>
 
-        <section className="v2-section v2-section-responsive">
-          <div className="v2-section-header">
+        <section className="site-section site-section-responsive">
+          <div className="site-section-header">
             <span>WEBBDESIGN I {city.toUpperCase()}</span>
             <h2>{localTitle}</h2>
             <p>{localDescription}</p>
@@ -205,14 +205,14 @@ export default function LocalLandingPage({
           ) : null}
         </section>
 
-        <section className="v2-section v2-process">
-          <div className="v2-section-header centered">
+        <section className="site-section site-process">
+          <div className="site-section-header centered">
             <span>FÖR FÖRETAG I {city.toUpperCase()}</span>
             <h2>{marketTitle}</h2>
             <p>{marketDescription}</p>
           </div>
 
-          <div className="v2-process-grid">
+          <div className="site-process-grid">
             {marketPoints.map((point, index) => (
               <article key={point.title}>
                 <strong>{String(index + 1).padStart(2, "0")}</strong>
@@ -223,8 +223,8 @@ export default function LocalLandingPage({
           </div>
         </section>
 
-        <section className="v2-section v2-services">
-          <div className="v2-section-header centered">
+        <section className="site-section site-services">
+          <div className="site-section-header centered">
             <span>VÅRA TJÄNSTER</span>
             <h2>Webbdesign, utveckling och SEO i {city}.</h2>
             <p>
@@ -233,18 +233,18 @@ export default function LocalLandingPage({
             </p>
           </div>
 
-          <div className="v2-service-grid">
+          <div className="site-service-grid">
             {services.map((service) => {
               const Icon = service.icon;
               return (
-                <article key={service.slug} className="v2-service-card">
-                  <div className="v2-icon">
-                    <Icon size={24} className="text-[var(--v2-blue)]" />
+                <article key={service.slug} className="site-service-card">
+                  <div className="site-icon">
+                    <Icon size={24} className="text-[var(--site-blue)]" />
                   </div>
                   <h3>{service.title}</h3>
                   <p>{service.description}</p>
-                  <Link href={`/tjanster/${service.slug}`} className="v2-text-link">
-                    Läs mer
+                  <Link href={`/tjanster/${service.slug}`} className="site-text-link">
+                    Läs mer om {service.title.toLowerCase()}
                     <ArrowRight size={15} />
                   </Link>
                 </article>
@@ -253,9 +253,9 @@ export default function LocalLandingPage({
           </div>
         </section>
 
-        <section className="v2-section">
+        <section className="site-section">
           <div className="service-detail-grid">
-            <div className="v2-section-header">
+            <div className="site-section-header">
               <span>PRIS & OMFATTNING</span>
               <h2>Vad kostar en hemsida i {city}?</h2>
               <p>
@@ -263,7 +263,7 @@ export default function LocalLandingPage({
                 Det slutliga priset beror på antal sidor, design, innehåll,
                 integrationer och vilka funktioner företaget behöver.
               </p>
-              <Link href="/priser" className="v2-text-link">
+              <Link href="/priser" className="site-text-link">
                 Se priser och vad som ingår
                 <ArrowRight size={15} />
               </Link>
@@ -281,8 +281,8 @@ export default function LocalLandingPage({
           </div>
         </section>
 
-        <section className="v2-section v2-services">
-          <div className="v2-section-header centered">
+        <section className="site-section site-services">
+          <div className="site-section-header centered">
             <span>GUIDER FÖR FÖRETAG</span>
             <h2>Läs innan du bestämmer dig.</h2>
             <p>
@@ -291,14 +291,14 @@ export default function LocalLandingPage({
             </p>
           </div>
 
-          <div className="v2-service-grid">
+          <div className="site-service-grid">
             {resources.map((resource) => (
-              <article key={resource.href} className="v2-service-card">
+              <article key={resource.href} className="site-service-card">
                 <span className="service-benefit-label">{resource.label}</span>
                 <h3>{resource.title}</h3>
                 <p>{resource.description}</p>
-                <Link href={resource.href} className="v2-text-link">
-                  Läs guiden
+                <Link href={resource.href} className="site-text-link">
+                  Läs guiden: {resource.title}
                   <ArrowRight size={15} />
                 </Link>
               </article>
@@ -306,8 +306,8 @@ export default function LocalLandingPage({
           </div>
         </section>
 
-        <section className="v2-section">
-          <div className="v2-section-header centered">
+        <section className="site-section">
+          <div className="site-section-header centered">
             <span>VANLIGA FRÅGOR</span>
             <h2>Webbyrå och hemsida i {city}.</h2>
           </div>
@@ -322,16 +322,16 @@ export default function LocalLandingPage({
           </div>
         </section>
 
-        <section className="v2-section v2-pricing">
-          <div className="v2-section-header centered">
+        <section className="site-section site-pricing">
+          <div className="site-section-header centered">
             <span>NÄSTA STEG</span>
             <h2>Behöver ditt företag i {city} en bättre webbplats?</h2>
             <p>
               Berätta kort vad du behöver så återkommer
               vi med ett förslag anpassat efter ditt företag.
             </p>
-            <div className="v2-actions">
-              <Link href="/kontakt" className="v2-button v2-button-primary">
+            <div className="site-actions">
+              <Link href="/kontakt" className="site-button site-button-primary">
                 Få kostnadsfri offert
                 <ArrowRight size={18} />
               </Link>

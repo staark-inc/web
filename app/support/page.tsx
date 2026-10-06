@@ -19,30 +19,30 @@ export const metadata: Metadata = {
 
 export default function SupportPage() {
   return (
-    <div className="v2-page">
+    <div className="site-page">
       <StandaloneLayout>
-        <section className="v2-hero public-support-hero">
-          <div className="v2-hero-copy">
-            <span className="v2-pill">KUNDSUPPORT</span>
+        <section className="site-hero public-support-hero">
+          <div className="site-hero-copy">
+            <span className="site-pill">KUNDSUPPORT</span>
             <h1>Något som inte fungerar? Vi hjälper dig.</h1>
             <p>Skapa ett supportärende för din webbplats, hosting, e-post eller en ändring du behöver. Ärendet hamnar direkt hos Staark Inc.</p>
-            <div className="v2-actions">
-              <a href="#supportformular" className="v2-button v2-button-primary">Skapa supportärende<LifeBuoy size={18} /></a>
-              <Link href="/kontakt" className="v2-button v2-button-secondary">Kontakta oss</Link>
+            <div className="site-actions">
+              <a href="#supportformular" className="site-button site-button-primary">Skapa supportärende<LifeBuoy size={18} /></a>
+              <Link href="/kontakt" className="site-button site-button-secondary">Kontakta oss</Link>
             </div>
           </div>
         </section>
 
-        <section className="v2-proof public-support-proof">
+        <section className="site-proof public-support-proof">
           <div><Check size={20} /><span>Ärendenummer direkt</span></div>
           <div><Clock3 size={20} /><span>Tydlig prioritet</span></div>
           <div><ShieldCheck size={20} /><span>Kopplas till ditt kundkonto</span></div>
         </section>
 
-        <section id="supportformular" className="v2-section public-support-section">
+        <section id="supportformular" className="site-section public-support-section">
           <div className="public-support-layout">
             <div className="public-support-copy">
-              <div className="v2-section-header">
+              <div className="site-section-header">
                 <span>BESKRIV PROBLEMET</span>
                 <h2>Ju mer information, desto snabbare kan vi hjälpa.</h2>
                 <p>Ange gärna vilken webbplats det gäller, vad som händer och om problemet påverkar besökare eller verksamheten just nu.</p>

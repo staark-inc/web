@@ -111,8 +111,8 @@ function SectionHeader({
     <div
       className={
         centered
-          ? "v2-section-header centered"
-          : "v2-section-header"
+          ? "site-section-header centered"
+          : "site-section-header"
       }
     >
       <span>{eyebrow}</span>
@@ -131,16 +131,16 @@ export default function Page() {
     projects[0] ?? null;
 
   return (
-    <main className="v2-page">
+    <main className="site-page">
       <SiteHeader />
 
       {/* =====================================================
           HERO
       ===================================================== */}
 
-      <section className="v2-hero">
-        <div className="v2-hero-copy">
-          <span className="v2-pill">
+      <section className="site-hero">
+        <div className="site-hero-copy">
+          <span className="site-pill">
             WEBBYRÅ I JÖNKÖPING & VÄRNAMO
           </span>
 
@@ -154,10 +154,10 @@ export default function Page() {
             som vill synas bättre och få fler kunder.
           </p>
 
-          <div className="v2-actions">
+          <div className="site-actions">
             <Link
               href="/kontakt"
-              className="v2-button v2-button-primary"
+              className="site-button site-button-primary"
             >
               Få kostnadsfri offert
 
@@ -166,7 +166,7 @@ export default function Page() {
 
             <Link
               href="/projekt"
-              className="v2-button v2-button-light"
+              className="site-button site-button-light"
             >
               Se våra projekt
             </Link>
@@ -183,7 +183,7 @@ export default function Page() {
           QUICK TRUST
       ===================================================== */}
 
-      <section className="v2-proof">
+      <section className="site-proof">
         <div>
           <Check size={20} />
 
@@ -214,7 +214,7 @@ export default function Page() {
       ===================================================== */}
 
       {featuredProject ? (
-        <section className="v2-section v2-about">
+        <section className="site-section site-about">
           <Image
             src={featuredProject.image}
             alt={`${featuredProject.title} – webbprojekt av Staark Inc.`}
@@ -232,7 +232,7 @@ export default function Page() {
               }
             />
 
-            <div className="v2-project-tags">
+            <div className="site-project-tags">
               {featuredProject.tags
                 .slice(0, 4)
                 .map((tag) => (
@@ -244,9 +244,9 @@ export default function Page() {
 
             <Link
               href={`/projekt/${featuredProject.slug}`}
-              className="v2-text-link"
+              className="site-text-link"
             >
-              Se hela projektet
+              Se projektet {featuredProject.title}
 
               <ArrowRight size={15} />
             </Link>
@@ -258,27 +258,27 @@ export default function Page() {
           SERVICES
       ===================================================== */}
 
-      <section className="v2-section v2-services">
+      <section className="site-section site-services">
         <SectionHeader
           eyebrow="VAD VI GÖR"
           title="Det viktigaste för en bättre webbplats."
           description="Design, utveckling, SEO och prestanda – samlat på ett ställe."
         />
 
-        <div className="v2-service-grid">
+        <div className="site-service-grid">
           {services.map((service) => {
             const Icon =
               service.icon;
 
             return (
               <article
-                className="v2-service-card"
+                className="site-service-card"
                 key={service.slug}
               >
-                <div className="v2-icon">
+                <div className="site-icon">
                   <Icon
                     size={24}
-                    className="text-[var(--v2-blue)]"
+                    className="text-[var(--site-blue)]"
                   />
                 </div>
 
@@ -292,9 +292,9 @@ export default function Page() {
 
                 <Link
                   href={`/tjanster/${service.slug}`}
-                  className="v2-text-link"
+                  className="site-text-link"
                 >
-                  Läs mer
+                  Läs mer om {service.title.toLowerCase()}
 
                   <ArrowRight size={15} />
                 </Link>
@@ -306,7 +306,7 @@ export default function Page() {
         <div className="home-section-action">
           <Link
             href="/tjanster"
-            className="v2-button v2-button-light"
+            className="site-button site-button-light"
           >
             Alla tjänster
 
@@ -319,7 +319,7 @@ export default function Page() {
           WHY STAARK
       ===================================================== */}
 
-      <section className="v2-section v2-process">
+      <section className="site-section site-process">
         <SectionHeader
           eyebrow="VARFÖR STAARK?"
           title="Enklare väg till en bättre webbplats."
@@ -327,7 +327,7 @@ export default function Page() {
           centered
         />
 
-        <div className="v2-process-grid">
+        <div className="site-process-grid">
           <article>
             <strong>01</strong>
 
@@ -374,9 +374,9 @@ export default function Page() {
           PRICE
       ===================================================== */}
 
-      <section className="v2-section v2-pricing">
+      <section className="site-section site-pricing">
         <div className="home-price">
-          <div className="v2-section-header">
+          <div className="site-section-header">
             <span>
               TYDLIGA PRISER
             </span>
@@ -436,7 +436,7 @@ export default function Page() {
 
             <Link
               href="/priser"
-              className="v2-button v2-button-primary"
+              className="site-button site-button-primary"
             >
               Se priser
 
@@ -450,7 +450,7 @@ export default function Page() {
           LOCAL SEO - SMALL / DISCREET
       ===================================================== */}
 
-      <section className="v2-section home-local">
+      <section className="site-section home-local">
         <SectionHeader
           eyebrow="LOKALT I SMÅLAND"
           title="Vi finns nära ditt företag."
@@ -489,7 +489,7 @@ export default function Page() {
           FINAL CTA
       ===================================================== */}
 
-      <section className="v2-section">
+      <section className="site-section">
         <SectionHeader
           eyebrow="NÄSTA STEG"
           title="Har du ett projekt i tankarna?"
@@ -500,7 +500,7 @@ export default function Page() {
         <div className="home-section-action">
           <Link
             href="/kontakt"
-            className="v2-button v2-button-primary"
+            className="site-button site-button-primary"
           >
             Få kostnadsfri offert
 

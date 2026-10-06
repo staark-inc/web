@@ -122,15 +122,15 @@ export default async function ServicePage({
   };
 
   return (
-    <div className="v2-page">
+    <div className="site-page">
       <SeoJsonLd data={serviceJsonLd} />
       <StandaloneLayout>
 
         {/* HERO */}
-        <section className="v2-hero">
-          <div className="v2-hero-copy">
+        <section className="site-hero">
+          <div className="site-hero-copy">
 
-            <span className="v2-pill">
+            <span className="site-pill">
               {service.shortTitle}
             </span>
 
@@ -138,10 +138,10 @@ export default async function ServicePage({
 
             <p>{service.description}</p>
 
-            <div className="v2-actions">
+            <div className="site-actions">
               <Link
                 href="/kontakt"
-                className="v2-button v2-button-primary"
+                className="site-button site-button-primary"
               >
                 Få kostnadsfri offert
                 <ArrowRight size={18} />
@@ -149,7 +149,7 @@ export default async function ServicePage({
 
               <Link
                 href="/tjanster"
-                className="v2-button v2-button-light"
+                className="site-button site-button-light"
               >
                 Alla tjänster
               </Link>
@@ -159,11 +159,11 @@ export default async function ServicePage({
         </section>
 
         {/* INTRO */}
-        <section className="v2-section">
+        <section className="site-section">
 
           <Link
             href="/tjanster"
-            className="flex items-center gap-2 text-[var(--v2-blue)]"
+            className="flex items-center gap-2 text-[var(--site-blue)]"
             style={{
               marginBottom: 48,
             }}
@@ -174,7 +174,7 @@ export default async function ServicePage({
 
           <div className="service-detail-grid">
 
-            <div className="v2-section-header">
+            <div className="site-section-header">
               <span>OM TJÄNSTEN</span>
 
               <h2>
@@ -209,9 +209,9 @@ export default async function ServicePage({
         </section>
 
         {/* INCLUDED */}
-        <section className="v2-section v2-portfolio">
+        <section className="site-section site-portfolio">
 
-          <div className="v2-section-header centered">
+          <div className="site-section-header centered">
             <span>VAD INGÅR?</span>
 
             <h2>
@@ -248,9 +248,9 @@ export default async function ServicePage({
         </section>
 
         {/* PROCESS */}
-        <section className="v2-section v2-process">
+        <section className="site-section site-process">
 
-          <div className="v2-section-header centered">
+          <div className="site-section-header centered">
             <span>SÅ FUNGERAR DET</span>
 
             <h2>
@@ -258,7 +258,7 @@ export default async function ServicePage({
             </h2>
           </div>
 
-          <div className="v2-process-grid">
+          <div className="site-process-grid">
 
             <article>
               <strong>01</strong>
@@ -292,9 +292,9 @@ export default async function ServicePage({
         </section>
 
         {relatedGuides.length > 0 ? (
-          <section className="v2-section v2-services">
+          <section className="site-section site-services">
 
-            <div className="v2-section-header centered">
+            <div className="site-section-header centered">
               <span>GUIDER & KUNSKAP</span>
 
               <h2>
@@ -307,11 +307,11 @@ export default async function ServicePage({
               </p>
             </div>
 
-            <div className="v2-service-grid">
+            <div className="site-service-grid">
               {relatedGuides.map((guide) => (
                 <article
                   key={guide.href}
-                  className="v2-service-card"
+                  className="site-service-card"
                 >
                   <span className="service-benefit-label">
                     {guide.label}
@@ -323,9 +323,9 @@ export default async function ServicePage({
 
                   <Link
                     href={guide.href}
-                    className="v2-text-link"
+                    className="site-text-link"
                   >
-                    Läs guiden
+                    Läs guiden: {guide.title}
                     <ArrowRight size={15} />
                   </Link>
                 </article>
@@ -336,9 +336,9 @@ export default async function ServicePage({
         ) : null}
 
         {/* CTA */}
-        <section className="v2-section v2-pricing">
+        <section className="site-section site-pricing">
 
-          <div className="v2-section-header centered">
+          <div className="site-section-header centered">
 
             <span>DITT PROJEKT</span>
 
@@ -351,11 +351,11 @@ export default async function ServicePage({
               så återkommer vi med ett förslag.
             </p>
 
-            <div className="v2-actions">
+            <div className="site-actions">
 
               <Link
                 href="/kontakt"
-                className="v2-button v2-button-primary"
+                className="site-button site-button-primary"
               >
                 Kontakta oss
                 <ArrowRight size={18} />
@@ -363,7 +363,7 @@ export default async function ServicePage({
 
               <Link
                 href="/projekt"
-                className="v2-button v2-button-light"
+                className="site-button site-button-light"
               >
                 Se våra projekt
               </Link>

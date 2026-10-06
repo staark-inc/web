@@ -77,7 +77,7 @@ export default function ContinueSetupButton({
     <div>
       <button
         type="button"
-        className="v2-button v2-button-primary"
+        className="site-button site-button-primary"
         disabled={loading}
         onClick={continueSetup}
       >
@@ -91,7 +91,7 @@ export default function ContinueSetupButton({
           style={{
             marginTop: 12,
             color:
-              "var(--v2-danger, #c33)",
+              "var(--site-danger, #c33)",
           }}
         >
           {error}

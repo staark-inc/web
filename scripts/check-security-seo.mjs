@@ -2,12 +2,35 @@ import assert from "node:assert/strict";
 
 // Run against next start, then against the deployed origin after merging.
 const origin = process.env.SEO_CHECK_URL || "http://localhost:3000";
+const linkedPaths = new Set();
+function inspectPublicLinks(html, path) {
+  for (const [, classes] of html.matchAll(/class="([^"]*)"/g)) {
+    assert.doesNotMatch(classes, /(?:^|[\s-])v\d+(?:[-_]|$)/, `Versioned CSS class on ${path}`);
+  }
+  const navigation = html.match(/<nav\b[^>]*\bid="site-navigation"[^>]*>([\s\S]*?)<\/nav>/)?.[1];
+  assert.ok(navigation, `Missing public navigation on ${path}`);
+  assert.match(navigation, /href="\/blog"/, `Missing blog navigation on ${path}`);
+  for (const [, attributes, body] of html.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)) {
+    const href = attributes.match(/\bhref="([^"]*)"/)?.[1];
+    assert.ok(href, `Anchor without href on ${path}`);
+    const label = attributes.match(/\baria-label="([^"]*)"/)?.[1] || body.replace(/<[^>]*>/g, "").trim() || body.match(/\balt="([^"]+)"/)?.[1];
+    assert.ok(label, `Empty link on ${path}: ${href}`);
+    assert.doesNotMatch(label, /^(Läs mer|Läs artikeln|Läs guiden|Se projekt|Se hela projektet)$/i, `Generic link on ${path}: ${href}`);
+    if (href.startsWith("#")) {
+      assert.ok(html.includes(`id="${href.slice(1)}"`), `Broken fragment on ${path}: ${href}`);
+    }
+    if (href.startsWith("/") && !href.startsWith("//") && !/^\/(api|hub|offert)(\/|$)/.test(href) && !/^\/saas\/(setup|checkout)(\/|$)/.test(href)) {
+      linkedPaths.add(new URL(href.replaceAll("&amp;", "&"), origin).pathname);
+    }
+  }
+}
 const home = await fetch(origin);
 assert.equal(home.status, 200);
 for (const header of ["content-security-policy", "strict-transport-security", "x-content-type-options", "x-frame-options", "referrer-policy"]) {
   assert.ok(home.headers.get(header), `Missing ${header}`);
 }
 const html = await home.text();
+inspectPublicLinks(html, "/");
 const modified = home.headers.get("last-modified");
 assert.ok(modified, "Missing Last-Modified on static public HTML");
 assert.ok(home.headers.get("expires"), "Missing Expires on public HTML");
@@ -84,8 +107,15 @@ for (const [, url] of xml.matchAll(/<loc>([^<]+)<\/loc>/g)) {
   const pageUrl = new URL(url);
   const response = await fetch(new URL(pageUrl.pathname, origin));
   assert.equal(response.status, 200, `Sitemap URL is not healthy: ${url}`);
-  assert.doesNotMatch(await response.text(), /name="robots" content="[^"]*noindex/);
+  const pageHtml = await response.text();
+  assert.doesNotMatch(pageHtml, /name="robots" content="[^"]*noindex/);
+  inspectPublicLinks(pageHtml, pageUrl.pathname);
 }
+for (const path of linkedPaths) {
+  assert.equal((await fetch(new URL(path, origin))).status, 200, `Broken public internal link: ${path}`);
+}
+const robots = await (await fetch(new URL("/robots.txt", origin))).text();
+assert.doesNotMatch(robots, /Disallow: \/blog/);
 for (const path of ["/hub/login", "/saas/setup", "/saas/checkout/success"]) {
   const response = await fetch(new URL(path, origin));
   assert.match(response.headers.get("x-robots-tag") || "", /noindex/);
