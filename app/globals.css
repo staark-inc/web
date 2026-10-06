@@ -4,6 +4,9 @@
   --font-sans: var(--font-geist-sans), system-ui, sans-serif;
 }
 
+.contact-honeypot { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+
+
 .v2-page {
   --v2-ink: #111827;
   --v2-muted: #4b5563;
@@ -2313,6 +2316,20 @@ footer {
     border-color 0.2s ease;
 }
 
+.home-local-links strong {
+  display: block;
+  font-size: 16px;
+}
+
+.home-local-description {
+  display: block;
+  margin-top: 10px;
+  color: var(--v2-muted);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
 .home-local-links a:hover {
   transform: translateY(-2px);
 
@@ -4002,4 +4019,10 @@ footer {
   .saas-promotion__head {
     gap: 10px;
   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior:auto; }
+  .v2-button { transition:none; }
+  .v2-button:hover { transform:none; }
 }

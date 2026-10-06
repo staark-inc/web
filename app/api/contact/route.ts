@@ -7,6 +7,15 @@ import {
   publishCurrentBadges,
 } from "@/lib/realtime";
 
+import { ContactInputError, contactLimiter, contactSameOrigin, readContactBody } from "@/lib/contact-intake";
+
+function rateLimitResponse(retryAfter: number) {
+  return NextResponse.json(
+    { error: "För många meddelanden. Vänta en stund och försök igen." },
+    { status: 429, headers: { "Retry-After": String(retryAfter), "Cache-Control": "no-store" } },
+  );
+}
+
 const emailPattern =
   /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -40,104 +49,26 @@ export async function POST(
         "content-type"
       ) ?? "";
 
-    let name = "";
-    let email = "";
-    let phone = "";
-    let company = "";
-    let service = "";
-    let budget = "";
-    let message = "";
-
-    /*
-     * Read JSON or standard HTML form.
-     */
-
-    if (
-      contentType.includes(
-        "application/json"
-      )
-    ) {
-      const body =
-        (await request.json()) as {
-          name?: unknown;
-          email?: unknown;
-          phone?: unknown;
-          company?: unknown;
-          service?: unknown;
-          budget?: unknown;
-          message?: unknown;
-        };
-
-      name =
-        typeof body.name === "string"
-          ? body.name.trim()
-          : "";
-
-      email =
-        typeof body.email === "string"
-          ? body.email
-              .trim()
-              .toLowerCase()
-          : "";
-
-      phone =
-        typeof body.phone === "string"
-          ? body.phone.trim()
-          : "";
-
-      company =
-        typeof body.company === "string"
-          ? body.company.trim()
-          : "";
-
-      service =
-        typeof body.service === "string"
-          ? body.service.trim()
-          : "";
-
-      budget =
-        typeof body.budget === "string"
-          ? body.budget.trim()
-          : "";
-
-      message =
-        typeof body.message === "string"
-          ? body.message.trim()
-          : "";
-    } else {
-      const formData =
-        await request.formData();
-
-      name = String(
-        formData.get("name") ?? ""
-      ).trim();
-
-      email = String(
-        formData.get("email") ?? ""
-      )
-        .trim()
-        .toLowerCase();
-
-      phone = String(
-        formData.get("phone") ?? ""
-      ).trim();
-
-      company = String(
-        formData.get("company") ?? ""
-      ).trim();
-
-      service = String(
-        formData.get("service") ?? ""
-      ).trim();
-
-      budget = String(
-        formData.get("budget") ?? ""
-      ).trim();
-
-      message = String(
-        formData.get("message") ?? ""
-      ).trim();
+    if (!contactSameOrigin(request)) {
+      return NextResponse.json({ error: "Förfrågan kommer från en annan webbplats." }, { status: 403 });
     }
+    const requestWait = contactLimiter.request(request);
+    if (requestWait) return rateLimitResponse(requestWait);
+
+    const body = await readContactBody(request);
+    if (typeof body.fax === "string" && body.fax.trim()) {
+      return contentType.includes("application/json")
+        ? NextResponse.json({ ok: true })
+        : redirectTo("/kontakt?sent=1", request);
+    }
+    const text = (key: string) => typeof body[key] === "string" ? body[key].trim() : "";
+    const name = text("name");
+    const email = text("email").toLowerCase();
+    const phone = text("phone");
+    const company = text("company");
+    const service = text("service");
+    const budget = text("budget");
+    const message = text("message");
 
     /*
      * Validation.
@@ -149,7 +80,11 @@ export async function POST(
       !emailPattern.test(email) ||
       email.length > 320 ||
       !message ||
-      message.length > 5000
+      message.length > 5000 ||
+      phone.length > 80 ||
+      company.length > 160 ||
+      service.length > 120 ||
+      budget.length > 120
     ) {
       return NextResponse.json(
         {
@@ -161,6 +96,9 @@ export async function POST(
         }
       );
     }
+
+    const emailWait = contactLimiter.email(email);
+    if (emailWait) return rateLimitResponse(emailWait);
 
     /*
      * Shared values.
@@ -762,7 +700,7 @@ Skickat via kontaktformuläret på staarkinc.com
 
     if (acceptsHtml) {
       return redirectTo(
-        "/kontakt?sent=1"
+        "/kontakt?sent=1", request
       );
     }
 
@@ -770,6 +708,9 @@ Skickat via kontaktformuläret på staarkinc.com
       ok: true,
     });
   } catch (error) {
+    if (error instanceof ContactInputError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
     console.error(
       "Contact form delivery failed:",
       error

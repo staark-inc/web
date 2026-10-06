@@ -19,7 +19,9 @@
     "typecheck": "tsc --noEmit",
     "test:news": "node --experimental-strip-types --test test/news-*.test.ts",
     "test:security-seo": "node --experimental-strip-types --test test/security-seo.test.ts",
-    "check:security-seo": "node scripts/check-security-seo.mjs"
+    "check:security-seo": "node scripts/check-security-seo.mjs",
+    "test:public-website": "node --experimental-strip-types --test test/contact-intake.test.ts test/public-http-cache.test.ts",
+    "check:public-browser": "node scripts/check-public-browser.mjs"
   },
   "dependencies": {
     "@google-analytics/data": "^7.1.0",
@@ -49,6 +51,7 @@
     "dotenv": "^18.0.5",
     "eslint": "^9",
     "eslint-config-next": "16.3.6",
+    "playwright": "1.62.1",
     "prisma": "^7.10.0",
     "tailwindcss": "^4",
     "typescript": "^5"

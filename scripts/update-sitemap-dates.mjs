@@ -22,7 +22,7 @@ if (!existsSync(join(root, ".git"))) {
         const route = `/${dirname(path).replace(/^app\/?/, "")}`;
         // Shared visual/content dependencies can change a page without its
         // route module changing. Blog publication dates are handled separately.
-        const date = execFileSync("git", ["log", "-1", "--format=%cI", "--", path, join(dirname(path), "layout.tsx"), "app/layout.tsx", "app/globals.css", "app/legal.css", "app/components", "app/data/projects.ts", "app/data/services.ts", "app/data/posts.ts"], { cwd: root, encoding: "utf8" }).trim();
+        const date = execFileSync("git", ["log", "-1", "--format=%cI", "--", path, join(dirname(path), "layout.tsx"), ...(route === "/saas" ? ["app/saas/SaaSPricing.tsx", "lib/saas/billing.ts", "lib/saas/plans.ts"] : []), "app/layout.tsx", "app/globals.css", "app/legal.css", "app/components", "app/data/projects.ts", "app/data/services.ts", "app/data/posts.ts"], { cwd: root, encoding: "utf8" }).trim();
         if (date) dates[route] = date;
       }
     }

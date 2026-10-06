@@ -1,0 +1,16 @@
+{
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "Staark Inc.",
+    "documentationUrl": "https://staarkinc.com/llms.txt"
+  },
+  "entries": [
+    {
+      "identifier": "urn:air:staarkinc.com:documentation:website-overview",
+      "displayName": "Staark Inc. – publik webbplatsöversikt",
+      "type": "text/markdown",
+      "url": "https://staarkinc.com/llms.txt",
+      "description": "Kuraterad översikt över publika tjänster, priser, projekt och kontaktvägar på svenska."
+    }
+  ]
+}

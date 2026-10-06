@@ -22,6 +22,9 @@ const contentSecurityPolicy = [
 const nextConfig: NextConfig = {
   output: "standalone",
 
+  // Inlined into the compiled proxy; changes with every actual HTML build.
+  env: { PUBLIC_HTTP_BUILD_TIME: new Date().toUTCString() },
+
   deploymentId: process.env.DEPLOYMENT_VERSION || undefined,
 
   allowedDevOrigins: ["192.168.0.10", "dev.staarkinc.com"],
@@ -34,6 +37,7 @@ const nextConfig: NextConfig = {
 
   async redirects() {
     return [
+      { source: "/.well-known/ai-catalog.json", destination: "/ai-catalog.json", permanent: true },
       {
         source: "/services",
         destination: "/tjanster",
@@ -81,6 +85,7 @@ const nextConfig: NextConfig = {
         headers: [
           { key: "Content-Security-Policy", value: contentSecurityPolicy },
           { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Link", value: '</llms.txt>; rel="describedby"; type="text/markdown", </ai-catalog.json>; rel="ai-catalog"' },
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
@@ -92,6 +97,8 @@ const nextConfig: NextConfig = {
         source,
         headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" }],
       })),
+      { source: "/llms.txt", headers: [{ key: "Content-Type", value: "text/markdown; charset=utf-8" }] },
+      { source: "/ai-catalog.json", headers: [{ key: "Content-Type", value: "application/ai-catalog+json" }] },
       {
         source: "/figma-v2/:path*",
         headers: [

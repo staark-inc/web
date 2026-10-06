@@ -1,0 +1,31 @@
+# Staark Inc.
+
+> Svensk webbyrå som erbjuder webbdesign, webbutveckling, SEO och prestanda för företag i Jönköping, Värnamo, Vaggeryd och Småland.
+
+Webbplatsens huvudspråk är svenska. Använd de länkade sidorna för aktuella tjänster, priser och villkor. Staark Platform samlar webbplats och företagsverktyg; konto- och betalningsflöden är inte publik dokumentation.
+
+## Tjänster och erbjudanden
+
+- [Tjänster](https://staarkinc.com/tjanster): Webbdesign, webbutveckling, SEO och prestanda.
+- [Priser](https://staarkinc.com/priser): Webbplatspaket och priser.
+- [Staark Platform](https://staarkinc.com/saas): Plattformens abonnemang och funktioner.
+- [Projekt](https://staarkinc.com/projekt): Publicerade kundprojekt.
+
+## Om företaget och kontakt
+
+- [Om oss](https://staarkinc.com/om-oss): Information om Staark Inc.
+- [Kontakt](https://staarkinc.com/kontakt): Kontaktuppgifter och förfrågningar.
+- [Support](https://staarkinc.com/support): Hjälp och supportvägar.
+
+## Lokala erbjudanden
+
+- [Webbyrå i Jönköping](https://staarkinc.com/webbyra-jonkoping): Webbdesign och SEO för företag i Jönköping.
+- [Webbyrå i Värnamo](https://staarkinc.com/webbyra-varnamo): Webbplatser för företag i Värnamo.
+- [Webbyrå i Vaggeryd](https://staarkinc.com/webbyra-vaggeryd): Webbplatser och lokal synlighet i Vaggeryd och Skillingaryd.
+
+## Optional
+
+- [Blogg](https://staarkinc.com/blog): Artiklar om webbplatser, SEO och digital utveckling.
+- [Integritetspolicy](https://staarkinc.com/integritetspolicy): Behandling av personuppgifter.
+- [Allmänna villkor](https://staarkinc.com/allmanna-villkor): Villkor för tjänsterna.
+- [Sitemap](https://staarkinc.com/sitemap.xml): Indexerbara publika sidor.

@@ -460,18 +460,27 @@ export default function Page() {
 
         <div className="home-local-links">
           <Link href="/webbyra-jonkoping">
-            Jönköping
-            <ArrowRight size={16} />
+            <span>
+              <strong>Webbyrå i Jönköping</strong>
+              <span className="home-local-description">Webbdesign, webbutveckling och SEO för företag i Jönköping som vill nå fler kunder online.</span>
+            </span>
+            <ArrowRight size={16} aria-hidden="true" />
           </Link>
 
           <Link href="/webbyra-varnamo">
-            Värnamo
-            <ArrowRight size={16} />
+            <span>
+              <strong>Webbyrå i Värnamo</strong>
+              <span className="home-local-description">Mobilanpassade webbplatser och tydliga kontaktvägar för företag i Värnamo.</span>
+            </span>
+            <ArrowRight size={16} aria-hidden="true" />
           </Link>
 
           <Link href="/webbyra-vaggeryd">
-            Vaggeryd
-            <ArrowRight size={16} />
+            <span>
+              <strong>Webbyrå i Vaggeryd</strong>
+              <span className="home-local-description">Snabba webbplatser, lokal synlighet och personlig hjälp för företag i Vaggeryd och Skillingaryd.</span>
+            </span>
+            <ArrowRight size={16} aria-hidden="true" />
           </Link>
         </div>
       </section>

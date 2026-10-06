@@ -10,6 +10,7 @@ export default function ContactForm() {
   const [status, setStatus] = useState<
     "idle" | "sending" | "success" | "error"
   >("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -19,6 +20,7 @@ export default function ContactForm() {
     }
 
     setStatus("sending");
+    setErrorMessage("");
 
     const form = event.currentTarget;
     const data = new FormData(form);
@@ -35,11 +37,17 @@ export default function ContactForm() {
           name: data.get("name"),
           email: data.get("email"),
           message: data.get("message"),
+          fax: data.get("fax"),
         }),
       });
 
       if (!response.ok) {
-        throw new Error("Contact request failed");
+        const result = await response.json().catch(() => null);
+        throw new Error(
+          response.status === 429
+            ? "För många meddelanden. Vänta en stund och försök igen."
+            : typeof result?.error === "string" ? result.error : "Meddelandet kunde inte skickas. Försök igen.",
+        );
       }
 
       if (hasAnalyticsConsent()) {
@@ -52,6 +60,7 @@ export default function ContactForm() {
       setStatus("success");
     } catch (error) {
       console.error("Contact form error:", error);
+      setErrorMessage(error instanceof Error ? error.message : "Meddelandet kunde inte skickas. Försök igen.");
       setStatus("error");
     }
   }
@@ -65,12 +74,18 @@ export default function ContactForm() {
     >
       <h3>Skicka ett snabbmeddelande</h3>
 
+      <div className="contact-honeypot" aria-hidden="true">
+        <label htmlFor="contact-fax">Lämna detta fält tomt</label>
+        <input id="contact-fax" name="fax" type="text" tabIndex={-1} autoComplete="off" />
+      </div>
+
       <label htmlFor="contact-name">
         Namn
 
         <input
           id="contact-name"
           name="name"
+          autoComplete="name"
           required
           maxLength={120}
           placeholder="ex. Andersson Anna"
@@ -86,6 +101,7 @@ export default function ContactForm() {
           required
           maxLength={320}
           type="email"
+          autoComplete="email"
           placeholder="ex. anna@foretag.se"
         />
       </label>
@@ -134,8 +150,7 @@ export default function ContactForm() {
           className="form-status error"
           role="alert"
         >
-          Meddelandet kunde inte skickas.
-          Försök igen.
+          {errorMessage}
         </p>
       )}
     </form>
