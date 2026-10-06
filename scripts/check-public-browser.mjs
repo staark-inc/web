@@ -46,7 +46,7 @@ try {
     await route.fulfill({ status: 503, contentType: "application/json", body: JSON.stringify({ error: "Test: betalningen startades inte." }) });
   });
   await page.locator(".v2-package.featured button").click();
-  await page.getByRole("alert").waitFor();
+  await page.locator('.v2-pricing [role="alert"]').waitFor();
   assert.equal(checkoutPayload.interval, "month");
   assert.equal(checkoutPayload.promotionCode, "GROWTH15");
 
@@ -56,8 +56,8 @@ try {
   await page.locator("#contact-email").fill("test@example.com");
   await page.locator("#contact-message").fill("Test only; no real email.");
   await page.getByRole("button", { name: "Skicka meddelande" }).click();
-  await page.getByRole("alert").waitFor();
-  assert.match(await page.getByRole("alert").textContent(), /För många meddelanden/);
+  await page.locator(".form-status.error").waitFor();
+  assert.match(await page.locator(".form-status.error").textContent(), /För många meddelanden/);
   assert.equal(await page.locator("#contact-message").inputValue(), "Test only; no real email.");
   assert.deepEqual(errors, []);
 
