@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import {
   ArrowRight,
-  Mail,
   MessageSquare,
   Check,
 } from "lucide-react";
 
 import { StandaloneLayout } from "../components/SiteChrome";
 import ContactForm from "../components/ContactForm";
+import ContactEmailLink from "../components/ContactEmailLink";
 
 export const metadata: Metadata = {
   title: "Kontakt | Webbyrå Jönköping & Värnamo",
@@ -143,15 +143,7 @@ export default function KontaktPage() {
 
               <div className="v2-contact-details">
 
-                <a href="mailto:contact@staarkinc.com">
-
-                  <Mail size={20} />
-
-                  <span>
-                    contact@staarkinc.com
-                  </span>
-
-                </a>
+                <ContactEmailLink iconSize={20} />
 
 
                 <div>

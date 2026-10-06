@@ -1,0 +1,41 @@
+name: Security and SEO checks
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      DATABASE_URL: postgresql://staark:build-only@localhost:5432/staark
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run test:security-seo
+      - run: npm run test:news
+      - run: npm run build
+      - run: npm run typecheck
+      - name: Check production HTTP responses
+        run: |
+          npm start -- --hostname 127.0.0.1 > /tmp/next-start.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://localhost:3000/ > /dev/null; then
+              break
+            fi
+            sleep 1
+          done
+          npm run check:security-seo

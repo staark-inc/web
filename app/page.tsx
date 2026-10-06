@@ -20,7 +20,7 @@ import { projects } from "./data/projects";
 
 export const metadata: Metadata = {
   title:
-    "Webbyrå i Jönköping & Värnamo",
+    "Webbyrå & webbdesign i Jönköping och Värnamo | Staark Inc.",
 
   description:
     "Staark Inc. bygger moderna, snabba och SEO-optimerade webbplatser för företag i Jönköping, Värnamo och Småland. Webbplatser från 2 999 kr.",
@@ -220,7 +220,6 @@ export default function Page() {
             alt={`${featuredProject.title} – webbprojekt av Staark Inc.`}
             width={720}
             height={520}
-            priority
             sizes="(max-width: 768px) 100vw, 50vw"
           />
 

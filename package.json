@@ -12,11 +12,14 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "prebuild": "node scripts/update-sitemap-dates.mjs",
     "start": "next start",
     "lint": "eslint",
     "postinstall": "prisma generate",
     "typecheck": "tsc --noEmit",
-    "test:news": "node --experimental-strip-types --test test/news-*.test.ts"
+    "test:news": "node --experimental-strip-types --test test/news-*.test.ts",
+    "test:security-seo": "node --experimental-strip-types --test test/security-seo.test.ts",
+    "check:security-seo": "node scripts/check-security-seo.mjs"
   },
   "dependencies": {
     "@google-analytics/data": "^7.1.0",
@@ -29,8 +32,8 @@
     "googleapis": "^181.0.0",
     "jose": "^6.2.12",
     "lucide-react": "^1.42.0",
-    "next": "16.3.4",
-    "nodemailer": "^10.0.1",
+    "next": "16.3.6",
+    "nodemailer": "10.0.15",
     "pg": "^8.23.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
@@ -45,7 +48,7 @@
     "@types/react-dom": "^19",
     "dotenv": "^18.0.5",
     "eslint": "^9",
-    "eslint-config-next": "16.3.4",
+    "eslint-config-next": "16.3.6",
     "prisma": "^7.10.0",
     "tailwindcss": "^4",
     "typescript": "^5"
