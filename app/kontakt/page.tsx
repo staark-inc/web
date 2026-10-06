@@ -33,18 +33,18 @@ export const metadata: Metadata = {
 
 export default function KontaktPage() {
   return (
-    <div className="v2-page">
+    <div className="site-page">
       <StandaloneLayout>
 
         {/* =====================================================
             HERO
         ===================================================== */}
 
-        <section className="v2-hero">
+        <section className="site-hero">
 
-          <div className="v2-hero-copy">
+          <div className="site-hero-copy">
 
-            <span className="v2-pill">
+            <span className="site-pill">
               KONTAKT
             </span>
 
@@ -58,11 +58,11 @@ export default function KontaktPage() {
               vad du behöver så tar vi nästa steg tillsammans.
             </p>
 
-            <div className="v2-actions">
+            <div className="site-actions">
 
               <a
                 href="#kontaktformular"
-                className="v2-button v2-button-primary"
+                className="site-button site-button-primary"
               >
                 Få kostnadsfri offert
 
@@ -80,7 +80,7 @@ export default function KontaktPage() {
             QUICK TRUST
         ===================================================== */}
 
-        <section className="v2-proof">
+        <section className="site-proof">
 
           <div>
             <Check size={20} />
@@ -115,14 +115,14 @@ export default function KontaktPage() {
 
         <section
           id="kontaktformular"
-          className="v2-section"
+          className="site-section"
         >
 
-          <div className="v2-contact">
+          <div className="site-contact">
 
             <div>
 
-              <div className="v2-section-header">
+              <div className="site-section-header">
 
                 <span>
                   LÅT OSS PRATA
@@ -141,7 +141,7 @@ export default function KontaktPage() {
               </div>
 
 
-              <div className="v2-contact-details">
+              <div className="site-contact-details">
 
                 <ContactEmailLink iconSize={20} />
 

@@ -144,7 +144,7 @@ const faq = [
 
 export default function PriserPage() {
   return (
-    <div className="v2-page">
+    <div className="site-page">
 
       <StandaloneLayout>
 
@@ -152,11 +152,11 @@ export default function PriserPage() {
             HERO
         ===================================================== */}
 
-        <section className="v2-hero">
+        <section className="site-hero">
 
-          <div className="v2-hero-copy">
+          <div className="site-hero-copy">
 
-            <span className="v2-pill">
+            <span className="site-pill">
               PRISER
             </span>
 
@@ -170,11 +170,11 @@ export default function PriserPage() {
               anpassat pris.
             </p>
 
-            <div className="v2-actions">
+            <div className="site-actions">
 
               <Link
                 href="/kontakt"
-                className="v2-button v2-button-primary"
+                className="site-button site-button-primary"
               >
                 Få kostnadsfri offert
 
@@ -192,9 +192,9 @@ export default function PriserPage() {
             PACKAGES
         ===================================================== */}
 
-        <section className="v2-section v2-pricing">
+        <section className="site-section site-pricing">
 
-          <div className="v2-section-header centered">
+          <div className="site-section-header centered">
 
             <span>
               VÄLJ RÄTT LÖSNING
@@ -212,20 +212,20 @@ export default function PriserPage() {
           </div>
 
 
-          <div className="v2-package-grid">
+          <div className="site-package-grid">
 
             {packages.map((pkg) => (
 
               <article
                 key={pkg.name}
-                className={`v2-package ${
+                className={`site-package ${
                   pkg.featured
                     ? "featured"
                     : ""
                 }`}
               >
 
-                <div className="v2-package-head">
+                <div className="site-package-head">
 
                   <h3>
                     {pkg.name}
@@ -246,7 +246,7 @@ export default function PriserPage() {
                 </p>
 
 
-                <div className="v2-price">
+                <div className="site-price">
 
                   {pkg.priceLabel ? (
                     <small>
@@ -286,7 +286,7 @@ export default function PriserPage() {
 
                       <Check
                         size={18}
-                        className="text-[var(--v2-blue)]"
+                        className="text-[var(--site-blue)]"
                       />
 
                       <span>
@@ -304,8 +304,8 @@ export default function PriserPage() {
                   href="/kontakt"
                   className={
                     pkg.featured
-                      ? "v2-button v2-button-primary"
-                      : "v2-button v2-button-outline"
+                      ? "site-button site-button-primary"
+                      : "site-button site-button-outline"
                   }
                 >
                   {pkg.price === "Begär offert"
@@ -328,9 +328,9 @@ export default function PriserPage() {
             FAQ
         ===================================================== */}
 
-        <section className="v2-section">
+        <section className="site-section">
 
-          <div className="v2-section-header centered">
+          <div className="site-section-header centered">
 
             <span>
               VANLIGA FRÅGOR
@@ -373,9 +373,9 @@ export default function PriserPage() {
             FINAL CTA
         ===================================================== */}
 
-        <section className="v2-section v2-pricing">
+        <section className="site-section site-pricing">
 
-          <div className="v2-section-header centered">
+          <div className="site-section-header centered">
 
             <span>
               NÄSTA STEG
@@ -391,11 +391,11 @@ export default function PriserPage() {
             </p>
 
 
-            <div className="v2-actions">
+            <div className="site-actions">
 
               <Link
                 href="/kontakt"
-                className="v2-button v2-button-primary"
+                className="site-button site-button-primary"
               >
                 Få kostnadsfri offert
 

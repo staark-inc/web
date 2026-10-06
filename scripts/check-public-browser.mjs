@@ -28,6 +28,7 @@ try {
   await page.keyboard.press("Escape");
   assert.equal(await menu.getAttribute("aria-expanded"), "false");
   assert.equal(await menu.evaluate((element) => element === document.activeElement), true);
+  assert.equal(await page.locator('#site-navigation a[href="/blog"]').count(), 1);
   const cookieSettings = page.getByRole("button", { name: /Cookie-inställningar/i });
   await cookieSettings.click(); await dialog.waitFor();
   await page.keyboard.press("Escape"); await dialog.waitFor({ state: "hidden" });
@@ -45,8 +46,8 @@ try {
     checkoutPayload = route.request().postDataJSON();
     await route.fulfill({ status: 503, contentType: "application/json", body: JSON.stringify({ error: "Test: betalningen startades inte." }) });
   });
-  await page.locator(".v2-package.featured button").click();
-  await page.locator('.v2-pricing [role="alert"]').waitFor();
+  await page.locator(".site-package.featured button").click();
+  await page.locator('.site-pricing [role="alert"]').waitFor();
   assert.equal(checkoutPayload.interval, "month");
   assert.equal(checkoutPayload.promotionCode, "GROWTH15");
 
@@ -61,11 +62,24 @@ try {
   assert.equal(await page.locator("#contact-message").inputValue(), "Test only; no real email.");
   assert.deepEqual(errors, []);
 
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto(origin);
+  const nav = await page.locator("#site-navigation").boundingBox();
+  const brand = await page.locator(".site-navbar .site-brand").boundingBox();
+  const actions = await page.locator(".site-nav-actions").boundingBox();
+  assert.ok(nav && brand && actions);
+  assert.ok(nav.x >= brand.x + brand.width, "Desktop navigation overlaps the brand");
+  assert.ok(nav.x + nav.width <= actions.x, "Desktop navigation overlaps contact actions");
+  assert.equal(await page.locator('#site-navigation a[href="/blog"]').isVisible(), true);
+  for (const width of [390, 1024, 1280]) {
+    await page.setViewportSize({ width, height: 900 });
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), true, `Horizontal overflow at ${width}px`);
+  }
   const noJs = await browser.newContext({ javaScriptEnabled: false });
   const staticPage = await noJs.newPage();
   await staticPage.goto(`${origin}/saas?billing=year&promo=GROWTH25`);
   assert.equal(await staticPage.getByRole("heading", { level: 1 }).count(), 1);
-  assert.equal(await staticPage.locator(".v2-package").count(), 3);
+  assert.equal(await staticPage.locator(".site-package").count(), 3);
   assert.equal(await staticPage.getByText("Rabatt aktiverad", { exact: true }).count(), 1);
   await noJs.close(); await context.close();
   console.log("Public website browser checks passed (mobile focus, consent, SaaS SSR/pricing, mocked checkout/contact).");

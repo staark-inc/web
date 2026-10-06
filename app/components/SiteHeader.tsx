@@ -34,6 +34,10 @@ const navigation = [
     href: "/priser",
   },
   {
+    label: "Blogg",
+    href: "/blog",
+  },
+  {
     label: "Om oss",
     href: "/om-oss",
   },
@@ -54,7 +58,7 @@ export default function SiteHeader() {
         menuButton.current?.focus();
       }
     };
-    const mobile = window.matchMedia("(max-width: 900px)");
+    const mobile = window.matchMedia("(max-width: 1100px)");
     if (mobile.matches) navigationRef.current?.querySelector<HTMLAnchorElement>("a")?.focus();
     const onResize = () => { if (!mobile.matches) setMenuOpen(false); };
     mobile.addEventListener("change", onResize);
@@ -74,12 +78,12 @@ export default function SiteHeader() {
   };
 
   return (
-    <header className="v2-navbar">
+    <header className="site-navbar">
 
       {/* LOGO */}
       <Link
         href="/"
-        className="v2-brand"
+        className="site-brand"
         onClick={() => setMenuOpen(false)}
         aria-label="Staark Inc. startsida"
       >
@@ -97,7 +101,7 @@ export default function SiteHeader() {
       <nav
         id="site-navigation"
         ref={navigationRef}
-        className={`v2-nav ${
+        className={`site-nav ${
           menuOpen ? "open" : ""
         }`}
         aria-label="Huvudnavigation"
@@ -108,21 +112,21 @@ export default function SiteHeader() {
             href={item.href}
             className={
               isActive(item.href)
-                ? "v2-nav-active"
+                ? "site-nav-active"
                 : ""
             }
             aria-current={isActive(item.href) ? "page" : undefined}
             onClick={() => setMenuOpen(false)}
           >
             {item.label}
-            {"badge" in item && item.badge ? <span className="v2-nav-new">{item.badge}</span> : null}
+            {"badge" in item && item.badge ? <span className="site-nav-new">{item.badge}</span> : null}
           </Link>
         ))}
 
         {/* only useful inside mobile menu */}
         <Link
           href="/kontakt"
-          className="v2-mobile-contact"
+          className="site-mobile-contact"
           onClick={() => setMenuOpen(false)}
         >
           Få offert
@@ -132,10 +136,10 @@ export default function SiteHeader() {
 
 
       {/* DESKTOP CTA */}
-      <div className="v2-nav-actions">
+      <div className="site-nav-actions">
         <Link
           href="/support"
-          className="v2-button v2-button-secondary v2-nav-support"
+          className="site-button site-button-secondary site-nav-support"
         >
           <LifeBuoy size={16} />
           Support
@@ -143,7 +147,7 @@ export default function SiteHeader() {
 
         <Link
           href="/kontakt"
-          className="v2-button v2-button-primary v2-nav-button"
+          className="site-button site-button-primary site-nav-button"
         >
           Få offert
           <ArrowRight size={16} />
@@ -154,7 +158,7 @@ export default function SiteHeader() {
       <button
         ref={menuButton}
         type="button"
-        className="v2-menu"
+        className="site-menu"
         onClick={() => setMenuOpen((current) => !current)}
         aria-label={
           menuOpen

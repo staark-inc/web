@@ -41,14 +41,14 @@ export default function BlogPage() {
   );
 
   return (
-    <div className="v2-page">
+    <div className="site-page">
       <StandaloneLayout>
 
         {/* HERO */}
-        <section className="v2-hero">
-          <div className="v2-hero-copy">
+        <section className="site-hero">
+          <div className="site-hero-copy">
 
-            <span className="v2-pill">
+            <span className="site-pill">
               STAARK BLOGG
             </span>
 
@@ -67,9 +67,9 @@ export default function BlogPage() {
 
 
         {/* ARTICLES */}
-        <section className="v2-section blog-section">
+        <section className="site-section blog-section">
 
-          <div className="v2-section-header">
+          <div className="site-section-header">
 
             <span>
               SENASTE ARTIKLARNA
@@ -144,9 +144,9 @@ export default function BlogPage() {
 
                 <Link
                   href={`/blog/${post.slug}`}
-                  className="v2-text-link"
+                  className="site-text-link"
                 >
-                  Läs artikeln
+                  Läs artikeln: {post.title}
                   <ArrowRight size={15} />
                 </Link>
 
@@ -159,7 +159,7 @@ export default function BlogPage() {
 
 
         {/* CTA */}
-        <section className="v2-section v2-portfolio">
+        <section className="site-section site-portfolio">
 
           <div className="blog-cta">
 
@@ -179,7 +179,7 @@ export default function BlogPage() {
 
             <Link
               href="/kontakt"
-              className="v2-button v2-button-primary"
+              className="site-button site-button-primary"
             >
               Kontakta oss
               <ArrowRight size={17} />
