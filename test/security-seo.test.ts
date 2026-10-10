@@ -16,6 +16,10 @@ test("production security headers protect HTML and allow hydration/consented ana
   assert.match(csp, /form-action 'self'/);
   assert.match(csp, /https:\/\/www\.googletagmanager\.com/);
   assert.match(csp, /https:\/\/\*\.google-analytics\.com/);
+  const connectSources = csp.split(";").find((directive) => directive.trim().startsWith("connect-src "))!.trim().split(/\s+/).slice(1);
+  assert.ok(connectSources.includes("https://stats.g.doubleclick.net"), "Google Analytics advertising collection must not be blocked");
+  assert.ok(connectSources.includes("https://googleads.g.doubleclick.net"), "Google Ads conversions must remain allowed");
+  assert.ok(!connectSources.includes("https:") && !connectSources.includes("*"), "Connection origins remain explicitly restricted");
   assert.doesNotMatch(csp, /unsafe-eval|upgrade-insecure-requests/);
 });
 
