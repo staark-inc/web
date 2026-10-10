@@ -32,11 +32,21 @@
 .hub-shell-compose-link { color: #2e4d87; }
 
 /* Empty priority queues should not reserve the space of a full dashboard widget. */
+/* Single source of truth for the overview panels (replaces workspace.css hotfix).
+   Keep both widgets side by side on desktop; stack them on smaller screens. */
 .hub-overview-page .hub-command-grid:has(.hub-command-clear) {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(340px, 1fr);
   align-items: stretch;
-  gap: 12px;
+  gap: 16px;
+  width: 100%;
+}
+.hub-overview-page .hub-command-grid:has(.hub-command-clear) > * {
+  min-width: 0;
+  width: auto;
+  max-width: none;
+  grid-column: auto;
+  align-self: stretch;
 }
 .hub-overview-page .hub-command-grid:has(.hub-command-clear) > .hub-command-panel:first-child {
   min-height: 0;
@@ -87,5 +97,16 @@
   }
   .hub-overview-page .hub-command-grid:has(.hub-command-clear) .hub-command-sales-footer {
     border-left: 0;
+  }
+}
+
+@media (max-width: 899px) {
+  .hub-overview-page .hub-command-grid:has(.hub-command-clear) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  .hub-overview-page .hub-command-grid:has(.hub-command-clear) > * {
+    width: 100%;
+    max-width: none;
   }
 }
