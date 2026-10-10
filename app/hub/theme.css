@@ -1,0 +1,82 @@
+/* Staark Workspace — canonical theme tokens and reusable surfaces.
+   New components use sw-* classes. Legacy Hub CSS stays untouched until migrated. */
+.hub-dashboard {
+  --sw-bg: #f6f8fb;
+  --sw-surface: #ffffff;
+  --sw-ink: #172238;
+  --sw-muted: #62718a;
+  --sw-line: #dfe6f0;
+  --sw-accent: #315cf5;
+  --sw-radius: 14px;
+  --sw-space-1: 4px;
+  --sw-space-2: 8px;
+  --sw-space-3: 12px;
+  --sw-space-4: 16px;
+  --sw-space-6: 24px;
+  --sw-space-8: 32px;
+}
+.hub-dashboard .sw-page { width: 100%; max-width: none; min-width: 0; color: var(--sw-ink); }
+.sw-page-header { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
+.sw-eyebrow { display: block; color: var(--sw-muted); font-size: 11px; letter-spacing: .09em; text-transform: uppercase; font-weight: 700; }
+.sw-page-heading h1 { font-size: clamp(26px, 2.5vw, 36px); line-height: 1.2; letter-spacing: -.04em; margin: 6px 0 0; }
+.sw-page-heading p { font-size: 14px; color: var(--sw-muted); margin: 8px 0 0; }
+.sw-primary-link { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 14px; border-radius: 10px; background: var(--sw-accent); color: white; font-size: 13px; font-weight: 650; text-decoration: none; }
+.sw-primary-link:hover { background: #244bd1; }
+.sw-metrics { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; margin-bottom: 24px; }
+.sw-metric { display: flex; gap: 13px; align-items: center; min-width: 0; padding: 18px; border-radius: var(--sw-radius); border: 1px solid var(--sw-line); background: var(--sw-surface); }
+.sw-metric-icon { display: grid; place-items: center; width: 38px; height: 38px; flex: 0 0 38px; border-radius: 10px; color: #46679d; background: #eef3fb; }
+.sw-metric-body { display: grid; gap: 4px; min-width: 0; }
+.sw-metric-label { font-size: 11px; font-weight: 650; color: var(--sw-muted); }
+.sw-metric-value { font-size: 22px; color: var(--sw-ink); line-height: 1.2; }
+.sw-metric-description { font-size: 12px; color: var(--sw-muted); }
+.sw-section-header { display: flex; align-items: end; justify-content: space-between; gap: 12px; margin: 28px 0 14px; }
+.sw-section-header h2 { font-size: 18px; margin: 0; letter-spacing: -.02em; }
+.sw-section-header p { margin: 4px 0 0; color: var(--sw-muted); font-size: 13px; }
+.sw-record-list { display: grid; gap: 10px; }
+.sw-record { display: grid; grid-template-columns: minmax(220px,1.3fr) minmax(240px,1fr) auto; gap: 20px; min-width: 0; align-items: center; padding: 15px 18px; border: 1px solid var(--sw-line); border-radius: var(--sw-radius); background: var(--sw-surface); }
+.sw-record-person { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.sw-avatar { display: grid; place-items: center; flex: 0 0 40px; height: 40px; border-radius: 10px; background: #eef2f7; color: #385071; font-size: 12px; font-weight: 750; }
+.sw-record-identity { min-width: 0; }
+.sw-record-name { display: block; color: var(--sw-ink); font-weight: 700; font-size: 14px; text-decoration: none; overflow-wrap: anywhere; }
+.sw-record-subtitle { margin-top: 3px; color: var(--sw-muted); font-size: 12px; overflow-wrap: anywhere; }
+.sw-record-details { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
+.sw-chip { display: inline-flex; align-items: center; gap: 5px; border-radius: 7px; padding: 6px 9px; background: #f1f4f8; color: #4e5c71; font-size: 11px; font-weight: 600; }
+.sw-chip-success { color: #19734a; background: #eaf8f0; }
+.sw-chip-info { color: #2454b1; background: #edf3ff; }
+.sw-chip-warning { color: #946000; background: #fff6df; }
+.sw-record-end { display: flex; align-items: center; gap: 14px; justify-content: flex-end; }
+.sw-record-meta { font-size: 11px; color: var(--sw-muted); white-space: nowrap; }
+.sw-record-open { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; font-size: 12px; color: var(--sw-accent); font-weight: 700; text-decoration: none; }
+.sw-empty { text-align: center; padding: 48px 20px; border: 1px dashed var(--sw-line); border-radius: var(--sw-radius); background: white; }
+.sw-empty h2 { margin: 0; font-size: 18px; }
+.sw-empty p { color: var(--sw-muted); margin: 8px 0 20px; font-size: 13px; }
+/* Overview is the first migrated surface; legacy data widgets are preserved. */
+.hub-dashboard .sw-overview .hub-command-center { overflow: hidden; border-radius: 18px; box-shadow: 0 12px 28px rgba(16,28,47,.07); }
+.hub-dashboard .sw-overview .hub-command-hero { padding: clamp(20px,2.1vw,32px); }
+.hub-dashboard .sw-overview .hub-command-hero h1 { font-size: clamp(30px,3vw,44px); letter-spacing: -.045em; }
+.hub-dashboard .sw-overview .hub-command-summary { font-size: 13px; line-height: 1.55; }
+.hub-dashboard .sw-overview .hub-command-grid { gap: 16px; margin-top: 16px; align-items: stretch; }
+.hub-dashboard .sw-overview .hub-command-panel { border-radius: var(--sw-radius); border-color: var(--sw-line); }
+.hub-dashboard .sw-overview .hub-command-grid:has(.hub-command-clear) { display: grid; grid-template-columns: minmax(0,1.4fr) minmax(330px,1fr); }
+.hub-dashboard .sw-overview .hub-command-grid:has(.hub-command-clear) > * { min-width: 0; width: auto; max-width: none; }
+.hub-dashboard .sw-overview .hub-overview-section-heading { margin-top: 28px; }
+.hub-dashboard .sw-overview .hub-overview-section-heading h2 { font-size: 19px; color: var(--sw-ink); }
+.hub-dashboard .sw-overview .hub-overview-card { border-color: var(--sw-line); border-radius: var(--sw-radius); }
+@media (max-width: 1100px) {
+  .sw-metrics { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .hub-dashboard .sw-overview .hub-command-grid:has(.hub-command-clear) { grid-template-columns: minmax(0,1fr); }
+}
+@media (max-width: 700px) {
+  .sw-page-header { align-items: stretch; }
+  .sw-metrics { gap: 8px; }
+  .sw-metric { padding: 13px; gap: 8px; align-items: flex-start; }
+  .sw-metric-icon { width: 30px; height: 30px; flex-basis: 30px; }
+  .sw-metric-value { font-size: 18px; }
+  .sw-record { grid-template-columns: minmax(0,1fr); gap: 10px; padding: 14px; }
+  .sw-record-details { padding-left: 0; }
+  .sw-record-end { justify-content: space-between; padding-top: 10px; border-top: 1px solid var(--sw-line); }
+  .sw-record-meta { white-space: normal; }
+  .hub-dashboard .sw-overview .hub-command-hero { padding: 20px 16px; }
+  .hub-dashboard .sw-overview .hub-command-actions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+  .hub-dashboard .sw-overview .hub-command-actions > :first-child { grid-column: 1/-1; }
+}
