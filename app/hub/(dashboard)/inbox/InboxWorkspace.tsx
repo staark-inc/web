@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ArrowLeft, ArrowRight, Inbox, Mail, MessageSquareText, PenLine } from "lucide-react";
 
 export type InboxConversation = {
@@ -34,10 +34,6 @@ export default function InboxWorkspace({
     ? selectedId
     : conversations[0]?.id ?? null;
   const selected = conversations.find((thread) => thread.id === activeId) ?? null;
-
-  useEffect(() => {
-    setShowPreviewOnMobile(false);
-  }, [selectedView]);
 
   return (
     <section className={`sw-mail-workspace ${showPreviewOnMobile ? "is-preview-open" : ""}`} aria-label="Mail workspace">
