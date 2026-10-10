@@ -34,6 +34,8 @@ jobs:
           export const dynamic = "force-dynamic";
           export default function ErrorFixture() { throw new Error("CI error boundary fixture"); }
           EOF
+      - name: Add CI-only Hub UI fixture
+        run: node scripts/create-hub-ui-fixture.mjs
       - run: npm run build
       - run: npm run typecheck
       - run: npx playwright install --with-deps chromium
@@ -51,3 +53,4 @@ jobs:
           npm run check:security-seo
           CHECK_ERROR_FIXTURE=1 npm run check:public-browser
           npm run check:google-ads-browser
+          npm run check:hub-browser

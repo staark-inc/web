@@ -116,7 +116,7 @@ export default async function HubProfilePage({
 
           <div className="hub-profile-v2-identity-copy">
             <span className="hub-profile-v2-kicker">Personal workspace</span>
-            <h1>{user.name}</h1>
+            <h2>{user.name}</h2>
             <p>{user.email}</p>
 
             <div className="hub-profile-v2-badges">
