@@ -3,29 +3,20 @@ import UnifiedAnalyticsChart from "@/components/hub/unified-analytics-chart";
 import { PageHeader, Metrics, Metric, SectionHeader, EmptyState, InfoChip } from "@/components/hub/workspace";
 
 import {
-  Activity,
   ArrowRight,
   BarChart3,
   CheckCircle2,
   CircleDollarSign,
-  Clock3,
   ExternalLink,
   Eye,
-  FileText,
   FolderKanban,
   GitCommitHorizontal,
-  GitMerge,
-  Inbox,
   LifeBuoy,
-  LoaderCircle,
   MailPlus,
   MousePointerClick,
   Plus,
-  Rocket,
   Target,
-  Trophy,
   Users,
-  XCircle,
 } from "lucide-react";
 import {
   getSearchConsoleOverview,
@@ -75,9 +66,6 @@ function createEmptySearchConsole(): SearchConsoleOverview {
   };
 }
 
-function formatPercent(value: number) {
-  return `${(value * 100).toFixed(1)}%`;
-}
 
 function formatMoneyOre(value: number | null | undefined) {
   if (!value) {
@@ -108,15 +96,6 @@ function formatPosition(value: number) {
   return value.toFixed(1);
 }
 
-function cleanSearchPage(page: string) {
-  try {
-    const url = new URL(page);
-
-    return `${url.pathname}${url.search}`;
-  } catch {
-    return page;
-  }
-}
 
 function formatDeploymentDate(
   value: string | null
