@@ -88,7 +88,7 @@ export default async function OffersPage({
   const liveCount = countFor("SHARED") + countFor("VIEWED");
 
   return (
-    <div className="hub-page hub-offers-v2-page">
+    <div className="hub-page hub-offers-v2-page hub-crm-workspace">
       <header className="hub-workspace-head">
         <div>
           <span className="hub-workspace-kicker">SALES / PROPOSALS</span>
