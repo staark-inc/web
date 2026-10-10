@@ -1,14 +1,6 @@
-import {
-  ArrowRight,
-  Bot,
-  Inbox,
-  Mail,
-  MailCheck,
-  MailOpen,
-  PenLine,
-  RefreshCw,
-  Search,
-} from "lucide-react";
+import { Inbox, MailOpen, PenLine, RefreshCw, Bot, Mail } from "lucide-react";
+import InboxWorkspace, { type InboxConversation } from "./InboxWorkspace";
+import { WorkspacePage, PageHeader, Metrics, Metric } from "@/components/hub/workspace";
 
 import Link from "next/link";
 
@@ -16,8 +8,6 @@ import { createMailPreview } from "@/lib/mail-content";
 import { prisma } from "@/lib/prisma";
 import { isAutomatedSender } from "@/lib/crm-mail";
 import InboxSearch from "./InboxSearch";
-import "../../inbox-workspace-v2.css";
-import "../../inbox-workspace-polish.css";
 
 export const dynamic = "force-dynamic";
 
@@ -270,253 +260,75 @@ export default async function HubInboxPage({ searchParams }: PageProps) {
     }
   }
 
+
   const returnTo = inboxHref(activeView, query);
+  const conversations: InboxConversation[] = visibleThreads.flatMap((thread) => {
+    const latestMessage = thread.messages[0];
+    if (!latestMessage) return [];
+    const unread = thread._count.messages;
+    const email = thread.contact?.email ??
+      (latestMessage.direction === "INBOUND" ? latestMessage.fromEmail : latestMessage.toEmail);
+    const name = thread.contact?.name ||
+      (latestMessage.direction === "INBOUND" ? latestMessage.fromName : null) || email;
+    const activity = messageActivityDate(latestMessage);
+    return [{
+      id: thread.id,
+      initials: getInitials(name, email),
+      name,
+      email,
+      subject: thread.subject,
+      preview: (latestMessage.direction === "OUTBOUND" ? "You: " : "") + createMailPreview(latestMessage.body),
+      date: formatDate(activity),
+      dateIso: activity.toISOString(),
+      messageCount: messageCountMap.get(thread.id) ?? 1,
+      unread,
+      isOther: otherThreads.has(thread.id),
+      needsReply: latestMessage.direction === "INBOUND",
+      href: "/hub/thread/" + thread.id + "?returnTo=" + encodeURIComponent(returnTo),
+    }];
+  });
+
 
   return (
-    <div className="hub-page hub-inbox-v2-page">
-      <header className="hub-inbox-v2-head">
-        <div>
-          <span className="hub-eyebrow">MAIL / CONVERSATIONS</span>
-          <h1>Inbox</h1>
-          <p>Customer conversations, replies and incoming enquiries in one place.</p>
+    <WorkspacePage>
+      <div className="sw-inbox-page">
+        <PageHeader eyebrow="COMMUNICATION / MAIL" title="Inbox"
+          description="Review customer conversations without leaving your workspace."
+          action={
+            <div className="sw-overview-actions">
+              <Link href={returnTo} className="sw-overview-secondary"><RefreshCw size={15}/> Refresh</Link>
+              <Link href="/hub/compose" className="sw-overview-primary"><PenLine size={15}/> Compose</Link>
+            </div>
+          }
+        />
+        <Metrics label="Inbox overview">
+          <Metric label="Conversations" value={counts.inbox} description="Customer threads" icon={<Inbox size={18}/>} />
+          <Metric label="Unread messages" value={unreadMessageCount} description="Needs review" icon={<MailOpen size={18}/>} />
+          <Metric label="Awaiting reply" value={awaitingReplyCount} description="Latest message inbound" icon={<Mail size={18}/>} />
+          <Metric label="Other mail" value={counts.other} description="Automated / filtered" icon={<Bot size={18}/>} />
+        </Metrics>
+        <div className="sw-inbox-toolbar">
+          <InboxSearch initialQuery={query} view={activeView}/>
+          <span className="sw-inbox-count">{conversations.length} conversations</span>
         </div>
-
-        <div className="hub-inbox-v2-actions">
-          <Link
-            href={returnTo}
-            className="hub-secondary-button"
-            aria-label="Refresh inbox"
-          >
-            <RefreshCw size={14} />
-            Refresh
-          </Link>
-
-          <Link href="/hub/compose" className="hub-inbox-v2-compose">
-            <PenLine size={14} />
-            New message
-          </Link>
-        </div>
-      </header>
-
-      <section className="hub-inbox-v2-overview" aria-label="Inbox overview">
-        <div className="hub-inbox-v2-stat">
-          <span className="hub-inbox-v2-stat-icon">
-            <Inbox size={16} />
-          </span>
-          <div>
-            <small>Conversations</small>
-            <strong>{counts.inbox}</strong>
-            <span>Customer threads</span>
-          </div>
-        </div>
-
-        <div className="hub-inbox-v2-stat">
-          <span className="hub-inbox-v2-stat-icon hub-inbox-v2-stat-icon-unread">
-            <MailOpen size={16} />
-          </span>
-          <div>
-            <small>Unread</small>
-            <strong>{unreadMessageCount}</strong>
-            <span>Messages needing review</span>
-          </div>
-        </div>
-
-        <div className="hub-inbox-v2-stat">
-          <span className="hub-inbox-v2-stat-icon hub-inbox-v2-stat-icon-reply">
-            <Mail size={16} />
-          </span>
-          <div>
-            <small>Awaiting reply</small>
-            <strong>{awaitingReplyCount}</strong>
-            <span>Latest message is inbound</span>
-          </div>
-        </div>
-
-        <div className="hub-inbox-v2-stat">
-          <span className="hub-inbox-v2-stat-icon hub-inbox-v2-stat-icon-other">
-            <Bot size={16} />
-          </span>
-          <div>
-            <small>Other mail</small>
-            <strong>{counts.other}</strong>
-            <span>Automated or filtered</span>
-          </div>
-        </div>
-      </section>
-
-      <div className="hub-inbox-v2-toolbar">
-        <InboxSearch initialQuery={query} view={activeView} />
-
-        <div className="hub-inbox-v2-total">
-          <MailCheck size={15} />
-          <span>
-            {visibleThreads.length} {visibleThreads.length === 1 ? "conversation" : "conversations"}
-            {query && " found"}
-          </span>
-        </div>
+        <nav className="sw-inbox-tabs" aria-label="Inbox views">
+          {([
+            ["inbox", "Inbox"],
+            ["needs-reply", "Needs reply"],
+            ["unread", "Unread"],
+            ["replied", "Replied"],
+            ["other", "Other"],
+            ["all", "All mail"],
+          ] as const).map(([key, label]) => (
+            <Link key={key} href={inboxHref(key, query)}
+              className={"sw-inbox-tab " + (activeView === key ? "is-active" : "")}
+              aria-current={activeView === key ? "page" : undefined}>
+              {label}<span>{counts[key]}</span>
+            </Link>
+          ))}
+        </nav>
+        <InboxWorkspace conversations={conversations} selectedView={activeView} key={activeView + ":" + query}/>
       </div>
-
-      <nav className="hub-inbox-v2-tabs" aria-label="Inbox views">
-        {([
-          ["inbox", "Inbox"],
-          ["needs-reply", "Needs reply"],
-          ["unread", "Unread"],
-          ["replied", "Replied"],
-          ["other", "Other"],
-          ["all", "All mail"],
-        ] as const).map(([key, label]) => (
-          <Link
-            key={key}
-            href={inboxHref(key, query)}
-            className={`hub-inbox-v2-tab ${
-              activeView === key ? "hub-inbox-v2-tab-active" : ""
-            }`}
-            aria-current={activeView === key ? "page" : undefined}
-          >
-            {label}
-            <span>{counts[key]}</span>
-          </Link>
-        ))}
-      </nav>
-
-      {visibleThreads.length === 0 ? (
-        <section className="hub-inbox-v2-empty">
-          {query ? (
-            <>
-              <Search size={28} />
-              <h2>No matches for &ldquo;{query}&rdquo;</h2>
-              <p>Try a different name, email address, subject or keyword.</p>
-              <Link href={inboxHref(activeView, "")} className="hub-secondary-button">
-                Clear search
-              </Link>
-            </>
-          ) : (
-            <>
-              <Inbox size={28} />
-              <h2>
-                {activeView === "unread"
-                  ? "All caught up"
-                  : activeView === "needs-reply"
-                    ? "Nothing needs a reply"
-                    : activeView === "replied"
-                      ? "No replied conversations"
-                      : activeView === "other"
-                        ? "No other messages"
-                        : "Your inbox is empty"}
-              </h2>
-              <p>
-                {activeView === "other"
-                  ? "Previously imported automated messages appear here. Nothing is deleted."
-                  : activeView === "unread"
-                    ? "You have no unread customer conversations."
-                    : activeView === "needs-reply"
-                      ? "No customer conversation is currently waiting for your reply."
-                      : activeView === "replied"
-                        ? "No customer conversation currently has your message as the latest reply."
-                        : "New customer conversations will appear here automatically."}
-              </p>
-            </>
-          )}
-        </section>
-      ) : (
-        <section className="hub-inbox-v2-list" aria-label="Inbox conversations">
-          {visibleThreads.map((thread) => {
-            const latestMessage = thread.messages[0];
-            if (!latestMessage) return null;
-
-            const unreadInThread = thread._count.messages;
-            const hasUnread = unreadInThread > 0;
-            const messageCount = messageCountMap.get(thread.id) ?? 1;
-            const isOther = otherThreads.has(thread.id);
-
-            const contactEmail =
-              thread.contact?.email ??
-              (latestMessage.direction === "INBOUND"
-                ? latestMessage.fromEmail
-                : latestMessage.toEmail);
-
-            const contactName =
-              thread.contact?.name ||
-              (latestMessage.direction === "INBOUND" ? latestMessage.fromName : null) ||
-              contactEmail;
-
-            const latestIsInbound = latestMessage.direction === "INBOUND";
-            const initials = getInitials(contactName, contactEmail);
-            const latestActivityAt = messageActivityDate(latestMessage);
-
-            return (
-              <Link
-                href={`/hub/thread/${thread.id}?returnTo=${encodeURIComponent(returnTo)}`}
-                className={`hub-inbox-v2-row ${
-                  hasUnread ? "hub-inbox-v2-row-unread" : ""
-                }`}
-                key={thread.id}
-              >
-                <div className="hub-inbox-v2-person">
-                  <div className="hub-inbox-v2-avatar">
-                    {initials}
-                    {hasUnread && <span className="hub-inbox-v2-unread-dot" />}
-                  </div>
-
-                  <div className="hub-inbox-v2-identity">
-                    <div className="hub-inbox-v2-name-line">
-                      <strong>{contactName}</strong>
-                      {isOther ? (
-                        <span className="hub-inbox-v2-badge hub-inbox-v2-badge-other">
-                          Other
-                        </span>
-                      ) : hasUnread ? (
-                        <span className="hub-inbox-v2-badge hub-inbox-v2-badge-unread">
-                          {unreadInThread} unread
-                        </span>
-                      ) : latestIsInbound ? (
-                        <span className="hub-inbox-v2-badge hub-inbox-v2-badge-reply">
-                          Reply
-                        </span>
-                      ) : (
-                        <span className="hub-inbox-v2-badge hub-inbox-v2-badge-done">
-                          Replied
-                        </span>
-                      )}
-                    </div>
-                    <span className="hub-inbox-v2-email">{contactEmail}</span>
-                  </div>
-                </div>
-
-                <div className="hub-inbox-v2-content">
-                  <strong className="hub-inbox-v2-subject">{thread.subject}</strong>
-                  <span className="hub-inbox-v2-preview">
-                    {latestMessage.direction === "OUTBOUND" ? "You: " : ""}
-                    {createMailPreview(latestMessage.body)}
-                  </span>
-                </div>
-
-                <div className="hub-inbox-v2-tail">
-                  <time dateTime={latestActivityAt.toISOString()}>
-                    {formatDate(latestActivityAt)}
-                  </time>
-
-                  <div className="hub-inbox-v2-meta">
-                    <span className="hub-inbox-v2-message-count">
-                      {messageCount} {messageCount === 1 ? "message" : "messages"}
-                    </span>
-                    <span className="hub-inbox-v2-open">
-                      Open
-                      <ArrowRight size={13} />
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
-        </section>
-      )}
-
-      {unreadMessageCount > 0 && (
-        <div className="hub-inbox-v2-unread-summary">
-          {unreadMessageCount} {unreadMessageCount === 1 ? "unread message" : "unread messages"}
-        </div>
-      )}
-    </div>
+    </WorkspacePage>
   );
 }
