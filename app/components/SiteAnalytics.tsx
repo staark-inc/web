@@ -1,28 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { GoogleAnalytics } from "@next/third-parties/google";
-import { CONSENT_CHANGE_EVENT, getStoredConsent } from "@/lib/consent";
+import { subscribeConsent } from "@/lib/consent";
+import { syncGoogleTag } from "@/lib/google-tag";
 
 type SiteAnalyticsProps = { gaId: string };
 
 export default function SiteAnalytics({ gaId }: SiteAnalyticsProps) {
   const pathname = usePathname();
-  const [enabled, setEnabled] = useState(false);
 
   useEffect(() => {
-    const sync = () => setEnabled(getStoredConsent()?.analytics === true);
+    const sync = () => syncGoogleTag(gaId, pathname);
     sync();
-    window.addEventListener(CONSENT_CHANGE_EVENT, sync);
-    return () => window.removeEventListener(CONSENT_CHANGE_EVENT, sync);
-  }, []);
+    return subscribeConsent(sync);
+  }, [gaId, pathname]);
 
-  if (
-    pathname === "/hub" || pathname.startsWith("/hub/") ||
-    pathname === "/offert" || pathname.startsWith("/offert/") ||
-    !enabled
-  ) return null;
-
-  return <GoogleAnalytics gaId={gaId} />;
+  return null;
 }

@@ -3,27 +3,18 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, useSyncExternalStore, type KeyboardEvent } from "react";
-import { BarChart3, Check, Settings2, ShieldCheck, X } from "lucide-react";
+import { BarChart3, Check, Megaphone, Settings2, ShieldCheck, X } from "lucide-react";
 import {
   getStoredConsent,
-  CONSENT_CHANGE_EVENT,
   OPEN_COOKIE_SETTINGS_EVENT,
-  rejectAnalytics,
   saveConsent,
-  setGoogleConsentDefaults,
-  updateGoogleConsent,
+  subscribeConsent,
+  type ConsentState,
 } from "@/lib/consent";
+import { isPrivateTrackingPath } from "@/lib/google-tag";
 
-function subscribeConsent(callback: () => void) {
-  window.addEventListener(CONSENT_CHANGE_EVENT, callback);
-  window.addEventListener("storage", callback);
-  return () => {
-    window.removeEventListener(CONSENT_CHANGE_EVENT, callback);
-    window.removeEventListener("storage", callback);
-  };
-}
-const readConsent = () => getStoredConsent()?.analytics ?? null;
-const serverConsent = () => null;
+const readConsent = () => JSON.stringify(getStoredConsent());
+const serverConsent = () => "null";
 const subscribeHydration = () => () => {};
 const clientHydrated = () => true;
 const serverHydrated = () => false;
@@ -31,38 +22,30 @@ const serverHydrated = () => false;
 export default function CookieConsent() {
   const pathname = usePathname();
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [sessionChoice, setSessionChoice] = useState<boolean | null>(null);
-  const storedAnalytics = useSyncExternalStore(subscribeConsent, readConsent, serverConsent);
+  const storedConsent = useSyncExternalStore(subscribeConsent, readConsent, serverConsent);
   const hydrated = useSyncExternalStore(subscribeHydration, clientHydrated, serverHydrated);
-  const consent = storedAnalytics ?? sessionChoice;
+  const consent = JSON.parse(storedConsent) as ConsentState | null;
   const dialogRef = useRef<HTMLElement>(null);
   const [customizing, setCustomizing] = useState(false);
   const [analytics, setAnalytics] = useState(false);
+  const [marketing, setMarketing] = useState(false);
 
-  const excluded =
-    pathname === "/hub" || pathname.startsWith("/hub/") ||
-    pathname === "/offert" || pathname.startsWith("/offert/");
+  const excluded = isPrivateTrackingPath(pathname);
 
   const visible = hydrated && !excluded && (settingsOpen || consent === null);
 
   useEffect(() => {
-    setGoogleConsentDefaults();
-  }, []);
-
-  useEffect(() => {
-    updateGoogleConsent(!excluded && consent === true);
-  }, [excluded, consent]);
-
-  useEffect(() => {
     const open = () => {
       if (excluded) return;
-      setAnalytics(consent === true);
+      const current = getStoredConsent();
+      setAnalytics(current?.analytics === true);
+      setMarketing(current?.marketing === true);
       setCustomizing(true);
       setSettingsOpen(true);
     };
     window.addEventListener(OPEN_COOKIE_SETTINGS_EVENT, open);
     return () => window.removeEventListener(OPEN_COOKIE_SETTINGS_EVENT, open);
-  }, [excluded, consent]);
+  }, [excluded]);
 
   useEffect(() => {
     if (!visible) return;
@@ -106,21 +89,19 @@ export default function CookieConsent() {
   if (!visible) return null;
 
   const acceptAll = () => {
-    saveConsent(true);
-    setSessionChoice(true);
+    saveConsent(true, true);
     setAnalytics(true);
+    setMarketing(true);
     setSettingsOpen(false);
   };
   const rejectAll = () => {
-    rejectAnalytics();
-    setSessionChoice(false);
+    saveConsent(false, false);
     setAnalytics(false);
+    setMarketing(false);
     setSettingsOpen(false);
   };
   const saveSelection = () => {
-    if (analytics) saveConsent(true);
-    else rejectAnalytics();
-    setSessionChoice(analytics);
+    saveConsent(analytics, marketing);
     setSettingsOpen(false);
   };
 
@@ -138,7 +119,8 @@ export default function CookieConsent() {
         {!customizing ? (
           <>
             <p className="cookie-consent-copy">
-              Nödvändiga funktioner används alltid. Google Analytics används bara om du godkänner statistik.
+              Nödvändiga funktioner används alltid. Med ditt samtycke använder vi Google Analytics för statistik
+              och Google Ads för att mäta om annonser leder till kontaktförfrågningar.
               Du kan ändra ditt val när som helst via Cookie-inställningar i sidfoten.
             </p>
             <p className="cookie-consent-more">
@@ -160,6 +142,10 @@ export default function CookieConsent() {
               <label className="cookie-consent-option">
                 <div><span className="cookie-consent-option-icon"><BarChart3 size={17} /></span><div><strong>Statistik</strong><p>Google Analytics hjälper oss förstå hur den publika webbplatsen används.</p></div></div>
                 <input type="checkbox" checked={analytics} onChange={(event) => setAnalytics(event.target.checked)} aria-label="Tillåt statistik via Google Analytics" />
+              </label>
+              <label className="cookie-consent-option">
+                <div><span className="cookie-consent-option-icon"><Megaphone size={17} /></span><div><strong>Marknadsföring</strong><p>Google Ads mäter om våra annonser leder till skickade kontaktförfrågningar. Anpassade annonser är avstängda.</p></div></div>
+                <input type="checkbox" checked={marketing} onChange={(event) => setMarketing(event.target.checked)} aria-label="Tillåt annonsmätning via Google Ads" />
               </label>
             </div>
             <p className="cookie-consent-more">Du kan när som helst återkalla eller ändra ditt val.</p>

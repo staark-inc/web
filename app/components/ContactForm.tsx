@@ -1,24 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
-import { sendGAEvent } from "@next/third-parties/google";
-import { hasAnalyticsConsent } from "@/lib/consent";
+import { trackContactConversion } from "@/lib/google-tag";
 
 export default function ContactForm() {
   const [status, setStatus] = useState<
     "idle" | "sending" | "success" | "error"
   >("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const submitting = useRef(false);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (status === "sending") {
+    if (submitting.current) {
       return;
     }
 
+    submitting.current = true;
     setStatus("sending");
     setErrorMessage("");
 
@@ -41,8 +42,8 @@ export default function ContactForm() {
         }),
       });
 
-      if (!response.ok) {
-        const result = await response.json().catch(() => null);
+      const result = await response.json().catch(() => null);
+      if (!response.ok || result?.ok !== true) {
         throw new Error(
           response.status === 429
             ? "För många meddelanden. Vänta en stund och försök igen."
@@ -50,18 +51,15 @@ export default function ContactForm() {
         );
       }
 
-      if (hasAnalyticsConsent()) {
-        sendGAEvent("event", "generate_lead", {
-          lead_source: "contact_form",
-        });
-      }
-
       form.reset();
       setStatus("success");
+      trackContactConversion(result.conversionId);
     } catch (error) {
       console.error("Contact form error:", error);
       setErrorMessage(error instanceof Error ? error.message : "Meddelandet kunde inte skickas. Försök igen.");
       setStatus("error");
+    } finally {
+      submitting.current = false;
     }
   }
 

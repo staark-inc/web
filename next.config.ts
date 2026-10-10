@@ -7,16 +7,16 @@ const isDevelopment = process.env.NODE_ENV === "development";
 // nonce-based XSS policy. Never allow unsafe-eval outside development.
 const contentSecurityPolicy = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://static.cloudflareinsights.com${isDevelopment ? " 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.googleadservices.com https://www.google.com https://static.cloudflareinsights.com${isDevelopment ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
   "font-src 'self'",
-  `connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://cloudflareinsights.com${isDevelopment ? " ws: wss:" : ""}`,
+  `connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://pagead2.googlesyndication.com https://ad.doubleclick.net https://www.google.com https://www.google.se https://cloudflareinsights.com${isDevelopment ? " ws: wss:" : ""}`,
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
   "frame-ancestors 'self'",
-  "frame-src 'self'",
+  "frame-src 'self' https://www.googletagmanager.com",
 ].join("; ");
 
 const nextConfig: NextConfig = {

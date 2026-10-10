@@ -16,7 +16,7 @@ export default function PrivacyPolicyPage() {
           <header className="legal-hero">
             <span>JURIDIK & INTEGRITET</span>
             <h1>Integritetspolicy</h1>
-            <p>Senast uppdaterad: 22 september 2026</p>
+            <p>Senast uppdaterad: 10 oktober 2026</p>
           </header>
 
           <section>
@@ -30,6 +30,7 @@ export default function PrivacyPolicyPage() {
             <h2>2. Vilka uppgifter vi behandlar</h2>
             <p>Beroende på hur du använder våra tjänster kan vi behandla namn, e-postadress, företagsnamn, webbplatsadress, innehåll i kontakt- och supportmeddelanden samt uppgifter som behövs för offert-, projekt-, kund- och fakturaadministration.</p>
             <p>Om du godkänner statistik behandlas även tekniska uppgifter om hur den publika webbplatsen används via Google Analytics, exempelvis besökta sidor, ungefärlig enhetsinformation och sessionsdata.</p>
+            <p>Om du godkänner Marknadsföring används Google Ads för annonsmätning. Google kan då behandla tekniska uppgifter, annonsklickidentifierare och en händelse som visar att en kontaktförfrågan skickats. Vi skickar inte formulärets namn, e-postadress eller meddelande till Google i denna händelse.</p>
           </section>
 
           <section>
@@ -42,6 +43,7 @@ export default function PrivacyPolicyPage() {
                   <tr><td>Hantera offerter, projekt, support och kundrelationer.</td><td>Avtal och, för kontaktpersoner hos företagskunder, berättigat intresse.</td></tr>
                   <tr><td>Uppfylla krav som följer av exempelvis bokförings- eller annan tillämplig lagstiftning.</td><td>Rättslig förpliktelse.</td></tr>
                   <tr><td>Mäta hur den publika webbplatsen används via Google Analytics.</td><td>Samtycke.</td></tr>
+                  <tr><td>Mäta om annonser leder till kontaktförfrågningar via Google Ads.</td><td>Samtycke till Marknadsföring.</td></tr>
                 </tbody>
               </table>
             </div>
@@ -50,7 +52,7 @@ export default function PrivacyPolicyPage() {
           <section>
             <h2>4. Mottagare och leverantörer</h2>
             <p>Vi kan använda leverantörer för hosting, e-post, drift, säkerhet och andra tekniska tjänster. De får bara behandla personuppgifter i den omfattning som behövs för att leverera tjänsten till oss.</p>
-            <p>Google Analytics används endast när du har godkänt statistik. Vi lämnar även ut uppgifter när det krävs enligt lag eller ett bindande myndighetsbeslut.</p>
+            <p>Google Analytics används endast när du har godkänt statistik. Google Ads används för annonsmätning endast när du har godkänt Marknadsföring; anpassade annonser är avstängda. Vi lämnar även ut uppgifter när det krävs enligt lag eller ett bindande myndighetsbeslut.</p>
           </section>
 
           <section>
@@ -61,7 +63,7 @@ export default function PrivacyPolicyPage() {
           <section>
             <h2>6. Hur länge uppgifter sparas</h2>
             <p>Vi sparar personuppgifter så länge de behövs för det ändamål de samlades in för, exempelvis för att hantera en förfrågan, ett pågående projekt, support eller en kundrelation. Uppgifter som måste bevaras enligt lag sparas under den tid lagen kräver.</p>
-            <p>Samtycke till statistik sparas lokalt i din webbläsare så att vi kan respektera ditt val. Du kan när som helst ändra valet via Cookie-inställningar i sidfoten.</p>
+            <p>Dina val för statistik och annonsmätning sparas lokalt i din webbläsare så att vi kan respektera ditt val. Du kan när som helst ändra valet via Cookie-inställningar i sidfoten.</p>
           </section>
 
           <section>
@@ -76,7 +78,7 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section>
-            <h2>9. Kakor och statistik</h2>
+            <h2>9. Kakor och annonsmätning</h2>
             <p>Information om de kakor och den lokala lagring som används finns på sidan <Link href="/kakor">Kakor & cookie-inställningar</Link>.</p>
           </section>
 

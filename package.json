@@ -18,6 +18,8 @@
     "postinstall": "prisma generate",
     "typecheck": "tsc --noEmit",
     "test:news": "node --experimental-strip-types --test test/news-*.test.ts",
+    "test:google-ads": "node --experimental-strip-types --test test/google-tag.test.ts",
+    "check:google-ads-browser": "node scripts/check-google-ads-browser.mjs",
     "test:security-seo": "node --experimental-strip-types --test test/security-seo.test.ts",
     "check:security-seo": "node scripts/check-security-seo.mjs",
     "test:public-website": "node --experimental-strip-types --test test/contact-intake.test.ts test/public-http-cache.test.ts",
