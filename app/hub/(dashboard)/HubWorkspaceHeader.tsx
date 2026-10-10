@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowUpRight, ChevronRight, Home, PenLine } from "lucide-react";
+import { ArrowUpRight, ChevronRight, Home } from "lucide-react";
 
 const names: Record<string, string> = {
   inbox: "Inbox", sent: "Sent", compose: "Compose", prospects: "Prospects",
@@ -47,10 +47,7 @@ export default function HubWorkspaceHeader() {
         </nav>
         <strong className="hub-shell-title">{title}</strong>
       </div>
-      <div className="hub-shell-actions hub-shell-actions-v4">
-        <Link href="/hub/compose" className="hub-shell-site-link hub-shell-compose-link">
-          <PenLine size={15} aria-hidden="true" /> <span>Compose</span>
-        </Link>
+      <div className="hub-shell-actions hub-shell-actions-v4" aria-label="Quick links">
         <a href="https://staarkinc.com" className="hub-shell-site-link" target="_blank" rel="noopener noreferrer">
           Website <ArrowUpRight size={14} aria-hidden="true" />
         </a>
