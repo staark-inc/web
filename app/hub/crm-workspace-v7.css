@@ -1,0 +1,165 @@
+/* HUB-UI-07: shared CRM workspace surface.
+   Opt-in only: Leads, Clients, Projects, Offers, Billing list pages.
+   Existing actions, status semantics and responsive markup remain unchanged. */
+.hub-dashboard .hub-crm-workspace {
+  --crm-line: #dfe6f0;
+  --crm-text: #182640;
+  --crm-muted: #62718a;
+  --crm-blue: #315cf5;
+  --crm-radius: 15px;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  margin-inline: 0;
+  padding-bottom: 58px;
+}
+.hub-dashboard .hub-crm-workspace :is(
+  .hub-leads-v2-head, .hub-clients-v2-head, .hub-projects-v2-head, .hub-workspace-head
+) {
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 23px;
+}
+.hub-dashboard .hub-crm-workspace :is(
+  .hub-leads-v2-head, .hub-clients-v2-head, .hub-projects-v2-head, .hub-workspace-head
+) h1 {
+  color: var(--crm-text);
+  font-size: clamp(25px, 2.1vw, 33px);
+  line-height: 1.17;
+  letter-spacing: -.035em;
+}
+.hub-dashboard .hub-crm-workspace :is(
+  .hub-leads-v2-kicker, .hub-clients-v2-kicker, .hub-projects-v2-title > span, .hub-workspace-kicker
+) {
+  color: #73829c;
+  font-size: 10px;
+  letter-spacing: .09em;
+}
+.hub-dashboard .hub-crm-workspace :is(
+  .hub-leads-v2-head, .hub-clients-v2-head, .hub-projects-v2-head, .hub-workspace-head
+) p {
+  color: var(--crm-muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+.hub-dashboard .hub-crm-workspace :is(
+  .hub-leads-v2-stats, .hub-clients-v2-stats, .hub-projects-v2-stats, .hub-workspace-stats
+) {
+  min-width: 0;
+  margin-bottom: 20px;
+  border: 1px solid var(--crm-line);
+  border-radius: var(--crm-radius);
+  box-shadow: 0 3px 18px rgba(24, 40, 67, .035);
+  background: #fff;
+}
+.hub-dashboard .hub-crm-workspace :is(
+  .hub-leads-v2-stat, .hub-clients-v2-stat, .hub-projects-v2-stat, .hub-workspace-stat
+) {
+  min-width: 0;
+  min-height: 90px;
+  padding: 17px 19px;
+}
+.hub-dashboard .hub-crm-workspace :is(
+  .hub-leads-v2-stat, .hub-clients-v2-stat, .hub-projects-v2-stat, .hub-workspace-stat
+) small {
+  color: var(--crm-muted);
+  font-size: 10px;
+  line-height: 1.45;
+  letter-spacing: .035em;
+}
+.hub-dashboard .hub-crm-workspace :is(
+  .hub-leads-v2-filters, .hub-projects-v2-filters, .hub-workspace-filters
+) {
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.hub-dashboard .hub-crm-workspace :is(
+  .hub-leads-v2-filters, .hub-projects-v2-filters, .hub-workspace-filters
+) > a {
+  min-height: 37px;
+  border-radius: 9px;
+  font-size: 12px;
+}
+.hub-dashboard .hub-crm-workspace :is(
+  .hub-leads-v2-list, .hub-clients-v2-list, .hub-projects-v2-list,
+  .hub-offers-v2-list, .hub-billing-v2-list
+) {
+  min-width: 0;
+  gap: 12px;
+}
+.hub-dashboard .hub-crm-workspace :is(
+  .hub-leads-v2-row, .hub-clients-v2-row, .hub-projects-v2-item,
+  .hub-offers-v2-row, .hub-billing-v2-row
+) {
+  min-width: 0;
+  border: 1px solid var(--crm-line);
+  border-radius: var(--crm-radius);
+  background: #fff;
+  box-shadow: 0 4px 18px rgba(20, 36, 62, .035);
+  transition: border-color .16s ease, box-shadow .16s ease;
+}
+.hub-dashboard .hub-crm-workspace :is(
+  .hub-leads-v2-row, .hub-clients-v2-row, .hub-projects-v2-item,
+  .hub-offers-v2-row, .hub-billing-v2-row
+):hover {
+  border-color: #b7c9e9;
+  box-shadow: 0 7px 24px rgba(26, 54, 98, .075);
+}
+.hub-dashboard .hub-crm-workspace :is(
+  .hub-leads-v2-row, .hub-clients-v2-row, .hub-projects-v2-item,
+  .hub-offers-v2-row, .hub-billing-v2-row
+) a:focus-visible,
+.hub-dashboard .hub-crm-workspace :is(
+  .hub-leads-v2-filters, .hub-projects-v2-filters, .hub-workspace-filters
+) a:focus-visible {
+  outline: 2px solid var(--crm-blue);
+  outline-offset: 2px;
+}
+.hub-dashboard .hub-crm-workspace :is(
+  .hub-leads-v2-name-line a, .hub-clients-v2-identity a,
+  .hub-projects-v2-name-line a, .hub-offers-v2-title-line a
+) {
+  color: var(--crm-text);
+}
+.hub-dashboard .hub-crm-workspace :is(
+  .hub-leads-v2-tail, .hub-clients-v2-tail, .hub-projects-v2-item-footer,
+  .hub-offers-v2-tail, .hub-billing-v2-tail
+) {
+  color: var(--crm-muted);
+}
+.hub-dashboard .hub-crm-workspace .hub-empty-state {
+  border: 1px dashed #cbd8e8;
+  border-radius: var(--crm-radius);
+  background: #fff;
+}
+@media (max-width: 900px) {
+  .hub-dashboard .hub-crm-workspace :is(
+    .hub-leads-v2-stats, .hub-clients-v2-stats, .hub-projects-v2-stats, .hub-workspace-stats
+  ) { margin-bottom: 16px; }
+  .hub-dashboard .hub-crm-workspace :is(
+    .hub-leads-v2-stat, .hub-clients-v2-stat, .hub-projects-v2-stat, .hub-workspace-stat
+  ) { min-height: 78px; padding: 14px; }
+}
+@media (max-width: 600px) {
+  .hub-dashboard .hub-crm-workspace :is(
+    .hub-leads-v2-head, .hub-clients-v2-head, .hub-projects-v2-head, .hub-workspace-head
+  ) { align-items: flex-start; gap: 13px; margin-bottom: 17px; }
+  .hub-dashboard .hub-crm-workspace :is(
+    .hub-leads-v2-head, .hub-clients-v2-head, .hub-projects-v2-head, .hub-workspace-head
+  ) h1 { font-size: 25px; }
+  .hub-dashboard .hub-crm-workspace :is(
+    .hub-leads-v2-list, .hub-clients-v2-list, .hub-projects-v2-list,
+    .hub-offers-v2-list, .hub-billing-v2-list
+  ) { gap: 10px; }
+  .hub-dashboard .hub-crm-workspace :is(
+    .hub-leads-v2-row, .hub-clients-v2-row, .hub-projects-v2-item,
+    .hub-offers-v2-row, .hub-billing-v2-row
+  ) { border-radius: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hub-dashboard .hub-crm-workspace :is(
+    .hub-leads-v2-row, .hub-clients-v2-row, .hub-projects-v2-item,
+    .hub-offers-v2-row, .hub-billing-v2-row
+  ) { transition: none; }
+}
