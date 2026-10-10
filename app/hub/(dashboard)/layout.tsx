@@ -19,6 +19,7 @@ import HubNav from "./HubNav";
 import HubSidebar from "./HubSidebar";
 import LiveUpdates from "./LiveUpdates";
 import NotificationCenter from "./NotificationCenter";
+import HubWorkspaceHeader from "./HubWorkspaceHeader";
 
 export const dynamic = "force-dynamic";
 
@@ -189,6 +190,7 @@ export default async function HubDashboardLayout({
       </HubSidebar>
 
       <main className="hub-content">
+        <HubWorkspaceHeader />
         {children}
       </main>
     </div>
