@@ -1,4 +1,5 @@
 import Link from "next/link";
+import OverviewChart from "@/components/hub/overview-chart";
 
 import {
   Activity,
@@ -50,23 +51,6 @@ function formatDate(date: Date) {
   }).format(date);
 }
 
-function formatTrafficDate(date: string) {
-  if (!date || date.length !== 8) {
-    return date;
-  }
-
-  const year = Number(date.slice(0, 4));
-  const month = Number(date.slice(4, 6)) - 1;
-  const day = Number(date.slice(6, 8));
-
-  return new Intl.DateTimeFormat("sv-SE", {
-    day: "numeric",
-    month: "short",
-  }).format(
-    new Date(year, month, day)
-  );
-}
-
 function createEmptyAnalytics(): Ga4Overview {
   return {
     visitors: 0,
@@ -88,23 +72,6 @@ function createEmptySearchConsole(): SearchConsoleOverview {
     topQueries: [],
     topPages: [],
   };
-}
-
-function formatSearchDate(date: string) {
-  if (!date) {
-    return date;
-  }
-
-  const parsed = new Date(`${date}T12:00:00`);
-
-  if (Number.isNaN(parsed.getTime())) {
-    return date;
-  }
-
-  return new Intl.DateTimeFormat("sv-SE", {
-    day: "numeric",
-    month: "short",
-  }).format(parsed);
 }
 
 function formatPercent(value: number) {
@@ -461,13 +428,7 @@ const githubPromise = getGitHubOverview()
 
   const analytics = analyticsResult.data;
   const searchConsole = searchConsoleResult.data;
-  const maxSearchImpressions = Math.max(
-    ...searchConsole.dailyTraffic.map(
-      (item) => item.impressions
-    ),
-    1
-  );
-
+  
   const github = githubResult.data;
 
   const workflowStatus = (() => {
@@ -517,21 +478,8 @@ const githubPromise = getGitHubOverview()
     };
   })();
 
-  /**
-   * The graph uses page views for now.
-   *
-   * We calculate the maximum so the bars
-   * automatically scale to the available data.
-   */
-  const maxPageViews = Math.max(
-    ...analytics.dailyTraffic.map(
-      (item) => item.pageViews
-    ),
-    1
-  );
-
   return (
-    <div className="hub-page hub-overview-page">
+    <div className="hub-page hub-overview-page sw-overview">
       {/* COMMAND CENTER */}
 
       <section className="hub-command-center">
@@ -1069,76 +1017,7 @@ const githubPromise = getGitHubOverview()
             </div>
           </div>
 
-          {analytics.dailyTraffic.length === 0 ? (
-            <div className="hub-overview-empty">
-              No website traffic yet.
-            </div>
-          ) : (
-            <div className="hub-traffic-chart">
-              <div className="hub-traffic-bars">
-                {analytics.dailyTraffic.map(
-                  (item, index) => {
-                    const hasTraffic =
-                      item.pageViews > 0;
-
-                    const height = hasTraffic
-                      ? Math.max(
-                          (item.pageViews /
-                            maxPageViews) *
-                            100,
-                          8
-                        )
-                      : 0;
-
-                    const showLabel =
-                      index === 0 ||
-                      index ===
-                        analytics.dailyTraffic.length - 1 ||
-                      index % 5 === 0;
-
-                    return (
-                      <div
-                        className="hub-traffic-column"
-                        key={item.date}
-                        title={`${formatTrafficDate(
-                          item.date
-                        )}: ${
-                          item.pageViews
-                        } page views`}
-                      >
-                        <div className="hub-traffic-bar-area">
-                          {hasTraffic ? (
-                            <div
-                              className="hub-traffic-bar"
-                              style={{
-                                height: `${height}%`,
-                              }}
-                            />
-                          ) : (
-                            <div className="hub-traffic-zero" />
-                          )}
-                        </div>
-
-                        <span
-                          className={
-                            showLabel
-                              ? "hub-traffic-date-visible"
-                              : "hub-traffic-date-hidden"
-                          }
-                        >
-                          {showLabel
-                            ? formatTrafficDate(
-                                item.date
-                              )
-                            : ""}
-                        </span>
-                      </div>
-                    );
-                  }
-                )}
-              </div>
-            </div>
-          )}
+          <OverviewChart kind="traffic" data={analytics.dailyTraffic} />
         </div>
 
         {/* TOP PAGES */}
@@ -1333,79 +1212,7 @@ const githubPromise = getGitHubOverview()
             </div>
           </div>
 
-          {searchConsole.dailyTraffic.length === 0 ? (
-            <div className="hub-overview-empty">
-              No search data yet.
-            </div>
-          ) : (
-            <div className="hub-traffic-chart">
-              <div className="hub-traffic-bars">
-                {searchConsole.dailyTraffic.map(
-                  (item, index) => {
-                    const hasTraffic =
-                      item.impressions > 0;
-
-                    const height = hasTraffic
-                      ? Math.max(
-                          (item.impressions /
-                            maxSearchImpressions) *
-                            100,
-                          8
-                        )
-                      : 0;
-
-                    const showLabel =
-                      index === 0 ||
-                      index ===
-                        searchConsole.dailyTraffic.length -
-                          1 ||
-                      index % 5 === 0;
-
-                    return (
-                      <div
-                        className="hub-traffic-column"
-                        key={item.date}
-                        title={`${formatSearchDate(
-                          item.date
-                        )}: ${
-                          item.impressions
-                        } impressions, ${
-                          item.clicks
-                        } clicks`}
-                      >
-                        <div className="hub-traffic-bar-area">
-                          {hasTraffic ? (
-                            <div
-                              className="hub-traffic-bar hub-search-bar"
-                              style={{
-                                height: `${height}%`,
-                              }}
-                            />
-                          ) : (
-                            <div className="hub-traffic-zero" />
-                          )}
-                        </div>
-
-                        <span
-                          className={
-                            showLabel
-                              ? "hub-traffic-date-visible"
-                              : "hub-traffic-date-hidden"
-                          }
-                        >
-                          {showLabel
-                            ? formatSearchDate(
-                                item.date
-                              )
-                            : ""}
-                        </span>
-                      </div>
-                    );
-                  }
-                )}
-              </div>
-            </div>
-          )}
+          <OverviewChart kind="search" data={searchConsole.dailyTraffic} />
         </div>
 
         <div className="hub-overview-card">

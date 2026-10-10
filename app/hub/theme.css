@@ -78,3 +78,49 @@
     animation-duration: .01ms;
   }
 }
+
+/* Overview charts — native SVG via Recharts. No CSS-generated bars. */
+.hub-dashboard .sw-overview .hub-command-center {
+  overflow: hidden;
+  border-radius: 18px;
+  box-shadow: 0 10px 26px rgba(18, 31, 53, .06);
+}
+.hub-dashboard .sw-overview .hub-command-summary {
+  font-size: 13px;
+  line-height: 1.6;
+}
+.hub-dashboard .sw-overview .hub-command-panel,
+.hub-dashboard .sw-overview .hub-overview-card {
+  border-radius: var(--sw-radius);
+  border-color: var(--sw-line);
+}
+.hub-dashboard .sw-overview .hub-command-grid {
+  align-items: stretch;
+}
+.hub-dashboard .sw-overview .hub-overview-section-heading h2 {
+  font-size: 18px;
+  color: var(--sw-ink);
+}
+.hub-dashboard .sw-overview .sw-chart {
+  width: 100%;
+  min-width: 0;
+  height: clamp(220px, 22vw, 315px);
+  padding: 16px 12px 24px 4px;
+}
+.hub-dashboard .sw-overview .sw-chart-empty {
+  display: grid;
+  min-height: 200px;
+  place-items: center;
+  padding: 24px;
+  color: var(--sw-muted);
+  font-size: 13px;
+}
+@media (max-width: 700px) {
+  .hub-dashboard .sw-overview .sw-chart {
+    height: 240px;
+    padding: 10px 4px 25px 0;
+  }
+  .hub-dashboard .sw-overview .hub-command-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
