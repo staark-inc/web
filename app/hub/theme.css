@@ -94,6 +94,9 @@
 .sw-overview-secondary:hover { background: #f3f6fc; border-color: #b9c6de; }
 .hub-dashboard .sw-overview-layout .sw-metrics { margin-bottom: 20px; }
 .sw-overview-primary-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 16px; }
+.sw-overview-priorities-clear .sw-priority-panel { align-self: start; }
+.sw-overview-priorities-clear .sw-overview-clear { padding: 8px 0 12px; }
+.sw-overview-priorities-clear .sw-overview-text-link { margin-top: 4px; }
 .sw-overview-panel, .sw-analytics-panel { min-width: 0; border: 1px solid var(--sw-line); border-radius: var(--sw-radius); background: var(--sw-surface); box-shadow: 0 2px 8px rgba(20, 40, 76, .025); }
 .sw-overview-panel { padding: 22px 24px; }
 .sw-overview-panel-heading { display: flex; align-items: start; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
@@ -139,7 +142,7 @@
 .sw-overview-secondary-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; margin-top: 16px; }
 .sw-panel-micro { font-size: 11px; color: var(--sw-muted); flex-shrink: 0; }
 .sw-simple-list { display: grid; min-width: 0; }
-.sw-simple-row { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid #edf1f7; min-width: 0; }
+.sw-simple-row { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid #edf1f7; min-width: 0; }
 .sw-simple-row:last-child { border-bottom: 0; }
 .sw-simple-rank { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; background: #f1f4f9; color: #6e8097; font-size: 11px; font-weight: 700; flex-shrink: 0; }
 .sw-simple-main { display: grid; gap: 4px; min-width: 0; flex: 1; }
