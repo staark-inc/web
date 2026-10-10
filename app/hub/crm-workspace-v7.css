@@ -163,3 +163,118 @@
     .hub-offers-v2-row, .hub-billing-v2-row
   ) { transition: none; }
 }
+
+
+/* HUB-UI-07 mobile correction: avoid fixed-width desktop columns and cramped cells.
+   Scoped to the five opted-in CRM list pages only. */
+@media (max-width: 760px) {
+  .hub-dashboard .hub-crm-workspace {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: clip;
+  }
+  .hub-dashboard .hub-crm-workspace :is(
+    .hub-leads-v2-head, .hub-clients-v2-head, .hub-projects-v2-head, .hub-workspace-head
+  ) {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .hub-dashboard .hub-crm-workspace :is(
+    .hub-leads-v2-head, .hub-clients-v2-head, .hub-projects-v2-head, .hub-workspace-head
+  ) > * { min-width: 0; max-width: 100%; }
+  .hub-dashboard .hub-crm-workspace :is(
+    .hub-clients-v2-new, .hub-projects-v2-new, .hub-workspace-primary-action
+  ) { width: 100%; min-height: 42px; justify-content: center; }
+  .hub-dashboard .hub-crm-workspace :is(
+    .hub-leads-v2-stats, .hub-clients-v2-stats, .hub-projects-v2-stats, .hub-workspace-stats
+  ) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+  .hub-dashboard .hub-crm-workspace :is(
+    .hub-leads-v2-stat, .hub-clients-v2-stat, .hub-projects-v2-stat, .hub-workspace-stat
+  ) {
+    min-width: 0;
+    min-height: 94px;
+    padding: 12px;
+    gap: 8px;
+  }
+  .hub-dashboard .hub-crm-workspace :is(
+    .hub-leads-v2-stat, .hub-clients-v2-stat, .hub-projects-v2-stat, .hub-workspace-stat
+  ) strong { font-size: clamp(16px, 4vw, 21px); }
+  .hub-dashboard .hub-crm-workspace :is(
+    .hub-leads-v2-filters, .hub-projects-v2-filters, .hub-workspace-filters
+  ) {
+    display: flex;
+    flex-wrap: nowrap;
+    width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-inline: contain;
+    -webkit-overflow-scrolling: touch;
+    padding-block: 4px 10px;
+    scroll-snap-type: x proximity;
+  }
+  .hub-dashboard .hub-crm-workspace :is(
+    .hub-leads-v2-filters, .hub-projects-v2-filters, .hub-workspace-filters
+  ) > a { flex: 0 0 auto; white-space: nowrap; scroll-snap-align: start; }
+  .hub-dashboard .hub-crm-workspace :is(
+    .hub-leads-v2-row, .hub-clients-v2-row, .hub-projects-v2-item,
+    .hub-offers-v2-row, .hub-billing-v2-row
+  ) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    min-width: 0;
+    width: 100%;
+  }
+  .hub-dashboard .hub-crm-workspace :is(
+    .hub-leads-v2-row, .hub-clients-v2-row, .hub-projects-v2-item,
+    .hub-offers-v2-row, .hub-billing-v2-row
+  ) > * {
+    min-width: 0;
+    max-width: 100%;
+    grid-column: 1 / -1;
+    border-left: 0;
+    border-right: 0;
+  }
+  .hub-dashboard .hub-crm-workspace :is(
+    .hub-leads-v2-row, .hub-clients-v2-row, .hub-projects-v2-item,
+    .hub-offers-v2-row, .hub-billing-v2-row
+  ) > * + * { border-top: 1px solid #eaf0f6; }
+  .hub-dashboard .hub-crm-workspace :is(
+    .hub-leads-v2-person, .hub-leads-v2-opportunity, .hub-leads-v2-message, .hub-leads-v2-tail,
+    .hub-clients-v2-main, .hub-clients-v2-signals, .hub-clients-v2-tail,
+    .hub-projects-v2-item-main, .hub-projects-v2-progress, .hub-projects-v2-meta, .hub-projects-v2-item-footer,
+    .hub-offers-v2-main, .hub-offers-v2-value, .hub-offers-v2-activity, .hub-offers-v2-tail,
+    .hub-billing-v2-main, .hub-billing-v2-amounts, .hub-billing-v2-terms, .hub-billing-v2-project, .hub-billing-v2-tail
+  ) { padding: 13px 15px; }
+  .hub-dashboard .hub-crm-workspace :is(
+    .hub-leads-v2-tail, .hub-clients-v2-tail, .hub-projects-v2-item-footer,
+    .hub-offers-v2-tail, .hub-billing-v2-tail
+  ) {
+    grid-column: 1 / -1;
+    padding-left: 15px;
+    align-items: flex-start;
+    text-align: left;
+  }
+  .hub-dashboard .hub-crm-workspace :is(
+    .hub-leads-v2-identity, .hub-clients-v2-identity, .hub-projects-v2-identity
+  ) { min-width: 0; overflow-wrap: anywhere; }
+  .hub-dashboard .hub-crm-workspace :is(
+    .hub-leads-v2-name-line, .hub-offers-v2-title-line, .hub-projects-v2-name-line
+  ) { flex-wrap: wrap; min-width: 0; }
+  .hub-dashboard .hub-crm-workspace :is(
+    .hub-leads-v2-tail, .hub-clients-v2-tail, .hub-offers-v2-tail, .hub-billing-v2-tail
+  ) a { min-height: 36px; display: inline-flex; align-items: center; }
+}
+@media (max-width: 360px) {
+  .hub-dashboard .hub-crm-workspace :is(
+    .hub-leads-v2-stat, .hub-clients-v2-stat, .hub-projects-v2-stat, .hub-workspace-stat
+  ) { padding: 10px; }
+}
