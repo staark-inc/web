@@ -4,6 +4,7 @@ import { Geist, Unbounded } from "next/font/google";
 import SeoJsonLd from "./components/SeoJsonLd";
 import CookieConsent from "./components/CookieConsent";
 import SiteAnalytics from "./components/SiteAnalytics";
+import GoogleTagManager from "./components/GoogleTagManager";
 
 import {
   absoluteUrl,
@@ -158,6 +159,7 @@ export default function RootLayout({
 
         <CookieConsent />
         <SiteAnalytics gaId={gaId} />
+        <GoogleTagManager />
       </body>
     </html>
   );
