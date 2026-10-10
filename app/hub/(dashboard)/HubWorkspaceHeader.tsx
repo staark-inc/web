@@ -21,6 +21,7 @@ function readable(segment: string) {
 export default function HubWorkspaceHeader() {
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean).slice(1);
+  const isOverview = segments.length === 0;
   const current = segments.at(-1);
   const title = current ? readable(current) : "Overview";
   const breadcrumbs = segments.map((segment, index) => ({
@@ -43,9 +44,9 @@ export default function HubWorkspaceHeader() {
               )}
             </span>
           ))}
-          {!breadcrumbs.length && <span className="hub-shell-crumb-current" aria-current="page">Overview</span>}
+          {isOverview && <span className="hub-shell-crumb-current" aria-current="page">Workspace</span>}
         </nav>
-        <strong className="hub-shell-title">{title}</strong>
+        {!isOverview && <strong className="hub-shell-title">{title}</strong>}
       </div>
       <div className="hub-shell-actions hub-shell-actions-v4" aria-label="Quick links">
         <a href="https://staarkinc.com" className="hub-shell-site-link" target="_blank" rel="noopener noreferrer">
