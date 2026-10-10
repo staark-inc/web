@@ -50,21 +50,17 @@
 .sw-empty { text-align: center; padding: 48px 20px; border: 1px dashed var(--sw-line); border-radius: var(--sw-radius); background: white; }
 .sw-empty h2 { margin: 0; font-size: 18px; }
 .sw-empty p { color: var(--sw-muted); margin: 8px 0 20px; font-size: 13px; }
-/* Overview is the first migrated surface; legacy data widgets are preserved. */
-.hub-dashboard .sw-overview .hub-command-center { overflow: hidden; border-radius: 18px; box-shadow: 0 12px 28px rgba(16,28,47,.07); }
-.hub-dashboard .sw-overview .hub-command-hero { padding: clamp(20px,2.1vw,32px); }
-.hub-dashboard .sw-overview .hub-command-hero h1 { font-size: clamp(30px,3vw,44px); letter-spacing: -.045em; }
-.hub-dashboard .sw-overview .hub-command-summary { font-size: 13px; line-height: 1.55; }
-.hub-dashboard .sw-overview .hub-command-grid { gap: 16px; margin-top: 16px; align-items: stretch; }
-.hub-dashboard .sw-overview .hub-command-panel { border-radius: var(--sw-radius); border-color: var(--sw-line); }
-.hub-dashboard .sw-overview .hub-command-grid:has(.hub-command-clear) { display: grid; grid-template-columns: minmax(0,1.4fr) minmax(330px,1fr); }
-.hub-dashboard .sw-overview .hub-command-grid:has(.hub-command-clear) > * { min-width: 0; width: auto; max-width: none; }
-.hub-dashboard .sw-overview .hub-overview-section-heading { margin-top: 28px; }
-.hub-dashboard .sw-overview .hub-overview-section-heading h2 { font-size: 19px; color: var(--sw-ink); }
-.hub-dashboard .sw-overview .hub-overview-card { border-color: var(--sw-line); border-radius: var(--sw-radius); }
+
+/* Keyboard and motion rules shared by every workspace primitive. */
+.sw-page :is(.sw-primary-link, .sw-record-name, .sw-record-open):focus-visible {
+  outline: 2px solid var(--sw-accent);
+  outline-offset: 3px;
+}
+.sw-page .sw-record:hover {
+  border-color: #bacbee;
+}
 @media (max-width: 1100px) {
   .sw-metrics { grid-template-columns: repeat(2,minmax(0,1fr)); }
-  .hub-dashboard .sw-overview .hub-command-grid:has(.hub-command-clear) { grid-template-columns: minmax(0,1fr); }
 }
 @media (max-width: 700px) {
   .sw-page-header { align-items: stretch; }
@@ -73,10 +69,12 @@
   .sw-metric-icon { width: 30px; height: 30px; flex-basis: 30px; }
   .sw-metric-value { font-size: 18px; }
   .sw-record { grid-template-columns: minmax(0,1fr); gap: 10px; padding: 14px; }
-  .sw-record-details { padding-left: 0; }
   .sw-record-end { justify-content: space-between; padding-top: 10px; border-top: 1px solid var(--sw-line); }
   .sw-record-meta { white-space: normal; }
-  .hub-dashboard .sw-overview .hub-command-hero { padding: 20px 16px; }
-  .hub-dashboard .sw-overview .hub-command-actions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
-  .hub-dashboard .sw-overview .hub-command-actions > :first-child { grid-column: 1/-1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sw-page *, .sw-page *::before, .sw-page *::after {
+    transition-duration: .01ms;
+    animation-duration: .01ms;
+  }
 }
