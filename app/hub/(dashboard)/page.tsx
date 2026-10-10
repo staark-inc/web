@@ -478,13 +478,6 @@ const githubPromise = getGitHubOverview()
     };
   })();
 
-  /**
-   * The graph uses page views for now.
-   *
-   * We calculate the maximum so the bars
-   * automatically scale to the available data.
-   */
-  
   return (
     <div className="hub-page hub-overview-page sw-overview">
       {/* COMMAND CENTER */}
