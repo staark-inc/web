@@ -1,5 +1,6 @@
 import Link from "next/link";
-import OverviewChart from "@/components/hub/overview-chart";
+import UnifiedAnalyticsChart from "@/components/hub/unified-analytics-chart";
+import { PageHeader, Metrics, Metric, SectionHeader, EmptyState, InfoChip } from "@/components/hub/workspace";
 
 import {
   Activity,
@@ -479,1020 +480,181 @@ const githubPromise = getGitHubOverview()
   })();
 
   return (
-    <div className="hub-page hub-overview-page sw-overview">
-      {/* COMMAND CENTER */}
-
-      <section className="hub-command-center">
-        <div className="hub-command-hero">
-          <div className="hub-command-copy">
-            <span className="hub-command-kicker">
-              STAARK COMMAND CENTER
-            </span>
-
-            <h1>Overview</h1>
-
-            <p className="hub-command-date">
-              {formatDashboardDate(now)}
-            </p>
-
-            <p className="hub-command-summary">
-              {attentionCount > 0
-                ? `${attentionCount} item${attentionCount === 1 ? "" : "s"} need attention across sales, delivery and support.`
-                : "Everything looks clear. No urgent customer or delivery signals right now."}
-            </p>
+    <main className="hub-page sw-page sw-overview-layout">
+      <PageHeader
+        eyebrow="STAARK WORKSPACE"
+        title="Overview"
+        description={formatDashboardDate(now)}
+        action={
+          <div className="sw-overview-actions">
+            <Link href="/hub/offers/new" className="sw-overview-primary"><Plus size={16} /> New offer</Link>
+            <Link href="/hub/compose" className="sw-overview-secondary"><MailPlus size={15} /> Compose</Link>
+            <Link href="/hub/projects/new" className="sw-overview-secondary"><FolderKanban size={15} /> New project</Link>
           </div>
+        }
+      />
 
-          <div className="hub-command-actions">
-            <Link
-              href="/hub/offers/new"
-              className="hub-command-action hub-command-action-primary"
-            >
-              <FileText size={15} />
-              New offer
-            </Link>
+      <Metrics label="Business performance">
+        <Metric label="Live proposal value" value={formatMoneyOre(liveOfferValueOre)}
+          description={`${liveOfferCount} open proposals`} icon={<CircleDollarSign size={18}/>} />
+        <Metric label="Active projects" value={activeProjectCount}
+          description={overdueProjectCount ? `${overdueProjectCount} overdue` : "On schedule"}
+          icon={<FolderKanban size={18}/>} />
+        <Metric label="New leads" value={newLeadCount} description={`${wonThisMonth} won this month`}
+          icon={<Target size={18}/>} />
+        <Metric label="Open support" value={openSupportCount}
+          description={urgentSupportCount ? `${urgentSupportCount} urgent` : "No urgent tickets"}
+          icon={<LifeBuoy size={18}/>} />
+      </Metrics>
 
-            <Link
-              href="/hub/compose"
-              className="hub-command-action"
-            >
-              <MailPlus size={15} />
-              Compose
-            </Link>
-
-            <Link
-              href="/hub/projects/new"
-              className="hub-command-action"
-            >
-              <Plus size={15} />
-              New project
-            </Link>
+      <div className="sw-overview-primary-grid">
+        <section className="sw-overview-panel sw-priority-panel" aria-label="Needs attention">
+          <div className="sw-overview-panel-heading">
+            <div><span className="sw-eyebrow">YOUR PRIORITIES</span><h2>Needs attention</h2></div>
+            <span className="sw-attention-counter">{attentionCount}</span>
           </div>
-        </div>
-
-        <div className="hub-command-metrics">
-          <Link
-            href="/hub/offers"
-            className="hub-command-metric"
-          >
-            <span className="hub-command-metric-icon">
-              <CircleDollarSign size={17} />
-            </span>
-
-            <div>
-              <small>Live proposal value</small>
-              <strong>{formatMoneyOre(liveOfferValueOre)}</strong>
-              <span>
-                {liveOfferCount} live offer{liveOfferCount === 1 ? "" : "s"}
-              </span>
-            </div>
-          </Link>
-
-          <Link
-            href="/hub/projects"
-            className={`hub-command-metric ${
-              overdueProjectCount
-                ? "hub-command-metric-alert"
-                : ""
-            }`}
-          >
-            <span className="hub-command-metric-icon">
-              <FolderKanban size={17} />
-            </span>
-
-            <div>
-              <small>Delivery</small>
-              <strong>{activeProjectCount} active</strong>
-              <span>
-                {overdueProjectCount
-                  ? `${overdueProjectCount} overdue`
-                  : "No overdue projects"}
-              </span>
-            </div>
-          </Link>
-
-          <Link
-            href="/hub/support"
-            className={`hub-command-metric ${
-              urgentSupportCount
-                ? "hub-command-metric-danger"
-                : ""
-            }`}
-          >
-            <span className="hub-command-metric-icon">
-              <LifeBuoy size={17} />
-            </span>
-
-            <div>
-              <small>Support</small>
-              <strong>{openSupportCount} open</strong>
-              <span>
-                {urgentSupportCount
-                  ? `${urgentSupportCount} urgent`
-                  : "No urgent tickets"}
-              </span>
-            </div>
-          </Link>
-
-          <Link
-            href="/hub/inbox"
-            className={`hub-command-metric ${
-              unreadCount
-                ? "hub-command-metric-alert"
-                : ""
-            }`}
-          >
-            <span className="hub-command-metric-icon">
-              <Inbox size={17} />
-            </span>
-
-            <div>
-              <small>Inbox</small>
-              <strong>{unreadCount} unread</strong>
-              <span>
-                {newLeadCount} new lead{newLeadCount === 1 ? "" : "s"}
-              </span>
-            </div>
-          </Link>
-        </div>
-      </section>
-
-      <section className="hub-command-grid">
-        <div className="hub-command-panel">
-          <div className="hub-command-panel-header">
-            <div>
-              <span>PRIORITY QUEUE</span>
-              <h2>Needs attention</h2>
-            </div>
-
-            <strong
-              className={
-                attentionCount
-                  ? "hub-command-count hub-command-count-hot"
-                  : "hub-command-count"
-              }
-            >
-              {attentionCount}
-            </strong>
-          </div>
-
-          {attentionItems.length === 0 ? (
-            <div className="hub-command-clear">
-              <CheckCircle2 size={20} />
-
-              <div>
-                <strong>All clear</strong>
-                <span>
-                  No urgent customer or delivery signals.
-                </span>
-              </div>
-            </div>
-          ) : (
-            <div className="hub-command-attention-list">
-              {attentionItems.map((item) => (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className={`hub-command-attention hub-command-attention-${item.tone}`}
-                >
-                  <span className="hub-command-attention-icon">
-                    {item.icon === "lead" ? (
-                      <Target size={15} />
-                    ) : item.icon === "inbox" ? (
-                      <Inbox size={15} />
-                    ) : item.icon === "support" ? (
-                      <LifeBuoy size={15} />
-                    ) : item.icon === "project" ? (
-                      <Clock3 size={15} />
-                    ) : (
-                      <Eye size={15} />
-                    )}
-                  </span>
-
-                  <div>
-                    <strong>{item.label}</strong>
-                    <span>{item.detail}</span>
-                  </div>
-
-                  <ArrowRight size={14} />
+          {attentionItems.length ? (
+            <div className="sw-priority-list">
+              {attentionItems.map(item => (
+                <Link href={item.href} key={item.label} className="sw-priority-item">
+                  <span className={`sw-priority-marker sw-priority-${item.tone}`} />
+                  <span className="sw-priority-text"><strong>{item.label}</strong><small>{item.detail}</small></span>
+                  <ArrowRight size={16} aria-hidden="true"/>
                 </Link>
               ))}
             </div>
-          )}
-        </div>
-
-        <div className="hub-command-panel hub-command-sales">
-          <div className="hub-command-panel-header">
-            <div>
-              <span>SALES</span>
-              <h2>This month</h2>
-            </div>
-
-            <CircleDollarSign size={19} />
-          </div>
-
-          <div className="hub-command-sales-value">
-            <small>Accepted offer value</small>
-
-            <strong>
-              {formatMoneyOre(acceptedThisMonthValueOre)}
-            </strong>
-
-            <span>
-              {acceptedThisMonthCount} accepted offer{acceptedThisMonthCount === 1 ? "" : "s"}
-            </span>
-          </div>
-
-          <div className="hub-command-sales-footer">
-            <div>
-              <small>New leads</small>
-              <strong>{newLeadCount}</strong>
-            </div>
-
-            <div>
-              <small>Won leads</small>
-              <strong>{wonThisMonth}</strong>
-            </div>
-
-            <div>
-              <small>Contacts</small>
-              <strong>{contactCount}</strong>
-            </div>
-          </div>
-
-          <Link
-            href="/hub/offers"
-            className="hub-command-panel-link"
-          >
-            Open sales pipeline
-            <ArrowRight size={13} />
-          </Link>
-        </div>
-      </section>
-
-        {/* DEPLOYMENT */}
-
-        <div className="hub-overview-section-heading hub-deployment-heading">
-          <div>
-            <span className="hub-overview-section-label">
-              DEPLOYMENT
-            </span>
-
-            <h2>Production</h2>
-          </div>
-
-          {githubResult.connected && github ? (
-            <div
-              className={`hub-deployment-status hub-deployment-${workflowStatus.className}`}
-            >
-              <span />
-
-              {workflowStatus.label}
-            </div>
-          ) : (
-            <div className="hub-deployment-status hub-deployment-unknown">
-              <span />
-              Unavailable
-            </div>
-          )}
-        </div>
-
-        <section className="hub-overview-card hub-deployment-card">
-          {!githubResult.connected || !github ? (
-            <div className="hub-deployment-unavailable">
-              <GitMerge size={21} />
-
-              <div>
-                <strong>
-                  GitHub unavailable
-                </strong>
-
-                <span>
-                  Deployment information could not be loaded.
-                </span>
-              </div>
-            </div>
-          ) : (
-            <>
-              <div className="hub-deployment-main">
-                <div className="hub-deployment-icon">
-                  {workflowStatus.className === "healthy" ? (
-                    <CheckCircle2 size={21} />
-                  ) : workflowStatus.className === "deploying" ? (
-                    <LoaderCircle size={21} />
-                  ) : workflowStatus.className === "failed" ? (
-                    <XCircle size={21} />
-                  ) : (
-                    <Rocket size={21} />
-                  )}
-                </div>
-
-                <div className="hub-deployment-info">
-                  <div className="hub-deployment-title">
-                    <strong>
-                      {github.workflow?.name ??
-                        "Production deployment"}
-                    </strong>
-
-                    <span>
-                      {workflowStatus.description}
-                    </span>
-                  </div>
-
-                  <div className="hub-deployment-commit">
-                    <div className="hub-deployment-commit-meta">
-                      <span>
-                        {github.branch.name}
-                      </span>
-
-                      <span className="hub-deployment-divider">
-                        ·
-                      </span>
-
-                      <span className="hub-deployment-sha">
-                        <GitCommitHorizontal size={13} />
-                        {github.commit.shortSha}
-                      </span>
-                    </div>
-
-                    <strong>
-                      {github.commit.message}
-                    </strong>
-
-                    <small>
-                      {github.commit.author}
-
-                      {formatDeploymentDate(
-                        github.commit.date
-                      )
-                        ? ` · ${formatDeploymentDate(
-                            github.commit.date
-                          )}`
-                        : ""}
-                    </small>
-                  </div>
-                </div>
-
-                <div className="hub-deployment-actions">
-                  <a
-                    href={github.commit.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hub-secondary-button"
-                  >
-                    View commit
-                    <ExternalLink size={12} />
-                  </a>
-
-                  {github.workflow ? (
-                    <a
-                      href={github.workflow.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="hub-secondary-button"
-                    >
-                      View workflow
-                      <ExternalLink size={12} />
-                    </a>
-                  ) : null}
-                </div>
-              </div>
-
-              <div className="hub-deployment-footer">
-                <div>
-                  <GitMerge size={14} />
-
-                  <span>
-                    {github.repository.fullName}
-                  </span>
-                </div>
-
-                <div>
-                  {github.workflow?.updatedAt ? (
-                    <span>
-                      Last deployment{" "}
-                      {formatDeploymentDate(
-                        github.workflow.updatedAt
-                      )}
-                    </span>
-                  ) : null}
-                </div>
-              </div>
-            </>
-          )}
+          ) : <div className="sw-overview-clear"><CheckCircle2 size={20}/><span>All caught up. No urgent items right now.</span></div>}
+          <Link href="/hub/inbox" className="sw-overview-text-link">Open inbox <ArrowRight size={15}/></Link>
         </section>
-
-      {/* WEBSITE ANALYTICS */}
-
-      <div className="hub-overview-section-heading hub-analytics-heading">
-        <div>
-          <span className="hub-overview-section-label">
-            WEBSITE
-          </span>
-
-          <h2>Website analytics</h2>
-        </div>
-
-        <div className="hub-analytics-period">
-          <BarChart3 size={15} />
-
-          <span>Last 30 days</span>
-        </div>
+        <section className="sw-overview-panel sw-sales-panel" aria-label="Monthly sales">
+          <div className="sw-overview-panel-heading"><div><span className="sw-eyebrow">SALES SNAPSHOT</span><h2>This month</h2></div><CircleDollarSign size={18}/></div>
+          <span className="sw-sales-label">Accepted offer value</span>
+          <strong className="sw-sales-value">{formatMoneyOre(acceptedThisMonthValueOre)}</strong>
+          <p className="sw-sales-note">{acceptedThisMonthCount} accepted offer{acceptedThisMonthCount === 1 ? "" : "s"}</p>
+          <div className="sw-sales-breakdown">
+            <div><span>New leads</span><strong>{newLeadCount}</strong></div>
+            <div><span>Won leads</span><strong>{wonThisMonth}</strong></div>
+            <div><span>Contacts</span><strong>{contactCount}</strong></div>
+          </div>
+          <Link href="/hub/offers" className="sw-overview-text-link">View sales pipeline <ArrowRight size={15}/></Link>
+        </section>
       </div>
 
-      {!analyticsResult.connected ? (
-        <div className="hub-analytics-error">
-          <div>
-            <strong>
-              Google Analytics unavailable
-            </strong>
-
-            <span>
-              We couldn&apos;t load your website
-              statistics right now.
-            </span>
-          </div>
-
-          <Link href="/api/hub/google/connect">
-            Reconnect
-          </Link>
+      <SectionHeader title="Analytics" description="Your website audience and Google Search performance, together."/>
+      {(!analyticsResult.connected || !searchConsoleResult.connected) && (
+        <div className="sw-source-warning" role="status">
+          <span>{!analyticsResult.connected && !searchConsoleResult.connected ? "Analytics connections unavailable."
+            : !analyticsResult.connected ? "GA4 connection unavailable." : "Search Console connection unavailable."}</span>
+          <Link href="/api/hub/google/connect">Reconnect Google</Link>
         </div>
-      ) : null}
-
-      <section className="hub-overview-stats hub-analytics-stats">
-        <div className="hub-stat-card">
-          <div className="hub-stat-icon">
-            <Users size={18} />
-          </div>
-
-          <div className="hub-stat-content">
-            <span>Visitors</span>
-
-            <strong>
-              {analytics.visitors}
-            </strong>
-
-            <small>
-              Active users
-            </small>
-          </div>
-        </div>
-
-        <div className="hub-stat-card">
-          <div className="hub-stat-icon">
-            <MousePointerClick size={18} />
-          </div>
-
-          <div className="hub-stat-content">
-            <span>Sessions</span>
-
-            <strong>
-              {analytics.sessions}
-            </strong>
-
-            <small>
-              Website sessions
-            </small>
-          </div>
-        </div>
-
-        <div className="hub-stat-card">
-          <div className="hub-stat-icon">
-            <Eye size={18} />
-          </div>
-
-          <div className="hub-stat-content">
-            <span>Page views</span>
-
-            <strong>
-              {analytics.pageViews}
-            </strong>
-
-            <small>
-              Public pages only
-            </small>
-          </div>
-        </div>
-
-        <div className="hub-stat-card hub-online-card">
-          <div className="hub-stat-icon">
-            <Activity size={18} />
-          </div>
-
-          <div className="hub-stat-content">
-            <span>Online now</span>
-
-            <strong>
-              {analytics.onlineNow}
-            </strong>
-
-            <small className="hub-online-label">
-              <i />
-              Realtime
-            </small>
-          </div>
-        </div>
-      </section>
-
-      {/* TRAFFIC + TOP PAGES */}
-
-      <section className="hub-analytics-grid">
-        {/* TRAFFIC */}
-
-        <div className="hub-overview-card hub-traffic-card">
-          <div className="hub-overview-card-header">
-            <div>
-              <h2>Website traffic</h2>
-
-              <p>
-                Page views over the last 30 days.
-              </p>
-            </div>
-
-            <div className="hub-traffic-total">
-              <strong>
-                {analytics.pageViews}
-              </strong>
-
-              <span>views</span>
-            </div>
-          </div>
-
-          <OverviewChart kind="traffic" data={analytics.dailyTraffic} />
-        </div>
-
-        {/* TOP PAGES */}
-
-        <div className="hub-overview-card">
-          <div className="hub-overview-card-header">
-            <div>
-              <h2>Top pages</h2>
-
-              <p>
-                Most visited public pages.
-              </p>
-            </div>
-          </div>
-
-          {analytics.topPages.length === 0 ? (
-            <div className="hub-overview-empty">
-              No page data yet.
-            </div>
-          ) : (
-            <div className="hub-top-pages">
-              {analytics.topPages.map(
-                (page, index) => (
-                  <div
-                    className="hub-top-page-row"
-                    key={`${page.path}-${index}`}
-                  >
-                    <div className="hub-top-page-rank">
-                      {index + 1}
-                    </div>
-
-                    <div className="hub-top-page-main">
-                      <strong>
-                        {page.path}
-                      </strong>
-
-                      <span>
-                        {page.title}
-                      </span>
-                    </div>
-
-                    <div className="hub-top-page-views">
-                      <strong>
-                        {page.views}
-                      </strong>
-
-                      <span>
-                        {page.views === 1
-                          ? "view"
-                          : "views"}
-                      </span>
-                    </div>
-                  </div>
-                )
-              )}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* GOOGLE SEARCH */}
-
-      <div className="hub-overview-section-heading hub-search-heading">
-        <div>
-          <span className="hub-overview-section-label">
-            GOOGLE SEARCH
-          </span>
-
-          <h2>Search performance</h2>
-        </div>
-
-        <div className="hub-analytics-period">
-          <BarChart3 size={15} />
-          <span>Last 30 days</span>
-        </div>
+      )}
+      <div className="sw-analytics-summary" aria-label="Analytics summary">
+        <Metric label="Visitors" value={analytics.visitors} description="GA4 active users" icon={<Users size={16}/>} />
+        <Metric label="Page views" value={analytics.pageViews} description="Public website" icon={<Eye size={16}/>} />
+        <Metric label="Search clicks" value={searchConsole.clicks} description="Google Search" icon={<MousePointerClick size={16}/>} />
+        <Metric label="Search impressions" value={searchConsole.impressions} description="Google Search" icon={<BarChart3 size={16}/>} />
       </div>
-
-      {!searchConsoleResult.connected ? (
-        <div className="hub-analytics-error">
-          <div>
-            <strong>
-              Google Search Console unavailable
-            </strong>
-
-            <span>
-              We couldn&apos;t load your search
-              performance right now.
-            </span>
+      <UnifiedAnalyticsChart
+        ga4={analytics.dailyTraffic}
+        search={searchConsole.dailyTraffic}
+        ga4Connected={analyticsResult.connected}
+        searchConnected={searchConsoleResult.connected}
+      />
+      <div className="sw-overview-secondary-grid">
+        <section className="sw-overview-panel" aria-label="Top website pages">
+          <div className="sw-overview-panel-heading">
+            <div><span className="sw-eyebrow">GOOGLE ANALYTICS</span><h2>Top pages</h2></div>
+            <span className="sw-panel-micro">Page views</span>
           </div>
-
-          <Link href="/api/hub/google/connect">
-            Reconnect
-          </Link>
-        </div>
-      ) : null}
-
-      <section className="hub-overview-stats hub-search-stats">
-        <div className="hub-stat-card">
-          <div className="hub-stat-icon">
-            <MousePointerClick size={18} />
-          </div>
-
-          <div className="hub-stat-content">
-            <span>Clicks</span>
-
-            <strong>
-              {searchConsole.clicks}
-            </strong>
-
-            <small>
-              From Google Search
-            </small>
-          </div>
-        </div>
-
-        <div className="hub-stat-card">
-          <div className="hub-stat-icon">
-            <Eye size={18} />
-          </div>
-
-          <div className="hub-stat-content">
-            <span>Impressions</span>
-
-            <strong>
-              {searchConsole.impressions}
-            </strong>
-
-            <small>
-              Search appearances
-            </small>
-          </div>
-        </div>
-
-        <div className="hub-stat-card">
-          <div className="hub-stat-icon">
-            <Target size={18} />
-          </div>
-
-          <div className="hub-stat-content">
-            <span>CTR</span>
-
-            <strong>
-              {formatPercent(
-                searchConsole.ctr
-              )}
-            </strong>
-
-            <small>
-              Click-through rate
-            </small>
-          </div>
-        </div>
-
-        <div className="hub-stat-card">
-          <div className="hub-stat-icon">
-            <BarChart3 size={18} />
-          </div>
-
-          <div className="hub-stat-content">
-            <span>Avg. position</span>
-
-            <strong>
-              {formatPosition(
-                searchConsole.position
-              )}
-            </strong>
-
-            <small>
-              Google ranking
-            </small>
-          </div>
-        </div>
-      </section>
-
-      <section className="hub-search-grid">
-        <div className="hub-overview-card hub-search-chart-card">
-          <div className="hub-overview-card-header">
-            <div>
-              <h2>Search visibility</h2>
-
-              <p>
-                Google impressions over the last 30 days.
-              </p>
-            </div>
-
-            <div className="hub-traffic-total">
-              <strong>
-                {searchConsole.impressions}
-              </strong>
-
-              <span>impressions</span>
-            </div>
-          </div>
-
-          <OverviewChart kind="search" data={searchConsole.dailyTraffic} />
-        </div>
-
-        <div className="hub-overview-card">
-          <div className="hub-overview-card-header">
-            <div>
-              <h2>Top search queries</h2>
-
-              <p>
-                What people search for before finding you.
-              </p>
-            </div>
-          </div>
-
-          {searchConsole.topQueries.length === 0 ? (
-            <div className="hub-overview-empty">
-              No search queries yet.
-            </div>
-          ) : (
-            <div className="hub-search-table">
-              <div className="hub-search-table-head">
-                <span>Query</span>
-                <span>Clicks</span>
-                <span>Pos.</span>
-              </div>
-
-              {searchConsole.topQueries.map(
-                (query, index) => (
-                  <div
-                    className="hub-search-table-row"
-                    key={`${query.query}-${index}`}
-                  >
-                    <strong title={query.query}>
-                      {query.query}
-                    </strong>
-
-                    <span>
-                      {query.clicks}
-                    </span>
-
-                    <span>
-                      {formatPosition(
-                        query.position
-                      )}
-                    </span>
-                  </div>
-                )
-              )}
-            </div>
-          )}
-        </div>
-      </section>
-
-      <div className="hub-overview-card hub-search-pages-card">
-        <div className="hub-overview-card-header">
-          <div>
-            <h2>Top pages in Google</h2>
-
-            <p>
-              Pages receiving visibility from Google Search.
-            </p>
-          </div>
-        </div>
-
-        {searchConsole.topPages.length === 0 ? (
-          <div className="hub-overview-empty">
-            No Google page data yet.
-          </div>
-        ) : (
-          <div className="hub-search-pages">
-            {searchConsole.topPages.map(
-              (page, index) => (
-                <div
-                  className="hub-search-page-row"
-                  key={`${page.page}-${index}`}
-                >
-                  <div className="hub-top-page-rank">
-                    {index + 1}
-                  </div>
-
-                  <div className="hub-search-page-main">
-                    <strong
-                      title={page.page}
-                    >
-                      {cleanSearchPage(
-                        page.page
-                      )}
-                    </strong>
-
-                    <span>
-                      {page.impressions} impressions
-                    </span>
-                  </div>
-
-                  <div className="hub-search-page-metric">
-                    <strong>
-                      {page.clicks}
-                    </strong>
-
-                    <span>
-                      {page.clicks === 1
-                        ? "click"
-                        : "clicks"}
-                    </span>
-                  </div>
-
-                  <div className="hub-search-page-metric">
-                    <strong>
-                      {formatPosition(
-                        page.position
-                      )}
-                    </strong>
-
-                    <span>
-                      position
-                    </span>
-                  </div>
+          {analytics.topPages.length ? (
+            <div className="sw-simple-list">
+              {analytics.topPages.slice(0, 6).map((page, index) => (
+                <div className="sw-simple-row" key={page.path + index}>
+                  <span className="sw-simple-rank">{index + 1}</span>
+                  <span className="sw-simple-main"><strong>{page.path}</strong><small>{page.title}</small></span>
+                  <strong className="sw-simple-value">{page.views}</strong>
                 </div>
-              )
-            )}
+              ))}
+            </div>
+          ) : <EmptyState title="No page data" description="Popular pages will appear here when GA4 reports traffic." />}
+        </section>
+        <section className="sw-overview-panel" aria-label="Top search queries">
+          <div className="sw-overview-panel-heading">
+            <div><span className="sw-eyebrow">SEARCH CONSOLE</span><h2>Top queries</h2></div>
+            <span className="sw-panel-micro">Clicks</span>
           </div>
-        )}
+          {searchConsole.topQueries.length ? (
+            <div className="sw-simple-list">
+              {searchConsole.topQueries.slice(0, 6).map((query, index) => (
+                <div className="sw-simple-row" key={query.query + index}>
+                  <span className="sw-simple-rank">{index + 1}</span>
+                  <span className="sw-simple-main"><strong>{query.query}</strong><small>Avg. position {formatPosition(query.position)}</small></span>
+                  <strong className="sw-simple-value">{query.clicks}</strong>
+                </div>
+              ))}
+            </div>
+          ) : <EmptyState title="No search queries" description="Your Google Search queries will appear here." />}
+        </section>
       </div>
 
-      {/* CRM ACTIVITY */}
-
-      <div className="hub-overview-section-heading hub-activity-heading">
-        <div>
-          <span className="hub-overview-section-label">
-            ACTIVITY
-          </span>
-
-          <h2>Recent activity</h2>
-        </div>
+      <SectionHeader title="Operations" description="Production status and latest customer activity."/>
+      <div className="sw-overview-operations-grid">
+        <section className="sw-overview-panel" aria-label="Production deployment">
+          <div className="sw-overview-panel-heading">
+            <div><span className="sw-eyebrow">GITHUB DEPLOYMENT</span><h2>Production</h2></div>
+            <InfoChip tone={workflowStatus.className === "healthy" ? "success" : workflowStatus.className === "failed" ? "warning" : "neutral"}>
+              {githubResult.connected ? workflowStatus.label : "Unavailable"}
+            </InfoChip>
+          </div>
+          {github ? (
+            <div className="sw-deploy-info">
+              <strong>{github.workflow?.name ?? "Production deployment"}</strong>
+              <p>{workflowStatus.description}</p>
+              <span className="sw-deploy-branch"><GitCommitHorizontal size={14}/>{github.branch.name} · {github.commit.shortSha}</span>
+              <strong className="sw-deploy-message">{github.commit.message}</strong>
+              <small>{github.commit.author} · {formatDeploymentDate(github.commit.date)}</small>
+              <div className="sw-deploy-links">
+                <a href={github.commit.url} target="_blank" rel="noreferrer">View commit <ExternalLink size={13}/></a>
+                {github.workflow && <a href={github.workflow.url} target="_blank" rel="noreferrer">View workflow <ExternalLink size={13}/></a>}
+              </div>
+            </div>
+          ) : <EmptyState title="GitHub unavailable" description="We could not retrieve the latest production deployment." />}
+        </section>
+        <section className="sw-overview-panel" aria-label="Recent leads">
+          <div className="sw-overview-panel-heading">
+            <div><span className="sw-eyebrow">CUSTOMER RELATIONSHIPS</span><h2>Recent leads</h2></div>
+            <Link href="/hub/leads" className="sw-overview-text-link">View all <ArrowRight size={14}/></Link>
+          </div>
+          {recentLeads.length ? (
+            <div className="sw-simple-list">
+              {recentLeads.map(lead => (
+                <Link href={`/hub/leads/${lead.id}`} key={lead.id} className="sw-simple-row sw-link-row">
+                  <span className="sw-simple-avatar"><Users size={16}/></span>
+                  <span className="sw-simple-main"><strong>{lead.contact.name || lead.contact.email || lead.contact.phone || lead.contact.facebook || "Unknown contact"}</strong><small>{lead.service || "General enquiry"}</small></span>
+                  <InfoChip tone={lead.status === "WON" ? "success" : lead.status === "NEW" ? "info" : "neutral"}>{lead.status}</InfoChip>
+                </Link>
+              ))}
+            </div>
+          ) : <EmptyState title="No leads yet" description="New opportunities will appear here." />}
+        </section>
+        <section className="sw-overview-panel" aria-label="Recent messages">
+          <div className="sw-overview-panel-heading">
+            <div><span className="sw-eyebrow">COMMUNICATION</span><h2>Recent messages</h2></div>
+            <Link href="/hub/inbox" className="sw-overview-text-link">View inbox <ArrowRight size={14}/></Link>
+          </div>
+          {recentMessages.length ? (
+            <div className="sw-simple-list">
+              {recentMessages.map(message => (
+                <Link href={`/hub/message/${message.id}`} key={message.id} className="sw-simple-row sw-link-row">
+                  <span className={`sw-message-dot ${message.isRead ? "" : "is-unread"}`}/>
+                  <span className="sw-simple-main"><strong>{message.fromName || message.fromEmail}</strong><small>{message.subject}</small></span>
+                  <time className="sw-message-date" dateTime={message.createdAt.toISOString()}>{formatDate(message.createdAt)}</time>
+                </Link>
+              ))}
+            </div>
+          ) : <EmptyState title="No messages yet" description="Customer messages will appear here." />}
+        </section>
       </div>
-
-      <section className="hub-overview-grid">
-        {/* RECENT LEADS */}
-
-        <div className="hub-overview-card">
-          <div className="hub-overview-card-header">
-            <div>
-              <h2>Recent leads</h2>
-
-              <p>
-                Latest business opportunities.
-              </p>
-            </div>
-
-            <Link href="/hub/leads">
-              View all
-              <ArrowRight size={14} />
-            </Link>
-          </div>
-
-          {recentLeads.length === 0 ? (
-            <div className="hub-overview-empty">
-              No leads yet.
-            </div>
-          ) : (
-            <div className="hub-overview-list">
-              {recentLeads.map((lead) => {
-                const initials =
-                  lead.contact.name
-                    ? lead.contact.name
-                        .split(" ")
-                        .slice(0, 2)
-                        .map(
-                          (part) =>
-                            part[0]
-                        )
-                        .join("")
-                        .toUpperCase()
-                    : (lead.contact.email ||
-                        lead.contact.phone ||
-                        lead.contact.facebook ||
-                        "??")
-                        .slice(0, 2)
-                        .toUpperCase();
-
-                return (
-                  <Link
-                    href={`/hub/leads/${lead.id}`}
-                    className="hub-overview-row"
-                    key={lead.id}
-                  >
-                    <div className="hub-overview-avatar">
-                      {initials}
-                    </div>
-
-                    <div className="hub-overview-main">
-                      <strong>
-                        {lead.contact.name ||
-                          lead.contact.email ||
-                          lead.contact.phone ||
-                          lead.contact.facebook ||
-                          "Unknown contact"}
-                      </strong>
-
-                      <span>
-                        {lead.service ||
-                          "General enquiry"}
-                      </span>
-                    </div>
-
-                    <span
-                      className={`hub-lead-status hub-lead-status-${lead.status.toLowerCase()}`}
-                    >
-                      {lead.status}
-                    </span>
-                  </Link>
-                );
-              })}
-            </div>
-          )}
-        </div>
-
-        {/* RECENT MESSAGES */}
-
-        <div className="hub-overview-card">
-          <div className="hub-overview-card-header">
-            <div>
-              <h2>Recent messages</h2>
-
-              <p>
-                Latest customer enquiries.
-              </p>
-            </div>
-
-            <Link href="/hub/inbox">
-              View inbox
-              <ArrowRight size={14} />
-            </Link>
-          </div>
-
-          {recentMessages.length === 0 ? (
-            <div className="hub-overview-empty">
-              No messages yet.
-            </div>
-          ) : (
-            <div className="hub-overview-list">
-              {recentMessages.map(
-                (message) => (
-                  <Link
-                    href={`/hub/message/${message.id}`}
-                    className="hub-overview-row"
-                    key={message.id}
-                  >
-                    <div
-                      className={`hub-overview-message-dot ${
-                        !message.isRead
-                          ? "hub-overview-message-dot-unread"
-                          : ""
-                      }`}
-                    />
-
-                    <div className="hub-overview-main">
-                      <strong>
-                        {message.fromName ||
-                          message.fromEmail}
-                      </strong>
-
-                      <span>
-                        {message.subject}
-                      </span>
-                    </div>
-
-                    <time
-                      dateTime={message.createdAt.toISOString()}
-                    >
-                      {formatDate(
-                        message.createdAt
-                      )}
-                    </time>
-                  </Link>
-                )
-              )}
-            </div>
-          )}
-        </div>
-      </section>
-    </div>
+    </main>
   );
 }
