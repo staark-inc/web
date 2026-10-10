@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import {
-  Area, AreaChart, CartesianGrid, Legend, ResponsiveContainer,
+  Area, AreaChart, CartesianGrid, ResponsiveContainer,
   Tooltip, XAxis, YAxis,
 } from "recharts";
 
@@ -63,9 +63,9 @@ export default function UnifiedAnalyticsChart({
         <div>
           <span className="sw-eyebrow">PERFORMANCE</span>
           <h2>Website &amp; Search</h2>
-          <p>GA4 and Google Search Console on the same daily timeline · Last 30 days</p>
+          <p>GA4 and Google Search Console on the same daily timeline</p>
         </div>
-        <span className="sw-analytics-period">30 days</span>
+        <span className="sw-analytics-period" aria-label="Reporting period: last 30 days">Last 30 days</span>
       </div>
       {(!ga4Connected || !searchConnected) && (
         <p className="sw-chart-notice" role="status">
@@ -99,7 +99,6 @@ export default function UnifiedAnalyticsChart({
                 <YAxis yAxisId="search" orientation="right" allowDecimals={false}
                   tick={{ fill: "#795da6", fontSize: 11 }} axisLine={false} tickLine={false} width={42} />
                 <Tooltip contentStyle={{ border: "1px solid #dfe6f0", borderRadius: 12, fontSize: 12 }} />
-                <Legend verticalAlign="bottom" iconType="circle" iconSize={7} wrapperStyle={{ fontSize: 11, paddingTop: 12 }} />
                 {series.filter((item) => enabled.includes(item.key) && available.some((v) => v.key === item.key)).map((item) => (
                   <Area key={item.key} yAxisId={item.axis} type="monotone"
                     dataKey={item.key} name={item.title}
