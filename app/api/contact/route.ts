@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { randomUUID } from "node:crypto";
 
 import { redirectTo } from "@/lib/redirect";
 import { getSmtpTransporter } from "@/lib/smtp";
@@ -706,6 +707,7 @@ Skickat via kontaktformuläret på staarkinc.com
 
     return NextResponse.json({
       ok: true,
+      conversionId: randomUUID(),
     });
   } catch (error) {
     if (error instanceof ContactInputError) {

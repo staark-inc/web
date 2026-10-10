@@ -26,6 +26,7 @@ jobs:
       - run: npm run test:security-seo
       - run: npm run test:news
       - run: npm run test:public-website
+      - run: npm run test:google-ads
       - name: Add CI-only error fixture
         run: |
           mkdir -p app/a11y-error-fixture
@@ -49,3 +50,4 @@ jobs:
           done
           npm run check:security-seo
           CHECK_ERROR_FIXTURE=1 npm run check:public-browser
+          npm run check:google-ads-browser
