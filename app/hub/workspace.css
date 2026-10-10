@@ -189,35 +189,3 @@
 .hub-projects-v2-item-footer > span { color: #657187; font-size: 10px; }
 .hub-projects-v2-item-footer > a { min-height: 36px; font-size: 12px; }
 .hub-content .hub-notification-preferences-page { max-width: 1080px; }
-
-/* HUB-UI-04 FIX: restore overview command panels */
-@media (min-width: 900px) {
-  .hub-overview-page .hub-command-grid {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1.5fr) minmax(340px, 1fr) !important;
-    align-items: stretch !important;
-    gap: 16px !important;
-    width: 100% !important;
-  }
-
-  .hub-overview-page .hub-command-grid > * {
-    min-width: 0 !important;
-    width: auto !important;
-    max-width: none !important;
-    grid-column: auto !important;
-    align-self: stretch !important;
-  }
-}
-
-@media (max-width: 899px) {
-  .hub-overview-page .hub-command-grid {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) !important;
-    gap: 12px !important;
-  }
-
-  .hub-overview-page .hub-command-grid > * {
-    width: 100% !important;
-    max-width: none !important;
-  }
-}
