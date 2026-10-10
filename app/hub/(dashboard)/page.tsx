@@ -486,7 +486,7 @@ const githubPromise = getGitHubOverview()
           icon={<LifeBuoy size={18}/>} />
       </Metrics>
 
-      <div className="sw-overview-primary-grid">
+      <div className={`sw-overview-primary-grid ${attentionItems.length === 0 ? "sw-overview-priorities-clear" : ""}`}>
         <section className="sw-overview-panel sw-priority-panel" aria-label="Needs attention">
           <div className="sw-overview-panel-heading">
             <div><span className="sw-eyebrow">YOUR PRIORITIES</span><h2>Needs attention</h2></div>
