@@ -120,7 +120,7 @@ export default async function LeadsPage({ searchParams }: PageProps) {
   const winRate = decidedCount ? Math.round((wonCount / decidedCount) * 100) : 0;
 
   return (
-    <div className="hub-page hub-leads-v2-page">
+    <div className="hub-page hub-leads-v2-page hub-crm-workspace">
       <header className="hub-leads-v2-head">
         <div>
           <span className="hub-leads-v2-kicker">SALES / PIPELINE</span>
