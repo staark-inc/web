@@ -23,7 +23,7 @@
 /* Compact mode: display every destination, no inaccessible collapsed group. */
 @media (min-width: 851px) {
   .hub-dashboard-sidebar-compact .hub-nav-group-toggle { display: none; }
-  .hub-dashboard.hub-dashboard-sidebar-compact .hub-dashboard .hub-sidebar .hub-nav-group > .hub-nav-group-links { display: flex; padding: 0; }
+  .hub-dashboard.hub-dashboard-sidebar-compact .hub-sidebar .hub-nav-group > .hub-nav-group-links { display: flex; padding: 0; }
   .hub-dashboard-sidebar-compact .hub-nav-group { border-top: 1px solid #2b3951; padding-top: 8px; }
 }
 @media (max-width: 850px) and (min-width: 601px) {
@@ -44,4 +44,38 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .hub-sidebar .hub-nav-group-toggle svg { transition: none; }
+}
+
+/* HUB-UI-06: navigation clarity, focus states, and accessible compact groups. */
+.hub-dashboard .hub-sidebar .hub-nav-item {
+  transition: background-color .16s ease, color .16s ease, box-shadow .16s ease;
+}
+.hub-dashboard .hub-sidebar .hub-nav-item:hover {
+  background: #22344f;
+}
+.hub-dashboard .hub-sidebar .hub-nav-item-active {
+  background: #253f70;
+  box-shadow: inset 3px 0 0 #76a5ff;
+  color: #f5f8ff;
+}
+.hub-dashboard .hub-sidebar :is(.hub-nav-item, .hub-nav-group-toggle):focus-visible {
+  outline: 2px solid #95b9ff;
+  outline-offset: -2px;
+}
+.hub-sidebar .hub-nav-group-toggle {
+  letter-spacing: .055em;
+  font-size: 11px;
+}
+@media (min-width: 851px) {
+  .hub-dashboard.hub-dashboard-sidebar-compact .hub-sidebar .hub-nav-group:not([open]) > .hub-nav-group-links {
+    display: flex;
+  }
+}
+@media (min-width: 601px) and (max-width: 850px) {
+  .hub-dashboard .hub-sidebar .hub-nav-group:not([open]) > .hub-nav-group-links {
+    display: flex;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hub-dashboard .hub-sidebar .hub-nav-item { transition: none; }
 }

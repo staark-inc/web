@@ -165,3 +165,59 @@
   .hub-shell-site-link { min-height: 32px; }
   .hub-content .hub-page { padding: 22px 16px 40px; }
 }
+
+/* HUB-UI-06 — responsive workspace shell polish. */
+.hub-dashboard .hub-sidebar {
+  background: linear-gradient(180deg, #111c30 0%, #101827 56%, #0e1625 100%);
+}
+.hub-dashboard .hub-sidebar .hub-brand {
+  padding-bottom: 15px;
+}
+.hub-dashboard .hub-sidebar .hub-compose-button {
+  border-radius: 11px;
+  font-weight: 700;
+  letter-spacing: -.01em;
+}
+.hub-dashboard .hub-sidebar .hub-nav {
+  scrollbar-gutter: stable;
+}
+.hub-dashboard .hub-sidebar .hub-sidebar-bottom {
+  background: transparent;
+  border-top-color: rgba(164, 184, 220, .16);
+}
+.hub-dashboard .hub-sidebar .hub-user-profile-link:focus-visible,
+.hub-dashboard .hub-sidebar .hub-compose-button:focus-visible {
+  outline: 2px solid #95b9ff;
+  outline-offset: 2px;
+}
+@media (max-width: 850px) and (min-width: 601px) {
+  .hub-dashboard .hub-sidebar .hub-nav-group {
+    width: 100%;
+  }
+  .hub-dashboard .hub-sidebar .hub-nav-group-links {
+    width: 100%;
+    padding-inline: 0;
+  }
+}
+@media (max-width: 600px) {
+  .hub-dashboard .hub-sidebar {
+    z-index: 30;
+    gap: 8px;
+    box-shadow: 0 8px 24px rgba(11, 21, 39, .14);
+  }
+  .hub-dashboard .hub-sidebar .hub-brand {
+    min-height: 44px;
+    padding: 0 5px;
+  }
+  .hub-dashboard .hub-sidebar .hub-compose-button {
+    min-height: 38px;
+    margin: 0;
+  }
+  .hub-dashboard .hub-sidebar.is-menu-open .hub-nav {
+    padding: 12px 0;
+    border-top: 1px solid rgba(164, 184, 220, .18);
+  }
+  .hub-dashboard .hub-sidebar.is-menu-open .hub-nav-item {
+    min-height: 42px;
+  }
+}

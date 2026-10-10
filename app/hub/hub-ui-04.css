@@ -110,3 +110,77 @@
     max-width: none;
   }
 }
+
+/* HUB-UI-06: cohesive workspace rhythm and resilient responsive layout. */
+.hub-dashboard {
+  --hub-ui06-border: #e2e8f1;
+  --hub-ui06-muted: #60708a;
+  --hub-ui06-radius: 15px;
+}
+.hub-dashboard .hub-shell-header-v4 {
+  min-height: 72px;
+  border-bottom: 1px solid var(--hub-ui06-border);
+  box-shadow: 0 2px 12px rgba(20, 39, 72, .025);
+}
+.hub-dashboard .hub-shell-heading-v4 { gap: 5px; }
+.hub-dashboard .hub-shell-breadcrumbs { font-size: 12px; }
+.hub-dashboard .hub-shell-heading-v4 .hub-shell-title {
+  font-size: clamp(18px, 1.35vw, 21px);
+  letter-spacing: -.025em;
+}
+.hub-dashboard .hub-shell-actions-v4 .hub-shell-site-link {
+  border-radius: 10px;
+  padding: 8px 13px;
+  font-size: 12px;
+}
+.hub-dashboard .hub-content {
+  min-width: 0;
+  background: #f6f8fc;
+}
+.hub-dashboard .hub-content .hub-page {
+  min-width: 0;
+  padding-top: clamp(22px, 2vw, 32px);
+}
+.hub-dashboard .hub-overview-page .hub-command-panel,
+.hub-dashboard .hub-overview-page .hub-stat-card {
+  border-radius: var(--hub-ui06-radius);
+  border-color: var(--hub-ui06-border);
+}
+.hub-dashboard .hub-overview-page .hub-command-panel-header h2 {
+  font-size: 15px;
+  letter-spacing: -.01em;
+}
+.hub-dashboard .hub-overview-page .hub-command-grid {
+  gap: 16px;
+}
+.hub-dashboard .hub-overview-page .hub-command-grid:has(.hub-command-clear) {
+  grid-template-columns: minmax(0, 1.5fr) minmax(340px, 1fr);
+  align-items: stretch;
+}
+.hub-dashboard .hub-overview-page .hub-command-panel:has(.hub-command-clear) {
+  min-width: 0;
+}
+.hub-dashboard .hub-overview-page .hub-command-grid:has(.hub-command-clear) .hub-command-clear {
+  min-height: 78px !important;
+  padding: 14px 20px !important;
+}
+@media (max-width: 1100px) {
+  .hub-dashboard .hub-overview-page .hub-command-grid:has(.hub-command-clear) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .hub-dashboard .hub-overview-page .hub-command-grid:has(.hub-command-clear) > * {
+    width: 100%;
+    min-width: 0;
+  }
+}
+@media (max-width: 600px) {
+  .hub-dashboard .hub-shell-header-v4 {
+    min-height: 62px;
+    padding: 10px 16px;
+  }
+  .hub-dashboard .hub-shell-heading-v4 .hub-shell-title { font-size: 17px; }
+  .hub-dashboard .hub-shell-breadcrumbs { font-size: 11px; }
+  .hub-dashboard .hub-content .hub-page { padding: 20px 14px 38px; }
+  .hub-dashboard .hub-overview-page .hub-command-panel-header { padding-inline: 14px; }
+  .hub-dashboard .hub-overview-page .hub-command-grid:has(.hub-command-clear) .hub-command-clear { padding: 14px !important; }
+}
