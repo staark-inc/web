@@ -1,4 +1,5 @@
 import Link from "next/link";
+import OverviewChart from "@/components/hub/overview-chart";
 
 import {
   Activity,
@@ -531,7 +532,7 @@ const githubPromise = getGitHubOverview()
   );
 
   return (
-    <div className="hub-page hub-overview-page">
+    <div className="hub-page hub-overview-page sw-overview">
       {/* COMMAND CENTER */}
 
       <section className="hub-command-center">
@@ -1069,76 +1070,7 @@ const githubPromise = getGitHubOverview()
             </div>
           </div>
 
-          {analytics.dailyTraffic.length === 0 ? (
-            <div className="hub-overview-empty">
-              No website traffic yet.
-            </div>
-          ) : (
-            <div className="hub-traffic-chart">
-              <div className="hub-traffic-bars">
-                {analytics.dailyTraffic.map(
-                  (item, index) => {
-                    const hasTraffic =
-                      item.pageViews > 0;
-
-                    const height = hasTraffic
-                      ? Math.max(
-                          (item.pageViews /
-                            maxPageViews) *
-                            100,
-                          8
-                        )
-                      : 0;
-
-                    const showLabel =
-                      index === 0 ||
-                      index ===
-                        analytics.dailyTraffic.length - 1 ||
-                      index % 5 === 0;
-
-                    return (
-                      <div
-                        className="hub-traffic-column"
-                        key={item.date}
-                        title={`${formatTrafficDate(
-                          item.date
-                        )}: ${
-                          item.pageViews
-                        } page views`}
-                      >
-                        <div className="hub-traffic-bar-area">
-                          {hasTraffic ? (
-                            <div
-                              className="hub-traffic-bar"
-                              style={{
-                                height: `${height}%`,
-                              }}
-                            />
-                          ) : (
-                            <div className="hub-traffic-zero" />
-                          )}
-                        </div>
-
-                        <span
-                          className={
-                            showLabel
-                              ? "hub-traffic-date-visible"
-                              : "hub-traffic-date-hidden"
-                          }
-                        >
-                          {showLabel
-                            ? formatTrafficDate(
-                                item.date
-                              )
-                            : ""}
-                        </span>
-                      </div>
-                    );
-                  }
-                )}
-              </div>
-            </div>
-          )}
+          <OverviewChart kind="traffic" data={analytics.dailyTraffic} />
         </div>
 
         {/* TOP PAGES */}
@@ -1333,79 +1265,7 @@ const githubPromise = getGitHubOverview()
             </div>
           </div>
 
-          {searchConsole.dailyTraffic.length === 0 ? (
-            <div className="hub-overview-empty">
-              No search data yet.
-            </div>
-          ) : (
-            <div className="hub-traffic-chart">
-              <div className="hub-traffic-bars">
-                {searchConsole.dailyTraffic.map(
-                  (item, index) => {
-                    const hasTraffic =
-                      item.impressions > 0;
-
-                    const height = hasTraffic
-                      ? Math.max(
-                          (item.impressions /
-                            maxSearchImpressions) *
-                            100,
-                          8
-                        )
-                      : 0;
-
-                    const showLabel =
-                      index === 0 ||
-                      index ===
-                        searchConsole.dailyTraffic.length -
-                          1 ||
-                      index % 5 === 0;
-
-                    return (
-                      <div
-                        className="hub-traffic-column"
-                        key={item.date}
-                        title={`${formatSearchDate(
-                          item.date
-                        )}: ${
-                          item.impressions
-                        } impressions, ${
-                          item.clicks
-                        } clicks`}
-                      >
-                        <div className="hub-traffic-bar-area">
-                          {hasTraffic ? (
-                            <div
-                              className="hub-traffic-bar hub-search-bar"
-                              style={{
-                                height: `${height}%`,
-                              }}
-                            />
-                          ) : (
-                            <div className="hub-traffic-zero" />
-                          )}
-                        </div>
-
-                        <span
-                          className={
-                            showLabel
-                              ? "hub-traffic-date-visible"
-                              : "hub-traffic-date-hidden"
-                          }
-                        >
-                          {showLabel
-                            ? formatSearchDate(
-                                item.date
-                              )
-                            : ""}
-                        </span>
-                      </div>
-                    );
-                  }
-                )}
-              </div>
-            </div>
-          )}
+          <OverviewChart kind="search" data={searchConsole.dailyTraffic} />
         </div>
 
         <div className="hub-overview-card">
