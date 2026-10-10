@@ -88,10 +88,11 @@ export default function HubNav({
     pathname.startsWith("/hub/updates/");
 
   return (
-    <nav className="hub-nav">
+    <nav id="hub-navigation" className="hub-nav" aria-label="Hub navigation">
       <Link
         href="/hub"
         aria-label="Overview"
+        title="Overview"
         data-tooltip="Overview"
         className={`hub-nav-item hub-compact-tooltip ${
           pathname === "/hub" ? "hub-nav-item-active" : ""
@@ -106,6 +107,7 @@ export default function HubNav({
       <Link
         href="/hub/inbox"
         aria-label="Inbox"
+        title="Inbox"
         data-tooltip="Inbox"
         className={`hub-nav-item hub-compact-tooltip ${
           isInbox ? "hub-nav-item-active" : ""
@@ -121,6 +123,7 @@ export default function HubNav({
       <Link
         href="/hub/sent"
         aria-label="Sent"
+        title="Sent"
         data-tooltip="Sent"
         className={`hub-nav-item hub-compact-tooltip ${
           isSent ? "hub-nav-item-active" : ""
@@ -135,6 +138,7 @@ export default function HubNav({
       <Link
         href="/hub/prospects"
         aria-label="Prospects"
+        title="Prospects"
         data-tooltip="Prospects"
         className={`hub-nav-item hub-compact-tooltip ${
           isProspects ? "hub-nav-item-active" : ""
@@ -147,6 +151,7 @@ export default function HubNav({
       <Link
         href="/hub/leads"
         aria-label="Leads"
+        title="Leads"
         data-tooltip="Leads"
         className={`hub-nav-item hub-compact-tooltip ${
           isLeads ? "hub-nav-item-active" : ""
@@ -162,6 +167,7 @@ export default function HubNav({
       <Link
         href="/hub/opportunities"
         aria-label="Opportunities"
+        title="Opportunities"
         data-tooltip="Opportunities"
         className={`hub-nav-item hub-compact-tooltip ${
           isOpportunities ? "hub-nav-item-active" : ""
@@ -174,6 +180,7 @@ export default function HubNav({
       <Link
         href="/hub/clients"
         aria-label="Clients"
+        title="Clients"
         data-tooltip="Clients"
         className={`hub-nav-item hub-compact-tooltip ${
           isClients ? "hub-nav-item-active" : ""
@@ -186,6 +193,7 @@ export default function HubNav({
       <Link
         href="/hub/contacts"
         aria-label="Contacts"
+        title="Contacts"
         data-tooltip="Contacts"
         className={`hub-nav-item hub-compact-tooltip ${
           isContacts ? "hub-nav-item-active" : ""
@@ -200,6 +208,7 @@ export default function HubNav({
       <Link
         href="/hub/projects"
         aria-label="Projects"
+        title="Projects"
         data-tooltip="Projects"
         className={`hub-nav-item hub-compact-tooltip ${
           isProjects ? "hub-nav-item-active" : ""
@@ -212,6 +221,7 @@ export default function HubNav({
       <Link
         href="/hub/offers"
         aria-label="Offers"
+        title="Offers"
         data-tooltip="Offers"
         className={`hub-nav-item hub-compact-tooltip ${
           isOffers ? "hub-nav-item-active" : ""
@@ -226,6 +236,7 @@ export default function HubNav({
       <Link
         href="/hub/saas"
         aria-label="SaaS overview"
+        title="SaaS overview"
         data-tooltip="SaaS overview"
         className={`hub-nav-item hub-compact-tooltip ${isSaas ? "hub-nav-item-active" : ""}`}
       >
@@ -236,6 +247,7 @@ export default function HubNav({
       <Link
         href="/hub/saas/subscriptions"
         aria-label="Subscriptions"
+        title="Subscriptions"
         data-tooltip="Subscriptions"
         className={`hub-nav-item hub-compact-tooltip ${
           isSaasSubscriptions ? "hub-nav-item-active" : ""
@@ -248,6 +260,7 @@ export default function HubNav({
       <Link
         href="/hub/saas/sites"
         aria-label="Sites"
+        title="Sites"
         data-tooltip="Sites"
         className={`hub-nav-item hub-compact-tooltip ${isSaasSites ? "hub-nav-item-active" : ""}`}
       >
@@ -258,6 +271,7 @@ export default function HubNav({
       <Link
         href="/hub/saas/plans"
         aria-label="Plans"
+        title="Plans"
         data-tooltip="Plans"
         className={`hub-nav-item hub-compact-tooltip ${isSaasPlans ? "hub-nav-item-active" : ""}`}
       >
@@ -268,6 +282,7 @@ export default function HubNav({
       <Link
         href="/hub/saas/provisioning"
         aria-label="Provisioning"
+        title="Provisioning"
         data-tooltip="Provisioning"
         className={`hub-nav-item hub-compact-tooltip ${
           isSaasProvisioning ? "hub-nav-item-active" : ""
@@ -282,6 +297,7 @@ export default function HubNav({
       <Link
         href="/hub/billing"
         aria-label="Billing"
+        title="Billing"
         data-tooltip="Billing"
         className={`hub-nav-item hub-compact-tooltip ${
           isBilling ? "hub-nav-item-active" : ""
@@ -294,6 +310,7 @@ export default function HubNav({
       <Link
         href="/hub/support"
         aria-label="Support"
+        title="Support"
         data-tooltip="Support"
         className={`hub-nav-item hub-compact-tooltip ${
           isSupport ? "hub-nav-item-active" : ""
@@ -306,6 +323,7 @@ export default function HubNav({
       <Link
         href="/hub/updates"
         aria-label="News & Updates"
+        title="News & Updates"
         data-tooltip="News & Updates"
         className={`hub-nav-item hub-compact-tooltip ${
           isUpdates ? "hub-nav-item-active" : ""
@@ -320,6 +338,7 @@ export default function HubNav({
       <Link
         href="/hub/profile"
         aria-label="Profile"
+        title="Profile"
         data-tooltip="Profile"
         className={`hub-nav-item hub-compact-tooltip ${
           isProfile ? "hub-nav-item-active" : ""
@@ -332,6 +351,7 @@ export default function HubNav({
       <Link
         href="/hub/settings"
         aria-label="Settings"
+        title="Settings"
         data-tooltip="Settings"
         className={`hub-nav-item hub-compact-tooltip ${
           isSettings ? "hub-nav-item-active" : ""

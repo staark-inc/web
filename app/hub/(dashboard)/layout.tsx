@@ -16,6 +16,7 @@ import {
 } from "@/lib/notifications";
 
 import HubNav from "./HubNav";
+import HubSidebar from "./HubSidebar";
 import LiveUpdates from "./LiveUpdates";
 import NotificationCenter from "./NotificationCenter";
 
@@ -106,7 +107,7 @@ export default async function HubDashboardLayout({
     >
       <LiveUpdates />
 
-      <aside className="hub-sidebar">
+      <HubSidebar>
         <Link href="/hub" className="hub-brand" aria-label="Staark Hub overview">
           <div className="hub-brand-icon">
             <Image
@@ -185,7 +186,7 @@ export default async function HubDashboardLayout({
             </form>
           </div>
         </div>
-      </aside>
+      </HubSidebar>
 
       <main className="hub-content">
         {children}

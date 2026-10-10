@@ -19,7 +19,7 @@ import "./saas-subscription-detail.css";
 import "./support-wordpress.css";
 import "./settings-v2.css";
 import "./profile-v2.css";
-import "./notifications-v1.css";
+import "./notifications.css";
 import "./notification-preferences.css";
 import "./prospects-vars.css";
 import "./prospects-v1.css";
@@ -35,7 +35,7 @@ import "./opportunities.css";
 import "./opportunities-mobile.css";
 import "./mail-workspace-v2.css";
 import "./thread-v2.css";
-import "./smoke-sidebar-fixes.css";
+import "./workspace.css";
 
 export const metadata: Metadata = {
   title: "Staark Hub",

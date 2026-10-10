@@ -1,0 +1,78 @@
+/* The notification dialog lives in the browser top layer, outside sidebar clipping. */
+.hub-notification-center { position: relative; min-width: 0; }
+.hub-notification-trigger {
+  display: flex; align-items: center; gap: 11px; width: 100%; min-height: 44px;
+  padding: 0 12px; border: 1px solid #303640; border-radius: 11px;
+  background: #1a1e25; color: #ccd3df; font: inherit; cursor: pointer;
+}
+.hub-notification-trigger:hover, .hub-notification-trigger[aria-expanded="true"] { background: #252c38; color: #fff; }
+.hub-notification-trigger.has-unread { border-color: #3a4e77; background: #1a2945; color: #e2ebff; }
+.hub-notification-trigger-label { font-size: 13px; font-weight: 600; }
+.hub-notification-badge { display: grid; place-items: center; min-width: 22px; height: 22px; margin-left: auto; padding: 0 6px; border-radius: 7px; background: #a7c1ff; color: #14264b; font-size: 11px; font-weight: 800; }
+.hub-notification-dialog {
+  position: fixed; inset: 16px 16px 16px auto; width: 440px;
+  max-width: calc(100vw - 32px); height: calc(100dvh - 32px); max-height: 820px;
+  margin: auto 0; padding: 0; overflow: hidden; box-sizing: border-box;
+  border: 1px solid #dce3ed; border-radius: 20px; background: #fff; color: #172033;
+  box-shadow: 0 28px 100px #0f172a38; font: inherit;
+}
+.hub-notification-dialog[open] { display: flex; flex-direction: column; }
+.hub-notification-dialog::backdrop { background: #0f172a45; }
+.hub-notification-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 24px 20px 20px; flex: 0 0 auto; }
+.hub-notification-panel-title { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.hub-notification-panel-title-icon { display: grid; place-items: center; width: 44px; height: 44px; flex: 0 0 44px; border: 1px solid #dce7ff; border-radius: 13px; background: #edf3ff; color: #315cf5; }
+.hub-notification-panel-title h2 { margin: 0; color: #172033; font-size: 19px; font-weight: 700; letter-spacing: -.025em; line-height: 1.3; }
+.hub-notification-panel-title p { margin: 4px 0 0; color: #657187; font-size: 12px; line-height: 1.45; }
+.hub-notification-icon-button { display: inline-grid; place-items: center; flex: 0 0 36px; width: 36px; height: 36px; padding: 0; border: 1px solid #e1e6ef; border-radius: 10px; background: #fff; color: #59667a; cursor: pointer; }
+.hub-notification-icon-button:hover:not(:disabled) { background: #f0f4fa; color: #172033; }
+.hub-notification-dialog button:disabled { opacity: .5; cursor: default; }
+.hub-notification-dialog :is(button, a):focus-visible, .hub-notification-trigger:focus-visible { outline: 3px solid #7297ff; outline-offset: 3px; }
+.hub-notification-panel-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 20px 16px; border-bottom: 1px solid #e5eaf1; flex: 0 0 auto; }
+.hub-notification-filters { display: flex; gap: 4px; padding: 4px; border: 1px solid #e4e9f1; border-radius: 11px; background: #f3f5f9; }
+.hub-notification-filters button { display: flex; align-items: center; gap: 7px; min-height: 32px; padding: 0 10px; border: 0; border-radius: 7px; background: transparent; color: #58657a; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+.hub-notification-filters button[aria-pressed="true"] { background: #fff; color: #172033; box-shadow: 0 1px 4px #17203314; }
+.hub-notification-filters button span { min-width: 19px; padding: 2px 4px; border-radius: 5px; background: #e7edfa; color: #344e7f; font-size: 10px; text-align: center; }
+.hub-notification-error { margin: 12px 16px 0; padding: 12px; border: 1px solid #f3cbc6; border-radius: 10px; background: #fff4f2; color: #9f3025; font-size: 12px; line-height: 1.5; flex: 0 0 auto; }
+.hub-notification-list { min-height: 0; flex: 1 1 auto; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #cbd4e2 transparent; }
+.hub-notification-item { display: grid; grid-template-columns: 38px minmax(0, 1fr) 28px; align-items: start; gap: 12px; padding: 19px 20px; border-bottom: 1px solid #edf0f5; background: #fff; }
+.hub-notification-item.is-unread { background: #f5f8ff; box-shadow: inset 3px 0 #648bfa; }
+.hub-notification-item-icon { display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid #e4e9f1; border-radius: 11px; background: #f1f4f9; color: #576780; }
+.hub-notification-kind-lead { background: #edf8f1; color: #2c7951; border-color: #d7ecdf; }
+.hub-notification-kind-inbox { background: #edf3ff; color: #3458b5; border-color: #dae5ff; }
+.hub-notification-kind-offer { background: #f4efff; color: #7251ac; border-color: #e6dcf6; }
+.hub-notification-kind-billing { background: #fff7e9; color: #936215; border-color: #f0e2c4; }
+.hub-notification-item-copy { min-width: 0; }
+.hub-notification-item-meta { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 6px; color: #59667b; font-size: 11px; }
+.hub-notification-item-meta > span { text-transform: capitalize; font-weight: 500; }
+.hub-notification-item-meta time { white-space: nowrap; }
+.hub-notification-item-copy > strong, .hub-notification-item-link { display: block; color: #1c2a42; font-size: 13px; font-weight: 650; line-height: 1.5; text-decoration: none; overflow-wrap: anywhere; }
+.hub-notification-item-link:hover { color: #315cf5; text-decoration: underline; text-underline-offset: 3px; }
+.hub-notification-item-copy p { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; margin: 5px 0 0; color: #5e6b80; font-size: 12px; line-height: 1.6; }
+.hub-notification-mark-read { display: grid; place-items: center; width: 28px; height: 32px; padding: 0; border: 0; border-radius: 8px; background: transparent; color: #315cf5; cursor: pointer; }
+.hub-notification-mark-read:hover { background: #e4edff; }
+.hub-notification-unread-dot { width: 7px; height: 7px; border-radius: 50%; background: #4169e1; }
+.hub-notification-read-check { margin: 8px 6px; color: #7e8ba0; }
+.hub-notification-empty { display: flex; min-height: 260px; height: 100%; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 32px; text-align: center; }
+.hub-notification-empty-icon { display: grid; width: 64px; height: 64px; place-items: center; border: 1px solid #dce8e3; border-radius: 20px; background: #f0f8f4; color: #468568; }
+.hub-notification-empty strong { color: #26334a; font-size: 16px; }
+.hub-notification-empty p { max-width: 260px; margin: 0; color: #657187; font-size: 13px; line-height: 1.6; }
+.hub-notification-panel-footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 16px 20px; border-top: 1px solid #e5eaf1; background: #fafbfd; flex: 0 0 auto; }
+.hub-notification-read-all, .hub-notification-preferences-link { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 40px; padding: 0 11px; border: 1px solid #dce3ed; border-radius: 9px; background: #fff; color: #3a4963; font: inherit; font-size: 12px; font-weight: 600; text-decoration: none; cursor: pointer; }
+.hub-notification-read-all:hover:not(:disabled), .hub-notification-preferences-link:hover { background: #edf3ff; border-color: #c3d2f7; color: #294cae; }
+.hub-notification-spin { animation: hub-notification-spin .9s linear infinite; }
+@keyframes hub-notification-spin { to { transform: rotate(360deg); } }
+@media (max-width: 600px) {
+  .hub-notification-dialog { inset: auto 8px 8px; width: auto; max-width: none; height: min(760px, calc(100dvh - 16px)); max-height: calc(100dvh - 16px); margin: 0; border-radius: 18px; }
+  .hub-notification-panel-head { padding: 20px 16px 16px; }
+  .hub-notification-panel-title-icon { display: none; }
+  .hub-notification-panel-title h2 { font-size: 21px; }
+  .hub-notification-panel-actions { padding-inline: 16px; }
+  .hub-notification-icon-button { width: 44px; height: 44px; flex-basis: 44px; }
+  .hub-notification-filters button { min-height: 36px; }
+  .hub-notification-item { grid-template-columns: 36px minmax(0, 1fr) 32px; padding: 16px; gap: 10px; }
+  .hub-notification-mark-read { width: 32px; min-height: 44px; }
+  .hub-notification-item-meta { flex-wrap: wrap; gap: 3px 8px; }
+  .hub-notification-panel-footer { padding: 12px 16px max(12px, env(safe-area-inset-bottom)); }
+  .hub-notification-read-all, .hub-notification-preferences-link { min-height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) { .hub-notification-spin { animation: none; } }

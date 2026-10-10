@@ -23,7 +23,8 @@
     "test:security-seo": "node --experimental-strip-types --test test/security-seo.test.ts",
     "check:security-seo": "node scripts/check-security-seo.mjs",
     "test:public-website": "node --experimental-strip-types --test test/contact-intake.test.ts test/public-http-cache.test.ts",
-    "check:public-browser": "node scripts/check-public-browser.mjs"
+    "check:public-browser": "node scripts/check-public-browser.mjs",
+    "check:hub-browser": "node scripts/check-hub-browser.mjs"
   },
   "dependencies": {
     "@google-analytics/data": "^7.1.0",
