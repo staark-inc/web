@@ -44,7 +44,12 @@ no new environment variables or database migrations are required.
 3. Use Tag Assistant with the deployed site. Before consent, there should be no
    Google tag request. Statistics alone should not configure `AW-18468720832`.
    Allow marketing, then send one deliberate test enquiry; confirm exactly one
-   Contact event, the correct `send_to`, and its opaque transaction ID. This live
+   Contact event, the correct `send_to`, and its opaque transaction ID. If the
+   first Tag Assistant connection reports no tag, accept **Acceptera alla** in
+   the website tab opened by Tag Assistant, then use **Retry**. If the banner is
+   hidden, reopen it from **Cookie-inställningar** in the footer. Basic consent
+   mode intentionally has no tag before permission; an automated initial scan
+   is not a substitute for this interactive check. This live
    test creates a real CRM enquiry/email and may record a conversion.
 4. Check rejection and withdrawal, and inspect CSP warnings. The allowlist includes
    Google's documented Ads endpoints and `.com`/`.se` regional endpoints. If a
@@ -59,8 +64,11 @@ no new environment variables or database migrations are required.
 - `npm run test:google-ads` checks consent, destinations, queue shape, duplicate
   handling, private paths, revocation, storage failures and tracking exceptions.
 - `npm run check:google-ads-browser` against a running local production build
-  checks all four consent combinations plus pending/error/honeypot/success
-  responses, repeated receipts, page reloads and revocation. It intercepts all
+  exercises CSP against Google collection origins (including the bare
+  `analytics.google.com` host, which is not covered by `*.analytics.google.com`),
+  verifies unrelated origins remain blocked, and checks all four consent
+  combinations plus pending/error/honeypot/success responses, repeated receipts,
+  page reloads and revocation. It intercepts all
   external requests and `/api/contact`; no Google events or emails are sent.
 - `npm run test:security-seo`, `npm run test:public-website`, `npm run typecheck`,
   and `npm run build` verify the surrounding application.

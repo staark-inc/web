@@ -50,6 +50,30 @@ try {
     assert.equal((await commands(page)).filter((c) => c[0] === "config" && String(c[1]).startsWith("G-")).length, analytics ? 1 : 0);
     assert.equal((await conversionEvents(page)).length, 0);
 
+    if (analytics && marketing) {
+      // Exercise browser CSP enforcement against the actual response header.
+      // Every external request is intercepted above; these probes never reach Google.
+      const blocked = await page.evaluate(async () => {
+        const collectors = [
+          "https://analytics.google.com", "https://www.google-analytics.com",
+          "https://region1.google-analytics.com", "https://stats.g.doubleclick.net",
+          "https://googleads.g.doubleclick.net", "https://pagead2.googlesyndication.com",
+          "https://ad.doubleclick.net", "https://www.googleadservices.com",
+          "https://www.google.com", "https://www.google.se",
+          "https://www.googletagmanager.com",
+        ];
+        return (await Promise.all(collectors.map(async (host) => {
+          try { await fetch(`${host}/__csp_probe`, { mode: "no-cors", method: "POST", body: "test" }); return null; }
+          catch { return host; }
+        }))).filter(Boolean);
+      });
+      assert.deepEqual(blocked, [], "CSP must allow Google collection origins");
+      assert.equal(await page.evaluate(async () => {
+        try { await fetch("https://example.org/__csp_probe", { mode: "no-cors" }); return false; }
+        catch { return true; }
+      }), true, "CSP must still block unrelated connection origins");
+    }
+
     let apiStatus = 429;
     let apiBody = { error: "rate limited" };
     let releaseResponse;
@@ -118,7 +142,7 @@ try {
     assert.deepEqual(errors, []);
     await context.close();
   }
-  console.log("Google Ads browser checks passed: four consent combinations, pending/error/honeypot/success, deduplication, reload, revocation. All external requests and email were mocked.");
+  console.log("Google Ads browser checks passed: Google collector CSP, four consent combinations, pending/error/honeypot/success, deduplication, reload, revocation. All external requests and email were mocked.");
 } finally {
   await browser.close();
 }
