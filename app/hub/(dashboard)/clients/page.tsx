@@ -103,7 +103,7 @@ export default async function ClientsPage() {
   ]);
 
   return (
-    <div className="hub-page hub-clients-v2-page">
+    <div className="hub-page hub-clients-v2-page hub-crm-workspace">
       <header className="hub-clients-v2-head">
         <div>
           <span className="hub-clients-v2-kicker">CUSTOMERS / CRM</span>

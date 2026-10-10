@@ -160,7 +160,7 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
         : "Delivery is clear. No overdue or near-term deadlines.";
 
   return (
-    <div className="hub-page hub-projects-v2-page">
+    <div className="hub-page hub-projects-v2-page hub-crm-workspace">
       <header className="hub-projects-v2-head">
         <div className="hub-projects-v2-title">
           <span>WORK / DELIVERY</span>
