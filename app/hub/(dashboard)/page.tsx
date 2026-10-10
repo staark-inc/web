@@ -51,23 +51,6 @@ function formatDate(date: Date) {
   }).format(date);
 }
 
-function formatTrafficDate(date: string) {
-  if (!date || date.length !== 8) {
-    return date;
-  }
-
-  const year = Number(date.slice(0, 4));
-  const month = Number(date.slice(4, 6)) - 1;
-  const day = Number(date.slice(6, 8));
-
-  return new Intl.DateTimeFormat("sv-SE", {
-    day: "numeric",
-    month: "short",
-  }).format(
-    new Date(year, month, day)
-  );
-}
-
 function createEmptyAnalytics(): Ga4Overview {
   return {
     visitors: 0,
@@ -89,23 +72,6 @@ function createEmptySearchConsole(): SearchConsoleOverview {
     topQueries: [],
     topPages: [],
   };
-}
-
-function formatSearchDate(date: string) {
-  if (!date) {
-    return date;
-  }
-
-  const parsed = new Date(`${date}T12:00:00`);
-
-  if (Number.isNaN(parsed.getTime())) {
-    return date;
-  }
-
-  return new Intl.DateTimeFormat("sv-SE", {
-    day: "numeric",
-    month: "short",
-  }).format(parsed);
 }
 
 function formatPercent(value: number) {
@@ -462,13 +428,7 @@ const githubPromise = getGitHubOverview()
 
   const analytics = analyticsResult.data;
   const searchConsole = searchConsoleResult.data;
-  const maxSearchImpressions = Math.max(
-    ...searchConsole.dailyTraffic.map(
-      (item) => item.impressions
-    ),
-    1
-  );
-
+  
   const github = githubResult.data;
 
   const workflowStatus = (() => {
@@ -524,13 +484,7 @@ const githubPromise = getGitHubOverview()
    * We calculate the maximum so the bars
    * automatically scale to the available data.
    */
-  const maxPageViews = Math.max(
-    ...analytics.dailyTraffic.map(
-      (item) => item.pageViews
-    ),
-    1
-  );
-
+  
   return (
     <div className="hub-page hub-overview-page sw-overview">
       {/* COMMAND CENTER */}
