@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, CircleDollarSign, Target, Trophy, UserRoundSearch, MessageCircle, Mail, Globe2 } from "lucide-react";
+import { CircleDollarSign, Target, Trophy, UserRoundSearch, MessageCircle, Mail, Globe2 } from "lucide-react";
 import { WorkspacePage, PageHeader, Metrics, Metric, RecordList, RecordRow, InfoChip, EmptyState, SectionHeader } from "@/components/hub/workspace";
 
 import { prisma } from "@/lib/prisma";
@@ -175,7 +175,7 @@ export default async function LeadsPage({ searchParams }: PageProps) {
                       <InfoChip tone={lead.status === "WON" ? "success" : lead.status === "LOST" ? "warning" : lead.status === "NEW" ? "info" : "neutral"}>
                         {statusLabels[lead.status]}
                       </InfoChip>
-                      {lead.client ? <Link className="sw-leads-client" href={`/hub/clients/${lead.client.id}`} onClick={undefined}>Client: {lead.client.name}</Link> :
+                      {lead.client ? <Link className="sw-leads-client" href={`/hub/clients/${lead.client.id}`}>Client: {lead.client.name}</Link> :
                         <time dateTime={lead.createdAt.toISOString()}>{formatDate(lead.createdAt)}</time>}
                     </span>
                   }
