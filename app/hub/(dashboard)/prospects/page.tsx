@@ -362,6 +362,7 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
           </Link>
         </nav>
       )}
-    </div>
+      </div>
+    </WorkspacePage>
   );
 }
