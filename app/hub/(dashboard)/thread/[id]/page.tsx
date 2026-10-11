@@ -6,6 +6,8 @@ import {
   Paperclip,
   Download,
   UserRound,
+  ArrowRight,
+  Clock3,
 } from "lucide-react";
 
 import Link from "next/link";
@@ -22,6 +24,7 @@ import {
 } from "@/lib/realtime";
 
 import ReplyForm from "./ReplyForm";
+import { WorkspacePage, InfoChip } from "@/components/hub/workspace";
 
 export const dynamic = "force-dynamic";
 
@@ -61,12 +64,12 @@ function createReplySubject(
   return `Re: ${subject}`;
 }
 
-function safeInboxReturnTo(value: string | undefined) {
+function safeThreadReturnTo(value: string | undefined) {
   if (!value) return "/hub/inbox";
 
   try {
     const url = new URL(value, "https://staark.local");
-    if (url.origin !== "https://staark.local" || url.pathname !== "/hub/inbox") {
+    if (url.origin !== "https://staark.local" || url.pathname !== "/hub/inbox" && url.pathname !== "/hub/sent") {
       return "/hub/inbox";
     }
 
@@ -90,7 +93,8 @@ export default async function ThreadPage({
   const { id } =
     await params;
   const { returnTo } = await searchParams;
-  const inboxReturnTo = safeInboxReturnTo(returnTo);
+  const threadReturnTo = safeThreadReturnTo(returnTo);
+  const fromSent = threadReturnTo.startsWith("/hub/sent");
 
   const thread =
     await prisma.thread.findUnique({
@@ -177,175 +181,124 @@ export default async function ThreadPage({
     );
 
   return (
-    <div className="hub-page hub-thread-page">
-      <Link
-        href={inboxReturnTo}
-        className="hub-back"
-      >
-        <ArrowLeft size={15} />
-        Back to inbox
-      </Link>
-
-      <header className="hub-thread-header">
-        <div className="hub-thread-heading">
-          <span className="hub-eyebrow">
-            CONVERSATION
-          </span>
-
-          <h1>
-            {thread.subject}
-          </h1>
-
-          <div className="hub-thread-meta">
-            <span>
-              <MessageSquare size={14} />
-              {thread.messages.length}{" "}
-              {thread.messages.length === 1 ? "message" : "messages"}
-            </span>
-
-            {contactEmail && (
-              <span>
-                <Mail size={14} />
-                {contactEmail}
-              </span>
-            )}
-          </div>
-        </div>
-      </header>
-
-      {thread.contact && (
-        <section className="hub-thread-contact">
-          <div className="hub-thread-contact-avatar">
-            <UserRound size={18} />
-          </div>
-
-          <div className="hub-thread-contact-info">
-            <strong>{contactName}</strong>
-            <span>{contactEmail}</span>
-
-            {thread.contact.company && (
-              <span>
-                <Building2 size={13} />
-                {thread.contact.company}
-              </span>
-            )}
-          </div>
-
-          <Link
-            href={`/hub/contacts/${thread.contact.id}`}
-            className="hub-secondary-button"
-          >
-            View contact
+    <WorkspacePage>
+      <div className="sw-thread-page">
+        <nav className="sw-thread-topbar" aria-label="Conversation navigation">
+          <Link href={threadReturnTo} className="sw-thread-back">
+            <ArrowLeft size={17} aria-hidden="true"/> Back to {fromSent ? "Sent" : "Inbox"}
           </Link>
-        </section>
-      )}
+          <Link href="/hub/compose" className="sw-thread-new"><Mail size={15}/> New message</Link>
+        </nav>
 
-      <section className="hub-thread-conversation">
-        {thread.messages.map(
-          (message) => {
-            const isOutbound =
-              message.direction ===
-              "OUTBOUND";
-            const activityAt = message.sentAt ?? message.createdAt;
+        <header className="sw-thread-hero">
+          <div className="sw-thread-hero-main">
+            <span className="sw-eyebrow">COMMUNICATION / CONVERSATION</span>
+            <h1>{thread.subject}</h1>
+            <div className="sw-thread-summary">
+              <span><MessageSquare size={15}/> {thread.messages.length} {thread.messages.length === 1 ? "message" : "messages"}</span>
+              {contactEmail && <span><Mail size={15}/>{contactEmail}</span>}
+            </div>
+          </div>
+          {contactEmail && <a href="#reply" className="sw-thread-reply-shortcut">Write reply <ArrowRight size={15}/></a>}
+        </header>
 
-            return (
-              <article
-                key={message.id}
-                className={`hub-thread-message ${
-                  isOutbound
-                    ? "hub-thread-message-outbound"
-                    : "hub-thread-message-inbound"
-                }`}
-              >
-                <div className="hub-thread-message-header">
-                  <div className="hub-thread-message-avatar">
-                    {isOutbound
-                      ? "S"
-                      : (
-                          message.fromName ||
-                          contactName ||
-                          message.fromEmail
-                        )
-                          .slice(0, 1)
-                          .toUpperCase()}
-                  </div>
-
-                  <div className="hub-thread-message-sender">
-                    <strong>
-                      {isOutbound
-                        ? "Staark Inc."
-                        : message.fromName || contactName || message.fromEmail}
-                    </strong>
-
-                    <span>{message.fromEmail}</span>
-                  </div>
-
-                  <div className="hub-thread-message-side">
-                    <span
-                      className={`hub-message-direction ${
-                        isOutbound
-                          ? "hub-message-direction-outbound"
-                          : "hub-message-direction-inbound"
-                      }`}
-                    >
-                      {isOutbound ? "Sent" : "Received"}
-                    </span>
-
-                    <time dateTime={activityAt.toISOString()}>
-                      {formatDate(activityAt)}
-                    </time>
-                  </div>
-                </div>
-
-                <ThreadMessageBody body={message.body} />
-
-                {(attachmentsByMessage.get(message.id)?.length ?? 0) > 0 && (
-                  <div className="hub-thread-attachments">
-                    <span className="hub-thread-attachments-title"><Paperclip size={15} /> Attachments</span>
-                    {attachmentsByMessage.get(message.id)!.map((attachment) => (
-                      <div key={attachment.partId} className="hub-thread-attachment-row">
-                        <a
-                          href={`/api/hub/messages/${message.id}/attachments/${encodeURIComponent(attachment.partId)}`}
-                          className="hub-thread-attachment"
-                        >
-                          <span><strong>{attachment.filename}</strong><small>{Math.ceil(attachment.size / 1024)} KB</small></span>
-                          <Download size={16} aria-hidden="true" />
-                        </a>
-                        {(attachment.mimeType === "application/pdf" || /^image\/(png|jpeg|webp|gif)$/.test(attachment.mimeType)) && (
-                          <a className="hub-thread-attachment-preview" href={`/api/hub/messages/${message.id}/attachments/${encodeURIComponent(attachment.partId)}?preview=1`} target="_blank" rel="noopener noreferrer">Preview</a>
-                        )}
+        <div className="sw-thread-workspace">
+          <div className="sw-thread-main">
+            <div className="sw-thread-timeline-heading">
+              <div><span className="sw-eyebrow">MESSAGE HISTORY</span><h2>Conversation</h2></div>
+              <span>{thread.messages.length} total</span>
+            </div>
+            <section className="sw-thread-timeline" aria-label="Conversation messages">
+              {thread.messages.map((message) => {
+                const isOutbound = message.direction === "OUTBOUND";
+                const activityAt = message.sentAt ?? message.createdAt;
+                return (
+                  <article key={message.id}
+                    className={"sw-thread-message " + (isOutbound ? "is-outbound" : "is-inbound")}>
+                    <header className="sw-thread-message-header">
+                      <span className={"sw-thread-avatar " + (isOutbound ? "is-outbound" : "")}>
+                        {isOutbound ? "S" : (message.fromName || contactName || message.fromEmail).slice(0, 1).toUpperCase()}
+                      </span>
+                      <div className="sw-thread-message-person">
+                        <strong>{isOutbound ? "Staark Inc." : message.fromName || contactName || message.fromEmail}</strong>
+                        <span>{message.fromEmail}</span>
                       </div>
-                    ))}
-                  </div>
-                )}
+                      <div className="sw-thread-message-metadata">
+                        <InfoChip tone={isOutbound ? "info" : "neutral"}>{isOutbound ? "Sent" : "Received"}</InfoChip>
+                        <time dateTime={activityAt.toISOString()}>{formatDate(activityAt)}</time>
+                      </div>
+                    </header>
+                    <div className="sw-thread-message-content">
+                      <ThreadMessageBody body={message.body}/>
+                    </div>
+                    {(attachmentsByMessage.get(message.id)?.length ?? 0) > 0 && (
+                      <div className="sw-thread-attachments">
+                        <div className="sw-thread-attachments-heading"><Paperclip size={15}/> Attachments</div>
+                        {attachmentsByMessage.get(message.id)!.map((attachment) => (
+                          <div key={attachment.partId} className="sw-thread-attachment">
+                            <a href={"/api/hub/messages/" + message.id + "/attachments/" + encodeURIComponent(attachment.partId)}>
+                              <Paperclip size={16}/><span>{attachment.filename}</span>
+                              <small>{Math.ceil(attachment.size / 1024)} KB</small><Download size={15}/>
+                            </a>
+                            {(attachment.mimeType === "application/pdf" || /^image\/(png|jpeg|webp|gif)$/.test(attachment.mimeType)) && (
+                              <a className="sw-thread-preview-file"
+                                href={"/api/hub/messages/" + message.id + "/attachments/" + encodeURIComponent(attachment.partId) + "?preview=1"}
+                                target="_blank" rel="noopener noreferrer">Preview</a>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {message.gmailMessageId && (
+                      <div className="sw-thread-gmail-attachments">
+                        <Suspense fallback={null}>
+                          <GmailAttachments messageId={message.id} gmailMessageId={message.gmailMessageId}/>
+                        </Suspense>
+                      </div>
+                    )}
+                  </article>
+                );
+              })}
+            </section>
+            <section id="reply" className="sw-thread-reply-section" aria-label="Reply to conversation">
+              {contactEmail ? (
+                <ReplyForm threadId={thread.id} to={contactEmail} subject={replySubject}/>
+              ) : (
+                <div className="sw-thread-no-reply">This conversation has no customer email address, so a reply cannot be sent.</div>
+              )}
+            </section>
+          </div>
 
-                {message.gmailMessageId && (
-                  <Suspense fallback={null}>
-                    <GmailAttachments
-                      messageId={message.id}
-                      gmailMessageId={message.gmailMessageId}
-                    />
-                  </Suspense>
-                )}
-              </article>
-            );
-          }
-        )}
-      </section>
-
-      {contactEmail ? (
-        <ReplyForm
-          threadId={thread.id}
-          to={contactEmail}
-          subject={replySubject}
-        />
-      ) : (
-        <section className="hub-detail-card">
-          <p className="hub-detail-empty">
-            This conversation has no customer email address, so a reply cannot be sent.
-          </p>
-        </section>
-      )}
-    </div>
+          <aside className="sw-thread-sidebar" aria-label="Conversation context">
+            <section className="sw-thread-context-card">
+              <div className="sw-thread-context-heading"><span className="sw-eyebrow">CUSTOMER CONTEXT</span><h2>Contact details</h2></div>
+              <div className="sw-thread-contact-identity">
+                <span className="sw-thread-contact-avatar"><UserRound size={21}/></span>
+                <div><strong>{contactName || "Unknown contact"}</strong><span>{contactEmail || "Email unavailable"}</span></div>
+              </div>
+              {thread.contact?.company && (
+                <div className="sw-thread-contact-line"><Building2 size={16}/><span>{thread.contact.company}</span></div>
+              )}
+              {thread.contact && (
+                <Link href={"/hub/contacts/" + thread.contact.id} className="sw-thread-contact-link">
+                  View CRM contact <ArrowRight size={15}/>
+                </Link>
+              )}
+            </section>
+            <section className="sw-thread-context-card sw-thread-activity-card">
+              <div className="sw-thread-context-heading"><span className="sw-eyebrow">OVERVIEW</span><h2>Thread activity</h2></div>
+              <div className="sw-thread-activity-line"><MessageSquare size={16}/><span>Messages</span><strong>{thread.messages.length}</strong></div>
+              {thread.messages.length > 0 && (
+                <div className="sw-thread-activity-line">
+                  <Clock3 size={16}/><span>Latest activity</span>
+                  <strong>{formatDate(thread.messages[thread.messages.length - 1].sentAt ?? thread.messages[thread.messages.length - 1].createdAt)}</strong>
+                </div>
+              )}
+              <Link href={threadReturnTo} className="sw-thread-contact-link">Return to {fromSent ? "Sent" : "Inbox"} <ArrowRight size={15}/></Link>
+            </section>
+          </aside>
+        </div>
+      </div>
+    </WorkspacePage>
   );
 }
