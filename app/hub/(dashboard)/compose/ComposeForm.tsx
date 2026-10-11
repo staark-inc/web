@@ -602,6 +602,10 @@ export default function ComposeForm({
             <div className="hub-mail-side-heading">
               <span className="hub-mail-v2-kicker">PREVIEW</span>
               <strong>Outgoing email</strong>
+              <button type="button" className="sw-compose-back-to-write"
+                onClick={() => setComposeView("write")}>
+                <Pencil size={14}/> Back to editor
+              </button>
             </div>
 
             <div className="hub-mail-preview-envelope">
