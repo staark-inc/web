@@ -18,6 +18,7 @@ import {
 import { prisma } from "@/lib/prisma";
 import type { Prisma } from "@/generated/prisma/client";
 import ProspectImportButton from "./ProspectImportButton";
+import { PageHeader, Metrics, Metric, WorkspacePage, InfoChip } from "@/components/hub/workspace";
 import ProspectTop10 from "./ProspectTop10";
 import {
   ProspectFilterBar,
@@ -148,50 +149,34 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
   const pages = paginationItems(currentPage, totalPages);
 
   return (
-    <div className="hub-page hub-prospects-page">
-      <header className="hub-prospects-head">
-        <div>
-          <span className="hub-prospects-kicker">SALES / DISCOVERY</span>
-          <h1>Prospects</h1>
-          <p>
-            Local businesses discovered outside the CRM. Review the opportunity first,
-            then promote only the good ones into Leads.
-          </p>
+    <WorkspacePage>
+      <div className="sw-sales-page sw-prospects-page">
+        <PageHeader eyebrow="SALES / DISCOVERY" title="Prospects"
+          description="Discover local businesses, assess their digital presence and promote qualified prospects into Leads."
+          action={
+            <div className="sw-sales-page-actions">
+              <InfoChip tone="info"><Sparkles size={14}/>{totalCount} discovered</InfoChip>
+              <ProspectImportButton/>
+            </div>
+          }
+        />
+        <Metrics label="Prospect discovery overview">
+          <Metric label="No website" value={noWebsiteCount} description="Potential new websites" icon={<Globe2 size={18}/>} />
+          <Metric label="Weak / old" value={weakCount} description="Improvement opportunities" icon={<Target size={18}/>} />
+          <Metric label="Contactable" value={contactableCount} description="Contact information available" icon={<Mail size={18}/>} />
+          <Metric label="Added to Leads" value={importedCount} description="Moved into your pipeline" icon={<CheckCircle2 size={18}/>} />
+        </Metrics>
+        <div className="sw-sales-guide" role="note">
+          <span className="sw-eyebrow">HOW TO WORK</span>
+          <strong>Discover <span>→</span> Evaluate <span>→</span> Add to Leads</strong>
+          <p>Expand a prospect to review website health, contact options and scanner findings before taking action.</p>
         </div>
-
-        <div className="hub-prospects-head-actions">
-          <div className="hub-prospects-head-badge">
-            <Sparkles size={16} />
-            <span>{totalCount} discovered</span>
-          </div>
-          <ProspectImportButton />
-        </div>
-      </header>
-
-      <section className="hub-prospects-stats" aria-label="Prospect overview">
-        <div className="hub-prospects-stat">
-          <Globe2 size={17} />
-          <div><small>No website</small><strong>{noWebsiteCount}</strong></div>
-        </div>
-        <div className="hub-prospects-stat">
-          <Target size={17} />
-          <div><small>Weak / old</small><strong>{weakCount}</strong></div>
-        </div>
-        <div className="hub-prospects-stat">
-          <Mail size={17} />
-          <div><small>Contactable</small><strong>{contactableCount}</strong></div>
-        </div>
-        <div className="hub-prospects-stat">
-          <CheckCircle2 size={17} />
-          <div><small>Added to Leads</small><strong>{importedCount}</strong></div>
-        </div>
-      </section>
 
       <ProspectTop10 />
 
       <ProspectFilterBar filters={filters} cities={cities} categories={categories} />
 
-      <div className="hub-prospects-result-bar">
+      <div className="hub-prospects-result-bar sw-sales-results">
         <span>
           {filteredCount === 0
             ? "0 prospects"
@@ -207,16 +192,7 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
           <p>Try clearing a filter or import scanner results if this workspace is still empty.</p>
         </div>
       ) : (
-        <section className="hub-prospects-list" aria-label="Prospect list">
-          <div className="hub-prospects-table-head" aria-hidden="true">
-            <span>Company</span>
-            <span>Website</span>
-            <span>Contact</span>
-            <span>Opportunity</span>
-            <span>Location</span>
-            <span />
-          </div>
-
+        <section className="hub-prospects-list sw-prospect-cards" aria-label="Prospect list">
           {prospects.map((prospect) => {
             const contact = bestContact(prospect);
             const reasons = reasonList(prospect.reasons);
@@ -229,55 +205,32 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
             ].filter((channel): channel is { value: string; label: string } => Boolean(channel));
 
             return (
-              <details key={prospect.id} className="hub-prospect-row">
-                <summary>
-                  <div className="hub-prospect-company">
-                    <div className="hub-prospect-logo">
-                      {prospect.name.slice(0, 2).toUpperCase()}
-                    </div>
-                    <div>
+              <details key={prospect.id} className="hub-prospect-row sw-prospect-card">
+                <summary className="sw-prospect-summary">
+                  <div className="sw-prospect-main">
+                    <span className="sw-prospect-logo" aria-hidden="true">{prospect.name.slice(0, 2).toUpperCase()}</span>
+                    <div className="sw-prospect-identity">
                       <strong>{prospect.name}</strong>
-                      <span>{prospect.category || "Local business"}</span>
+                      <span>{prospect.category || "Local business"}{prospect.city ? " · " + prospect.city : ""}</span>
+                      <small>{contact.label}</small>
                     </div>
                   </div>
-
-                  <div className="hub-prospect-website">
+                  <div className="sw-prospect-condition">
                     {prospect.website ? (
-                      <a href={prospect.website} target="_blank" rel="noreferrer">
-                        {prospect.website.replace(/^https?:\/\//, "").replace(/\/$/, "")}
-                        <ArrowUpRight size={12} />
-                      </a>
+                      <span className="sw-prospect-website-present"><Globe2 size={14}/> Has website</span>
                     ) : (
-                      <span className="hub-prospect-no-website">No website</span>
+                      <span className="sw-prospect-website-missing"><Globe2 size={14}/> No website</span>
                     )}
-                    {prospect.websiteScore != null && (
-                      <small>Site score {prospect.websiteScore}/100</small>
-                    )}
+                    {prospect.websiteScore != null && <small>Website score {prospect.websiteScore}/100</small>}
                   </div>
-
-                  <div className="hub-prospect-contact">
-                    {contact.kind === "email" && <Mail size={14} />}
-                    {contact.kind === "phone" && <Phone size={14} />}
-                    {contact.kind === "form" && <Globe2 size={14} />}
-                    <span>{contact.label}</span>
-                  </div>
-
-                  <div className="hub-prospect-score-cell">
-                    <span className={`hub-prospect-status hub-prospect-status-${prospect.status.toLowerCase().replaceAll("_", "-")}`}>
+                  <div className="sw-prospect-priority">
+                    <span className="sw-prospect-score-number">{prospect.leadScore}<small>/100</small></span>
+                    <span className={"hub-prospect-status hub-prospect-status-" + prospect.status.toLowerCase().replaceAll("_", "-")}>
                       {PROSPECT_STATUS_LABELS[prospect.status]}
                     </span>
-                    <strong>{prospect.leadScore}</strong>
                   </div>
-
-                  <div className="hub-prospect-location">
-                    <MapPin size={13} />
-                    <span>{prospect.city || "—"}</span>
-                    {prospect.rating != null && <small>★ {prospect.rating.toFixed(1)} · {prospect.reviews || 0}</small>}
-                  </div>
-
-                  <span className="hub-prospect-open">Open</span>
+                  <span className="sw-prospect-expand">Details <ChevronRight size={16}/></span>
                 </summary>
-
                 <div className="hub-prospect-detail">
                   <div className="hub-prospect-detail-main">
                     <div className="hub-prospect-detail-block">
