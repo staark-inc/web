@@ -1,3 +1,4 @@
+import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
 import { Inbox, MailOpen, PenLine, RefreshCw, Bot, Mail } from "lucide-react";
 import InboxWorkspace, { type InboxConversation } from "./InboxWorkspace";
 import { WorkspacePage, PageHeader, Metrics, Metric } from "@/components/hub/workspace";
@@ -311,22 +312,14 @@ export default async function HubInboxPage({ searchParams }: PageProps) {
           <InboxSearch initialQuery={query} view={activeView}/>
           <span className="sw-inbox-count">{conversations.length} conversations</span>
         </div>
-        <nav className="sw-inbox-tabs" aria-label="Inbox views">
-          {([
-            ["inbox", "Inbox"],
-            ["needs-reply", "Needs reply"],
-            ["unread", "Unread"],
-            ["replied", "Replied"],
-            ["other", "Other"],
-            ["all", "All mail"],
-          ] as const).map(([key, label]) => (
-            <Link key={key} href={inboxHref(key, query)}
-              className={"sw-inbox-tab " + (activeView === key ? "is-active" : "")}
-              aria-current={activeView === key ? "page" : undefined}>
-              {label}<span>{counts[key]}</span>
-            </Link>
-          ))}
-        </nav>
+        <WorkspaceTabs label="Inbox views" activeKey={activeView}
+          tabs={([
+            ["inbox", "Inbox"], ["needs-reply", "Needs reply"], ["unread", "Unread"],
+            ["replied", "Replied"], ["other", "Other"], ["all", "All mail"],
+          ] as const).map(([key, label]) => ({
+            key, label, href: inboxHref(key, query), count: counts[key],
+          }))}/>
+
         <InboxWorkspace conversations={conversations} selectedView={activeView} key={activeView + ":" + query}/>
       </div>
     </WorkspacePage>

@@ -789,3 +789,46 @@
   }
   .sw-projects-board-page .sw-project-tabs a {flex:0 0 auto;scroll-snap-align:start}
 }
+
+/* Shared Hub status tabs — one component and one visual pattern across modules. */
+.hub-dashboard .sw-filter-tabs {
+  display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap;
+  flex:0 1 auto;gap:6px;width:fit-content;max-width:100%;min-width:0;
+  margin:0 0 14px;padding:0;border:0;border-radius:0;
+  background:transparent;box-shadow:none;overflow:visible;
+}
+.hub-dashboard .sw-filter-tabs>a {
+  display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;gap:7px;
+  min-height:34px;padding:0 12px;border:1px solid var(--sw-line);
+  border-radius:9px;background:#fff;color:var(--sw-muted);
+  font-size:12px;font-weight:650;text-decoration:none;white-space:nowrap;
+  box-shadow:none;transition:color .12s ease,border-color .12s ease,background-color .12s ease;
+}
+.hub-dashboard .sw-filter-tabs>a:hover {color:var(--sw-accent);background:#f7faff;border-color:#afc2e7}
+.hub-dashboard .sw-filter-tabs>a.is-active,
+.hub-dashboard .sw-filter-tabs>a[aria-current="page"] {
+  color:#244bd1;background:#eaf0ff;border-color:#b8c9ff;box-shadow:none;
+}
+.hub-dashboard .sw-filter-tabs>a strong {
+  display:inline-grid;place-items:center;min-width:19px;height:19px;padding:0 5px;
+  border-radius:6px;background:#eef1f6;color:#73819a;font-size:10px;font-weight:750;
+}
+.hub-dashboard .sw-filter-tabs>a.is-active strong {background:#315cf5;color:#fff}
+.hub-dashboard .sw-filter-tabs>a.sw-filter-clear {background:transparent;color:var(--sw-muted);border-color:transparent}
+.hub-dashboard .sw-filter-tabs>a.sw-filter-clear:hover {color:var(--sw-accent)}
+.hub-dashboard .sw-filter-tabs>a:focus-visible {outline:2px solid var(--sw-accent);outline-offset:2px}
+.sw-leads-toolbar .sw-filter-tabs {margin-bottom:0}
+.sw-inbox-page .sw-filter-tabs {margin-bottom:12px}
+.sw-projects-board-page .sw-filter-tabs {margin:0 0 12px}
+.sw-contacts-page .hub-contacts-v2-tools {display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin:0 0 16px}
+.sw-contacts-page .hub-contacts-v2-tools .sw-filter-tabs {margin:0}
+.sw-contacts-page .hub-contacts-v2-search {flex:1 1 310px;min-width:0}
+@media(max-width:760px) {
+  .hub-dashboard .sw-filter-tabs {
+    flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;
+    width:100%;max-width:100%;padding:0 0 7px;scroll-snap-type:x proximity;
+  }
+  .hub-dashboard .sw-filter-tabs>a {scroll-snap-align:start}
+  .sw-contacts-page .hub-contacts-v2-tools .sw-filter-tabs {flex:1 1 100%}
+  .sw-leads-toolbar .sw-filter-tabs {margin:0 0 5px}
+}

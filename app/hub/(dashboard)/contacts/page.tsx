@@ -1,3 +1,4 @@
+import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -119,12 +120,15 @@ export default async function ContactsPage({ searchParams }: PageProps) {
           />
         </form>
 
-        <nav className="hub-contacts-v2-filters" aria-label="Contact status">
-          <Link href={getFilterHref("all", q)} className={filter === "all" ? "hub-contacts-v2-filter-active" : undefined}>All<strong>{contacts.length}</strong></Link>
-          <Link href={getFilterHref("leads", q)} className={filter === "leads" ? "hub-contacts-v2-filter-active" : undefined}>Leads<strong>{contactsWithLeads}</strong></Link>
-          <Link href={getFilterHref("clients", q)} className={filter === "clients" ? "hub-contacts-v2-filter-active" : undefined}>Clients<strong>{contactsWithClients}</strong></Link>
-          <Link href={getFilterHref("unlinked", q)} className={filter === "unlinked" ? "hub-contacts-v2-filter-active" : undefined}>Unlinked</Link>
-        </nav>
+        <WorkspaceTabs label="Contact status" activeKey={filter}
+          tabs={[
+            { key: "all", label: "All", href: getFilterHref("all", q), count: contacts.length },
+            { key: "leads", label: "Leads", href: getFilterHref("leads", q), count: contactsWithLeads },
+            { key: "clients", label: "Clients", href: getFilterHref("clients", q), count: contactsWithClients },
+            { key: "unlinked", label: "Unlinked", href: getFilterHref("unlinked", q),
+              count: contacts.filter((item) => item._count.leads === 0 && item._count.clients === 0).length },
+          ]}/>
+
       </section>
 
       {filteredContacts.length === 0 ? (

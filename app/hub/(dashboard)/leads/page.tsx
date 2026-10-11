@@ -1,3 +1,4 @@
+import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
 import Link from "next/link";
 import { CircleDollarSign, Target, Trophy, UserRoundSearch, MessageCircle, Mail, ArrowRight, ChevronRight, CalendarDays } from "lucide-react";
 import { WorkspacePage, PageHeader, Metrics, Metric, InfoChip, EmptyState, SectionHeader } from "@/components/hub/workspace";
@@ -130,17 +131,14 @@ export default async function LeadsPage({ searchParams }: PageProps) {
         <section className="sw-leads-listing" aria-label="Leads workspace">
           <div className="sw-leads-toolbar">
             <SectionHeader title="Pipeline" description={`${counts[activeStatus]} lead${counts[activeStatus] === 1 ? "" : "s"} in this view`} />
-            <nav className="sw-leads-filters" aria-label="Filter leads by status">
-              {filters.map((filter) => {
-                const active = activeStatus === filter.value;
-                const href = filter.value === "ALL" ? "/hub/leads" : `/hub/leads?status=${filter.value}`;
-                return <Link key={filter.value} href={href}
-                  aria-current={active ? "page" : undefined}
-                  className={`sw-leads-filter ${active ? "is-active" : ""}`}>
-                  <span>{filter.label}</span><strong>{counts[filter.value]}</strong>
-                </Link>;
-              })}
-            </nav>
+            <WorkspaceTabs label="Filter leads by status" activeKey={activeStatus}
+              tabs={filters.map((filter) => ({
+                key: filter.value,
+                label: filter.label,
+                href: filter.value === "ALL" ? "/hub/leads" : `/hub/leads?status=${filter.value}`,
+                count: counts[filter.value],
+              }))}/>
+
           </div>
 
           {leads.length === 0 ? (
