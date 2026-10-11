@@ -79,7 +79,7 @@ export default async function SaaSOverviewPage() {
   ];
 
   return (
-    <div className="hub-page hub-saas-workspace-page hub-saas-overview-page">
+    <div className="hub-page hub-saas-workspace-page hub-saas-overview-page sw-saas-overview">
       <header className="hub-workspace-head">
         <div>
           <span className="hub-workspace-kicker">SAAS / CONTROL PLANE</span>
@@ -133,26 +133,24 @@ export default async function SaaSOverviewPage() {
         </div>
       </section>
 
-      <section className="hub-billing-v2-list" aria-label="SaaS workspaces">
+      <div className="sw-saas-directory-heading"><span>MANAGE YOUR PLATFORM</span><strong>Workspaces</strong></div>
+      <section className="sw-saas-workspace-grid" aria-label="SaaS workspaces">
         {workspaces.map((workspace) => {
           const Icon = workspace.icon;
           return (
-            <article key={workspace.href} className="hub-billing-v2-row">
-              <div className="hub-billing-v2-main">
-                <span className="hub-billing-v2-icon"><Icon size={16} /></span>
-                <div>
-                  <Link href={workspace.href}>{workspace.title}</Link>
-                  <span>{workspace.description}</span>
-                </div>
+            <article key={workspace.href} className="sw-saas-workspace-card">
+              <div className="sw-saas-card-top">
+                <span className="sw-saas-card-icon"><Icon size={20}/></span>
+                <span className="sw-saas-card-value">{workspace.value}</span>
               </div>
-              <div className="hub-billing-v2-terms">
-                <small>Status</small>
-                <strong>{workspace.value}</strong>
+              <div className="sw-saas-card-main">
+                <h2><Link href={workspace.href}>{workspace.title}</Link></h2>
+                <p>{workspace.description}</p>
+              </div>
+              <footer className="sw-saas-card-footer">
                 <span>{workspace.meta}</span>
-              </div>
-              <div className="hub-billing-v2-tail">
-                <Link href={workspace.href}>Open <ArrowRight size={13} /></Link>
-              </div>
+                <Link href={workspace.href} aria-label={`Open ${workspace.title}`}>Open <ArrowRight size={15}/></Link>
+              </footer>
             </article>
           );
         })}

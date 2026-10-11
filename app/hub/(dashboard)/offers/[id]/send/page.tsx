@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, FileText, Mail, ShieldCheck } from "lucide-react";
 
 import ComposeForm from "../../../compose/ComposeForm";
 import {
@@ -100,7 +100,7 @@ export default async function SendOfferPage({ params }: { params: Promise<{ id: 
     : "";
 
   return (
-    <div className="hub-page hub-compose-page">
+    <div className="hub-page hub-compose-page sw-offer-send-page">
       <header className="hub-page-header">
         <div>
           <Link className="hub-back" href={backToOffer}><ArrowLeft size={16} />Offer</Link>
@@ -108,23 +108,46 @@ export default async function SendOfferPage({ params }: { params: Promise<{ id: 
           <p>Review the price, terms and recipient before sending to {offer.client.name}.</p>
         </div>
       </header>
-      {offer.status !== "DRAFT" ? (
-        <div className="hub-client-panel">This offer is {offer.status.toLowerCase()}. Revise it as a draft before sending again.</div>
-      ) : !ready ? (
-        <div className="hub-client-panel">Add the scope and at least one price to the draft before sending it.</div>
-      ) : (
-        <>
-          {!recipient && <p className="hub-offer-send-note">Enter an email address you control for this demo. Sample example.com addresses cannot receive the offer.</p>}
-          <ComposeForm
-            initialTo={recipient}
-            initialSubject={subject}
-            initialMessage={body}
-            returnTo={backToOffer}
-            confirmRecipient
-            offerId={offer.id}
-          />
-        </>
-      )}
+      <div className="sw-offer-send-grid">
+        <section className="sw-offer-send-compose" aria-label="Offer email composer">
+          <div className="sw-offer-send-section-head">
+            <span><Mail size={18}/></span>
+            <div><strong>Client message</strong><small>Check the recipient, message and client link before sending.</small></div>
+          </div>
+          {offer.status !== "DRAFT" ? (
+            <div className="sw-offer-send-not-ready">This offer is {offer.status.toLowerCase()}. Revise it as a draft before sending again.</div>
+          ) : !ready ? (
+            <div className="sw-offer-send-not-ready">Add the scope and at least one price to the draft before sending it.</div>
+          ) : (
+            <>
+              {!recipient && <p className="hub-offer-send-note">Enter a valid client email address before sending. Sample example.com addresses cannot receive this offer.</p>}
+              <ComposeForm
+                initialTo={recipient}
+                initialSubject={subject}
+                initialMessage={body}
+                returnTo={backToOffer}
+                confirmRecipient
+                offerId={offer.id}
+              />
+            </>
+          )}
+        </section>
+        <aside className="sw-offer-send-sidebar" aria-label="Offer review">
+          <div className="sw-offer-send-review">
+            <span className="sw-offer-send-eyebrow">PROPOSAL REVIEW</span>
+            <h2>{offer.title}</h2>
+            <div className="sw-offer-send-field"><span>Client</span><strong>{offer.client.name}</strong></div>
+            <div className="sw-offer-send-field"><span>One-time value</span><strong>{offer.oneTimePriceOre === null ? "Not specified" : formatOfferAmount(offer.oneTimePriceOre)}</strong></div>
+            <div className="sw-offer-send-field"><span>Monthly value</span><strong>{offer.monthlyPriceOre === null ? "Not specified" : `${formatOfferAmount(offer.monthlyPriceOre)}/mo`}</strong></div>
+            <div className="sw-offer-send-field"><span>Included support</span><strong>{offer.includedMonths} months</strong></div>
+            <a href={publicOfferUrl} target="_blank" rel="noopener noreferrer" className="sw-offer-send-preview"><FileText size={15}/> Preview client offer</a>
+          </div>
+          <div className="sw-offer-send-note">
+            <span><ShieldCheck size={18}/></span>
+            <div><strong>Review before sending</strong><p>The email uses the selected offer template. Confirm recipient, pricing and terms. Sending is separate from saving a draft.</p></div>
+          </div>
+        </aside>
+      </div>
     </div>
   );
 }
