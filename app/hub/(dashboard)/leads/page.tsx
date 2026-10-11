@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CircleDollarSign, Target, Trophy, UserRoundSearch, MessageCircle, Mail, Globe2, ArrowRight, ChevronRight, CalendarDays } from "lucide-react";
+import { CircleDollarSign, Target, Trophy, UserRoundSearch, MessageCircle, Mail, ArrowRight, ChevronRight, CalendarDays } from "lucide-react";
 import { WorkspacePage, PageHeader, Metrics, Metric, InfoChip, EmptyState, SectionHeader } from "@/components/hub/workspace";
 
 import { prisma } from "@/lib/prisma";
