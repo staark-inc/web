@@ -1060,3 +1060,27 @@
 .sw-offer-admin-preview-paper section p{white-space:pre-wrap;font-size:13px;line-height:1.7;color:var(--sw-ink);margin:0;overflow-wrap:anywhere}
 .sw-offer-admin-preview-footer{font-size:11px;color:var(--sw-muted);border-top:1px solid var(--sw-line);margin:0;padding-top:18px}
 @media(max-width:700px){.sw-offer-admin-preview-head{align-items:flex-start;flex-wrap:wrap}.sw-offer-admin-preview-prices{grid-template-columns:minmax(0,1fr)}}
+
+
+/* SaaS subpages — consistent 2/1 card grid instead of wide billing rows */
+.sw-saas-detail-page{width:100%;max-width:none;min-width:0}
+.sw-saas-detail-page .hub-workspace-head{margin-bottom:14px}
+.sw-saas-detail-page .hub-workspace-stats{margin-bottom:14px;gap:10px}
+.sw-saas-detail-page .sw-filter-tabs{margin:0 0 12px}
+.sw-saas-detail-page .sw-saas-detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;gap:12px;min-width:0}
+.sw-saas-detail-page .sw-saas-data-card{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-content:start;gap:0;min-width:0;overflow:hidden;background:#fff;border:1px solid var(--sw-line);border-radius:14px;box-shadow:none}
+.sw-saas-detail-page .sw-saas-data-card>:is(.hub-billing-v2-main,.hub-saas-subscription-main){grid-column:1/-1;display:flex;align-items:flex-start;min-width:0;padding:16px;border:0;border-bottom:1px solid #edf1f7}
+.sw-saas-detail-page .sw-saas-data-card>:is(.hub-billing-v2-terms,.hub-billing-v2-project,.hub-saas-subscription-plan,.hub-saas-subscription-state,.hub-saas-subscription-lifecycle){grid-column:auto;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:6px;padding:14px 16px;border:0;border-bottom:1px solid #edf1f7}
+.sw-saas-detail-page .sw-saas-data-card>:is(.hub-billing-v2-tail,.hub-saas-subscription-tail){grid-column:1/-1;display:flex;align-items:center;justify-content:flex-end;gap:12px;min-width:0;padding:12px 16px;border:0}
+.sw-saas-detail-page .sw-saas-data-card :is(.hub-billing-v2-main,.hub-saas-subscription-main) a{color:var(--sw-ink);font-size:14px;font-weight:750;overflow-wrap:anywhere}
+.sw-saas-detail-page .sw-saas-data-card :is(.hub-billing-v2-main,.hub-saas-subscription-main) span,.sw-saas-detail-page .sw-saas-data-card small{overflow-wrap:anywhere}
+.sw-saas-detail-page .sw-saas-data-card :is(.hub-billing-v2-terms,.hub-billing-v2-project,.hub-saas-subscription-plan,.hub-saas-subscription-lifecycle)>strong{font-size:13px;color:var(--sw-ink);overflow-wrap:anywhere}
+.sw-saas-detail-page .sw-saas-data-card :is(.hub-billing-v2-tail,.hub-saas-subscription-tail) a{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-size:11px;font-weight:700;white-space:nowrap}
+.sw-saas-detail-page .sw-saas-subscriptions-grid .sw-saas-data-card{grid-template-columns:repeat(2,minmax(0,1fr))}
+.sw-saas-detail-page .sw-saas-subscriptions-grid .hub-saas-subscription-state{display:flex;flex-direction:column;align-items:flex-start;gap:7px}
+.sw-saas-detail-page .sw-saas-subscriptions-grid .hub-saas-subscription-tail{justify-content:space-between}
+.sw-saas-detail-page .sw-saas-plans-grid .sw-saas-data-card{grid-template-columns:repeat(2,minmax(0,1fr))}
+.sw-saas-detail-page .sw-saas-plans-grid .hub-billing-v2-tail{justify-content:flex-start}
+.sw-saas-detail-page .sw-saas-data-card:focus-within{border-color:#b8c9ff}
+@media(max-width:1160px){.sw-saas-detail-page .sw-saas-detail-grid{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:720px){.sw-saas-detail-page .sw-saas-detail-grid{gap:10px}.sw-saas-detail-page .sw-saas-data-card>:is(.hub-billing-v2-main,.hub-saas-subscription-main){padding:14px}.sw-saas-detail-page .sw-saas-data-card>:is(.hub-billing-v2-terms,.hub-billing-v2-project,.hub-saas-subscription-plan,.hub-saas-subscription-state,.hub-saas-subscription-lifecycle){padding:12px 14px}.sw-saas-detail-page .sw-saas-data-card>:is(.hub-billing-v2-tail,.hub-saas-subscription-tail){padding:12px 14px}}
