@@ -27,7 +27,7 @@ export default async function SaaSSitesPage() {
   });
 
   return (
-    <div className="hub-page hub-saas-workspace-page hub-saas-sites-page">
+    <div className="hub-page hub-saas-workspace-page hub-saas-sites-page sw-saas-detail-page">
       <header className="hub-workspace-head">
         <div>
           <span className="hub-workspace-kicker">SAAS / SITES</span>
@@ -44,9 +44,9 @@ export default async function SaaSSitesPage() {
           <p>Sites appear here after SaaS provisioning creates a runtime tenant.</p>
         </div>
       ) : (
-        <section className="hub-billing-v2-list" aria-label="SaaS sites">
+        <section className="sw-saas-detail-grid sw-saas-sites-grid" aria-label="SaaS sites">
           {sites.map((site) => (
-            <article key={site.id} className="hub-billing-v2-row">
+            <article key={site.id} className="hub-billing-v2-row sw-saas-data-card">
               <div className="hub-billing-v2-main">
                 <span className="hub-billing-v2-icon"><Globe2 size={16} /></span>
                 <div>
