@@ -2,11 +2,8 @@ import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
-  AlertTriangle,
   ArrowLeft,
   Building2,
-  CalendarDays,
-  CheckCircle2,
   Clock3,
   ExternalLink,
   Gauge,
@@ -14,7 +11,6 @@ import {
   LifeBuoy,
   Package,
   Rocket,
-  Wallet,
 } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
