@@ -28,19 +28,37 @@ export default async function OfferDetailPage({ params }: { params: Promise<{ id
   if (!offer) notFound();
 
   return (
-    <div className="hub-page">
+    <div className="hub-page sw-offer-detail-page">
       <div className="hub-detail-back"><Link href="/hub/offers"><ArrowLeft size={16} />Offers</Link></div>
-      <div className="hub-page-header"><div><span className="hub-eyebrow">CLIENT OFFER</span><h1>{offer.title}</h1><p>Created {formatDate(offer.createdAt)}</p></div><span className={`hub-offer-status hub-offer-status-${offer.status.toLowerCase()}`}>{offerStatusLabels[offer.status]}</span></div>
+      <div className="hub-page-header sw-offer-detail-header"><div><span className="hub-eyebrow">CLIENT OFFER</span><h1>{offer.title}</h1><p>Created {formatDate(offer.createdAt)}</p></div><span className={`hub-offer-status hub-offer-status-${offer.status.toLowerCase()}`}>{offerStatusLabels[offer.status]}</span></div>
 
-      <section className="hub-client-stats">
-        <div className="hub-client-stat"><span className="hub-client-stat-label">Website build</span><strong className="hub-offer-amount">{formatOfferAmount(offer.oneTimePriceOre)}</strong><small>One-time, excl. VAT</small></div>
-        <div className="hub-client-stat"><span className="hub-client-stat-label">Hosting + support</span><strong className="hub-offer-amount">{formatOfferAmount(offer.monthlyPriceOre)}</strong><small>Monthly after agreed start, excl. VAT</small></div>
-        <div className="hub-client-stat"><span className="hub-client-stat-label"><CalendarDays size={16} />Included support</span><strong>{offer.includedMonths}</strong><small>Months included in proposal</small></div>
+      <section className="sw-offer-detail-summary" aria-label="Offer summary">
+        <div className="sw-offer-detail-pricing">
+          <span className="sw-offer-detail-kicker">PROPOSAL VALUE</span>
+          <strong>{formatOfferAmount(offer.oneTimePriceOre)}</strong>
+          <span>One-time project fee · excluding VAT</span>
+          <div className="sw-offer-detail-pricing-foot">
+            <div><small>Recurring</small><b>{offer.monthlyPriceOre === null ? "Not specified" : `${formatOfferAmount(offer.monthlyPriceOre)}/mo`}</b></div>
+            <div><small>Included support</small><b>{offer.includedMonths} months</b></div>
+          </div>
+        </div>
+        <div className="sw-offer-detail-history">
+          <div className="sw-offer-detail-history-head">
+            <span className="sw-offer-detail-kicker">CLIENT JOURNEY</span>
+            <span className={`hub-offer-status hub-offer-status-${offer.status.toLowerCase()}`}>{offerStatusLabels[offer.status]}</span>
+          </div>
+          <ol>
+            <li className="is-complete"><span>Created</span><strong>{formatDate(offer.createdAt)}</strong></li>
+            <li className={offer.sharedAt ? "is-complete" : ""}><span>Shared</span><strong>{offer.sharedAt ? formatDate(offer.sharedAt) : "Not yet shared"}</strong></li>
+            <li className={offer.viewedAt ? "is-complete" : ""}><span>Viewed</span><strong>{offer.viewedAt ? formatDate(offer.viewedAt) : "Awaiting client view"}</strong></li>
+            <li className={offer.decidedAt ? "is-complete" : ""}><span>Decision</span><strong>{offer.decidedAt ? formatDate(offer.decidedAt) : "Pending"}</strong></li>
+          </ol>
+        </div>
       </section>
 
-      <div className="hub-offer-detail-grid">
-        <div className="hub-client-panel">
-          <h2>{offer.status === "DRAFT" ? "Edit draft" : "Offer terms"}</h2>
+      <div className="hub-offer-detail-grid sw-offer-detail-content">
+        <div className="hub-client-panel sw-offer-editor-panel">
+          <div className="sw-offer-section-heading"><div><span className="sw-offer-detail-kicker">PROPOSAL CONTENT</span><h2>{offer.status === "DRAFT" ? "Edit draft" : "Offer terms"}</h2></div><span>{offer.status === "DRAFT" ? "Draft — editable" : "Read only after sending"}</span></div>
           {offer.status === "DRAFT" ? <OfferForm offer={offer} clients={[offer.client]} /> : (
             <div className="hub-offer-terms">
               <h3>Scope and deliverables</h3><p>{offer.scope || "No scope provided."}</p>
@@ -48,8 +66,8 @@ export default async function OfferDetailPage({ params }: { params: Promise<{ id
             </div>
           )}
         </div>
-        <div className="hub-client-side">
-          <div className="hub-client-panel">
+        <div className="hub-client-side sw-offer-detail-sidebar">
+          <div className="hub-client-panel sw-offer-detail-client">
             <h2>Client</h2>
             <Link className="hub-offer-client-link" href={`/hub/clients/${offer.clientId}`}><Building2 size={16} />{offer.client.name}</Link>
             {offer.lead && (
@@ -59,7 +77,7 @@ export default async function OfferDetailPage({ params }: { params: Promise<{ id
               </Link>
             )}
           </div>
-          <div className="hub-client-panel"><h2>Decision</h2>
+          <div className="hub-client-panel sw-offer-detail-actions-panel"><h2>Actions &amp; decision</h2>
             <p className="hub-client-empty">The client can accept or decline from the secure offer link. Linked leads become won automatically when the offer is accepted.</p>
             {offer.sharedAt && <p className="hub-offer-timestamp hub-offer-timestamp-shared">Shared {formatDate(offer.sharedAt)}</p>}
             {offer.viewedAt && <p className="hub-offer-timestamp hub-offer-timestamp-viewed">Viewed {formatDate(offer.viewedAt)}</p>}
