@@ -172,13 +172,11 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
           <Metric label="Due soon" value={dueSoonCount} description="Within the next 7 days" icon={<CheckCircle2 size={18}/>}/>
           <Metric label="Overdue" value={overdueCount} description={overdueCount ? "Needs attention" : "All clear"} icon={<AlertTriangle size={18}/>}/>
         </Metrics>
-        <div className="sw-projects-workflow">
-          <div><span className="sw-eyebrow">DELIVERY COMMAND CENTER</span>
-          <strong>Plan <span>→</span> Build <span>→</span> Review <span>→</span> Launch</strong></div>
-          <p>Expand a project to see next tasks, deadlines, required materials, support, and deployment.</p>
+        <div className="sw-projects-section-heading">
+          <div><span className="sw-eyebrow">DELIVERY</span><h2>Project portfolio</h2></div>
+          <span>{projects.length} shown</span>
         </div>
-        <div className="sw-projects-section-heading"><div><span className="sw-eyebrow">PROJECT PORTFOLIO</span><h2>Delivery pipeline</h2></div><span>{projects.length} shown</span></div>
-      <nav className="hub-projects-v2-filters" aria-label="Project filters">
+      <nav className="hub-projects-v2-filters sw-project-filter-strip" aria-label="Project filters">
         {filters.map((filter) => {
           const active = activeStatus === filter.value;
 
@@ -269,12 +267,17 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
                     <small><Building2 size={13}/>{project.client.name}</small>
                   </span>
                   <span className="sw-project-progress">
-                    <span className="sw-project-progress-line"><strong>{progress}%</strong><small>{done}/{totalTasks} tasks</small></span>
+                    <span className="sw-project-progress-line"><strong>{totalTasks ? progress + "%" : "No tasks"}</strong><small>{done}/{totalTasks} tasks</small></span>
                     <progress max={100} value={progress} aria-label={project.name + " task progress"}/>
+                    {nextTask && <small className="sw-project-next-inline">Next: {nextTask.title}</small>}
                   </span>
                   <span className="sw-project-state">
                     <InfoChip tone={project.status === "COMPLETED" ? "success" : project.status === "WAITING_CLIENT" ? "warning" : project.status === "IN_PROGRESS" ? "info" : "neutral"}>{statusLabels[project.status]}</InfoChip>
                     {overdue && <span className="sw-project-urgent">Overdue</span>}
+                  </span>
+                  <span className="sw-project-at-glance">
+                    <span><Clock3 size={13}/>{deadlineLabel}</span>
+                    <span><Rocket size={13}/>{deploymentLabel}</span>
                   </span>
                   <span className="sw-project-review">Review <ArrowRight size={16}/></span>
                 </summary>
