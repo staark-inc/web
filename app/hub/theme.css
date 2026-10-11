@@ -686,7 +686,7 @@
 .sw-projects-page .sw-projects-section-heading {margin:2px 0 11px}
 .sw-projects-page .sw-project-filter-strip {padding:5px;gap:3px;min-height:0;margin:0 0 12px;overflow-x:auto;scrollbar-width:thin}
 .sw-projects-page .sw-project-filter-strip a {flex-shrink:0}
-.sw-projects-page .sw-projects-v2-list {gap:8px}
+.sw-projects-page .hub-projects-v2-list {gap:8px}
 .sw-projects-page .sw-project-summary {grid-template-columns:40px minmax(170px,1.45fr) minmax(150px,1fr) minmax(110px,.55fr) minmax(140px,.7fr) 72px;gap:13px;padding:14px 16px}
 .sw-projects-page .sw-project-icon {height:40px;width:40px}
 .sw-project-at-glance {display:grid;gap:6px;min-width:0}
