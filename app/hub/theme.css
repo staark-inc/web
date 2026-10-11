@@ -314,3 +314,15 @@
   .sw-mail-message-preview { padding: 16px; }
   .sw-mail-preview-footer { padding: 14px 18px; }
 }
+
+/* Sent uses the same conversation workspace as Inbox. */
+.sw-sent-search { display: flex; align-items: center; gap: 10px; flex: 1 1 340px; max-width: 620px; min-width: 0; padding: 5px 6px 5px 13px; min-height: 44px; background: var(--sw-surface); border: 1px solid var(--sw-line); border-radius: 10px; }
+.sw-sent-search svg { flex: 0 0 auto; color: var(--sw-muted); }
+.sw-sent-search input { border: 0; outline: none; background: transparent; flex: 1; min-width: 0; color: var(--sw-ink); font-size: 13px; }
+.sw-sent-search button { min-height: 32px; border: 0; background: var(--sw-accent); border-radius: 7px; color: #fff; font-weight: 700; font-size: 12px; padding: 0 12px; cursor: pointer; }
+.sw-sent-search:focus-within { border-color: var(--sw-accent); box-shadow: 0 0 0 3px #315cf51c; }
+.sw-sent-page .sw-metrics { grid-template-columns: repeat(3,minmax(0,1fr)); }
+@media (max-width: 760px) {
+  .sw-sent-page .sw-metrics { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .sw-sent-search { flex-basis: 100%; max-width: none; }
+}

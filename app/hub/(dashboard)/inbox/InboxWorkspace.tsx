@@ -21,10 +21,11 @@ export type InboxConversation = {
 };
 
 export default function InboxWorkspace({
-  conversations, selectedView,
+  conversations, selectedView, mode = "inbox",
 }: {
   conversations: InboxConversation[];
   selectedView: string;
+  mode?: "inbox" | "sent";
 }) {
   const [selectedId, setSelectedId] = useState<string | null>(conversations[0]?.id ?? null);
   const [showPreviewOnMobile, setShowPreviewOnMobile] = useState(false);
@@ -39,7 +40,7 @@ export default function InboxWorkspace({
     <section className={`sw-mail-workspace ${showPreviewOnMobile ? "is-preview-open" : ""}`} aria-label="Mail workspace">
       <div className="sw-mail-list-panel">
         <div className="sw-mail-panel-heading">
-          <div><span className="sw-eyebrow">CONVERSATIONS</span><h2>{selectedView === "inbox" ? "Your inbox" : selectedView.replaceAll("-", " ")}</h2></div>
+          <div><span className="sw-eyebrow">CONVERSATIONS</span><h2>{mode === "sent" ? "Sent conversations" : selectedView === "inbox" ? "Your inbox" : selectedView.replaceAll("-", " ")}</h2></div>
           <span className="sw-mail-counter">{conversations.length}</span>
         </div>
         {conversations.length === 0 ? (
@@ -61,7 +62,7 @@ export default function InboxWorkspace({
                     <span className="sw-mail-conversation-bottom">
                       {thread.unread > 0 ? <span className="sw-mail-tag sw-mail-tag-unread">{thread.unread} unread</span>
                         : thread.isOther ? <span className="sw-mail-tag">Other</span>
-                          : thread.needsReply ? <span className="sw-mail-tag sw-mail-tag-reply">Needs reply</span>
+                          : thread.needsReply ? <span className="sw-mail-tag sw-mail-tag-reply">{mode === "sent" ? "Awaiting reply" : "Needs reply"}</span>
                             : <span className="sw-mail-tag sw-mail-tag-done">Replied</span>}
                       <span>{thread.messageCount} {thread.messageCount === 1 ? "message" : "messages"}</span>
                     </span>
@@ -78,12 +79,12 @@ export default function InboxWorkspace({
           <>
             <header className="sw-mail-preview-header">
               <button type="button" className="sw-mail-mobile-back" onClick={() => setShowPreviewOnMobile(false)}>
-                <ArrowLeft size={16}/> Inbox
+                <ArrowLeft size={16}/> {mode === "sent" ? "Sent" : "Inbox"}
               </button>
               <div className="sw-mail-preview-heading">
                 <span className="sw-eyebrow">MESSAGE PREVIEW</span>
                 <h2>{selected.subject}</h2>
-                <p>Read the latest message, then open the conversation to reply.</p>
+                <p>{mode === "sent" ? "Review the latest activity and open the complete thread." : "Read the latest message, then open the conversation to reply."}</p>
               </div>
               <Link className="sw-mail-open-link" href={selected.href}>Open conversation <ArrowRight size={16}/></Link>
             </header>
@@ -101,7 +102,7 @@ export default function InboxWorkspace({
             </div>
             <footer className="sw-mail-preview-footer">
               <span><MessageSquareText size={16}/>{selected.messageCount} messages in conversation</span>
-              <Link href={selected.href}><PenLine size={16}/> View thread &amp; reply <ArrowRight size={16}/></Link>
+              <Link href={selected.href}><PenLine size={16}/> {mode === "sent" ? "View conversation" : "View thread & reply"} <ArrowRight size={16}/></Link>
             </footer>
           </>
         ) : (

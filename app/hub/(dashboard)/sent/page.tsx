@@ -1,12 +1,7 @@
 import Link from "next/link";
-import {
-  ArrowUpRight,
-  Clock3,
-  MailCheck,
-  MessageSquare,
-  Search,
-  Send,
-} from "lucide-react";
+import { Clock3, MailCheck, MessageSquare, Search, Send } from "lucide-react";
+import InboxWorkspace, { type InboxConversation } from "../inbox/InboxWorkspace";
+import { WorkspacePage, PageHeader, Metrics, Metric } from "@/components/hub/workspace";
 
 import { createMailPreview } from "@/lib/mail-content";
 import { prisma } from "@/lib/prisma";
@@ -106,141 +101,56 @@ export default async function HubSentPage({
     return suffix ? `/hub/sent?${suffix}` : "/hub/sent";
   };
 
+  const conversations: InboxConversation[] = filteredRows.map((row) => ({
+    id: row.id,
+    initials: row.contactName.trim().slice(0, 2).toUpperCase() || "SE",
+    name: row.contactName,
+    email: row.contactEmail,
+    subject: row.subject,
+    preview: (row.latestDirection === "OUTBOUND" ? "You: " : "Reply: ") + createMailPreview(row.preview),
+    date: formatDate(row.latestAt),
+    dateIso: row.latestAt.toISOString(),
+    messageCount: row.messageCount,
+    unread: 0,
+    isOther: false,
+    needsReply: row.awaitingReply,
+    href: "/hub/thread/" + row.id,
+  }));
   return (
-    <div className="hub-page hub-mail-v2-page hub-sent-v2-page">
-      <header className="hub-page-header hub-mail-v2-header">
-        <div>
-          <span className="hub-eyebrow">MAIL WORKSPACE</span>
-          <h1>Sent</h1>
-          <p>Track outgoing conversations and see who still owes you a reply.</p>
+    <WorkspacePage>
+      <div className="sw-inbox-page sw-sent-page">
+        <PageHeader eyebrow="COMMUNICATION / OUTBOX" title="Sent"
+          description="Follow outgoing conversations and customer replies."
+          action={<Link href="/hub/compose" className="sw-overview-primary"><Send size={16}/> New message</Link>}
+        />
+        <Metrics label="Sent overview">
+          <Metric label="Sent conversations" value={rows.length} description="Threads containing outgoing mail" icon={<MessageSquare size={18}/>} />
+          <Metric label="Awaiting reply" value={awaitingCount} description="Your message is the latest" icon={<Clock3 size={18}/>} />
+          <Metric label="Replied" value={repliedCount} description="Customer replied last" icon={<MailCheck size={18}/>} />
+        </Metrics>
+        <div className="sw-inbox-toolbar">
+          <form action="/hub/sent" className="sw-sent-search" role="search">
+            <Search size={17} aria-hidden="true"/>
+            <input type="search" name="q" aria-label="Search sent conversations"
+              defaultValue={params.q ?? ""} placeholder="Search recipient, subject or message..." />
+            {status !== "all" && <input type="hidden" name="status" value={status}/>}
+            <button type="submit">Search</button>
+          </form>
+          <span className="sw-inbox-count">{filteredRows.length} conversations</span>
         </div>
-
-        <Link href="/hub/compose" className="hub-header-action">
-          <Send size={16} />
-          New message
-        </Link>
-      </header>
-
-      <section className="hub-sent-v2-stats">
-        <div>
-          <span><MessageSquare size={16} /> Sent conversations</span>
-          <strong>{rows.length}</strong>
-          <small>Threads with at least one outbound message</small>
-        </div>
-        <div>
-          <span><Clock3 size={16} /> Awaiting reply</span>
-          <strong>{awaitingCount}</strong>
-          <small>Last message was sent by you</small>
-        </div>
-        <div>
-          <span><MailCheck size={16} /> Replied</span>
-          <strong>{repliedCount}</strong>
-          <small>Customer sent the latest message</small>
-        </div>
-      </section>
-
-      <section className="hub-sent-v2-toolbar">
-        <form action="/hub/sent" className="hub-sent-v2-search">
-          <Search size={16} />
-          <input
-            type="search"
-            name="q"
-            defaultValue={params.q ?? ""}
-            placeholder="Search recipient, subject or message..."
-          />
-          {status !== "all" && <input type="hidden" name="status" value={status} />}
-          <button type="submit">Search</button>
-        </form>
-
-        <nav className="hub-sent-v2-filters" aria-label="Sent conversation status">
-          {[
-            ["all", "All"],
-            ["awaiting", "Awaiting reply"],
-            ["replied", "Replied"],
-          ].map(([key, label]) => (
-            <Link
-              key={key}
-              href={makeStatusHref(key)}
-              className={status === key ? "is-active" : undefined}
-            >
-              {label}
+        <nav className="sw-inbox-tabs" aria-label="Sent conversation status">
+          {([["all", "All"], ["awaiting", "Awaiting reply"], ["replied", "Replied"]] as const).map(([key, label]) => (
+            <Link href={makeStatusHref(key)} key={key}
+              className={"sw-inbox-tab " + (status === key ? "is-active" : "")}
+              aria-current={status === key ? "page" : undefined}>
+              {label}<span>{key === "all" ? rows.length : key === "awaiting" ? awaitingCount : repliedCount}</span>
             </Link>
           ))}
+          {(query || status !== "all") && <Link href="/hub/sent" className="sw-inbox-tab">Clear filters</Link>}
         </nav>
-      </section>
-
-      <section className="hub-sent-v2-list">
-        <div className="hub-sent-v2-list-head">
-          <div>
-            <span className="hub-mail-v2-kicker">CONVERSATIONS</span>
-            <strong>
-              {filteredRows.length} {filteredRows.length === 1 ? "result" : "results"}
-            </strong>
-          </div>
-
-          {(query || status !== "all") && (
-            <Link href="/hub/sent" className="hub-mail-v2-ghost">
-              Clear filters
-            </Link>
-          )}
-        </div>
-
-        {filteredRows.length === 0 ? (
-          <div className="hub-mail-v2-empty">
-            <Send size={24} />
-            <h2>No sent conversations found</h2>
-            <p>Try another search or start a new message from the Hub.</p>
-            <Link href="/hub/compose" className="hub-header-action">
-              New message
-            </Link>
-          </div>
-        ) : (
-          <div className="hub-sent-v2-rows">
-            {filteredRows.map((row) => (
-              <Link
-                key={row.id}
-                href={`/hub/thread/${row.id}`}
-                className="hub-sent-v2-row"
-              >
-                <div className="hub-sent-v2-avatar">
-                  {row.contactName.charAt(0).toUpperCase()}
-                </div>
-
-                <div className="hub-sent-v2-main">
-                  <div className="hub-sent-v2-topline">
-                    <strong>{row.contactName}</strong>
-                    {row.company && <span>{row.company}</span>}
-                    <time>{formatDate(row.latestAt)}</time>
-                  </div>
-
-                  <h2>{row.subject}</h2>
-
-                  <p>
-                    <b>{row.latestDirection === "OUTBOUND" ? "You:" : "Reply:"}</b>{" "}
-                    {createMailPreview(row.preview)}
-                  </p>
-
-                  <div className="hub-sent-v2-meta">
-                    <span>{row.contactEmail}</span>
-                    <span>·</span>
-                    <span>
-                      {row.messageCount} {row.messageCount === 1 ? "message" : "messages"}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="hub-sent-v2-status-col">
-                  <span className={row.awaitingReply ? "is-awaiting" : "is-replied"}>
-                    {row.awaitingReply ? <Clock3 size={13} /> : <MailCheck size={13} />}
-                    {row.awaitingReply ? "Awaiting reply" : "Replied"}
-                  </span>
-                  <ArrowUpRight size={16} />
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
-      </section>
-    </div>
+        <InboxWorkspace mode="sent" selectedView={status} conversations={conversations}
+          key={status + ":" + query}/>
+      </div>
+    </WorkspacePage>
   );
 }
