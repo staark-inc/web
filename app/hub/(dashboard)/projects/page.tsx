@@ -37,7 +37,7 @@ const statuses = [
 
 type FilterStatus = "ALL" | (typeof statuses)[number];
 
-export const statusLabels: Record<ProjectStatus, string> = {
+const statusLabels: Record<ProjectStatus, string> = {
   PLANNING: "Planning",
   IN_PROGRESS: "In progress",
   WAITING_CLIENT: "Waiting on client",
