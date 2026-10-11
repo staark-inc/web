@@ -1,3 +1,4 @@
+import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
 import Link from "next/link";
 import { Clock3, MailCheck, MessageSquare, Search, Send } from "lucide-react";
 import InboxWorkspace, { type InboxConversation } from "../inbox/InboxWorkspace";
@@ -138,16 +139,15 @@ export default async function HubSentPage({
           </form>
           <span className="sw-inbox-count">{filteredRows.length} conversations</span>
         </div>
-        <nav className="sw-inbox-tabs" aria-label="Sent conversation status">
-          {([["all", "All"], ["awaiting", "Awaiting reply"], ["replied", "Replied"]] as const).map(([key, label]) => (
-            <Link href={makeStatusHref(key)} key={key}
-              className={"sw-inbox-tab " + (status === key ? "is-active" : "")}
-              aria-current={status === key ? "page" : undefined}>
-              {label}<span>{key === "all" ? rows.length : key === "awaiting" ? awaitingCount : repliedCount}</span>
-            </Link>
-          ))}
-          {(query || status !== "all") && <Link href="/hub/sent" className="sw-inbox-tab">Clear filters</Link>}
-        </nav>
+        <WorkspaceTabs label="Sent conversation status" activeKey={status}
+          tabs={([
+            ["all", "All"], ["awaiting", "Awaiting reply"], ["replied", "Replied"],
+          ] as const).map(([key, label]) => ({
+            key, label, href: makeStatusHref(key),
+            count: key === "all" ? rows.length : key === "awaiting" ? awaitingCount : repliedCount,
+          }))}
+          trailing={(query || status !== "all") ? <Link href="/hub/sent" className="sw-filter-clear">Clear filters</Link> : null}/>
+
         <InboxWorkspace mode="sent" selectedView={status} conversations={conversations}
           key={status + ":" + query}/>
       </div>
