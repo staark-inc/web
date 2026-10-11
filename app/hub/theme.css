@@ -832,3 +832,28 @@
   .sw-contacts-page .hub-contacts-v2-tools .sw-filter-tabs {flex:1 1 100%}
   .sw-leads-toolbar .sw-filter-tabs {margin:0 0 5px}
 }
+
+
+/* Project detail workspace — compact functional dashboard, shared tab navigation */
+.sw-project-detail-workspace {width:100%;max-width:none;min-width:0}
+.sw-project-detail-workspace .hub-project-detail-header {margin-bottom:12px;gap:12px}
+.sw-project-detail-workspace .hub-project-detail-header h1 {line-height:1.17;overflow-wrap:anywhere}
+.sw-project-detail-workspace .hub-project-command {margin:0 0 12px;padding:16px 18px}
+.sw-project-detail-workspace .hub-project-command-signals {gap:10px}
+.sw-project-detail-workspace .hub-project-signal {min-width:0}
+.sw-project-detail-workspace .hub-client-stats {margin:0 0 12px;gap:10px}
+.sw-project-detail-workspace .hub-client-stat {min-width:0;padding:14px}
+.sw-project-detail-workspace .sw-filter-tabs {margin:0 0 12px}
+.sw-project-detail-workspace .hub-client-detail-grid {gap:12px;align-items:start}
+.sw-project-detail-workspace .hub-client-side {min-width:0;gap:12px}
+.sw-project-detail-workspace .hub-client-panel {min-width:0;overflow-wrap:anywhere}
+@media(max-width:900px) {
+ .sw-project-detail-workspace .hub-project-command-signals {grid-template-columns:repeat(2,minmax(0,1fr))}
+ .sw-project-detail-workspace .hub-client-stats {grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:620px) {
+ .sw-project-detail-workspace .hub-project-command {padding:13px}
+ .sw-project-detail-workspace .hub-project-command-signals {grid-template-columns:1fr}
+ .sw-project-detail-workspace .hub-client-stats {grid-template-columns:repeat(2,minmax(0,1fr))}
+ .sw-project-detail-workspace .hub-client-stat {padding:12px}
+}
