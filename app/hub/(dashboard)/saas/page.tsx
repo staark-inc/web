@@ -133,6 +133,7 @@ export default async function SaaSOverviewPage() {
         </div>
       </section>
 
+      <p><Link href="/hub/saas/reconciliation" className="hub-secondary-button">Runtime reconciliation <ArrowRight size={15} /></Link></p>
       <div className="sw-saas-directory-heading"><span>MANAGE YOUR PLATFORM</span><strong>Workspaces</strong></div>
       <section className="sw-saas-workspace-grid" aria-label="SaaS workspaces">
         {workspaces.map((workspace) => {
