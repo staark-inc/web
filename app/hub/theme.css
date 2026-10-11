@@ -984,3 +984,55 @@
 .sw-offer-new-page :is(button,input,textarea,select,a):focus-visible{outline:2px solid var(--sw-accent);outline-offset:2px}
 @media(max-width:1050px){.sw-offer-new-layout{grid-template-columns:minmax(0,1fr)}.sw-offer-new-sidebar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.sw-offer-new-sidebar{grid-template-columns:minmax(0,1fr)}.sw-offer-new-editor,.sw-offer-new-guide,.sw-offer-new-note{padding:14px}}
+
+
+/* SaaS control plane overview — 4 focused cards, not full-width list rows */
+.sw-saas-overview{width:100%;max-width:none;min-width:0}
+.sw-saas-overview .hub-workspace-head{margin-bottom:14px}
+.sw-saas-overview .hub-workspace-stats{margin-bottom:16px;gap:10px}
+.sw-saas-directory-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.sw-saas-directory-heading span{font-size:10px;letter-spacing:.08em;font-weight:750;color:var(--sw-muted)}
+.sw-saas-directory-heading strong{font-size:15px;color:var(--sw-ink)}
+.sw-saas-workspace-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;min-width:0}
+.sw-saas-workspace-card{display:flex;flex-direction:column;min-width:0;border:1px solid var(--sw-line);border-radius:14px;background:#fff;overflow:hidden}
+.sw-saas-card-top{display:flex;align-items:flex-start;justify-content:space-between;padding:18px 18px 0;gap:12px}
+.sw-saas-card-icon{display:grid;place-items:center;width:42px;height:42px;border-radius:11px;background:#eef2fa;color:#315cf5}
+.sw-saas-card-value{font-weight:800;font-size:29px;line-height:1.2;color:var(--sw-ink)}
+.sw-saas-card-main{flex:1;min-width:0;padding:14px 18px 20px}
+.sw-saas-card-main h2{margin:0 0 6px;font-size:17px}
+.sw-saas-card-main h2 a{color:var(--sw-ink);text-decoration:none}
+.sw-saas-card-main h2 a:hover{color:var(--sw-accent)}
+.sw-saas-card-main p{font-size:12px;line-height:1.55;color:var(--sw-muted);margin:0}
+.sw-saas-card-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 18px;border-top:1px solid #edf1f7}
+.sw-saas-card-footer>span{font-size:11px;color:var(--sw-muted)}
+.sw-saas-card-footer a{display:inline-flex;align-items:center;gap:6px;padding:9px 12px;border-radius:8px;color:#fff;background:var(--sw-accent);font-weight:750;font-size:11px;text-decoration:none}
+@media(max-width:760px){.sw-saas-workspace-grid{grid-template-columns:minmax(0,1fr);gap:10px}.sw-saas-card-top{padding:14px 14px 0}.sw-saas-card-main{padding:12px 14px 16px}.sw-saas-card-footer{padding:12px 14px}}
+
+/* Offer send — actual compose form plus independent confirmation sidebar */
+.sw-offer-send-page{width:100%;max-width:none;min-width:0}
+.sw-offer-send-page .hub-page-header{margin-bottom:14px}
+.sw-offer-send-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(285px,.75fr);align-items:start;gap:12px;min-width:0}
+.sw-offer-send-compose,.sw-offer-send-review,.sw-offer-send-note{min-width:0;border:1px solid var(--sw-line);border-radius:14px;background:#fff}
+.sw-offer-send-compose{padding:18px}
+.sw-offer-send-section-head{display:flex;align-items:center;gap:11px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--sw-line)}
+.sw-offer-send-section-head>span{display:grid;place-items:center;flex:0 0 40px;height:40px;border-radius:10px;background:#eef2fa;color:var(--sw-accent)}
+.sw-offer-send-section-head>div{display:grid;gap:4px}
+.sw-offer-send-section-head strong{font-size:15px;color:var(--sw-ink)}
+.sw-offer-send-section-head small{font-size:11px;color:var(--sw-muted)}
+.sw-offer-send-sidebar{display:flex;flex-direction:column;gap:12px;min-width:0}
+.sw-offer-send-review{padding:18px}
+.sw-offer-send-eyebrow{display:block;font-size:10px;letter-spacing:.08em;font-weight:750;color:var(--sw-muted)}
+.sw-offer-send-review h2{margin:9px 0 16px;font-size:17px;line-height:1.4;color:var(--sw-ink);overflow-wrap:anywhere}
+.sw-offer-send-field{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:12px 0;border-top:1px solid var(--sw-line)}
+.sw-offer-send-field span{font-size:11px;color:var(--sw-muted)}
+.sw-offer-send-field strong{font-size:12px;text-align:right;color:var(--sw-ink);overflow-wrap:anywhere}
+.sw-offer-send-preview{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;padding:12px;border:1px solid var(--sw-line);border-radius:9px;font-size:12px;font-weight:700;text-decoration:none;color:var(--sw-ink)}
+.sw-offer-send-preview:hover{border-color:#b8c9ff;color:var(--sw-accent)}
+.sw-offer-send-note{display:flex;align-items:flex-start;gap:10px;padding:15px;background:#f5f8fc}
+.sw-offer-send-note>span{color:var(--sw-accent)}
+.sw-offer-send-note strong{font-size:12px;color:var(--sw-ink)}
+.sw-offer-send-note p{margin:5px 0 0;font-size:11px;line-height:1.6;color:var(--sw-muted)}
+.sw-offer-send-not-ready{padding:15px;border-radius:9px;background:#f5f8fc;color:var(--sw-muted);font-size:13px}
+.sw-offer-send-page :is(a,button,input,textarea,select):focus-visible{outline:2px solid var(--sw-accent);outline-offset:2px}
+@media(max-width:1000px){.sw-offer-send-grid{grid-template-columns:minmax(0,1fr)}.sw-offer-send-sidebar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.sw-offer-send-sidebar{grid-template-columns:minmax(0,1fr)}.sw-offer-send-compose,.sw-offer-send-review{padding:14px}}
