@@ -140,7 +140,7 @@ export default async function SendOfferPage({ params }: { params: Promise<{ id: 
             <div className="sw-offer-send-field"><span>One-time value</span><strong>{offer.oneTimePriceOre === null ? "Not specified" : formatOfferAmount(offer.oneTimePriceOre)}</strong></div>
             <div className="sw-offer-send-field"><span>Monthly value</span><strong>{offer.monthlyPriceOre === null ? "Not specified" : `${formatOfferAmount(offer.monthlyPriceOre)}/mo`}</strong></div>
             <div className="sw-offer-send-field"><span>Included support</span><strong>{offer.includedMonths} months</strong></div>
-            <a href={publicOfferUrl} target="_blank" rel="noopener noreferrer" className="sw-offer-send-preview"><FileText size={15}/> Preview client offer</a>
+            <Link href={`/hub/offers/${offer.id}/preview`} target="_blank" rel="noopener noreferrer" className="sw-offer-send-preview"><FileText size={15}/> Preview client offer</Link>
           </div>
           <div className="sw-offer-send-note">
             <span><ShieldCheck size={18}/></span>
