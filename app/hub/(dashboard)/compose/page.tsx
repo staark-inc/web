@@ -1,4 +1,5 @@
 import { ArrowLeft } from "lucide-react";
+import { WorkspacePage, PageHeader } from "@/components/hub/workspace";
 import Link from "next/link";
 
 import { getEmailTemplates } from "@/lib/email-templates";
@@ -96,19 +97,12 @@ export default async function HubComposePage({ searchParams }: PageProps) {
     }));
 
   return (
-    <div className="hub-page hub-mail-v2-page">
-      <header className="hub-page-header hub-mail-v2-header">
-        <div>
-          <Link href="/hub/inbox" className="hub-back">
-            <ArrowLeft size={16} />
-            Inbox
-          </Link>
-          <span className="hub-eyebrow">MAIL WORKSPACE</span>
-          <h1>New message</h1>
-          <p>Write, preview and send client communication from one place.</p>
-        </div>
-      </header>
-
+    <WorkspacePage>
+      <div className="sw-compose-page">
+        <PageHeader eyebrow="COMMUNICATION / COMPOSE" title="New message"
+          description="Write, preview and send client communication with full CRM context."
+          action={<Link href="/hub/inbox" className="sw-overview-secondary"><ArrowLeft size={16}/> Back to Inbox</Link>}
+        />
       <ComposeForm
         initialTo={params.replyTo ?? ""}
         initialSubject={params.subject ?? ""}
@@ -118,6 +112,7 @@ export default async function HubComposePage({ searchParams }: PageProps) {
         senderEmail={settings?.senderEmail ?? "contact@staarkinc.com"}
         signature={settings?.signature ?? ""}
       />
-    </div>
+      </div>
+    </WorkspacePage>
   );
 }
