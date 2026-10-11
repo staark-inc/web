@@ -176,7 +176,7 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
           <div><span className="sw-eyebrow">DELIVERY</span><h2>Project portfolio</h2></div>
           <span>{projects.length} shown</span>
         </div>
-      <nav className="hub-projects-v2-filters sw-project-filter-strip" aria-label="Project filters">
+      <nav className="sw-project-tabs" aria-label="Project filters">
         {filters.map((filter) => {
           const active = activeStatus === filter.value;
 
@@ -188,7 +188,8 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
                   ? "/hub/projects"
                   : `/hub/projects?status=${filter.value}`
               }
-              className={active ? "hub-projects-v2-filter-active" : undefined}
+              className={active ? "is-active" : undefined}
+              aria-current={active ? "page" : undefined}
             >
               <span>{filter.label}</span>
               <strong>{countFor(filter.value)}</strong>
