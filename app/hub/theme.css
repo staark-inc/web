@@ -758,3 +758,34 @@
  .sw-board-card-head,.sw-board-card-body {padding:14px}
  .sw-board-footer {padding:12px 14px}
 }
+
+/* Project status tabs: intentionally detached from the legacy full-width filter bar. */
+.sw-projects-board-page .sw-project-tabs {
+  display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap;
+  gap:6px;width:fit-content;max-width:100%;margin:0 0 14px;padding:0;
+  background:transparent;border:0;border-radius:0;overflow:visible;
+}
+.sw-projects-board-page .sw-project-tabs a {
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  min-height:34px;padding:0 12px;border:1px solid var(--sw-line);
+  border-radius:9px;background:#fff;color:var(--sw-muted);
+  font-size:12px;font-weight:650;text-decoration:none;white-space:nowrap;
+  transition:background-color .12s ease,border-color .12s ease,color .12s ease;
+}
+.sw-projects-board-page .sw-project-tabs a:hover {border-color:#afc2e7;color:var(--sw-accent);background:#f7faff}
+.sw-projects-board-page .sw-project-tabs a.is-active {
+  border-color:#b8c9ff;background:#eaf0ff;color:#244bd1;box-shadow:none;
+}
+.sw-projects-board-page .sw-project-tabs a strong {
+  display:inline-grid;place-items:center;min-width:19px;height:19px;padding:0 5px;
+  border-radius:6px;background:#eef1f6;color:#73819a;font-size:10px;font-weight:750;
+}
+.sw-projects-board-page .sw-project-tabs a.is-active strong {background:#315cf5;color:white}
+.sw-projects-board-page .sw-project-tabs a:focus-visible {outline:2px solid var(--sw-accent);outline-offset:2px}
+@media(max-width:760px) {
+  .sw-projects-board-page .sw-project-tabs {
+    flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;width:100%;max-width:100%;
+    scrollbar-width:thin;padding:0 0 7px;scroll-snap-type:x proximity;
+  }
+  .sw-projects-board-page .sw-project-tabs a {flex:0 0 auto;scroll-snap-align:start}
+}
