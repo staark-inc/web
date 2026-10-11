@@ -1,3 +1,4 @@
+import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -164,7 +165,7 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
   const deploymentTone = project.liveUrl || project.demo ? "good" : "neutral";
 
   return (
-    <div className="hub-page hub-project-detail-page">
+    <div className="hub-page hub-project-detail-page sw-project-detail-workspace">
       <div className="hub-detail-back">
         <Link href="/hub/projects">
           <ArrowLeft size={16} />
@@ -337,32 +338,16 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
         </div>
       </section>
 
-      <nav className="hub-lead-filters" aria-label="Project sections">
-        {tabs.map((item) => (
-          <Link
-            key={item.value}
-            href={
-              item.value === "overview"
-                ? `/hub/projects/${project.id}`
-                : `/hub/projects/${project.id}?tab=${item.value}`
-            }
-            className={`hub-lead-filter ${activeTab === item.value ? "hub-lead-filter-active" : ""}`}
-          >
-            <span>{item.label}</span>
-
-            {item.value === "tasks" && project.tasks.length > 0 && (
-              <strong className="hub-project-tab-count">
-                {done}/{project.tasks.length}
-              </strong>
-            )}
-
-            {item.value === "billing" && openSupport > 0 && (
-              <strong className="hub-project-tab-count hub-project-tab-count-alert">{openSupport}</strong>
-            )}
-          </Link>
-        ))}
-      </nav>
-
+      <WorkspaceTabs label="Project sections" activeKey={activeTab ?? "overview"}
+        tabs={tabs.map((item) => ({
+          key: item.value,
+          label: item.label,
+          href: item.value === "overview"
+            ? `/hub/projects/${project.id}`
+            : `/hub/projects/${project.id}?tab=${item.value}`,
+          count: item.value === "tasks" ? project.tasks.length
+            : item.value === "billing" ? openSupport : undefined,
+        }))}/>
       {activeTab === "overview" && (
         <section className="hub-client-detail-grid">
           <div className="hub-client-side">
