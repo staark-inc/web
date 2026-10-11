@@ -42,7 +42,7 @@ export default async function SaaSProvisioningPage() {
   const attention = rows.filter((row) => row.status === "FAILED" || row.status === "PENDING_SETUP").length;
 
   return (
-    <div className="hub-page hub-saas-workspace-page hub-saas-provisioning-page">
+    <div className="hub-page hub-saas-workspace-page hub-saas-provisioning-page sw-saas-detail-page">
       <header className="hub-workspace-head">
         <div>
           <span className="hub-workspace-kicker">SAAS / PROVISIONING</span>
@@ -69,9 +69,9 @@ export default async function SaaSProvisioningPage() {
           <p>Provisioning starts after a SaaS subscription is created.</p>
         </div>
       ) : (
-        <section className="hub-billing-v2-list" aria-label="Provisioning records">
+        <section className="sw-saas-detail-grid sw-saas-provisioning-grid" aria-label="Provisioning records">
           {rows.map((row) => (
-            <article key={row.id} className="hub-billing-v2-row">
+            <article key={row.id} className="hub-billing-v2-row sw-saas-data-card">
               <div className="hub-billing-v2-main">
                 <span className="hub-billing-v2-icon"><ServerCog size={16} /></span>
                 <div>

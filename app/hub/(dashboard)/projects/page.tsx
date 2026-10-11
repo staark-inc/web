@@ -1,3 +1,4 @@
+import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
 import Link from "next/link";
 import {
   AlertTriangle,
@@ -6,7 +7,6 @@ import {
   CheckCircle2,
   Clock3,
   FolderKanban,
-  Gauge,
   LifeBuoy,
   Package,
   Plus,
@@ -15,6 +15,7 @@ import {
 
 import { prisma } from "@/lib/prisma";
 import type { ProjectStatus } from "@/generated/prisma/client";
+import { WorkspacePage, PageHeader, Metrics, Metric, InfoChip } from "@/components/hub/workspace";
 
 export const dynamic = "force-dynamic";
 
@@ -160,86 +161,30 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
         : "Delivery is clear. No overdue or near-term deadlines.";
 
   return (
-    <div className="hub-page hub-projects-v2-page">
-      <header className="hub-projects-v2-head">
-        <div className="hub-projects-v2-title">
-          <span>WORK / DELIVERY</span>
-          <h1>Projects</h1>
-          <p>{deliverySummary}</p>
+    <WorkspacePage>
+      <div className="sw-projects-page sw-projects-board-page">
+        <PageHeader eyebrow="WORK / DELIVERY" title="Projects"
+          description={deliverySummary}
+          action={<Link href="/hub/projects/new" className="sw-primary-link"><Plus size={16}/> New project</Link>}
+        />
+        <Metrics label="Delivery overview">
+          <Metric label="Active" value={activeCount} description="In progress or review" icon={<FolderKanban size={18}/>}/>
+          <Metric label="Waiting" value={waitingCount} description="Client input needed" icon={<Clock3 size={18}/>}/>
+          <Metric label="Due soon" value={dueSoonCount} description="Within the next 7 days" icon={<CheckCircle2 size={18}/>}/>
+          <Metric label="Overdue" value={overdueCount} description={overdueCount ? "Needs attention" : "All clear"} icon={<AlertTriangle size={18}/>}/>
+        </Metrics>
+        <div className="sw-projects-section-heading">
+          <div><span className="sw-eyebrow">DELIVERY</span><h2>Project portfolio</h2></div>
+          <span>{projects.length} shown</span>
         </div>
+      <WorkspaceTabs label="Project filters" activeKey={activeStatus}
+        tabs={filters.map((filter) => ({
+          key: filter.value,
+          label: filter.label,
+          href: filter.value === "ALL" ? "/hub/projects" : `/hub/projects?status=${filter.value}`,
+          count: countFor(filter.value),
+        }))}/>
 
-        <Link href="/hub/projects/new" className="hub-projects-v2-new">
-          <Plus size={15} />
-          New project
-        </Link>
-      </header>
-
-      <section className="hub-projects-v2-stats" aria-label="Delivery overview">
-        <div className="hub-projects-v2-stat">
-          <span className="hub-projects-v2-stat-icon">
-            <FolderKanban size={16} />
-          </span>
-          <div>
-            <small>Active</small>
-            <strong>{activeCount}</strong>
-            <span>In progress or review</span>
-          </div>
-        </div>
-
-        <div className="hub-projects-v2-stat">
-          <span className="hub-projects-v2-stat-icon hub-projects-v2-stat-icon-warning">
-            <Clock3 size={16} />
-          </span>
-          <div>
-            <small>Waiting</small>
-            <strong>{waitingCount}</strong>
-            <span>Client input needed</span>
-          </div>
-        </div>
-
-        <div className="hub-projects-v2-stat">
-          <span className="hub-projects-v2-stat-icon">
-            <CheckCircle2 size={16} />
-          </span>
-          <div>
-            <small>Due soon</small>
-            <strong>{dueSoonCount}</strong>
-            <span>Next 7 days</span>
-          </div>
-        </div>
-
-        <div className={`hub-projects-v2-stat ${overdueCount ? "hub-projects-v2-stat-danger" : ""}`}>
-          <span className="hub-projects-v2-stat-icon">
-            <AlertTriangle size={16} />
-          </span>
-          <div>
-            <small>Overdue</small>
-            <strong>{overdueCount}</strong>
-            <span>{overdueCount ? "Needs attention" : "All clear"}</span>
-          </div>
-        </div>
-      </section>
-
-      <nav className="hub-projects-v2-filters" aria-label="Project filters">
-        {filters.map((filter) => {
-          const active = activeStatus === filter.value;
-
-          return (
-            <Link
-              key={filter.value}
-              href={
-                filter.value === "ALL"
-                  ? "/hub/projects"
-                  : `/hub/projects?status=${filter.value}`
-              }
-              className={active ? "hub-projects-v2-filter-active" : undefined}
-            >
-              <span>{filter.label}</span>
-              <strong>{countFor(filter.value)}</strong>
-            </Link>
-          );
-        })}
-      </nav>
 
       {projects.length === 0 ? (
         <div className="hub-empty-state">
@@ -261,7 +206,7 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
           )}
         </div>
       ) : (
-        <section className="hub-projects-v2-list" aria-label="Projects">
+        <section className="sw-board-grid" aria-label="Projects">
           {projects.map((project) => {
             const done = project.tasks.filter((task) => task.done).length;
             const totalTasks = project.tasks.length;
@@ -303,90 +248,51 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
                 : "Not deployed";
 
             return (
-              <article key={project.id} className="hub-projects-v2-item">
-                <div className="hub-projects-v2-item-main">
-                  <span className="hub-projects-v2-avatar">
-                    <FolderKanban size={17} />
+              <article key={project.id} className="sw-board-card">
+                <header className="sw-board-card-head">
+                  <span className="sw-board-icon"><FolderKanban size={19}/></span>
+                  <span className="sw-board-title">
+                    <Link href={"/hub/projects/" + project.id}>{project.name}</Link>
+                    <small><Building2 size={13}/>{project.client.name}</small>
                   </span>
+                  <InfoChip tone={project.status === "COMPLETED" ? "success" : project.status === "WAITING_CLIENT" ? "warning" : project.status === "IN_PROGRESS" ? "info" : "neutral"}>
+                    {statusLabels[project.status]}
+                  </InfoChip>
+                </header>
 
-                  <div className="hub-projects-v2-identity">
-                    <div className="hub-projects-v2-name-line">
-                      <Link href={`/hub/projects/${project.id}`}>
-                        {project.name}
-                      </Link>
-                      <span
-                        className={`hub-project-status hub-project-status-${project.status.toLowerCase()}`}
-                      >
-                        {statusLabels[project.status]}
-                      </span>
-                    </div>
+                <div className="sw-board-card-body">
+                  <div className="sw-board-progress-heading">
+                    <span>Task progress</span>
+                    <strong>{totalTasks ? progress + "%" : "Not started"}</strong>
+                  </div>
+                  <progress max={100} value={progress} aria-label={project.name + " task completion"}/>
+                  <div className="sw-board-task-count">{done} of {totalTasks} tasks complete</div>
 
-                    <span className="hub-projects-v2-client">
-                      <Building2 size={12} />
-                      {project.client.name}
-                    </span>
+                  <div className="sw-board-next-task">
+                    <span className="sw-eyebrow">NEXT STEP</span>
+                    <strong>{nextTask?.title || (totalTasks ? "All tasks completed" : "Plan your first task")}</strong>
+                  </div>
 
-                    {project.description && (
-                      <p>{project.description}</p>
-                    )}
+                  <div className="sw-board-facts">
+                    <span className={overdue ? "is-urgent" : ""}><Clock3 size={15}/>{deadlineLabel}</span>
+                    <span><Rocket size={15}/>{deploymentLabel}</span>
+                    {awaitingMaterials > 0 && <span className="is-urgent"><Package size={15}/>{awaitingMaterials} materials waiting</span>}
+                    {openSupport > 0 && <span className="is-urgent"><LifeBuoy size={15}/>{openSupport} support requests</span>}
                   </div>
                 </div>
 
-                <div className="hub-projects-v2-progress">
-                  <div className="hub-projects-v2-progress-top">
-                    <span>
-                      <Gauge size={13} />
-                      Progress
-                    </span>
-                    <strong>{progress}%</strong>
-                  </div>
-
-                  <div className="hub-projects-v2-progress-bar">
-                    <span style={{ width: `${progress}%` }} />
-                  </div>
-
-                  <span className="hub-projects-v2-progress-sub">
-                    {totalTasks
-                      ? `${done}/${totalTasks} tasks · `
-                      : "No tasks · "}
-                    {nextTask ? `Next: ${nextTask.title}` : "No open task"}
-                  </span>
-                </div>
-
-                <div className="hub-projects-v2-meta">
-                  <span className={overdue ? "hub-projects-v2-chip hub-projects-v2-chip-danger" : dueDays !== null && dueDays <= 7 ? "hub-projects-v2-chip hub-projects-v2-chip-warning" : "hub-projects-v2-chip"}>
-                    <Clock3 size={13} />
-                    {deadlineLabel}
-                  </span>
-
-                  <span className={awaitingMaterials ? "hub-projects-v2-chip hub-projects-v2-chip-warning" : "hub-projects-v2-chip hub-projects-v2-chip-good"}>
-                    <Package size={13} />
-                    {awaitingMaterials ? `${awaitingMaterials} materials` : "Materials clear"}
-                  </span>
-
-                  <span className={openSupport ? "hub-projects-v2-chip hub-projects-v2-chip-warning" : "hub-projects-v2-chip hub-projects-v2-chip-good"}>
-                    <LifeBuoy size={13} />
-                    {openSupport ? `${openSupport} support` : "Support clear"}
-                  </span>
-
-                  <span className={project.liveUrl || project.demo ? "hub-projects-v2-chip hub-projects-v2-chip-good" : "hub-projects-v2-chip"}>
-                    <Rocket size={13} />
-                    {deploymentLabel}
-                  </span>
-                </div>
-
-                <div className="hub-projects-v2-item-footer">
-                  <span>Updated {formatDate(project.updatedAt)}</span>
-                  <Link href={`/hub/projects/${project.id}`}>
-                    Open
-                    <ArrowRight size={13} />
+                <footer className="sw-board-footer">
+                  <small>Updated {formatDate(project.updatedAt)}</small>
+                  <Link href={"/hub/projects/" + project.id} className="sw-board-open">
+                    Open project <ArrowRight size={15}/>
                   </Link>
-                </div>
+                </footer>
               </article>
             );
           })}
         </section>
       )}
-    </div>
+      </div>
+    </WorkspacePage>
   );
 }

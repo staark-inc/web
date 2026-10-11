@@ -1,3 +1,4 @@
+import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
 import Link from "next/link";
 import {
   Activity,
@@ -7,7 +8,6 @@ import {
   ArrowUpRight,
   Building2,
   CreditCard,
-  FlaskConical,
   Radio,
 } from "lucide-react";
 
@@ -185,7 +185,7 @@ export default async function SaaSSubscriptionsPage({
   ];
 
   return (
-    <div className="hub-page hub-saas-subscriptions-page">
+    <div className="hub-page hub-saas-subscriptions-page sw-saas-detail-page">
       <header className="hub-workspace-head">
         <div>
           <span className="hub-workspace-kicker">SAAS / SUBSCRIPTIONS</span>
@@ -247,20 +247,13 @@ export default async function SaaSSubscriptionsPage({
         </div>
       </section>
 
-      <nav className="hub-workspace-filters" aria-label="Subscription filters">
-        {filters.map((filter) => (
-          <Link
-            key={filter.key}
-            href={filter.key === "all" ? "/hub/saas/subscriptions" : `/hub/saas/subscriptions?view=${filter.key}`}
-            className={view === filter.key ? "hub-workspace-filter-active" : undefined}
-          >
-            {filter.key === "test" && <FlaskConical size={12} />}
-            {filter.label}
-            <strong>{filter.count}</strong>
-          </Link>
-        ))}
-      </nav>
-
+      <WorkspaceTabs label="Subscription filters" activeKey={view}
+        tabs={filters.map((filter) => ({
+          key: filter.key,
+          label: filter.label,
+          href: filter.key === "all" ? "/hub/saas/subscriptions" : `/hub/saas/subscriptions?view=${filter.key}`,
+          count: filter.count,
+        }))}/>
       {filteredSubscriptions.length === 0 ? (
         <div className="hub-empty-state">
           <CreditCard size={28} />
@@ -275,7 +268,7 @@ export default async function SaaSSubscriptionsPage({
           )}
         </div>
       ) : (
-        <section className="hub-saas-subscriptions-list" aria-label="SaaS subscriptions">
+        <section className="sw-saas-detail-grid sw-saas-subscriptions-grid" aria-label="SaaS subscriptions">
           {filteredSubscriptions.map((subscription) => {
             const failure = failureBySubscriptionId.get(subscription.id) ?? null;
             const provisioningStatus = subscription.provisioning?.status ?? null;
@@ -287,7 +280,7 @@ export default async function SaaSSubscriptionsPage({
             return (
               <article
                 key={subscription.id}
-                className={`hub-saas-subscription-row ${
+                className={`hub-saas-subscription-row sw-saas-data-card ${
                   isAttentionStatus(subscription.status) ? "hub-saas-subscription-row-attention" : ""
                 }`}
               >

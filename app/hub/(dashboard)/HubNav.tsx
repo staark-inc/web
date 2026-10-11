@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
+  ChevronDown,
   Inbox,
   Send,
   Settings,
@@ -102,7 +103,12 @@ export default function HubNav({
         <span>Overview</span>
       </Link>
 
-      <div className="hub-nav-section-label">Communication</div>
+      <details className="hub-nav-group" key={pathname + "-communication"} open={pathname.startsWith("/hub/inbox") || pathname.startsWith("/hub/message/") || pathname.startsWith("/hub/thread/") || pathname.startsWith("/hub/sent")}>
+        <summary className="hub-nav-group-toggle">
+          <span>Communication</span>
+          <ChevronDown size={15} aria-hidden="true" />
+        </summary>
+        <div className="hub-nav-group-links">
 
       <Link
         href="/hub/inbox"
@@ -133,7 +139,15 @@ export default function HubNav({
         <span>Sent</span>
       </Link>
 
-      <div className="hub-nav-section-label">Sales</div>
+        </div>
+      </details>
+
+      <details className="hub-nav-group" key={pathname + "-sales"} open={pathname.startsWith("/hub/prospects") || pathname.startsWith("/hub/leads") || pathname.startsWith("/hub/opportunities") || pathname.startsWith("/hub/clients") || pathname.startsWith("/hub/contacts") || pathname.startsWith("/hub/offers")}>
+        <summary className="hub-nav-group-toggle">
+          <span>Sales</span>
+          <ChevronDown size={15} aria-hidden="true" />
+        </summary>
+        <div className="hub-nav-group-links">
 
       <Link
         href="/hub/prospects"
@@ -203,7 +217,15 @@ export default function HubNav({
         <span>Contacts</span>
       </Link>
 
-      <div className="hub-nav-section-label">Delivery</div>
+        </div>
+      </details>
+
+      <details className="hub-nav-group" key={pathname + "-delivery"} open={pathname.startsWith("/hub/projects")}>
+        <summary className="hub-nav-group-toggle">
+          <span>Delivery</span>
+          <ChevronDown size={15} aria-hidden="true" />
+        </summary>
+        <div className="hub-nav-group-links">
 
       <Link
         href="/hub/projects"
@@ -231,7 +253,15 @@ export default function HubNav({
         <span>Offers</span>
       </Link>
 
-      <div className="hub-nav-section-label">SaaS</div>
+        </div>
+      </details>
+
+      <details className="hub-nav-group" key={pathname + "-saas"} open={pathname.startsWith("/hub/saas")}>
+        <summary className="hub-nav-group-toggle">
+          <span>SaaS</span>
+          <ChevronDown size={15} aria-hidden="true" />
+        </summary>
+        <div className="hub-nav-group-links">
 
       <Link
         href="/hub/saas"
@@ -292,7 +322,15 @@ export default function HubNav({
         <span>Provisioning</span>
       </Link>
 
-      <div className="hub-nav-section-label">Operations</div>
+        </div>
+      </details>
+
+      <details className="hub-nav-group" key={pathname + "-operations"} open={pathname.startsWith("/hub/billing") || pathname.startsWith("/hub/support") || pathname.startsWith("/hub/updates")}>
+        <summary className="hub-nav-group-toggle">
+          <span>Operations</span>
+          <ChevronDown size={15} aria-hidden="true" />
+        </summary>
+        <div className="hub-nav-group-links">
 
       <Link
         href="/hub/billing"
@@ -333,7 +371,15 @@ export default function HubNav({
         <span>News & Updates</span>
       </Link>
 
-      <div className="hub-nav-section-label">Account</div>
+        </div>
+      </details>
+
+      <details className="hub-nav-group" key={pathname + "-account"} open={pathname.startsWith("/hub/profile") || pathname.startsWith("/hub/settings")}>
+        <summary className="hub-nav-group-toggle">
+          <span>Account</span>
+          <ChevronDown size={15} aria-hidden="true" />
+        </summary>
+        <div className="hub-nav-group-links">
 
       <Link
         href="/hub/profile"
@@ -360,6 +406,8 @@ export default function HubNav({
         <Settings size={18} />
         <span>Settings</span>
       </Link>
+        </div>
+      </details>
     </nav>
   );
 }

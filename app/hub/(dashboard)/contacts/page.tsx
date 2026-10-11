@@ -1,3 +1,4 @@
+import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -13,6 +14,7 @@ import {
 } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
+import { WorkspacePage, PageHeader, Metrics, Metric, InfoChip } from "@/components/hub/workspace";
 
 export const dynamic = "force-dynamic";
 
@@ -90,37 +92,21 @@ export default async function ContactsPage({ searchParams }: PageProps) {
   const totalMessages = contacts.reduce((total, contact) => total + contact._count.messages, 0);
 
   return (
-    <div className="hub-page hub-contacts-v2-page">
-      <header className="hub-contacts-v2-head">
-        <div>
-          <span className="hub-contacts-v2-kicker">PEOPLE / CRM</span>
-          <h1>Contacts</h1>
-          <p>Track everyone who has reached Staark Inc. and see where each relationship is going.</p>
+    <WorkspacePage>
+      <div className="sw-contacts-page">
+        <PageHeader eyebrow="PEOPLE / CRM" title="Contacts"
+          description="Find people, review their relationship with Staark and take the next step."
+          action={<InfoChip tone="info"><UsersRound size={15}/>{contacts.length} contacts</InfoChip>}/>
+        <Metrics label="Contact overview">
+          <Metric label="Total contacts" value={contacts.length} description="People in your CRM" icon={<UserRound size={18}/>}/>
+          <Metric label="With leads" value={contactsWithLeads} description="Commercial enquiries" icon={<Target size={18}/>}/>
+          <Metric label="Linked clients" value={contactsWithClients} description="Customer relationships" icon={<Building2 size={18}/>}/>
+          <Metric label="Messages" value={totalMessages} description="Linked messages" icon={<MessageSquareText size={18}/>}/>
+        </Metrics>
+        <div className="sw-contacts-directory-heading">
+          <div><span className="sw-eyebrow">YOUR NETWORK</span><h2>Contact directory</h2></div>
+          <span>{filteredContacts.length} shown</span>
         </div>
-        <div className="hub-contacts-v2-head-count">
-          <UsersRound size={15} /><strong>{contacts.length}</strong><span>contacts</span>
-        </div>
-      </header>
-
-      <section className="hub-contacts-v2-stats" aria-label="Contact overview">
-        <div className="hub-contacts-v2-stat">
-          <span className="hub-contacts-v2-stat-icon"><UserRound size={16} /></span>
-          <div><small>Total contacts</small><strong>{contacts.length}</strong><span>Known people</span></div>
-        </div>
-        <div className="hub-contacts-v2-stat">
-          <span className="hub-contacts-v2-stat-icon hub-contacts-v2-stat-icon-lead"><Target size={16} /></span>
-          <div><small>With leads</small><strong>{contactsWithLeads}</strong><span>Commercial interest</span></div>
-        </div>
-        <div className="hub-contacts-v2-stat">
-          <span className="hub-contacts-v2-stat-icon hub-contacts-v2-stat-icon-client"><Building2 size={16} /></span>
-          <div><small>Linked clients</small><strong>{contactsWithClients}</strong><span>Converted relationships</span></div>
-        </div>
-        <div className="hub-contacts-v2-stat">
-          <span className="hub-contacts-v2-stat-icon"><MessageSquareText size={16} /></span>
-          <div><small>Messages</small><strong>{totalMessages}</strong><span>Linked conversations</span></div>
-        </div>
-      </section>
-
       <section className="hub-contacts-v2-tools" aria-label="Contact filters">
         <form className="hub-contacts-v2-search" action="/hub/contacts">
           {filter !== "all" ? <input type="hidden" name="filter" value={filter} /> : null}
@@ -134,12 +120,15 @@ export default async function ContactsPage({ searchParams }: PageProps) {
           />
         </form>
 
-        <nav className="hub-contacts-v2-filters" aria-label="Contact status">
-          <Link href={getFilterHref("all", q)} className={filter === "all" ? "hub-contacts-v2-filter-active" : undefined}>All<strong>{contacts.length}</strong></Link>
-          <Link href={getFilterHref("leads", q)} className={filter === "leads" ? "hub-contacts-v2-filter-active" : undefined}>Leads<strong>{contactsWithLeads}</strong></Link>
-          <Link href={getFilterHref("clients", q)} className={filter === "clients" ? "hub-contacts-v2-filter-active" : undefined}>Clients<strong>{contactsWithClients}</strong></Link>
-          <Link href={getFilterHref("unlinked", q)} className={filter === "unlinked" ? "hub-contacts-v2-filter-active" : undefined}>Unlinked</Link>
-        </nav>
+        <WorkspaceTabs label="Contact status" activeKey={filter}
+          tabs={[
+            { key: "all", label: "All", href: getFilterHref("all", q), count: contacts.length },
+            { key: "leads", label: "Leads", href: getFilterHref("leads", q), count: contactsWithLeads },
+            { key: "clients", label: "Clients", href: getFilterHref("clients", q), count: contactsWithClients },
+            { key: "unlinked", label: "Unlinked", href: getFilterHref("unlinked", q),
+              count: contacts.filter((item) => item._count.leads === 0 && item._count.clients === 0).length },
+          ]}/>
+
       </section>
 
       {filteredContacts.length === 0 ? (
@@ -150,42 +139,47 @@ export default async function ContactsPage({ searchParams }: PageProps) {
           {contacts.length > 0 ? <Link href="/hub/contacts" className="hub-secondary-button">Clear filters</Link> : null}
         </div>
       ) : (
-        <section className="hub-contacts-v2-list" aria-label="Contacts">
+        <section className="sw-contact-directory" aria-label="Contacts">
           {filteredContacts.map((contact) => {
             const fallback = contact.email || contact.phone || contact.facebook || contact.company;
             return (
-              <article key={contact.id} className="hub-contacts-v2-row">
-                <div className="hub-contacts-v2-main">
-                  <div className="hub-contacts-v2-avatar">{getInitials(contact.name, fallback)}</div>
-                  <div className="hub-contacts-v2-identity">
-                    <Link href={`/hub/contacts/${contact.id}`}>{contact.name || contact.company || "Unknown contact"}</Link>
-                    {contact.email ? <span><Mail size={12} />{contact.email}</span> : null}
-                    {contact.phone ? <span><Phone size={12} />{contact.phone}</span> : null}
-                    {contact.facebook ? <span><Globe2 size={12} />Facebook</span> : null}
-                    {contact.company ? <span><Building2 size={12} />{contact.company}</span> : null}
+              <details key={contact.id} className="sw-contact-entry">
+                <summary>
+                  <span className="sw-contact-avatar">{getInitials(contact.name, fallback)}</span>
+                  <span className="sw-contact-person">
+                    <strong>{contact.name || contact.company || "Unknown contact"}</strong>
+                    <small>{contact.email || contact.phone || contact.company || "No contact details"}</small>
+                  </span>
+                  <span className="sw-contact-relations">
+                    {contact._count.clients > 0 ? <InfoChip tone="success">Client</InfoChip> :
+                      contact._count.leads > 0 ? <InfoChip tone="info">Lead</InfoChip> :
+                      <InfoChip>Unlinked</InfoChip>}
+                    <span>{contact._count.messages} messages</span>
+                  </span>
+                  <span className="sw-contact-entry-open">Details <ArrowRight size={15}/></span>
+                </summary>
+                <div className="sw-contact-entry-detail">
+                  <div className="sw-contact-details">
+                    <span className="sw-eyebrow">CONTACT INFORMATION</span>
+                    {contact.email && <p><Mail size={15}/>{contact.email}</p>}
+                    {contact.phone && <p><Phone size={15}/>{contact.phone}</p>}
+                    {contact.company && <p><Building2 size={15}/>{contact.company}</p>}
+                    {contact.facebook && <p><Globe2 size={15}/>Facebook profile recorded</p>}
+                    <small>Added {formatDate(contact.createdAt)}</small>
+                  </div>
+                  <div className="sw-contact-quick">
+                    <span className="sw-eyebrow">NEXT ACTION</span>
+                    {contact.email && <Link href={`/hub/compose?replyTo=${encodeURIComponent(contact.email)}`}><Mail size={15}/> Compose email</Link>}
+                    {contact.phone && <a href={`tel:${contact.phone}`}><Phone size={15}/> Call contact</a>}
+                    <Link className="sw-contact-primary" href={`/hub/contacts/${contact.id}`}>View contact record <ArrowRight size={15}/></Link>
                   </div>
                 </div>
-
-                <div className="hub-contacts-v2-signals">
-                  <span className={contact._count.leads ? "hub-contacts-v2-signal-lead" : undefined}>
-                    <Target size={12} />{contact._count.leads} lead{contact._count.leads === 1 ? "" : "s"}
-                  </span>
-                  <span className={contact._count.clients ? "hub-contacts-v2-signal-client" : undefined}>
-                    <Building2 size={12} />
-                    {contact._count.clients ? `${contact._count.clients} client${contact._count.clients === 1 ? "" : "s"}` : "Not a client"}
-                  </span>
-                  <span><MessageSquareText size={12} />{contact._count.messages} message{contact._count.messages === 1 ? "" : "s"}</span>
-                </div>
-
-                <div className="hub-contacts-v2-tail">
-                  <time dateTime={contact.createdAt.toISOString()}>Added {formatDate(contact.createdAt)}</time>
-                  <Link href={`/hub/contacts/${contact.id}`}>Open<ArrowRight size={13} /></Link>
-                </div>
-              </article>
+              </details>
             );
           })}
         </section>
       )}
-    </div>
+      </div>
+    </WorkspacePage>
   );
 }

@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
+import { WorkspacePage, PageHeader, Metrics, Metric, InfoChip } from "@/components/hub/workspace";
 import {
   rankOpportunity,
   readinessLabel,
@@ -156,42 +157,24 @@ export default async function OpportunitiesPage({ searchParams }: PageProps) {
   const shown = filtered.slice(offset, offset + PAGE_SIZE);
 
   return (
-    <div className="hub-page hub-opportunities-page">
-      <header className="hub-opportunities-head">
-        <div>
-          <span className="hub-opportunities-kicker">SALES / PRIORITY</span>
-          <h1>Opportunities</h1>
-          <p>
-            Ranked from the prospect database using website need, contactability,
-            business proof, technical issues and scanner signals.
-          </p>
+    <WorkspacePage>
+      <div className="sw-sales-page sw-opportunities-page">
+        <PageHeader eyebrow="SALES / PRIORITY" title="Opportunities"
+          description="Prioritized local companies, ranked by website need, contactability and business signals."
+          action={<Link href="/hub/prospects" className="sw-overview-secondary"><Search size={15}/> Browse prospects</Link>}
+        />
+        <Metrics label="Opportunity overview">
+          <Metric label="Opportunities" value={all.length} description="Ranked businesses" icon={<Sparkles size={18}/>} />
+          <Metric label="Offer-ready" value={hotCount} description="Highest sales readiness" icon={<Target size={18}/>} />
+          <Metric label="Direct contact" value={directCount} description="Reachable companies" icon={<Phone size={18}/>} />
+          <Metric label="Already in Leads" value={inLeadsCount} description="Added to pipeline" icon={<CheckCircle2 size={18}/>} />
+        </Metrics>
+        <div className="sw-sales-guide">
+          <span className="sw-eyebrow">PRIORITIZATION</span>
+          <strong>Rank <span>→</span> Review <span>→</span> Contact <span>→</span> Convert</strong>
+          <p>Open a company to see its score breakdown and suggested offer before promoting it into Leads.</p>
         </div>
-
-        <Link href="/hub/prospects" className="hub-secondary-button">
-          <Search size={14} /> Browse all prospects
-        </Link>
-      </header>
-
-      <section className="hub-opportunities-stats" aria-label="Opportunity overview">
-        <div>
-          <Sparkles size={16} />
-          <span><small>Opportunities</small><strong>{all.length}</strong></span>
-        </div>
-        <div>
-          <Target size={16} />
-          <span><small>Offer-ready</small><strong>{hotCount}</strong></span>
-        </div>
-        <div>
-          <Phone size={16} />
-          <span><small>Direct contact</small><strong>{directCount}</strong></span>
-        </div>
-        <div>
-          <CheckCircle2 size={16} />
-          <span><small>Already in Leads</small><strong>{inLeadsCount}</strong></span>
-        </div>
-      </section>
-
-      <form className="hub-opportunities-filters" method="get">
+      <form className="hub-opportunities-filters sw-opportunities-filters" method="get">
         <label className="hub-opportunities-search">
           <Search size={15} />
           <input name="q" defaultValue={raw.q || ""} placeholder="Search company, city, email, phone…" />
@@ -248,90 +231,73 @@ export default async function OpportunitiesPage({ searchParams }: PageProps) {
           <p>Reset the filters or return to Prospects to review the full discovery database.</p>
         </div>
       ) : (
-        <section className="hub-opportunities-list">
+        <section className="hub-opportunities-list sw-opportunities-list">
           {shown.map((opportunity, index) => {
             const channels = contactChannels(opportunity);
             const rank = offset + index + 1;
 
             return (
-              <article key={opportunity.id} className="hub-opportunity-card">
-                <div className="hub-opportunity-rank">#{rank}</div>
-
-                <div className="hub-opportunity-main">
-                  <div className="hub-opportunity-title-row">
-                    <div>
-                      <strong>{opportunity.name}</strong>
-                      <span>
-                        {opportunity.city && <><MapPin size={12} /> {opportunity.city}</>}
-                        {opportunity.category && <em>{opportunity.category}</em>}
-                      </span>
+              <details key={opportunity.id} className="sw-opportunity-card">
+                <summary className="sw-opportunity-summary">
+                  <span className="sw-opportunity-position">#{rank}</span>
+                  <span className="sw-opportunity-identity">
+                    <strong>{opportunity.name}</strong>
+                    <small>{[opportunity.city, opportunity.category].filter(Boolean).join(" · ") || "Local business"}</small>
+                  </span>
+                  <span className="sw-opportunity-score">
+                    <strong>{opportunity.score}</strong><small>Priority score</small>
+                  </span>
+                  <InfoChip tone={opportunity.readiness === "HOT" ? "success" : opportunity.readiness === "STRONG" ? "info" : "neutral"}>
+                    {readinessLabel(opportunity.readiness)}
+                  </InfoChip>
+                  <span className="sw-opportunity-expand">Review <ChevronRight size={16}/></span>
+                </summary>
+                <div className="sw-opportunity-expanded">
+                  <div className="sw-opportunity-analysis">
+                    <span className="sw-eyebrow">WHY THIS OPPORTUNITY</span>
+                    <div className="sw-opportunity-reason-list">
+                      {opportunity.reasons.map(reason => <span key={reason}><CheckCircle2 size={14}/>{reason}</span>)}
                     </div>
-
-                    <div className={`hub-opportunity-readiness is-${opportunity.readiness.toLowerCase()}`}>
-                      <span>{readinessLabel(opportunity.readiness)}</span>
-                      <strong>{opportunity.score}</strong>
+                    <span className="sw-eyebrow">SCORE BREAKDOWN</span>
+                    <div className="sw-opportunity-breakdown">
+                      {([
+                        ["Website need", opportunity.breakdown.websiteNeed, 40],
+                        ["Contactability", opportunity.breakdown.contactability, 25],
+                        ["Business proof", opportunity.breakdown.businessProof, 20],
+                        ["Technical need", opportunity.breakdown.technicalNeed, 10],
+                        ["Scanner", opportunity.breakdown.scannerSignal, 5],
+                      ] as const).map(([label, score, maximum]) => (
+                        <div key={label} className="sw-opportunity-score-row">
+                          <div><span>{label}</span><strong>{score}/{maximum}</strong></div>
+                          <progress max={maximum} value={score} aria-label={label + " score"}/>
+                        </div>
+                      ))}
                     </div>
                   </div>
-
-                  <div className="hub-opportunity-reasons">
-                    {opportunity.reasons.map((reason) => <span key={reason}>{reason}</span>)}
-                  </div>
-
-                  <div className="hub-opportunity-breakdown" aria-label="Score breakdown">
-                    <span>Website <strong>{opportunity.breakdown.websiteNeed}/40</strong></span>
-                    <span>Contact <strong>{opportunity.breakdown.contactability}/25</strong></span>
-                    <span>Proof <strong>{opportunity.breakdown.businessProof}/20</strong></span>
-                    <span>Tech <strong>{opportunity.breakdown.technicalNeed}/10</strong></span>
-                    <span>Scanner <strong>{opportunity.breakdown.scannerSignal}/5</strong></span>
-                  </div>
-                </div>
-
-                <aside className="hub-opportunity-side">
-                  <div className="hub-opportunity-offer">
-                    <small>Suggested offer</small>
-                    <strong><FileText size={14} /> {opportunity.suggestedOffer}</strong>
-                  </div>
-
-                  <div className="hub-opportunity-contact-links">
-                    {opportunity.email && <a href={`mailto:${opportunity.email}`}><Mail size={13} /> Email</a>}
-                    {opportunity.phone && <a href={`tel:${opportunity.phone}`}><Phone size={13} /> Call</a>}
-                    {opportunity.website && (
-                      <a href={opportunity.website} target="_blank" rel="noreferrer">
-                        Website <ArrowUpRight size={12} />
-                      </a>
-                    )}
-                  </div>
-
-                  <div className="hub-opportunity-actions">
+                  <aside className="sw-opportunity-next-step">
+                    <span className="sw-eyebrow">SUGGESTED OFFER</span>
+                    <strong className="sw-opportunity-offer"><FileText size={17}/>{opportunity.suggestedOffer}</strong>
+                    <div className="sw-opportunity-contact-actions">
+                      {opportunity.email && <a href={`mailto:${opportunity.email}`}><Mail size={14}/> Email</a>}
+                      {opportunity.phone && <a href={`tel:${opportunity.phone}`}><Phone size={14}/> Call</a>}
+                      {opportunity.website && <a href={opportunity.website} target="_blank" rel="noreferrer">Website <ArrowUpRight size={14}/></a>}
+                    </div>
                     {opportunity.importedLeadId ? (
-                      <Link href={`/hub/leads/${opportunity.importedLeadId}`} className="hub-primary-button">
-                        Open Lead <ArrowUpRight size={13} />
-                      </Link>
+                      <Link href={`/hub/leads/${opportunity.importedLeadId}`} className="sw-opportunity-main-action">Open lead <ArrowUpRight size={15}/></Link>
                     ) : channels.length > 0 ? (
-                      <form action={addProspectToLeads}>
-                        <input type="hidden" name="prospectId" value={opportunity.id} />
-                        <select name="contactChannel" defaultValue={channels[0].value} aria-label="Contact channel">
-                          {channels.map((channel) => (
-                            <option key={channel.value} value={channel.value}>{channel.label}</option>
-                          ))}
+                      <form action={addProspectToLeads} className="sw-opportunity-convert">
+                        <input type="hidden" name="prospectId" value={opportunity.id}/>
+                        <label htmlFor={`contact-channel-${opportunity.id}`}>Contact channel</label>
+                        <select id={`contact-channel-${opportunity.id}`} name="contactChannel" defaultValue={channels[0].value}>
+                          {channels.map(channel => <option key={channel.value} value={channel.value}>{channel.label}</option>)}
                         </select>
-                        <button type="submit" className="hub-primary-button">
-                          <UserPlus size={13} /> Add to Leads
-                        </button>
+                        <button type="submit" className="sw-opportunity-main-action"><UserPlus size={15}/> Add to Leads</button>
                       </form>
-                    ) : (
-                      <span className="hub-opportunity-no-contact">Needs contact research</span>
-                    )}
-
-                    <Link
-                      href={`/hub/prospects?q=${encodeURIComponent(opportunity.name)}`}
-                      className="hub-secondary-button"
-                    >
-                      Review prospect
-                    </Link>
-                  </div>
-                </aside>
-              </article>
+                    ) : <p className="sw-opportunity-no-contact">Needs contact research before conversion.</p>}
+                    <Link className="sw-opportunity-review-link" href={`/hub/prospects?q=${encodeURIComponent(opportunity.name)}`}>Review prospect <ArrowUpRight size={14}/></Link>
+                  </aside>
+                </div>
+              </details>
             );
           })}
         </section>
@@ -356,6 +322,7 @@ export default async function OpportunitiesPage({ searchParams }: PageProps) {
           </Link>
         </nav>
       )}
-    </div>
+      </div>
+    </WorkspacePage>
   );
 }

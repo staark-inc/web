@@ -80,7 +80,7 @@ export default async function BillingPage() {
   ).length;
 
   return (
-    <div className="hub-page hub-billing-v2-page">
+    <div className="hub-page hub-billing-v2-page hub-crm-workspace">
       <header className="hub-workspace-head">
         <div>
           <span className="hub-workspace-kicker">FINANCE / CONTRACTS</span>

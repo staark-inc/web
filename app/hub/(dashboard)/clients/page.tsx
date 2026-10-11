@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
+import { WorkspacePage, PageHeader, Metrics, Metric } from "@/components/hub/workspace";
 
 export const dynamic = "force-dynamic";
 
@@ -103,68 +104,21 @@ export default async function ClientsPage() {
   ]);
 
   return (
-    <div className="hub-page hub-clients-v2-page">
-      <header className="hub-clients-v2-head">
-        <div>
-          <span className="hub-clients-v2-kicker">CUSTOMERS / CRM</span>
-          <h1>Clients</h1>
-          <p>
-            Keep customer relationships, delivery and commercial activity in one place.
-          </p>
+    <WorkspacePage>
+      <div className="sw-clients-page">
+        <PageHeader eyebrow="CUSTOMERS / CRM" title="Clients"
+          description="Manage client relationships, active delivery, offers and support in one workspace."
+          action={<Link href="/hub/clients/new" className="sw-primary-link"><Plus size={16}/> New client</Link>}/>
+        <Metrics label="Client overview">
+          <Metric label="Clients" value={totalClients} description="Confirmed customer records" icon={<Building2 size={18}/>}/>
+          <Metric label="Linked contacts" value={linkedContacts} description="People connected to clients" icon={<UsersRound size={18}/>}/>
+          <Metric label="Active projects" value={activeProjects} description="Delivery in progress" icon={<FolderKanban size={18}/>}/>
+          <Metric label="Open support" value={openSupport} description={`${liveOffers} live offers`} icon={<LifeBuoy size={18}/>}/>
+        </Metrics>
+        <div className="sw-client-workspace-heading">
+          <div><span className="sw-eyebrow">YOUR ACCOUNTS</span><h2>Client portfolio</h2><p>Expand a client to review ongoing work before opening their complete record.</p></div>
+          <span className="sw-client-count">{clients.length} clients</span>
         </div>
-
-        <Link href="/hub/clients/new" className="hub-clients-v2-new">
-          <Plus size={15} />
-          New client
-        </Link>
-      </header>
-
-      <section className="hub-clients-v2-stats" aria-label="Client overview">
-        <div className="hub-clients-v2-stat">
-          <span className="hub-clients-v2-stat-icon">
-            <Building2 size={16} />
-          </span>
-          <div>
-            <small>Clients</small>
-            <strong>{totalClients}</strong>
-            <span>Confirmed records</span>
-          </div>
-        </div>
-
-        <div className="hub-clients-v2-stat">
-          <span className="hub-clients-v2-stat-icon">
-            <UsersRound size={16} />
-          </span>
-          <div>
-            <small>Contacts</small>
-            <strong>{linkedContacts}</strong>
-            <span>Linked people</span>
-          </div>
-        </div>
-
-        <div className="hub-clients-v2-stat">
-          <span className="hub-clients-v2-stat-icon">
-            <FolderKanban size={16} />
-          </span>
-          <div>
-            <small>Active delivery</small>
-            <strong>{activeProjects}</strong>
-            <span>Open projects</span>
-          </div>
-        </div>
-
-        <div className={`hub-clients-v2-stat ${openSupport ? "hub-clients-v2-stat-warning" : ""}`}>
-          <span className="hub-clients-v2-stat-icon">
-            <LifeBuoy size={16} />
-          </span>
-          <div>
-            <small>Open support</small>
-            <strong>{openSupport}</strong>
-            <span>{liveOffers} live offer{liveOffers === 1 ? "" : "s"}</span>
-          </div>
-        </div>
-      </section>
-
       {clients.length === 0 ? (
         <div className="hub-empty-state">
           <Building2 size={28} />
@@ -177,89 +131,42 @@ export default async function ClientsPage() {
           </Link>
         </div>
       ) : (
-        <section className="hub-clients-v2-list" aria-label="Clients">
+        <section className="sw-client-portfolio" aria-label="Clients">
           {clients.map((client) => {
-            const email =
-              client.billingEmail ??
-              client.contacts[0]?.email ??
-              null;
-
-            const activeProjectCount = client.projects.filter(
-              (project) =>
-                project.status !== "COMPLETED" &&
-                project.status !== "CANCELLED"
-            ).length;
-
-            const liveOfferCount = client.offers.filter(
-              (offer) => offer.status === "SHARED" || offer.status === "VIEWED"
-            ).length;
-
-            const openSupportCount = client.supportRequests.filter(
-              (request) => request.status !== "RESOLVED"
-            ).length;
-
+            const email = client.billingEmail ?? client.contacts[0]?.email ?? null;
+            const activeProjectCount = client.projects.filter(project => project.status !== "COMPLETED" && project.status !== "CANCELLED").length;
+            const liveOfferCount = client.offers.filter(offer => offer.status === "SHARED" || offer.status === "VIEWED").length;
+            const openSupportCount = client.supportRequests.filter(request => request.status !== "RESOLVED").length;
             return (
-              <article key={client.id} className="hub-clients-v2-row">
-                <div className="hub-clients-v2-main">
-                  <div className="hub-clients-v2-avatar">
-                    {getInitials(client.name) || <Building2 size={17} />}
+              <details key={client.id} className="sw-client-account">
+                <summary>
+                  <span className="sw-client-avatar">{getInitials(client.name) || <Building2 size={17}/>}</span>
+                  <span className="sw-client-identity"><strong>{client.name}</strong><small>{email || "No billing email added"}</small></span>
+                  <span className="sw-client-health">
+                    <span><FolderKanban size={14}/>{activeProjectCount} projects</span>
+                    <span><FileText size={14}/>{liveOfferCount} offers</span>
+                    {openSupportCount > 0 && <span className="is-attention"><LifeBuoy size={14}/>{openSupportCount} support</span>}
+                  </span>
+                  <span className="sw-client-open">Details <ArrowRight size={16}/></span>
+                </summary>
+                <div className="sw-client-account-detail">
+                  <div><span className="sw-eyebrow">RELATIONSHIP</span><h3>{client.name}</h3>
+                    <p><Mail size={15}/>{email || "No email on record"}</p>
+                    <p><UsersRound size={15}/>{client.contacts.length} linked contacts</p>
+                    <p>Client since {formatDate(client.createdAt)}</p>
                   </div>
-
-                  <div className="hub-clients-v2-identity">
-                    <Link href={`/hub/clients/${client.id}`}>
-                      {client.name}
-                    </Link>
-
-                    <span>
-                      {email ? (
-                        <>
-                          <Mail size={13} />
-                          {email}
-                        </>
-                      ) : (
-                        "No email added"
-                      )}
-                    </span>
+                  <div className="sw-client-detail-actions">
+                    <span className="sw-eyebrow">NEXT ACTION</span>
+                    {email && <Link href={`/hub/compose?replyTo=${encodeURIComponent(email)}`}><Mail size={15}/> Compose email</Link>}
+                    <Link className="sw-client-primary-action" href={`/hub/clients/${client.id}`}>Open client workspace <ArrowRight size={16}/></Link>
                   </div>
                 </div>
-
-                <div className="hub-clients-v2-signals">
-                  <span>
-                    <UsersRound size={13} />
-                    {client.contacts.length} contact{client.contacts.length === 1 ? "" : "s"}
-                  </span>
-
-                  <span className={activeProjectCount ? "hub-clients-v2-signal-active" : undefined}>
-                    <FolderKanban size={13} />
-                    {activeProjectCount} active project{activeProjectCount === 1 ? "" : "s"}
-                  </span>
-
-                  <span className={liveOfferCount ? "hub-clients-v2-signal-info" : undefined}>
-                    <FileText size={13} />
-                    {liveOfferCount} live offer{liveOfferCount === 1 ? "" : "s"}
-                  </span>
-
-                  <span className={openSupportCount ? "hub-clients-v2-signal-warning" : undefined}>
-                    <LifeBuoy size={13} />
-                    {openSupportCount} open support
-                  </span>
-                </div>
-
-                <div className="hub-clients-v2-tail">
-                  <time dateTime={client.createdAt.toISOString()}>
-                    Client since {formatDate(client.createdAt)}
-                  </time>
-
-                  <Link href={`/hub/clients/${client.id}`}>
-                    Open
-                    <ArrowRight size={13} />
-                  </Link>
-                </div>
-              </article>
+              </details>
             );
           })}
         </section>
       )}
-    </div>
+      </div>
+    </WorkspacePage>
   );
 }

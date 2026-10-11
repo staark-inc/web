@@ -1,21 +1,11 @@
+import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
 import Link from "next/link";
-import {
-  ArrowRight,
-  Building2,
-  CircleDollarSign,
-  Globe2,
-  Mail,
-  MessageCircle,
-  Phone,
-  Target,
-  Trophy,
-  UserRoundSearch,
-} from "lucide-react";
+import { CircleDollarSign, Target, Trophy, UserRoundSearch, MessageCircle, Mail, ArrowRight, ChevronRight, CalendarDays } from "lucide-react";
+import { WorkspacePage, PageHeader, Metrics, Metric, InfoChip, EmptyState, SectionHeader } from "@/components/hub/workspace";
 
 import { prisma } from "@/lib/prisma";
 import { formatAmount } from "@/lib/format";
 import type { ContactChannel, LeadStatus } from "@/generated/prisma/client";
-import "../../leads-v2-readable.css";
 
 export const dynamic = "force-dynamic";
 
@@ -120,106 +110,88 @@ export default async function LeadsPage({ searchParams }: PageProps) {
   const winRate = decidedCount ? Math.round((wonCount / decidedCount) * 100) : 0;
 
   return (
-    <div className="hub-page hub-leads-v2-page">
-      <header className="hub-leads-v2-head">
-        <div>
-          <span className="hub-leads-v2-kicker">SALES / PIPELINE</span>
-          <h1>Leads</h1>
-          <p>Track new enquiries from first contact through qualification and conversion.</p>
-        </div>
+    <WorkspacePage>
+      <div className="sw-leads-page">
+        <PageHeader eyebrow="SALES / PIPELINE" title="Leads"
+          description="Track enquiries from first contact to conversion."
+          action={
+            <div className="sw-leads-summary">
+              <span><strong>{activePipeline}</strong> active opportunities</span>
+              <span><strong>{winRate}%</strong> win rate</span>
+            </div>
+          } />
+        <Metrics label="Sales pipeline overview">
+          <Metric label="New" value={newCount} description="Needs first contact" icon={<Target size={18} />} />
+          <Metric label="Contacted" value={contactedCount} description="Conversation started" icon={<UserRoundSearch size={18} />} />
+          <Metric label="Qualified" value={qualifiedCount} description="Ready for proposal" icon={<CircleDollarSign size={18} />} />
+          <Metric label="Won" value={wonCount} description={decidedCount ? `${winRate}% of decided leads` : "No decisions yet"} icon={<Trophy size={18} />} />
+        </Metrics>
 
-        <div className="hub-leads-v2-pipeline-summary">
-          <span>{activePipeline} active</span>
-          <strong>{winRate}% win rate</strong>
-        </div>
-      </header>
+        <div className="sw-sales-guide" role="note"><span className="sw-eyebrow">SALES JOURNEY</span><strong>New <span>→</span> Contacted <span>→</span> Qualified <span>→</span> Won</strong><p>Select a lead to review its message and contact options, then open the full record to advance the pipeline.</p></div>
+        <section className="sw-leads-listing" aria-label="Leads workspace">
+          <div className="sw-leads-toolbar">
+            <SectionHeader title="Pipeline" description={`${counts[activeStatus]} lead${counts[activeStatus] === 1 ? "" : "s"} in this view`} />
+            <WorkspaceTabs label="Filter leads by status" activeKey={activeStatus}
+              tabs={filters.map((filter) => ({
+                key: filter.value,
+                label: filter.label,
+                href: filter.value === "ALL" ? "/hub/leads" : `/hub/leads?status=${filter.value}`,
+                count: counts[filter.value],
+              }))}/>
 
-      <section className="hub-leads-v2-stats" aria-label="Sales pipeline overview">
-        <div className="hub-leads-v2-stat">
-          <span className="hub-leads-v2-stat-icon hub-leads-v2-stat-icon-new"><Target size={16} /></span>
-          <div><small>New</small><strong>{newCount}</strong><span>Needs first contact</span></div>
-        </div>
-        <div className="hub-leads-v2-stat">
-          <span className="hub-leads-v2-stat-icon"><UserRoundSearch size={16} /></span>
-          <div><small>Contacted</small><strong>{contactedCount}</strong><span>Conversation started</span></div>
-        </div>
-        <div className="hub-leads-v2-stat">
-          <span className="hub-leads-v2-stat-icon hub-leads-v2-stat-icon-qualified"><CircleDollarSign size={16} /></span>
-          <div><small>Qualified</small><strong>{qualifiedCount}</strong><span>Ready for proposal</span></div>
-        </div>
-        <div className="hub-leads-v2-stat">
-          <span className="hub-leads-v2-stat-icon hub-leads-v2-stat-icon-won"><Trophy size={16} /></span>
-          <div><small>Won</small><strong>{wonCount}</strong><span>{decidedCount ? `${winRate}% of decided leads` : "No decisions yet"}</span></div>
-        </div>
-      </section>
+          </div>
 
-      <nav className="hub-leads-v2-filters" aria-label="Lead filters">
-        {filters.map((filter) => {
-          const active = activeStatus === filter.value;
-          const href = filter.value === "ALL" ? "/hub/leads" : `/hub/leads?status=${filter.value}`;
-          return (
-            <Link key={filter.value} href={href} className={active ? "hub-leads-v2-filter-active" : undefined}>
-              <span>{filter.label}</span><strong>{counts[filter.value]}</strong>
-            </Link>
-          );
-        })}
-      </nav>
-
-      {leads.length === 0 ? (
-        <div className="hub-empty-state">
-          <Target size={28} />
-          <h2>{activeStatus === "ALL" ? "No leads yet" : `No ${activeStatus.toLowerCase()} leads`}</h2>
-          <p>{activeStatus === "ALL" ? "New leads from the website and Prospects will appear here." : "There are no leads with this status."}</p>
-        </div>
-      ) : (
-        <section className="hub-leads-v2-list" aria-label="Lead pipeline">
-          {leads.map((lead) => {
-            const fallback = lead.contact.email || lead.contact.phone || lead.contact.facebook || lead.contact.company;
-            const initials = getInitials(lead.contact.name, fallback);
-            const label = contactLabel(lead);
-
-            return (
-              <article key={lead.id} className="hub-leads-v2-row">
-                <div className="hub-leads-v2-person">
-                  <div className="hub-leads-v2-avatar">{initials}</div>
-                  <div className="hub-leads-v2-identity">
-                    <div className="hub-leads-v2-name-line">
-                      <Link href={`/hub/leads/${lead.id}`}>{lead.contact.name || lead.contact.company || "Unknown contact"}</Link>
-                      <span className={`hub-lead-status hub-lead-status-${lead.status.toLowerCase()}`}>{statusLabels[lead.status]}</span>
+          {leads.length === 0 ? (
+            <EmptyState
+              title={activeStatus === "ALL" ? "No leads yet" : `No ${activeStatus.toLowerCase()} leads`}
+              description={activeStatus === "ALL" ? "New leads from the website and Prospects will appear here." : "There are no leads with this status."}
+            />
+          ) : (
+            <div className="sw-lead-cards" role="list" aria-label="Lead pipeline">
+              {leads.map((lead) => {
+                const fallback = lead.contact.email || lead.contact.phone || lead.contact.facebook || lead.contact.company;
+                const initials = getInitials(lead.contact.name, fallback);
+                const label = contactLabel(lead);
+                return (
+                  <details key={lead.id} role="listitem" className="sw-lead-card">
+                    <summary>
+                      <span className="sw-lead-avatar" aria-hidden="true">{initials}</span>
+                      <span className="sw-lead-person">
+                        <strong>{lead.contact.name || lead.contact.company || "Unknown contact"}</strong>
+                        <small>{channelLabels[lead.contactChannel]} · {label}</small>
+                      </span>
+                      <span className="sw-lead-service">
+                        <strong>{lead.service || "General enquiry"}</strong>
+                        <small>{formatAmount(lead.budget) || "Budget not specified"}</small>
+                      </span>
+                      <InfoChip tone={lead.status === "WON" ? "success" : lead.status === "LOST" ? "warning" : lead.status === "NEW" ? "info" : "neutral"}>
+                        {statusLabels[lead.status]}
+                      </InfoChip>
+                      <span className="sw-lead-summary-arrow"><ChevronRight size={17}/></span>
+                    </summary>
+                    <div className="sw-lead-expanded">
+                      <div>
+                        <span className="sw-eyebrow">ENQUIRY</span>
+                        <p className="sw-lead-full-message">{lead.message || "No message provided."}</p>
+                        <span className="sw-lead-date"><CalendarDays size={14}/> Received {formatDate(lead.createdAt)}</span>
+                      </div>
+                      <div className="sw-lead-quick-actions">
+                        <span className="sw-eyebrow">NEXT STEP</span>
+                        {lead.contactChannel === "EMAIL" && lead.contact.email && (
+                          <Link href={`/hub/compose?replyTo=${encodeURIComponent(lead.contact.email)}`}><Mail size={15}/> Compose email</Link>
+                        )}
+                        {lead.contact.phone && <a href={`tel:${lead.contact.phone}`}><MessageCircle size={15}/> Call {lead.contact.phone}</a>}
+                        {lead.client && <Link href={`/hub/clients/${lead.client.id}`}>View client <ArrowRight size={15}/></Link>}
+                        <Link className="sw-lead-open" href={`/hub/leads/${lead.id}`}>Open lead &amp; update status <ArrowRight size={15}/></Link>
+                      </div>
                     </div>
-                    <span>
-                      {lead.contactChannel === "EMAIL" ? <Mail size={12} /> : lead.contactChannel === "WHATSAPP" ? <MessageCircle size={12} /> : <Globe2 size={12} />}
-                      {channelLabels[lead.contactChannel]} · {label}
-                    </span>
-                    {lead.contact.phone && lead.contactChannel !== "WHATSAPP" && <span><Phone size={12} />{lead.contact.phone}</span>}
-                    {lead.contact.company && <span><Building2 size={12} />{lead.contact.company}</span>}
-                  </div>
-                </div>
-
-                <div className="hub-leads-v2-opportunity">
-                  <small>Opportunity</small>
-                  <strong>{lead.service || "General enquiry"}</strong>
-                  <span>{formatAmount(lead.budget) || "Budget not specified"}</span>
-                </div>
-
-                <div className="hub-leads-v2-message">
-                  <small>Message</small>
-                  <p>{lead.message || "No message was provided."}</p>
-                </div>
-
-                <div className="hub-leads-v2-tail">
-                  {lead.client ? (
-                    <Link href={`/hub/clients/${lead.client.id}`} className="hub-leads-v2-client-link">Client: {lead.client.name}</Link>
-                  ) : (
-                    <time dateTime={lead.createdAt.toISOString()}>{formatDate(lead.createdAt)}</time>
-                  )}
-                  <Link href={`/hub/leads/${lead.id}`} className="hub-leads-v2-open">Open<ArrowRight size={13} /></Link>
-                </div>
-              </article>
-            );
-          })}
+                  </details>
+                );
+              })}
+            </div>
+          )}
         </section>
-      )}
-    </div>
+      </div>
+    </WorkspacePage>
   );
 }

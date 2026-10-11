@@ -1,0 +1,92 @@
+/* HUB UI 03 — measured density and readability pass.
+   Loaded after workspace, without replacing legacy module rules. */
+.hub-dashboard {
+  --hub-v3-radius: 14px;
+  --hub-v3-line: #dce3ed;
+  --hub-v3-text: #192337;
+  --hub-v3-muted: #58677e;
+}
+
+/* Keep wide workspaces wide, with a consistent content rhythm. */
+.hub-dashboard .hub-content .hub-page {
+  max-width: none;
+  padding-inline: clamp(20px, 2.35vw, 42px);
+}
+.hub-dashboard .hub-content .hub-page > header {
+  margin-bottom: 20px;
+  padding-bottom: 18px;
+}
+.hub-dashboard .hub-content .hub-page > header h1 {
+  font-size: clamp(26px, 2.1vw, 34px);
+}
+
+/* Command-center panels: make the status scannable, not decorative. */
+.hub-dashboard .hub-overview-page .hub-command-grid {
+  align-items: stretch;
+  gap: 14px;
+  margin-top: 14px;
+}
+.hub-dashboard .hub-overview-page .hub-command-panel {
+  border-color: var(--hub-v3-line);
+  border-radius: var(--hub-v3-radius);
+  box-shadow: 0 3px 16px rgba(18, 33, 56, .035);
+}
+.hub-dashboard .hub-overview-page .hub-command-panel-header {
+  min-height: 58px;
+  padding-inline: 18px;
+}
+.hub-dashboard .hub-overview-page .hub-command-panel-header h2 {
+  font-size: 15px;
+  color: var(--hub-v3-text);
+}
+.hub-dashboard .hub-overview-page .hub-command-panel-header span,
+.hub-dashboard .hub-overview-page .hub-command-metric small {
+  font-size: 10px;
+  letter-spacing: .06em;
+}
+.hub-dashboard .hub-overview-page .hub-command-attention strong,
+.hub-dashboard .hub-overview-page .hub-command-clear strong {
+  font-size: 13px;
+}
+.hub-dashboard .hub-overview-page .hub-command-attention div > span,
+.hub-dashboard .hub-overview-page .hub-command-clear span {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* Empty priority queue gets the size it deserves, not a giant placeholder. */
+@supports selector(:has(*)) {
+  .hub-dashboard .hub-overview-page .hub-command-grid:has(.hub-command-clear) {
+    align-items: start;
+  }
+  .hub-dashboard .hub-overview-page .hub-command-panel:has(.hub-command-clear) {
+    min-height: 0;
+  }
+  .hub-dashboard .hub-overview-page .hub-command-clear {
+    min-height: 100px !important;
+    padding: 18px 20px !important;
+    justify-content: flex-start !important;
+    text-align: left;
+  }
+}
+
+/* Restore some prominence to sidebar labels without increasing height. */
+.hub-dashboard .hub-sidebar .hub-nav-item {
+  font-size: 13px;
+  letter-spacing: 0;
+}
+.hub-dashboard .hub-sidebar .hub-nav-item-active {
+  font-weight: 650;
+}
+
+@media (max-width: 760px) {
+  .hub-dashboard .hub-content .hub-page {
+    padding-inline: 16px;
+  }
+  .hub-dashboard .hub-overview-page .hub-command-grid {
+    gap: 12px;
+  }
+  .hub-dashboard .hub-overview-page .hub-command-clear {
+    min-height: 80px !important;
+  }
+}

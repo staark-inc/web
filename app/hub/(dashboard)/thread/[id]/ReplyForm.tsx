@@ -139,7 +139,7 @@ export default function ReplyForm({
   }
 
   return (
-    <section className="hub-thread-reply">
+    <section className="hub-thread-reply sw-thread-reply">
       <div className="hub-thread-reply-header">
         <div>
           <span>REPLY</span>
@@ -153,7 +153,9 @@ export default function ReplyForm({
       </div>
 
       <form onSubmit={handleSubmit}>
+        <label htmlFor="sw-thread-reply-message" className="sw-thread-reply-label">Your reply</label>
         <textarea
+          id="sw-thread-reply-message"
           name="message"
           value={message}
           onChange={(event) =>
