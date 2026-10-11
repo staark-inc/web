@@ -11,6 +11,9 @@ import {
 import {
   CheckCircle2,
   FileText,
+  Eye,
+  Focus,
+  Pencil,
   History,
   Mail,
   Paperclip,
@@ -120,6 +123,8 @@ export default function ComposeForm({
   const [message, setMessage] = useState(initialMessage);
   const [templateKey, setTemplateKey] = useState("");
   const [showPreview, setShowPreview] = useState(true);
+  const [composeView, setComposeView] = useState<"write" | "preview">("write");
+  const [focusMode, setFocusMode] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [draftLoaded, setDraftLoaded] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -327,7 +332,7 @@ export default function ComposeForm({
   }
 
   return (
-    <form className="hub-mail-compose-grid" onSubmit={handleSubmit}>
+    <form className={`hub-mail-compose-grid sw-compose-workspace ${composeView === "preview" ? "sw-compose-preview-mode" : ""} ${focusMode ? "sw-compose-focus-mode" : ""}`} onSubmit={handleSubmit}>
       <section className="hub-mail-compose-editor">
         <div className="hub-mail-compose-toolbar">
           <div>
@@ -335,10 +340,25 @@ export default function ComposeForm({
             <strong>Compose email</strong>
           </div>
 
-          <button type="button" className="hub-mail-v2-ghost" onClick={clearDraft}>
-            <RotateCcw size={14} />
-            Discard draft
-          </button>
+          <div className="sw-compose-toolbar-actions">
+            <div className="sw-compose-view-toggle" role="group" aria-label="Compose view">
+              <button type="button" className={composeView === "write" ? "is-active" : ""}
+                aria-pressed={composeView === "write"} onClick={() => setComposeView("write")}>
+                <Pencil size={14}/> Write
+              </button>
+              <button type="button" className={composeView === "preview" ? "is-active" : ""}
+                aria-pressed={composeView === "preview"} onClick={() => { setComposeView("preview"); setShowPreview(true); setFocusMode(false); }}>
+                <Eye size={14}/> Preview
+              </button>
+            </div>
+            <button type="button" className="sw-compose-focus-toggle"
+              aria-pressed={focusMode} onClick={() => { setFocusMode((value) => !value); setComposeView("write"); }}>
+              <Focus size={14}/> {focusMode ? "Exit focus" : "Focus"}
+            </button>
+            <button type="button" className="hub-mail-v2-ghost" onClick={clearDraft}>
+              <RotateCcw size={14}/> Discard draft
+            </button>
+          </div>
         </div>
 
         <div className="hub-mail-recipient-row">
@@ -416,6 +436,7 @@ export default function ComposeForm({
           <div className="hub-mail-template-note">{selectedTemplate.description}</div>
         )}
 
+        <div className="sw-compose-message-heading"><label htmlFor="hub-message">Message</label><span>{message.trim() ? message.trim().split(/\s+/).length : 0} words · {message.length}/20,000 characters</span></div>
         <div className="hub-mail-message-field">
           <textarea
             id="hub-message"
@@ -526,7 +547,7 @@ export default function ComposeForm({
       </section>
 
       <aside className="hub-mail-compose-side">
-        <section className="hub-mail-context-card">
+        <section className="hub-mail-context-card sw-compose-context-card">
           <div className="hub-mail-side-heading">
             <span className="hub-mail-v2-kicker">RECIPIENT</span>
             <strong>Contact context</strong>
@@ -577,7 +598,7 @@ export default function ComposeForm({
         </section>
 
         {showPreview && (
-          <section className="hub-mail-preview-card">
+          <section className="hub-mail-preview-card sw-compose-preview-card">
             <div className="hub-mail-side-heading">
               <span className="hub-mail-v2-kicker">PREVIEW</span>
               <strong>Outgoing email</strong>
