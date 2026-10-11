@@ -2,11 +2,8 @@ import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
-  AlertTriangle,
   ArrowLeft,
   Building2,
-  CalendarDays,
-  CheckCircle2,
   Clock3,
   ExternalLink,
   Gauge,
@@ -14,7 +11,6 @@ import {
   LifeBuoy,
   Package,
   Rocket,
-  Wallet,
 } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
@@ -206,135 +202,24 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
         </div>
       </div>
 
-      <section className="hub-project-command">
-        <div className="hub-project-command-progress">
-          <div className="hub-project-command-heading">
-            <span>
-              <Gauge size={15} />
-              Project progress
-            </span>
-            <strong>{taskPercent}%</strong>
+      <section className="sw-project-overview-board" aria-label="Project delivery at a glance">
+        <div className="sw-project-overview-main">
+          <div className="sw-project-overview-kicker"><Gauge size={16}/> DELIVERY PROGRESS</div>
+          <div className="sw-project-overview-value">{taskPercent}<span>%</span></div>
+          <div className="sw-project-overview-track" role="progressbar" aria-valuenow={taskPercent} aria-valuemin={0} aria-valuemax={100} aria-label="Tasks completed">
+            <span style={{ width: `${taskPercent}%` }}/>
           </div>
-
-          <div
-            className="hub-project-command-bar"
-            role="progressbar"
-            aria-valuenow={taskPercent}
-            aria-valuemin={0}
-            aria-valuemax={100}
-          >
-            <span style={{ width: `${taskPercent}%` }} />
-          </div>
-
-          <p>
-            {project.tasks.length
-              ? `${done} of ${project.tasks.length} tasks complete`
-              : "Add tasks to start tracking delivery progress"}
-          </p>
-        </div>
-
-        <div className="hub-project-command-signals hub-project-command-signals-four">
-          <div className="hub-project-signal">
-            <span className="hub-project-signal-icon">
-              <CheckCircle2 size={15} />
-            </span>
-            <div>
-              <small>Next action</small>
-              <strong>{nextTask?.title ?? "No open tasks"}</strong>
-            </div>
-          </div>
-
-          <div className={`hub-project-signal hub-project-signal-${dueTone}`}>
-            <span className="hub-project-signal-icon">
-              {dueTone === "danger" || dueTone === "warning" ? (
-                <AlertTriangle size={15} />
-              ) : (
-                <Clock3 size={15} />
-              )}
-            </span>
-            <div>
-              <small>Timeline</small>
-              <strong>{dueLabel}</strong>
-            </div>
-          </div>
-
-          <div className={`hub-project-signal ${openSupport ? "hub-project-signal-warning" : "hub-project-signal-good"}`}>
-            <span className="hub-project-signal-icon">
-              <LifeBuoy size={15} />
-            </span>
-            <div>
-              <small>Support</small>
-              <strong>
-                {openSupport
-                  ? `${openSupport} open request${openSupport === 1 ? "" : "s"}`
-                  : "No open requests"}
-              </strong>
-            </div>
-          </div>
-
-          <div className={`hub-project-signal hub-project-signal-${deploymentTone}`}>
-            <span className="hub-project-signal-icon">
-              <Rocket size={15} />
-            </span>
-            <div>
-              <small>Deployment</small>
-              <strong>{deploymentLabel}</strong>
-            </div>
+          <div className="sw-project-overview-caption">{done} / {project.tasks.length} tasks completed</div>
+          <div className="sw-project-overview-focus">
+            <span>UP NEXT</span>
+            <strong>{nextTask?.title ?? (project.tasks.length ? "All recorded tasks complete" : "Add your first task")}</strong>
           </div>
         </div>
-      </section>
-
-      <section className="hub-client-stats">
-        <div className="hub-client-stat">
-          <span className="hub-client-stat-label">
-            <CheckCircle2 size={16} />
-            Tasks complete
-          </span>
-          <strong>{done} of {project.tasks.length}</strong>
-          <small>
-            {project.tasks.find((task) => !task.done)
-              ? `Next: ${project.tasks.find((task) => !task.done)!.title}`
-              : project.tasks.length
-                ? "All tasks done"
-                : "No tasks yet"}
-          </small>
-        </div>
-
-        <div className="hub-client-stat">
-          <span className="hub-client-stat-label">
-            <Package size={16} />
-            Client materials
-          </span>
-          <strong>{receivedMaterials} of {project.materials.length} received</strong>
-          <small>
-            {project.materials.length === 0
-              ? "Nothing requested yet"
-              : awaitingMaterials.length === 0
-                ? "Nothing waiting on the client"
-                : `${awaitingMaterials.length} item${awaitingMaterials.length === 1 ? "" : "s"} still awaiting`}
-          </small>
-        </div>
-
-        <div className="hub-client-stat">
-          <span className="hub-client-stat-label">
-            <CalendarDays size={16} />
-            Launch date
-          </span>
-          <strong>{project.dueAt ? formatDate(project.dueAt) : "Not scheduled"}</strong>
-          <small>
-            {project.startedAt
-              ? `Started ${formatDate(project.startedAt)}`
-              : "Set after client approval"}
-          </small>
-        </div>
-
-        <div className="hub-client-stat">
-          <span className="hub-client-stat-label">
-            <Wallet size={16} />
-            Budget
-          </span>
-          <strong>{formatAmount(project.budget) ?? "Not set"}</strong>
-          <small>{project.liveUrl ? "Live site published" : "Not live yet"}</small>
+        <div className="sw-project-overview-facts">
+          <div><Clock3 size={17}/><span>Deadline</span><strong>{dueLabel}</strong></div>
+          <div><Package size={17}/><span>Client materials</span><strong>{receivedMaterials} / {project.materials.length} received</strong></div>
+          <div><Rocket size={17}/><span>Deployment</span><strong>{deploymentLabel}</strong></div>
+          <div><LifeBuoy size={17}/><span>Open support</span><strong>{openSupport}</strong></div>
         </div>
       </section>
 
@@ -349,7 +234,7 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
             : item.value === "billing" ? openSupport : undefined,
         }))}/>
       {activeTab === "overview" && (
-        <section className="hub-client-detail-grid">
+        <section className="hub-client-detail-grid sw-project-content-grid">
           <div className="hub-client-side">
             <ProjectTasks projectId={project.id} tasks={project.tasks} summary />
             <ProjectActivity projectId={project.id} activities={project.activities} />
