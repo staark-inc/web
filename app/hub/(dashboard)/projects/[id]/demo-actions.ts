@@ -53,7 +53,7 @@ export async function saveDemoConfig(
     throw new Error("Invalid demo slug");
   }
 
-  let image = String(
+  const image = String(
     formData.get("image") || ""
   )
     .trim()
