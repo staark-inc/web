@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { CircleDollarSign, Target, Trophy, UserRoundSearch, MessageCircle, Mail, Globe2 } from "lucide-react";
-import { WorkspacePage, PageHeader, Metrics, Metric, RecordList, RecordRow, InfoChip, EmptyState, SectionHeader } from "@/components/hub/workspace";
+import { CircleDollarSign, Target, Trophy, UserRoundSearch, MessageCircle, Mail, Globe2, ArrowRight, ChevronRight, CalendarDays } from "lucide-react";
+import { WorkspacePage, PageHeader, Metrics, Metric, InfoChip, EmptyState, SectionHeader } from "@/components/hub/workspace";
 
 import { prisma } from "@/lib/prisma";
 import { formatAmount } from "@/lib/format";
@@ -126,6 +126,7 @@ export default async function LeadsPage({ searchParams }: PageProps) {
           <Metric label="Won" value={wonCount} description={decidedCount ? `${winRate}% of decided leads` : "No decisions yet"} icon={<Trophy size={18} />} />
         </Metrics>
 
+        <div className="sw-sales-guide" role="note"><span className="sw-eyebrow">SALES JOURNEY</span><strong>New <span>→</span> Contacted <span>→</span> Qualified <span>→</span> Won</strong><p>Select a lead to review its message and contact options, then open the full record to advance the pipeline.</p></div>
         <section className="sw-leads-listing" aria-label="Leads workspace">
           <div className="sw-leads-toolbar">
             <SectionHeader title="Pipeline" description={`${counts[activeStatus]} lead${counts[activeStatus] === 1 ? "" : "s"} in this view`} />
@@ -148,40 +149,48 @@ export default async function LeadsPage({ searchParams }: PageProps) {
               description={activeStatus === "ALL" ? "New leads from the website and Prospects will appear here." : "There are no leads with this status."}
             />
           ) : (
-            <RecordList label="Lead pipeline">
+            <div className="sw-lead-cards" role="list" aria-label="Lead pipeline">
               {leads.map((lead) => {
                 const fallback = lead.contact.email || lead.contact.phone || lead.contact.facebook || lead.contact.company;
                 const initials = getInitials(lead.contact.name, fallback);
                 const label = contactLabel(lead);
-                return <RecordRow key={lead.id} href={`/hub/leads/${lead.id}`} initials={initials}
-                  name={lead.contact.name || lead.contact.company || "Unknown contact"}
-                  subtitle={
-                    <span className="sw-leads-contact">
-                      {lead.contactChannel === "EMAIL" ? <Mail size={13} aria-hidden="true" /> : lead.contactChannel === "WHATSAPP" ? <MessageCircle size={13} aria-hidden="true" /> : <Globe2 size={13} aria-hidden="true" />}
-                      {channelLabels[lead.contactChannel]} · {label}
-                    </span>
-                  }
-                  details={
-                    <div className="sw-leads-details">
-                      <div className="sw-leads-opportunity">
+                return (
+                  <details key={lead.id} role="listitem" className="sw-lead-card">
+                    <summary>
+                      <span className="sw-lead-avatar" aria-hidden="true">{initials}</span>
+                      <span className="sw-lead-person">
+                        <strong>{lead.contact.name || lead.contact.company || "Unknown contact"}</strong>
+                        <small>{channelLabels[lead.contactChannel]} · {label}</small>
+                      </span>
+                      <span className="sw-lead-service">
                         <strong>{lead.service || "General enquiry"}</strong>
-                        <span>{formatAmount(lead.budget) || "Budget not specified"}</span>
-                      </div>
-                      <p className="sw-leads-message">{lead.message || "No message provided"}</p>
-                    </div>
-                  }
-                  meta={
-                    <span className="sw-leads-meta">
+                        <small>{formatAmount(lead.budget) || "Budget not specified"}</small>
+                      </span>
                       <InfoChip tone={lead.status === "WON" ? "success" : lead.status === "LOST" ? "warning" : lead.status === "NEW" ? "info" : "neutral"}>
                         {statusLabels[lead.status]}
                       </InfoChip>
-                      {lead.client ? <Link className="sw-leads-client" href={`/hub/clients/${lead.client.id}`}>Client: {lead.client.name}</Link> :
-                        <time dateTime={lead.createdAt.toISOString()}>{formatDate(lead.createdAt)}</time>}
-                    </span>
-                  }
-                />;
+                      <span className="sw-lead-summary-arrow"><ChevronRight size={17}/></span>
+                    </summary>
+                    <div className="sw-lead-expanded">
+                      <div>
+                        <span className="sw-eyebrow">ENQUIRY</span>
+                        <p className="sw-lead-full-message">{lead.message || "No message provided."}</p>
+                        <span className="sw-lead-date"><CalendarDays size={14}/> Received {formatDate(lead.createdAt)}</span>
+                      </div>
+                      <div className="sw-lead-quick-actions">
+                        <span className="sw-eyebrow">NEXT STEP</span>
+                        {lead.contactChannel === "EMAIL" && lead.contact.email && (
+                          <Link href={`/hub/compose?replyTo=${encodeURIComponent(lead.contact.email)}`}><Mail size={15}/> Compose email</Link>
+                        )}
+                        {lead.contact.phone && <a href={`tel:${lead.contact.phone}`}><MessageCircle size={15}/> Call {lead.contact.phone}</a>}
+                        {lead.client && <Link href={`/hub/clients/${lead.client.id}`}>View client <ArrowRight size={15}/></Link>}
+                        <Link className="sw-lead-open" href={`/hub/leads/${lead.id}`}>Open lead &amp; update status <ArrowRight size={15}/></Link>
+                      </div>
+                    </div>
+                  </details>
+                );
               })}
-            </RecordList>
+            </div>
           )}
         </section>
       </div>
