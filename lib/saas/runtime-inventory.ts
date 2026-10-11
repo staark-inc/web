@@ -52,7 +52,7 @@ export async function fetchRuntimeInventory(): Promise<InventoryFetchResult> {
       const body = JSON.stringify({ cursor, limit: 100 });
       const timestamp = Math.floor(Date.now() / 1000).toString();
       const signature = createHmac("sha256", secret)
-        .update(`${timestamp}.${body}`).digest("hex");
+        .update(`POST\n/api/staark/inventory\n${timestamp}.${body}`).digest("hex");
       const response = await fetch(`${origin}/api/staark/inventory`, {
         method: "POST",
         headers: {
