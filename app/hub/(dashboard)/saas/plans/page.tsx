@@ -6,7 +6,7 @@ export default function SaaSPlansPage() {
   const plans = Object.values(STAARK_PLANS);
 
   return (
-    <div className="hub-page hub-saas-workspace-page hub-saas-plans-page">
+    <div className="hub-page hub-saas-workspace-page hub-saas-plans-page sw-saas-detail-page">
       <header className="hub-workspace-head">
         <div>
           <span className="hub-workspace-kicker">SAAS / PLANS</span>
@@ -28,9 +28,9 @@ export default function SaaSPlansPage() {
         ))}
       </section>
 
-      <section className="hub-billing-v2-list" aria-label="SaaS plans">
+      <section className="sw-saas-detail-grid sw-saas-plans-grid" aria-label="SaaS plans">
         {plans.map((plan) => (
-          <article key={plan.code} className="hub-billing-v2-row">
+          <article key={plan.code} className="hub-billing-v2-row sw-saas-data-card">
             <div className="hub-billing-v2-main">
               <span className="hub-billing-v2-icon"><Layers3 size={16} /></span>
               <div>
