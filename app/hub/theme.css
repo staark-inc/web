@@ -857,3 +857,31 @@
  .sw-project-detail-workspace .hub-client-stats {grid-template-columns:repeat(2,minmax(0,1fr))}
  .sw-project-detail-workspace .hub-client-stat {padding:12px}
 }
+
+/* Offers board — same compact 3/2/1 card grid as Projects */
+.sw-offers-board-page .sw-filter-tabs {margin:0 0 12px}
+.sw-offer-board-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:stretch;min-width:0}
+.sw-offer-board-card {display:flex;flex-direction:column;min-width:0;overflow:hidden;background:#fff;border:1px solid var(--sw-line);border-radius:14px}
+.sw-offer-board-header {display:flex;align-items:flex-start;gap:10px;padding:16px;border-bottom:1px solid #edf1f7}
+.sw-offer-board-icon {flex:0 0 36px;height:36px;display:grid;place-items:center;background:#eef2fa;color:#40618a;border-radius:9px}
+.sw-offer-board-title {display:grid;gap:5px;flex:1;min-width:0}
+.sw-offer-board-title>a {font-size:14px;font-weight:750;line-height:1.4;color:var(--sw-ink);text-decoration:none;overflow-wrap:anywhere}
+.sw-offer-board-title>a:hover {color:var(--sw-accent)}
+.sw-offer-board-title small {font-size:11px;color:var(--sw-muted);overflow-wrap:anywhere}
+.sw-offer-board-header .hub-offer-status {flex-shrink:0;max-width:40%;font-size:10px;text-align:center}
+.sw-offer-board-body {display:flex;flex:1;flex-direction:column;gap:12px;padding:16px}
+.sw-offer-board-price {display:grid;gap:5px;padding:13px;border-radius:9px;background:#f5f8fc;border:1px solid #eaf0f7}
+.sw-offer-board-price span,.sw-offer-board-monthly span {font-size:11px;color:var(--sw-muted)}
+.sw-offer-board-price strong {font-size:22px;line-height:1.2;color:var(--sw-ink);overflow-wrap:anywhere}
+.sw-offer-board-monthly {display:flex;align-items:center;justify-content:space-between;gap:8px}
+.sw-offer-board-monthly strong {font-size:12px;color:var(--sw-ink)}
+.sw-offer-board-activity,.sw-offer-board-project {display:flex;align-items:center;gap:7px;font-size:11px;color:var(--sw-muted)}
+.sw-offer-board-activity {margin-top:auto}
+.sw-offer-board-activity svg,.sw-offer-board-project svg {flex-shrink:0}
+.sw-offer-board-project {color:#277754}
+.sw-offer-board-footer {display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 16px;border-top:1px solid #edf1f7}
+.sw-offer-board-footer time {font-size:10px;color:var(--sw-muted)}
+.sw-offer-board-footer a {display:inline-flex;align-items:center;gap:6px;border-radius:8px;background:var(--sw-accent);padding:9px 11px;color:#fff;font-size:11px;font-weight:750;white-space:nowrap;text-decoration:none}
+.sw-offer-board-footer a:hover {background:#244bd1}
+@media(max-width:1320px) {.sw-offer-board-grid {grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px) {.sw-offer-board-grid {grid-template-columns:minmax(0,1fr);gap:10px}.sw-offer-board-header,.sw-offer-board-body {padding:14px}.sw-offer-board-footer {padding:12px 14px}}
