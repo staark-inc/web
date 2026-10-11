@@ -1,3 +1,4 @@
+import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -88,7 +89,7 @@ export default async function OffersPage({
   const liveCount = countFor("SHARED") + countFor("VIEWED");
 
   return (
-    <div className="hub-page hub-offers-v2-page hub-crm-workspace">
+    <div className="hub-page hub-offers-v2-page hub-crm-workspace sw-offers-board-page">
       <header className="hub-workspace-head">
         <div>
           <span className="hub-workspace-kicker">SALES / PROPOSALS</span>
@@ -150,20 +151,13 @@ export default async function OffersPage({
         </div>
       </section>
 
-      <nav className="hub-workspace-filters" aria-label="Offer filters">
-        {filters.map((value) => (
-          <Link
-            key={value}
-            href={value === "ALL" ? "/hub/offers" : `/hub/offers?status=${value}`}
-            className={active === value ? "hub-workspace-filter-active" : undefined}
-            aria-current={active === value ? "page" : undefined}
-          >
-            <span>{value === "ALL" ? "All" : offerStatusLabels[value]}</span>
-            <strong>{countFor(value)}</strong>
-          </Link>
-        ))}
-      </nav>
-
+      <WorkspaceTabs label="Offer filters" activeKey={active}
+        tabs={filters.map((value) => ({
+          key: value,
+          label: value === "ALL" ? "All" : offerStatusLabels[value],
+          href: value === "ALL" ? "/hub/offers" : `/hub/offers?status=${value}`,
+          count: countFor(value),
+        }))}/>
       {offers.length === 0 ? (
         <div className="hub-empty-state">
           <FileText size={28} />
@@ -180,7 +174,7 @@ export default async function OffersPage({
           )}
         </div>
       ) : (
-        <section className="hub-offers-v2-list" aria-label="Offers">
+        <section className="sw-offer-board-grid" aria-label="Offers">
           {offers.map((offer) => {
             const activityLabel = offer.decidedAt
               ? `Decided ${formatDate(offer.decidedAt)}`
@@ -191,48 +185,37 @@ export default async function OffersPage({
                   : `Created ${formatDate(offer.createdAt)}`;
 
             return (
-              <article key={offer.id} className="hub-offers-v2-row">
-                <div className="hub-offers-v2-main">
-                  <span className="hub-offers-v2-icon">
-                    <FileText size={16} />
-                  </span>
-
-                  <div>
-                    <div className="hub-offers-v2-title-line">
-                      <Link href={`/hub/offers/${offer.id}`}>{offer.title}</Link>
-                      <span className={`hub-offer-status hub-offer-status-${offer.status.toLowerCase()}`}>
-                        {offerStatusLabels[offer.status]}
-                      </span>
-                    </div>
-                    <span>{offer.client.name}</span>
+              <article key={offer.id} className="sw-offer-board-card">
+                <header className="sw-offer-board-header">
+                  <span className="sw-offer-board-icon"><FileText size={18}/></span>
+                  <div className="sw-offer-board-title">
+                    <Link href={`/hub/offers/${offer.id}`}>{offer.title}</Link>
+                    <small>{offer.client.name}</small>
                   </div>
-                </div>
-
-                <div className="hub-offers-v2-value">
-                  <small>One-time</small>
-                  <strong>{formatOfferAmount(offer.oneTimePriceOre)}</strong>
-                  <span>
-                    {offer.monthlyPriceOre !== null
-                      ? `${formatOfferAmount(offer.monthlyPriceOre)}/mo`
-                      : "No monthly fee"}
+                  <span className={`hub-offer-status hub-offer-status-${offer.status.toLowerCase()}`}>
+                    {offerStatusLabels[offer.status]}
                   </span>
+                </header>
+                <div className="sw-offer-board-body">
+                  <div className="sw-offer-board-price">
+                    <span>One-time proposal</span>
+                    <strong>{formatOfferAmount(offer.oneTimePriceOre)}</strong>
+                  </div>
+                  <div className="sw-offer-board-monthly">
+                    <span>Monthly</span>
+                    <strong>{offer.monthlyPriceOre !== null
+                      ? `${formatOfferAmount(offer.monthlyPriceOre)}/mo`
+                      : "No monthly fee"}</strong>
+                  </div>
+                  <div className="sw-offer-board-activity">
+                    <Clock3 size={14}/><span>{activityLabel}</span>
+                  </div>
+                  {offer.project && <span className="sw-offer-board-project"><CheckCircle2 size={14}/> Project created</span>}
                 </div>
-
-                <div className="hub-offers-v2-activity">
-                  <Clock3 size={13} />
-                  <span>{activityLabel}</span>
-                  {offer.project && <small>Project created</small>}
-                </div>
-
-                <div className="hub-offers-v2-tail">
-                  <time dateTime={offer.updatedAt.toISOString()}>
-                    Updated {formatDate(offer.updatedAt)}
-                  </time>
-                  <Link href={`/hub/offers/${offer.id}`}>
-                    Open
-                    <ArrowRight size={13} />
-                  </Link>
-                </div>
+                <footer className="sw-offer-board-footer">
+                  <time dateTime={offer.updatedAt.toISOString()}>Updated {formatDate(offer.updatedAt)}</time>
+                  <Link href={`/hub/offers/${offer.id}`}>Open offer <ArrowRight size={15}/></Link>
+                </footer>
               </article>
             );
           })}
