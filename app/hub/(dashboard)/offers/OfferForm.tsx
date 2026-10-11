@@ -62,7 +62,7 @@ export default function OfferForm({
   }
 
   return (
-    <form action={action} className="hub-client-form">
+    <form action={action} className="hub-client-form sw-offer-builder-form">
       {offer && <input type="hidden" name="offerId" value={offer.id} />}
       {lead && <input type="hidden" name="leadId" value={lead.id} />}
       {lead && <input type="hidden" name="clientId" value={lead.clientId ?? ""} />}
@@ -92,6 +92,7 @@ export default function OfferForm({
         </div>
       )}
 
+      <div className="sw-offer-builder-heading"><span>OFFER DETAILS</span><p>Client, title and commercial terms</p></div>
       <div className="hub-client-form-grid">
         <div className="hub-client-form-field">
           <label htmlFor="offer-title">Offer title</label>
@@ -165,6 +166,7 @@ export default function OfferForm({
         </div>
       </div>
 
+      <div className="sw-offer-builder-heading"><span>SCOPE & DELIVERY</span><p>Define the deliverables and the agreement clearly</p></div>
       <div className="hub-client-form-field">
         <label htmlFor="offer-scope">Scope and deliverables</label>
         <textarea
