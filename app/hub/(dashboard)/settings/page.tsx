@@ -54,6 +54,10 @@ function formatDateTime(value: Date | null | undefined) {
   }).format(value);
 }
 
+async function getRequestTime(): Promise<Date> {
+  return new Date();
+}
+
 export default async function HubSettingsPage({
   searchParams,
 }: {
@@ -79,11 +83,12 @@ export default async function HubSettingsPage({
     settings?.signature ??
     `Med vänliga hälsningar,\n\nIonuț\nStaark Inc.\nstaarkinc.com`;
 
+  const requestTime = await getRequestTime();
   const gmailConnected = Boolean(settings?.gmailRefreshToken);
   const gmailWatchActive = Boolean(
     gmailConnected &&
       settings?.gmailWatchExpiresAt &&
-      settings.gmailWatchExpiresAt.getTime() > Date.now()
+      settings.gmailWatchExpiresAt.getTime() > requestTime.getTime()
   );
   const analyticsConnected = Boolean(settings?.ga4RefreshToken);
 

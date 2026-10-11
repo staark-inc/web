@@ -148,25 +148,35 @@ export default function ComposeForm({
   );
 
   useEffect(() => {
-    if (initialTo || initialSubject || initialMessage || returnTo) {
-      setDraftLoaded(true);
-      return;
-    }
+    let cancelled = false;
 
-    try {
-      const raw = localStorage.getItem(DRAFT_KEY);
-      if (raw) {
-        const draft = JSON.parse(raw) as Partial<DraftState>;
-        if (typeof draft.to === "string") setTo(draft.to);
-        if (typeof draft.subject === "string") setSubject(draft.subject);
-        if (typeof draft.message === "string") setMessage(draft.message);
-        if (typeof draft.templateKey === "string") setTemplateKey(draft.templateKey);
+    queueMicrotask(() => {
+      if (cancelled) return;
+
+      if (initialTo || initialSubject || initialMessage || returnTo) {
+        setDraftLoaded(true);
+        return;
       }
-    } catch {
-      localStorage.removeItem(DRAFT_KEY);
-    } finally {
-      setDraftLoaded(true);
-    }
+
+      try {
+        const raw = localStorage.getItem(DRAFT_KEY);
+        if (raw) {
+          const draft = JSON.parse(raw) as Partial<DraftState>;
+          if (typeof draft.to === "string") setTo(draft.to);
+          if (typeof draft.subject === "string") setSubject(draft.subject);
+          if (typeof draft.message === "string") setMessage(draft.message);
+          if (typeof draft.templateKey === "string") setTemplateKey(draft.templateKey);
+        }
+      } catch {
+        localStorage.removeItem(DRAFT_KEY);
+      } finally {
+        setDraftLoaded(true);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
   }, [initialMessage, initialSubject, initialTo, returnTo]);
 
   useEffect(() => {
