@@ -3,7 +3,7 @@ import { Activity, AlertTriangle, ArrowLeft, CheckCircle2, HelpCircle } from "lu
 
 import { prisma } from "@/lib/prisma";
 import { getRuntimeSiteHealth } from "@/lib/saas/runtime-health";
-import { reconcileSite } from "@/lib/saas/site-reconciliation";
+import { mapWithConcurrency, reconcileSite } from "@/lib/saas/site-reconciliation";
 
 export const dynamic = "force-dynamic";
 
@@ -22,20 +22,32 @@ export default async function SaaSReconciliationPage() {
     },
   });
 
-  const results = [];
-  // Bounded sequential reads avoid bursts to the shared runtime service.
-  for (const row of rows) {
-    const health = await getRuntimeSiteHealth(row.nextSiteId);
-    const result = reconcileSite(
-      { siteId: row.nextSiteId ?? "", hostname: row.nextHostname },
-      health,
-    );
-    results.push({ ...row, result });
-  }
+  // Run at most four signed read-only health checks at a time.
+  const results = await mapWithConcurrency(rows, 4, async (row) => {
+    try {
+      const health = await getRuntimeSiteHealth(row.nextSiteId);
+      return {
+        ...row,
+        result: reconcileSite(
+          { siteId: row.nextSiteId ?? "", hostname: row.nextHostname },
+          health,
+        ),
+      };
+    } catch {
+      return {
+        ...row,
+        result: reconcileSite(
+          { siteId: row.nextSiteId ?? "", hostname: row.nextHostname },
+          { reachable: false, ok: false, error: "Runtime health check failed." },
+        ),
+      };
+    }
+  });
 
   const drift = results.filter((row) => row.result.state === "drift").length;
   const unavailable = results.filter((row) => row.result.state === "unavailable").length;
   const matched = results.filter((row) => row.result.state === "matched").length;
+  const incomplete = results.filter((row) => row.result.state === "incomplete").length;
 
   return (
     <div className="hub-page hub-saas-workspace-page sw-saas-detail-page">
@@ -52,6 +64,7 @@ export default async function SaaSReconciliationPage() {
           { label: "Matched", value: matched, icon: CheckCircle2 },
           { label: "Drift", value: drift, icon: AlertTriangle },
           { label: "Unavailable", value: unavailable, icon: HelpCircle },
+          { label: "Incomplete", value: incomplete, icon: AlertTriangle },
           { label: "Checked", value: results.length, icon: Activity },
         ].map((item) => {
           const Icon = item.icon;
