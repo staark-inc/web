@@ -4,6 +4,15 @@ import { isReservedPlatformSubdomain } from "./platform-subdomains";
 
 export type SaaSDomainMode = "platform" | "custom";
 
+export function platformDomain(): string {
+  const domain = process.env.SAAS_PLATFORM_DOMAIN?.trim().toLowerCase() || "staark.app";
+  if (!/^[a-z0-9.-]+$/.test(domain) || !domain.includes(".") || domain.startsWith(".") || domain.endsWith(".")) {
+    throw new Error("SAAS_PLATFORM_DOMAIN is invalid.");
+  }
+  return domain;
+}
+
+
 const HOST_LABEL = /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/;
 
 export function normalizeDomainMode(value: unknown): SaaSDomainMode {
@@ -80,5 +89,5 @@ export function fallbackPlatformHostname(provisioningId: string): string {
     .digest("hex")
     .slice(0, 10);
 
-  return `site-${suffix}.staark.app`;
+  return `site-${suffix}.${platformDomain()}`;
 }
