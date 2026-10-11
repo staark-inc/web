@@ -114,7 +114,7 @@ export default async function HubSentPage({
     unread: 0,
     isOther: false,
     needsReply: row.awaitingReply,
-    href: "/hub/thread/" + row.id,
+    href: "/hub/thread/" + row.id + "?returnTo=" + encodeURIComponent(makeStatusHref(status)),
   }));
   return (
     <WorkspacePage>
