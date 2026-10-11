@@ -54,3 +54,30 @@ export function reconcileSite(
     findings: findings.length ? findings : ["No discrepancies in reported fields."],
   };
 }
+
+
+/**
+ * Read-only bounded concurrency. Preserves input order and never starts more than
+ * `limit` requests at once. Callers handle transport errors as unavailable.
+ */
+export async function mapWithConcurrency<T, U>(
+  rows: readonly T[],
+  limit: number,
+  worker: (row: T) => Promise<U>,
+): Promise<U[]> {
+  if (!Number.isInteger(limit) || limit < 1) {
+    throw new RangeError("Concurrency limit must be a positive integer.");
+  }
+  const results = new Array<U>(rows.length);
+  let cursor = 0;
+  async function run() {
+    while (cursor < rows.length) {
+      const index = cursor++;
+      results[index] = await worker(rows[index]);
+    }
+  }
+  await Promise.all(
+    Array.from({ length: Math.min(limit, rows.length) }, () => run()),
+  );
+  return results;
+}
