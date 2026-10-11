@@ -1,3 +1,4 @@
+import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
 import Link from "next/link";
 import {
   AlertTriangle,
@@ -176,27 +177,14 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
           <div><span className="sw-eyebrow">DELIVERY</span><h2>Project portfolio</h2></div>
           <span>{projects.length} shown</span>
         </div>
-      <nav className="sw-project-tabs" aria-label="Project filters">
-        {filters.map((filter) => {
-          const active = activeStatus === filter.value;
+      <WorkspaceTabs label="Project filters" activeKey={activeStatus}
+        tabs={filters.map((filter) => ({
+          key: filter.value,
+          label: filter.label,
+          href: filter.value === "ALL" ? "/hub/projects" : `/hub/projects?status=${filter.value}`,
+          count: countFor(filter.value),
+        }))}/>
 
-          return (
-            <Link
-              key={filter.value}
-              href={
-                filter.value === "ALL"
-                  ? "/hub/projects"
-                  : `/hub/projects?status=${filter.value}`
-              }
-              className={active ? "is-active" : undefined}
-              aria-current={active ? "page" : undefined}
-            >
-              <span>{filter.label}</span>
-              <strong>{countFor(filter.value)}</strong>
-            </Link>
-          );
-        })}
-      </nav>
 
       {projects.length === 0 ? (
         <div className="hub-empty-state">
