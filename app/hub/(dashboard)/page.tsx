@@ -130,10 +130,9 @@ const searchConsolePromise = getSearchConsoleOverview()
     connected: true,
   }))
   .catch((error) => {
-    console.error(
-      "Failed to load Search Console overview:",
-      error
-    );
+    if (process.env.SEARCH_CONSOLE_SITE_URL) {
+      console.error("Failed to load Search Console overview:", error);
+    }
 
     return {
       data: createEmptySearchConsole(),
@@ -147,10 +146,9 @@ const githubPromise = getGitHubOverview()
     data,
   }))
   .catch((error) => {
-    console.error(
-      "Failed to load GitHub overview:",
-      error
-    );
+    if (process.env.GITHUB_APP_ID) {
+      console.error("Failed to load GitHub overview:", error);
+    }
 
     return {
       connected: false as const,
@@ -170,10 +168,9 @@ const githubPromise = getGitHubOverview()
       connected: true,
     }))
     .catch((error) => {
-      console.error(
-        "Failed to load GA4 overview:",
-        error
-      );
+      if (process.env.GA4_PROPERTY_ID) {
+        console.error("Failed to load GA4 overview:", error);
+      }
 
       return {
         data: createEmptyAnalytics(),
