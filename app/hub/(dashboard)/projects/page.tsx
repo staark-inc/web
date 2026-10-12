@@ -15,7 +15,7 @@ import {
 
 import { prisma } from "@/lib/prisma";
 import type { ProjectStatus } from "@/generated/prisma/client";
-import { ActionLink, WorkspacePage, PageHeader, Metrics, Metric, StatusBadge, BoardCard } from "@/components/hub/workspace";
+import { ActionLink, WorkspacePage, PageHeader, Metrics, Metric, StatusBadge, BoardCard, CardHeader, CardIcon, CardBody, CardFooter } from "@/components/hub/workspace";
 
 export const dynamic = "force-dynamic";
 
@@ -248,19 +248,19 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
                 : "Not deployed";
 
             return (
-              <BoardCard key={project.id} className="sw-board-card">
-                <header className="sw-board-card-head">
-                  <span className="sw-board-icon"><FolderKanban size={19}/></span>
-                  <span className="sw-board-title">
+              <BoardCard key={project.id} className="sw-board-card sw-entity-card">
+                <CardHeader className="sw-board-card-head">
+                  <CardIcon className="sw-board-icon"><FolderKanban size={19}/></CardIcon>
+                  <span className="sw-board-title sw-entity-title">
                     <Link href={"/hub/projects/" + project.id}>{project.name}</Link>
                     <small><Building2 size={13}/>{project.client.name}</small>
                   </span>
                   <StatusBadge tone={project.status === "COMPLETED" ? "success" : project.status === "WAITING_CLIENT" ? "warning" : project.status === "IN_PROGRESS" ? "info" : "neutral"}>
                     {statusLabels[project.status]}
                   </StatusBadge>
-                </header>
+                </CardHeader>
 
-                <div className="sw-board-card-body">
+                <CardBody className="sw-board-card-body">
                   <div className="sw-board-progress-heading">
                     <span>Task progress</span>
                     <strong>{totalTasks ? progress + "%" : "Not started"}</strong>
@@ -279,14 +279,14 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
                     {awaitingMaterials > 0 && <span className="is-urgent"><Package size={15}/>{awaitingMaterials} materials waiting</span>}
                     {openSupport > 0 && <span className="is-urgent"><LifeBuoy size={15}/>{openSupport} support requests</span>}
                   </div>
-                </div>
+                </CardBody>
 
-                <footer className="sw-board-footer">
+                <CardFooter className="sw-board-footer">
                   <small>Updated {formatDate(project.updatedAt)}</small>
-                  <Link href={"/hub/projects/" + project.id} className="sw-board-open">
+                  <Link href={"/hub/projects/" + project.id} className="sw-board-open sw-entity-action">
                     Open project <ArrowRight size={15}/>
                   </Link>
-                </footer>
+                </CardFooter>
               </BoardCard>
             );
           })}

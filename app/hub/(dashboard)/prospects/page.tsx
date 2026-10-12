@@ -18,7 +18,7 @@ import {
 import { prisma } from "@/lib/prisma";
 import type { Prisma } from "@/generated/prisma/client";
 import ProspectImportButton from "./ProspectImportButton";
-import { PageHeader, Metrics, Metric, WorkspacePage, InfoChip, ExpandableCard } from "@/components/hub/workspace";
+import { PageHeader, Metrics, Metric, WorkspacePage, InfoChip, ExpandableCard, CardSummary, CardIcon, CardBody, CardActions } from "@/components/hub/workspace";
 import ProspectTop10 from "./ProspectTop10";
 import {
   ProspectFilterBar,
@@ -205,11 +205,11 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
             ].filter((channel): channel is { value: string; label: string } => Boolean(channel));
 
             return (
-              <ExpandableCard key={prospect.id} className="hub-prospect-row sw-prospect-card">
-                <summary className="sw-prospect-summary">
+              <ExpandableCard key={prospect.id} className="hub-prospect-row sw-prospect-card sw-entity-card">
+                <CardSummary className="sw-prospect-summary">
                   <div className="sw-prospect-main">
-                    <span className="sw-prospect-logo" aria-hidden="true">{prospect.name.slice(0, 2).toUpperCase()}</span>
-                    <div className="sw-prospect-identity">
+                    <CardIcon className="sw-prospect-logo" aria-hidden="true">{prospect.name.slice(0, 2).toUpperCase()}</CardIcon>
+                    <div className="sw-prospect-identity sw-entity-title">
                       <strong>{prospect.name}</strong>
                       <span>{prospect.category || "Local business"}{prospect.city ? " · " + prospect.city : ""}</span>
                       <small>{contact.label}</small>
@@ -230,8 +230,8 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
                     </span>
                   </div>
                   <span className="sw-prospect-expand">Details <ChevronRight size={16}/></span>
-                </summary>
-                <div className="hub-prospect-detail">
+                </CardSummary>
+                <CardBody className="hub-prospect-detail">
                   <div className="hub-prospect-detail-main">
                     <div className="hub-prospect-detail-block">
                       <small>WHY THIS PROSPECT?</small>
@@ -278,7 +278,7 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
                       </a>
                     )}
 
-                    <div className="hub-prospect-actions">
+                    <CardActions className="hub-prospect-actions">
                       {prospect.status === "IMPORTED" && prospect.importedLeadId ? (
                         <Link href={`/hub/leads/${prospect.importedLeadId}`} className="hub-prospect-primary-action">
                           Open Lead <ArrowUpRight size={14} />
@@ -313,9 +313,9 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
                           <button type="submit" className="hub-prospect-secondary-action">Ignore</button>
                         </form>
                       ) : null}
-                    </div>
+                    </CardActions>
                   </aside>
-                </div>
+                </CardBody>
               </ExpandableCard>
             );
           })}

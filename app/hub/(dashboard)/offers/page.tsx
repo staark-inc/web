@@ -1,5 +1,5 @@
 import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
-import { StatusBadge, WorkspacePage, PageHeader, Metrics, Metric, ActionLink, BoardCard } from "@/components/hub/workspace";
+import { StatusBadge, WorkspacePage, PageHeader, Metrics, Metric, ActionLink, BoardCard, CardHeader, CardIcon, CardBody, CardFooter } from "@/components/hub/workspace";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -139,10 +139,10 @@ export default async function OffersPage({
                   : `Created ${formatDate(offer.createdAt)}`;
 
             return (
-              <BoardCard key={offer.id} className="sw-offer-board-card">
-                <header className="sw-offer-board-header">
-                  <span className="sw-offer-board-icon"><FileText size={18}/></span>
-                  <div className="sw-offer-board-title">
+              <BoardCard key={offer.id} className="sw-offer-board-card sw-entity-card">
+                <CardHeader className="sw-offer-board-header">
+                  <CardIcon className="sw-offer-board-icon"><FileText size={18}/></CardIcon>
+                  <div className="sw-offer-board-title sw-entity-title">
                     <Link href={`/hub/offers/${offer.id}`}>{offer.title}</Link>
                     <small>{offer.client.name}</small>
                   </div>
@@ -156,8 +156,8 @@ export default async function OffersPage({
                   >
                     {offerStatusLabels[offer.status]}
                   </StatusBadge>
-                </header>
-                <div className="sw-offer-board-body">
+                </CardHeader>
+                <CardBody className="sw-offer-board-body">
                   <div className="sw-offer-board-price">
                     <span>One-time proposal</span>
                     <strong>{formatOfferAmount(offer.oneTimePriceOre)}</strong>
@@ -172,11 +172,11 @@ export default async function OffersPage({
                     <Clock3 size={14}/><span>{activityLabel}</span>
                   </div>
                   {offer.project && <span className="sw-offer-board-project"><CheckCircle2 size={14}/> Project created</span>}
-                </div>
-                <footer className="sw-offer-board-footer">
+                </CardBody>
+                <CardFooter className="sw-offer-board-footer">
                   <time dateTime={offer.updatedAt.toISOString()}>Updated {formatDate(offer.updatedAt)}</time>
-                  <Link href={`/hub/offers/${offer.id}`}>Open offer <ArrowRight size={15}/></Link>
-                </footer>
+                  <Link href={`/hub/offers/${offer.id}`} className="sw-entity-action">Open offer <ArrowRight size={15}/></Link>
+                </CardFooter>
               </BoardCard>
             );
           })}

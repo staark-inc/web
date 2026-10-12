@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
-import { WorkspacePage, PageHeader, Metrics, Metric, InfoChip, ExpandableCard } from "@/components/hub/workspace";
+import { WorkspacePage, PageHeader, Metrics, Metric, InfoChip, ExpandableCard, CardSummary, CardIcon, CardBody, CardActions } from "@/components/hub/workspace";
 import {
   rankOpportunity,
   readinessLabel,
@@ -237,10 +237,10 @@ export default async function OpportunitiesPage({ searchParams }: PageProps) {
             const rank = offset + index + 1;
 
             return (
-              <ExpandableCard key={opportunity.id} className="sw-opportunity-card">
-                <summary className="sw-opportunity-summary">
-                  <span className="sw-opportunity-position">#{rank}</span>
-                  <span className="sw-opportunity-identity">
+              <ExpandableCard key={opportunity.id} className="sw-opportunity-card sw-entity-card">
+                <CardSummary className="sw-opportunity-summary">
+                  <CardIcon className="sw-opportunity-position">#{rank}</CardIcon>
+                  <span className="sw-opportunity-identity sw-entity-title">
                     <strong>{opportunity.name}</strong>
                     <small>{[opportunity.city, opportunity.category].filter(Boolean).join(" · ") || "Local business"}</small>
                   </span>
@@ -251,8 +251,8 @@ export default async function OpportunitiesPage({ searchParams }: PageProps) {
                     {readinessLabel(opportunity.readiness)}
                   </InfoChip>
                   <span className="sw-opportunity-expand">Review <ChevronRight size={16}/></span>
-                </summary>
-                <div className="sw-opportunity-expanded">
+                </CardSummary>
+                <CardBody className="sw-opportunity-expanded">
                   <div className="sw-opportunity-analysis">
                     <span className="sw-eyebrow">WHY THIS OPPORTUNITY</span>
                     <div className="sw-opportunity-reason-list">
@@ -277,11 +277,11 @@ export default async function OpportunitiesPage({ searchParams }: PageProps) {
                   <aside className="sw-opportunity-next-step">
                     <span className="sw-eyebrow">SUGGESTED OFFER</span>
                     <strong className="sw-opportunity-offer"><FileText size={17}/>{opportunity.suggestedOffer}</strong>
-                    <div className="sw-opportunity-contact-actions">
+                    <CardActions className="sw-opportunity-contact-actions">
                       {opportunity.email && <a href={`mailto:${opportunity.email}`}><Mail size={14}/> Email</a>}
                       {opportunity.phone && <a href={`tel:${opportunity.phone}`}><Phone size={14}/> Call</a>}
                       {opportunity.website && <a href={opportunity.website} target="_blank" rel="noreferrer">Website <ArrowUpRight size={14}/></a>}
-                    </div>
+                    </CardActions>
                     {opportunity.importedLeadId ? (
                       <Link href={`/hub/leads/${opportunity.importedLeadId}`} className="sw-opportunity-main-action">Open lead <ArrowUpRight size={15}/></Link>
                     ) : channels.length > 0 ? (
@@ -296,7 +296,7 @@ export default async function OpportunitiesPage({ searchParams }: PageProps) {
                     ) : <p className="sw-opportunity-no-contact">Needs contact research before conversion.</p>}
                     <Link className="sw-opportunity-review-link" href={`/hub/prospects?q=${encodeURIComponent(opportunity.name)}`}>Review prospect <ArrowUpRight size={14}/></Link>
                   </aside>
-                </div>
+                </CardBody>
               </ExpandableCard>
             );
           })}

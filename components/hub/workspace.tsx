@@ -155,3 +155,12 @@ export function ListCardHeader({icon,title,subtitle,status}:{icon:ReactNode;titl
 export function ListCardFacts({children}:{children:ReactNode}){return <div className="sw-list-card-facts">{children}</div>}
 export function ListCardFact({label,children}:{label:string;children:ReactNode}){return <div className="sw-list-card-fact"><span>{label}</span><div>{children}</div></div>}
 export function ListCardFooter({children}:{children:ReactNode}){return <footer className="sw-list-card-footer">{children}</footer>}
+
+/** Foundation 09: consistent card slots; all preserve their native DOM tags. */
+export function CardHeader({className,children,...props}:ComponentPropsWithoutRef<"header">){return <header {...props} className={["sw-entity-header",className].filter(Boolean).join(" ")}>{children}</header>}
+export function CardTop({className,children,...props}:ComponentPropsWithoutRef<"div">){return <div {...props} className={["sw-entity-header",className].filter(Boolean).join(" ")}>{children}</div>}
+export function CardSummary({className,children,...props}:ComponentPropsWithoutRef<"summary">){return <summary {...props} className={["sw-entity-header","sw-entity-summary",className].filter(Boolean).join(" ")}>{children}</summary>}
+export function CardBody({className,children,...props}:ComponentPropsWithoutRef<"div">){return <div {...props} className={["sw-entity-body",className].filter(Boolean).join(" ")}>{children}</div>}
+export function CardFooter({className,children,...props}:ComponentPropsWithoutRef<"footer">){return <footer {...props} className={["sw-entity-footer",className].filter(Boolean).join(" ")}>{children}</footer>}
+export function CardActions({className,children,...props}:ComponentPropsWithoutRef<"div">){return <div {...props} className={["sw-entity-actions",className].filter(Boolean).join(" ")}>{children}</div>}
+export function CardIcon({className,children,...props}:ComponentPropsWithoutRef<"span">){return <span {...props} className={["sw-entity-icon",className].filter(Boolean).join(" ")}>{children}</span>}

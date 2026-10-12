@@ -1215,3 +1215,29 @@
   .hub-dashboard .sw-list-card-fact:last-child{border-bottom:0!important}
 }
 @media(prefers-reduced-motion:reduce){.hub-dashboard .sw-list-card{transition:none}}
+
+/* STAARK HUB — Foundation 09 shared card interiors */
+/* Shared slots also render native header/summary/div/footer/span elements.
+   Keep per-page classes for grids, statuses, forms and existing responsive logic. */
+.hub-dashboard .sw-entity-card{--sw-entity-pad:18px;--sw-entity-icon:42px}
+.hub-dashboard .sw-entity-header{min-width:0;gap:12px;padding:var(--sw-entity-pad);border-bottom:1px solid var(--sw-line)}
+.hub-dashboard .sw-entity-summary{cursor:pointer;list-style:none}
+.hub-dashboard .sw-entity-summary::-webkit-details-marker{display:none}
+.hub-dashboard .sw-card-expandable>.sw-entity-summary{border-bottom:0}
+.hub-dashboard .sw-card-expandable[open]>.sw-entity-summary{border-bottom:1px solid var(--sw-line)}
+.hub-dashboard .sw-entity-icon{display:grid;place-items:center;flex:0 0 var(--sw-entity-icon);width:var(--sw-entity-icon);height:var(--sw-entity-icon);border-radius:11px;background:#eef3fb;color:#41649a;font-size:12px;font-weight:750}
+.hub-dashboard .sw-entity-title{min-width:0;overflow-wrap:anywhere}
+.hub-dashboard .sw-entity-title :is(a,strong,h2){color:var(--sw-ink);font-size:14px;font-weight:750;line-height:1.4;letter-spacing:-.012em;overflow-wrap:anywhere}
+.hub-dashboard .sw-entity-title :is(small,p){color:var(--sw-muted);font-size:11px;line-height:1.5;overflow-wrap:anywhere}
+.hub-dashboard .sw-entity-body{min-width:0;padding:var(--sw-entity-pad)}
+.hub-dashboard .sw-entity-actions{min-width:0;gap:10px}
+.hub-dashboard .sw-entity-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;min-height:54px;padding:11px var(--sw-entity-pad);border-top:1px solid var(--sw-line);color:var(--sw-muted);font-size:12px}
+.hub-dashboard .sw-entity-action{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:34px;padding:7px 12px;border:1px solid transparent;border-radius:8px;background:#edf3ff;color:#2953c3;font-size:12px;font-weight:750;line-height:1.35;text-decoration:none;white-space:normal;overflow-wrap:anywhere}
+.hub-dashboard .sw-entity-action:hover{background:#e0eaff;color:#2449ac}
+.hub-dashboard .sw-entity-action:focus-visible{outline:2px solid var(--sw-accent);outline-offset:2px}
+@media(max-width:640px){
+ .hub-dashboard .sw-entity-card{--sw-entity-pad:14px}
+ .hub-dashboard .sw-entity-header{gap:10px}
+ .hub-dashboard .sw-entity-footer{align-items:flex-start}
+}
+@media(prefers-reduced-motion:reduce){.hub-dashboard .sw-entity-action{transition:none}}
