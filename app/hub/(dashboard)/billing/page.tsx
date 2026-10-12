@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { WorkspacePage, PageHeader, Metrics, Metric, ActionLink, BoardCard } from "@/components/hub/workspace";
+import { WorkspacePage, PageHeader, Metrics, Metric, ActionLink, StatusBadge, ListCard, ListCardHeader, ListCardFacts, ListCardFact, ListCardFooter } from "@/components/hub/workspace";
 import {
   ArrowRight,
   CalendarClock,
@@ -107,68 +107,28 @@ export default async function BillingPage() {
           </ActionLink>
         </div>
       ) : (
-        <section className="hub-billing-v2-list" aria-label="Accepted billing contracts">
-          {acceptedOffers.map((offer) => (
-            <BoardCard key={offer.id} className="hub-billing-v2-row">
-              <div className="hub-billing-v2-main">
-                <span className="hub-billing-v2-icon">
-                  <CreditCard size={16} />
-                </span>
-
-                <div>
-                  <Link href={`/hub/offers/${offer.id}`}>{offer.client.name}</Link>
-                  <span>{offer.title}</span>
-                  {offer.client.billingEmail && <small>{offer.client.billingEmail}</small>}
-                </div>
-              </div>
-
-              <div className="hub-billing-v2-amounts">
-                <div>
-                  <small>One-time</small>
-                  <strong>{formatOfferAmount(offer.oneTimePriceOre)}</strong>
-                </div>
-                <div>
-                  <small>Monthly</small>
-                  <strong>{formatOfferAmount(offer.monthlyPriceOre)}</strong>
-                </div>
-              </div>
-
-              <div className="hub-billing-v2-terms">
-                <small>Contract terms</small>
-                <strong>{offer.includedMonths} months included</strong>
-                <span>
-                  {offer.decidedAt
-                    ? `Accepted ${formatDate(offer.decidedAt)}`
-                    : `Updated ${formatDate(offer.updatedAt)}`}
-                </span>
-              </div>
-
-              <div className="hub-billing-v2-project">
-                <small>Delivery</small>
-                {offer.project ? (
-                  <>
-                    <Link href={`/hub/projects/${offer.project.id}`}>{offer.project.name}</Link>
-                    <span>
-                      {offer.project.liveUrl
-                        ? "Live"
-                        : formatProjectStatus(offer.project.status)}
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <strong>No project yet</strong>
-                    <span>Accepted offer not linked to delivery</span>
-                  </>
-                )}
-              </div>
-
-              <div className="hub-billing-v2-tail">
-                <Link href={`/hub/offers/${offer.id}`}>
-                  Open
-                  <ArrowRight size={13} />
-                </Link>
-              </div>
-            </BoardCard>
+        <section className="sw-list-card-stack" aria-label="Accepted billing contracts">
+          {acceptedOffers.map(offer => (
+            <ListCard key={offer.id}>
+              <ListCardHeader
+                icon={<CreditCard size={19}/>}
+                title={<Link href={'/hub/offers/'+offer.id}>{offer.client.name}</Link>}
+                subtitle={<><span>{offer.title}</span>{offer.client.billingEmail&&<small>{offer.client.billingEmail}</small>}</>}
+                status={<StatusBadge tone="success">Accepted</StatusBadge>}
+              />
+              <ListCardFacts>
+                <ListCardFact label="One-time"><strong>{formatOfferAmount(offer.oneTimePriceOre)}</strong></ListCardFact>
+                <ListCardFact label="Monthly"><strong>{formatOfferAmount(offer.monthlyPriceOre)}</strong></ListCardFact>
+                <ListCardFact label="Contract terms"><strong>{offer.includedMonths} months included</strong><small>{(offer.decidedAt?'Accepted ':'Updated ')+formatDate(offer.decidedAt??offer.updatedAt)}</small></ListCardFact>
+                <ListCardFact label="Delivery">
+                  {offer.project?<><Link href={'/hub/projects/'+offer.project.id}>{offer.project.name}</Link><small>{offer.project.liveUrl?'Live':formatProjectStatus(offer.project.status)}</small></>:<><strong>No project yet</strong><small>Accepted offer not linked to delivery</small></>}
+                </ListCardFact>
+              </ListCardFacts>
+              <ListCardFooter>
+                <span>Agency contract · {(offer.decidedAt?'Accepted ':'Updated ')+formatDate(offer.decidedAt??offer.updatedAt)}</span>
+                <Link href={'/hub/offers/'+offer.id}>Open contract <ArrowRight size={15}/></Link>
+              </ListCardFooter>
+            </ListCard>
           ))}
         </section>
       )}

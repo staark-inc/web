@@ -146,3 +146,12 @@ export function BoardCard({ className, children, ...props }: ComponentPropsWitho
 export function ExpandableCard({ className, children, ...props }: ComponentPropsWithoutRef<"details">) {
   return <details {...props} className={["sw-card", "sw-card-expandable", className].filter(Boolean).join(" ")}>{children}</details>;
 }
+
+/** Foundation 08: semantic card composition shared by operational workspaces. */
+export function ListCard({className,children,...props}:ComponentPropsWithoutRef<"article">){return <article {...props} className={["sw-card","sw-list-card",className].filter(Boolean).join(" ")}>{children}</article>}
+export function ListCardHeader({icon,title,subtitle,status}:{icon:ReactNode;title:ReactNode;subtitle?:ReactNode;status?:ReactNode}){
+  return <header className="sw-list-card-head"><span className="sw-list-card-icon" aria-hidden="true">{icon}</span><div className="sw-list-card-identity"><h2>{title}</h2>{subtitle&&<div className="sw-list-card-subtitle">{subtitle}</div>}</div>{status&&<div className="sw-list-card-status">{status}</div>}</header>
+}
+export function ListCardFacts({children}:{children:ReactNode}){return <div className="sw-list-card-facts">{children}</div>}
+export function ListCardFact({label,children}:{label:string;children:ReactNode}){return <div className="sw-list-card-fact"><span>{label}</span><div>{children}</div></div>}
+export function ListCardFooter({children}:{children:ReactNode}){return <footer className="sw-list-card-footer">{children}</footer>}

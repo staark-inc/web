@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
-import { StatusBadge, WorkspacePage, PageHeader, Metrics, Metric, ActionLink, BoardCard } from "@/components/hub/workspace";
+import { StatusBadge, WorkspacePage, PageHeader, Metrics, Metric, ActionLink, ListCard, ListCardHeader, ListCardFacts, ListCardFact, ListCardFooter } from "@/components/hub/workspace";
 import {
   AlertTriangle,
   ArrowRight,
@@ -145,70 +145,30 @@ export default async function SupportPage({
           )}
         </div>
       ) : (
-        <section className="hub-support-v2-list" aria-label="Support requests">
-          {requests.map((request) => {
-            const requester =
-              request.client?.name ??
-              request.requesterCompany ??
-              request.requesterEmail ??
-              "Unmatched requester";
-
-            return (
-              <BoardCard key={request.id} className="hub-support-v2-row">
-                <div className="hub-support-v2-main">
-                  <span className="hub-support-v2-icon">
-                    <LifeBuoy size={16} />
-                  </span>
-
-                  <div>
-                    <div className="hub-support-v2-title-line">
-                      <Link href={`/hub/support/${request.id}`}>{request.title}</Link>
-                      <StatusBadge
-                        tone={
-                          request.status === "RESOLVED" ? "success"
-                          : request.status === "WAITING_CLIENT" ? "warning"
-                          : request.status === "IN_PROGRESS" ? "info"
-                          : "neutral"
-                        }
-                      >
-                        {supportStatusLabels[request.status]}
-                      </StatusBadge>
-                    </div>
-                    <span>{requester}</span>
-                    {request.project && <small>{request.project.name}</small>}
-                  </div>
-                </div>
-
-                <div className="hub-support-v2-context">
-                  <small>Request</small>
-                  <strong>{supportCategoryLabels[request.category]}</strong>
-                  <span>{request.reference ?? "No public reference"}</span>
-                </div>
-
-                <div className="hub-support-v2-signals">
-                  <span className={request.priority === "URGENT" ? "hub-support-v2-chip hub-support-v2-chip-danger" : "hub-support-v2-chip"}>
-                    {supportPriorityLabels[request.priority]}
-                  </span>
-                  <span className={request.coverage === "EXTRA" ? "hub-support-v2-chip hub-support-v2-chip-warning" : request.coverage === "INCLUDED" ? "hub-support-v2-chip hub-support-v2-chip-good" : "hub-support-v2-chip"}>
-                    {supportCoverageLabels[request.coverage]}
-                  </span>
-                  <span className="hub-support-v2-chip">
-                    <Timer size={12} />
-                    {request.timeSpentMinutes} min
-                  </span>
-                </div>
-
-                <div className="hub-support-v2-tail">
-                  <time dateTime={request.updatedAt.toISOString()}>
-                    Updated {formatDate(request.updatedAt)}
-                  </time>
-                  <Link href={`/hub/support/${request.id}`}>
-                    Open
-                    <ArrowRight size={13} />
-                  </Link>
-                </div>
-              </BoardCard>
-            );
+        <section className="sw-list-card-stack" aria-label="Support requests">
+          {requests.map(request => {
+            const requester=request.client?.name??request.requesterCompany??request.requesterEmail??'Unmatched requester';
+            return <ListCard key={request.id}>
+              <ListCardHeader
+                icon={<LifeBuoy size={19}/>}
+                title={<Link href={'/hub/support/'+request.id}>{request.title}</Link>}
+                subtitle={<><span>{requester}</span>{request.project&&<small>{request.project.name}</small>}</>}
+                status={<div className="sw-list-card-badges">
+                  <StatusBadge tone={request.status==='RESOLVED'?'success':request.status==='WAITING_CLIENT'?'warning':request.status==='IN_PROGRESS'?'info':'neutral'}>{supportStatusLabels[request.status]}</StatusBadge>
+                  {request.priority==='URGENT'&&<StatusBadge tone="danger">Urgent</StatusBadge>}
+                </div>}
+              />
+              <ListCardFacts>
+                <ListCardFact label="Request"><strong>{supportCategoryLabels[request.category]}</strong><small>{request.reference??'No public reference'}</small></ListCardFact>
+                <ListCardFact label="Priority"><strong>{supportPriorityLabels[request.priority]}</strong></ListCardFact>
+                <ListCardFact label="Coverage"><strong>{supportCoverageLabels[request.coverage]}</strong></ListCardFact>
+                <ListCardFact label="Work recorded"><strong>{request.timeSpentMinutes} min</strong></ListCardFact>
+              </ListCardFacts>
+              <ListCardFooter>
+                <time dateTime={request.updatedAt.toISOString()}>Updated {formatDate(request.updatedAt)}</time>
+                <Link href={'/hub/support/'+request.id}>Open request <ArrowRight size={15}/></Link>
+              </ListCardFooter>
+            </ListCard>;
           })}
         </section>
       )}
