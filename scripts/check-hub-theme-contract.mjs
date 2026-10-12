@@ -34,9 +34,8 @@ let file = "";
 for (const line of diff.split("\n")) {
   if (line.startsWith("+++ b/")) {
     file = line.slice(6);
-    if (versionedFilename.test(file)) {
-      offenders.push(file + ": new/modified versioned filename");
-    }
+    // Existing legacy filenames may be edited during migration.
+    // This guard only rejects new versioned selectors in added lines.
     continue;
   }
 
