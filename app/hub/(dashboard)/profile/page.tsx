@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { WorkspacePage, PageHeader, StatusBadge } from "@/components/hub/workspace";
 import { cookies } from "next/headers";
 import {
   BellDot,
@@ -99,16 +100,12 @@ export default async function HubProfilePage({
     "Europe/Stockholm";
 
   return (
-    <div className="hub-page hub-profile-v2-page">
-      <header className="hub-page-header">
-        <div>
-          <span className="hub-eyebrow">STAARK HUB</span>
-          <h1>Profile</h1>
-          <p>
-            Your identity, access, preferences and security settings in one place.
-          </p>
-        </div>
-      </header>
+    <WorkspacePage className="hub-profile-v2-page">
+      <PageHeader
+        eyebrow="STAARK HUB"
+        title="Profile"
+        description="Your identity, access, preferences and security settings in one place."
+      />
 
       <section className="hub-profile-v2-hero">
         <div className="hub-profile-v2-identity">
@@ -120,14 +117,8 @@ export default async function HubProfilePage({
             <p>{user.email}</p>
 
             <div className="hub-profile-v2-badges">
-              <span className="hub-profile-v2-badge is-active">
-                <CircleCheck size={13} />
-                Active account
-              </span>
-              <span className="hub-profile-v2-badge">
-                <ShieldCheck size={13} />
-                {roleLabel}
-              </span>
+              <StatusBadge tone="success" icon={<CircleCheck size={13} />}>Active account</StatusBadge>
+              <StatusBadge icon={<ShieldCheck size={13} />}>{roleLabel}</StatusBadge>
             </div>
           </div>
         </div>
@@ -574,6 +565,6 @@ export default async function HubProfilePage({
           </div>
         </section>
       </div>
-    </div>
+    </WorkspacePage>
   );
 }

@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
+import { WorkspacePage, PageHeader, StatusBadge } from "@/components/hub/workspace";
 import { redirect } from "next/navigation";
 import {
   AlertCircle,
@@ -169,26 +171,22 @@ export default async function HubSettingsPage({
   }
 
   return (
-    <div className="hub-page hub-settings-page hub-settings-v2-page">
-      <header className="hub-page-header">
-        <div>
-          <span className="hub-eyebrow">STAARK HUB</span>
-          <h1>Settings</h1>
-          <p>Manage communication, templates and connected services.</p>
-        </div>
-      </header>
+    <WorkspacePage className="hub-settings-page hub-settings-v2-page">
+      <PageHeader
+        eyebrow="STAARK HUB"
+        title="Settings"
+        description="Manage communication, templates and connected services."
+      />
 
-      <nav className="hub-settings-v2-tabs" aria-label="Settings sections">
-        <Link href="/hub/settings?tab=email" className={activeTab === "email" ? "is-active" : undefined}>
-          <Mail size={16} />Email
-        </Link>
-        <Link href="/hub/settings?tab=templates" className={activeTab === "templates" ? "is-active" : undefined}>
-          <Send size={16} />Templates
-        </Link>
-        <Link href="/hub/settings?tab=integrations" className={activeTab === "integrations" ? "is-active" : undefined}>
-          <Plug size={16} />Integrations
-        </Link>
-      </nav>
+      <WorkspaceTabs
+        label="Settings sections"
+        activeKey={activeTab}
+        tabs={[
+          { key: "email", label: "Email", href: "/hub/settings?tab=email", icon: <Mail size={16} /> },
+          { key: "templates", label: "Templates", href: "/hub/settings?tab=templates", icon: <Send size={16} /> },
+          { key: "integrations", label: "Integrations", href: "/hub/settings?tab=integrations", icon: <Plug size={16} /> },
+        ]}
+      />
 
       {params.updated === "1" && (
         <div className="hub-profile-alert hub-profile-alert-success">
@@ -357,9 +355,7 @@ export default async function HubSettingsPage({
                   <strong>Google Workspace</strong>
                   <span>Mailbox sync, inbound watch and SMTP relay.</span>
                 </div>
-                <span className={gmailConnected ? "hub-settings-v2-status is-connected" : "hub-settings-v2-status is-offline"}>
-                  {gmailConnected ? "Connected" : "Not connected"}
-                </span>
+                <StatusBadge tone={gmailConnected ? "success" : "neutral"}>{gmailConnected ? "Connected" : "Not connected"}</StatusBadge>
               </div>
 
               <div className="hub-settings-v2-integration-facts">
@@ -385,9 +381,7 @@ export default async function HubSettingsPage({
                   <strong>Google Analytics</strong>
                   <span>Traffic and website performance data.</span>
                 </div>
-                <span className={analyticsConnected ? "hub-settings-v2-status is-connected" : "hub-settings-v2-status is-offline"}>
-                  {analyticsConnected ? "Connected" : "Not connected"}
-                </span>
+                <StatusBadge tone={analyticsConnected ? "success" : "neutral"}>{analyticsConnected ? "Connected" : "Not connected"}</StatusBadge>
               </div>
 
               <div className="hub-settings-v2-integration-facts">
@@ -410,9 +404,7 @@ export default async function HubSettingsPage({
                   <strong>Google Search Console</strong>
                   <span>Search visibility and ranking data.</span>
                 </div>
-                <span className={analyticsConnected ? "hub-settings-v2-status is-connected" : "hub-settings-v2-status is-offline"}>
-                  {analyticsConnected ? "Connected" : "Not connected"}
-                </span>
+                <StatusBadge tone={analyticsConnected ? "success" : "neutral"}>{analyticsConnected ? "Connected" : "Not connected"}</StatusBadge>
               </div>
 
               <div className="hub-settings-v2-integration-facts">
@@ -435,9 +427,7 @@ export default async function HubSettingsPage({
                   <strong>GitHub</strong>
                   <span>Repository, branch and deployment visibility.</span>
                 </div>
-                <span className={githubResult.connected ? "hub-settings-v2-status is-connected" : "hub-settings-v2-status is-offline"}>
-                  {githubResult.connected ? "Connected" : "Unavailable"}
-                </span>
+                <StatusBadge tone={githubResult.connected ? "success" : "neutral"}>{githubResult.connected ? "Connected" : "Unavailable"}</StatusBadge>
               </div>
 
               <div className="hub-settings-v2-integration-facts">
@@ -455,9 +445,7 @@ export default async function HubSettingsPage({
                   <strong>Stripe</strong>
                   <span>Payments, invoices and future Billing sync.</span>
                 </div>
-                <span className={stripeStatus.configured ? "hub-settings-v2-status is-connected" : "hub-settings-v2-status is-offline"}>
-                  {stripeStatus.configured ? "Configured" : "Not configured"}
-                </span>
+                <StatusBadge tone={stripeStatus.configured ? "success" : "neutral"}>{stripeStatus.configured ? "Configured" : "Not configured"}</StatusBadge>
               </div>
 
               <div className="hub-settings-v2-integration-facts">
@@ -480,6 +468,6 @@ export default async function HubSettingsPage({
           </section>
         </div>
       )}
-    </div>
+    </WorkspacePage>
   );
 }

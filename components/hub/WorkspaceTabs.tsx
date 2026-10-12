@@ -6,6 +6,7 @@ export type WorkspaceTab = {
   label: string;
   href: string;
   count?: number;
+  icon?: ReactNode;
 };
 
 export function WorkspaceTabs({
@@ -30,6 +31,7 @@ export function WorkspaceTabs({
             className={active ? "is-active" : undefined}
             aria-current={active ? "page" : undefined}
           >
+            {tab.icon && <span aria-hidden="true">{tab.icon}</span>}
             <span>{tab.label}</span>
             {tab.count !== undefined && <strong>{tab.count}</strong>}
           </Link>
