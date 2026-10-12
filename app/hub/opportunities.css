@@ -1,3 +1,4 @@
+/* Opportunities — section 1 */
 .hub-opportunities-head,
 .hub-opportunities-stats,
 .hub-opportunities-filters,
@@ -87,5 +88,63 @@
   .hub-opportunities-search {
     width: 100%;
     min-width: 0;
+  }
+}
+
+/* Opportunities — section 2 */
+@media (max-width: 760px) {
+
+  .hub-opportunities-filters {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .hub-opportunities-search {
+    grid-column: 1 / -1;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .hub-opportunities-filters select {
+    min-width: 0;
+    width: 100%;
+    padding: 0 7px;
+    font-size: 12px;
+  }
+
+  .hub-opportunities-filters > .hub-primary-button,
+  .hub-opportunities-filters > .hub-secondary-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hub-opportunities-result-bar {
+    gap: 10px;
+    font-size: 11px;
+  }
+
+  .hub-opportunities-pagination {
+    justify-content: space-between;
+  }
+
+  .hub-opportunities-pagination .hub-secondary-button {
+    padding-inline: 10px;
+  }
+}
+
+@media (max-width: 430px) {
+
+  .hub-opportunities-filters {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .hub-opportunities-filters select {
+    font-size: 11px;
+  }
+
+  .hub-opportunities-result-bar small {
+    display: none;
   }
 }
