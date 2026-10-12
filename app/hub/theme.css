@@ -1084,3 +1084,46 @@
 .sw-saas-detail-page .sw-saas-data-card:focus-within{border-color:#b8c9ff}
 @media(max-width:1160px){.sw-saas-detail-page .sw-saas-detail-grid{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:720px){.sw-saas-detail-page .sw-saas-detail-grid{gap:10px}.sw-saas-detail-page .sw-saas-data-card>:is(.hub-billing-v2-main,.hub-saas-subscription-main){padding:14px}.sw-saas-detail-page .sw-saas-data-card>:is(.hub-billing-v2-terms,.hub-billing-v2-project,.hub-saas-subscription-plan,.hub-saas-subscription-state,.hub-saas-subscription-lifecycle){padding:12px 14px}.sw-saas-detail-page .sw-saas-data-card>:is(.hub-billing-v2-tail,.hub-saas-subscription-tail){padding:12px 14px}}
+
+
+/* Canonical Hub action component */
+.hub-dashboard .sw-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.3;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.hub-dashboard .sw-button-primary {
+  background: var(--sw-accent);
+  color: #fff;
+}
+
+.hub-dashboard .sw-button-primary:hover {
+  background: #244bd1;
+}
+
+.hub-dashboard .sw-button-secondary {
+  background: var(--sw-surface);
+  color: var(--sw-ink);
+  border-color: var(--sw-line);
+}
+
+.hub-dashboard .sw-button-secondary:hover {
+  background: var(--sw-bg);
+}
+
+.hub-dashboard .sw-button:focus-visible {
+  outline: 2px solid var(--sw-accent);
+  outline-offset: 3px;
+}

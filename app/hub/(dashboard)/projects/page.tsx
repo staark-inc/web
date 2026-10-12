@@ -15,7 +15,7 @@ import {
 
 import { prisma } from "@/lib/prisma";
 import type { ProjectStatus } from "@/generated/prisma/client";
-import { WorkspacePage, PageHeader, Metrics, Metric, InfoChip } from "@/components/hub/workspace";
+import { ActionLink, WorkspacePage, PageHeader, Metrics, Metric, InfoChip } from "@/components/hub/workspace";
 
 export const dynamic = "force-dynamic";
 
@@ -165,7 +165,7 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
       <div className="sw-projects-page sw-projects-board-page">
         <PageHeader eyebrow="WORK / DELIVERY" title="Projects"
           description={deliverySummary}
-          action={<Link href="/hub/projects/new" className="sw-primary-link"><Plus size={16}/> New project</Link>}
+          action={<ActionLink href="/hub/projects/new"><Plus size={16}/> New project</ActionLink>}
         />
         <Metrics label="Delivery overview">
           <Metric label="Active" value={activeCount} description="In progress or review" icon={<FolderKanban size={18}/>}/>
@@ -200,9 +200,9 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
               : "Try a different status filter."}
           </p>
           {activeStatus === "ALL" && (
-            <Link href="/hub/projects/new" className="hub-secondary-button">
+            <ActionLink href="/hub/projects/new" variant="secondary">
               New project
-            </Link>
+            </ActionLink>
           )}
         </div>
       ) : (

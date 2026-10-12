@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
-import { WorkspacePage, PageHeader, Metrics, Metric } from "@/components/hub/workspace";
+import { ActionLink, WorkspacePage, PageHeader, Metrics, Metric } from "@/components/hub/workspace";
 
 export const dynamic = "force-dynamic";
 
@@ -108,7 +108,7 @@ export default async function ClientsPage() {
       <div className="sw-clients-page">
         <PageHeader eyebrow="CUSTOMERS / CRM" title="Clients"
           description="Manage client relationships, active delivery, offers and support in one workspace."
-          action={<Link href="/hub/clients/new" className="sw-primary-link"><Plus size={16}/> New client</Link>}/>
+          action={<ActionLink href="/hub/clients/new"><Plus size={16}/> New client</ActionLink>}/>
         <Metrics label="Client overview">
           <Metric label="Clients" value={totalClients} description="Confirmed customer records" icon={<Building2 size={18}/>}/>
           <Metric label="Linked contacts" value={linkedContacts} description="People connected to clients" icon={<UsersRound size={18}/>}/>
@@ -126,9 +126,9 @@ export default async function ClientsPage() {
           <p>
             Once a lead becomes a client, their company and activity will appear here.
           </p>
-          <Link href="/hub/clients/new" className="hub-secondary-button">
+          <ActionLink href="/hub/clients/new" variant="secondary">
             New client
-          </Link>
+          </ActionLink>
         </div>
       ) : (
         <section className="sw-client-portfolio" aria-label="Clients">

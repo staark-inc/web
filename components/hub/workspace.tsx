@@ -49,6 +49,22 @@ export function Metric({
   );
 }
 
+export function ActionLink({
+  href,
+  children,
+  variant = "primary",
+}: {
+  href: string;
+  children: ReactNode;
+  variant?: "primary" | "secondary";
+}) {
+  return (
+    <Link href={href} className={`sw-button sw-button-${variant}`}>
+      {children}
+    </Link>
+  );
+}
+
 export function SectionHeader({ title, description, action }: {
   title: string; description?: string; action?: ReactNode;
 }) {

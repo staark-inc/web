@@ -1,6 +1,6 @@
 import Link from "next/link";
 import UnifiedAnalyticsChart from "@/components/hub/unified-analytics-chart";
-import { PageHeader, Metrics, Metric, SectionHeader, EmptyState, InfoChip } from "@/components/hub/workspace";
+import { ActionLink, PageHeader, Metrics, Metric, SectionHeader, EmptyState, InfoChip } from "@/components/hub/workspace";
 
 import {
   ArrowRight,
@@ -463,9 +463,9 @@ const githubPromise = getGitHubOverview()
         description={formatDashboardDate(now)}
         action={
           <div className="sw-overview-actions">
-            <Link href="/hub/offers/new" className="sw-overview-primary"><Plus size={16} /> New offer</Link>
-            <Link href="/hub/compose" className="sw-overview-secondary"><MailPlus size={15} /> Compose</Link>
-            <Link href="/hub/projects/new" className="sw-overview-secondary"><FolderKanban size={15} /> New project</Link>
+            <ActionLink href="/hub/offers/new"><Plus size={16} /> New offer</ActionLink>
+            <ActionLink href="/hub/compose" variant="secondary"><MailPlus size={15} /> Compose</ActionLink>
+            <ActionLink href="/hub/projects/new" variant="secondary"><FolderKanban size={15} /> New project</ActionLink>
           </div>
         }
       />
