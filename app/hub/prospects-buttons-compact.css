@@ -26,14 +26,6 @@
   padding-inline: 8px;
 }
 
-.hub-prospect-open {
-  min-width: 46px;
-  min-height: 28px;
-  height: 28px;
-  padding-inline: 9px;
-  font-size: 9px;
-}
-
 .hub-prospect-primary-action,
 .hub-prospect-secondary-action {
   min-height: 34px;
