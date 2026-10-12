@@ -1,7 +1,7 @@
 import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
 import Link from "next/link";
 import { CircleDollarSign, Target, Trophy, UserRoundSearch, MessageCircle, Mail, ArrowRight, ChevronRight, CalendarDays } from "lucide-react";
-import { WorkspacePage, PageHeader, Metrics, Metric, InfoChip, EmptyState, SectionHeader } from "@/components/hub/workspace";
+import { WorkspacePage, PageHeader, Metrics, Metric, StatusBadge, EmptyState, SectionHeader } from "@/components/hub/workspace";
 
 import { prisma } from "@/lib/prisma";
 import { formatAmount } from "@/lib/format";
@@ -164,9 +164,9 @@ export default async function LeadsPage({ searchParams }: PageProps) {
                         <strong>{lead.service || "General enquiry"}</strong>
                         <small>{formatAmount(lead.budget) || "Budget not specified"}</small>
                       </span>
-                      <InfoChip tone={lead.status === "WON" ? "success" : lead.status === "LOST" ? "warning" : lead.status === "NEW" ? "info" : "neutral"}>
+                      <StatusBadge tone={lead.status === "WON" ? "success" : lead.status === "LOST" ? "warning" : lead.status === "NEW" ? "info" : "neutral"}>
                         {statusLabels[lead.status]}
-                      </InfoChip>
+                      </StatusBadge>
                       <span className="sw-lead-summary-arrow"><ChevronRight size={17}/></span>
                     </summary>
                     <div className="sw-lead-expanded">

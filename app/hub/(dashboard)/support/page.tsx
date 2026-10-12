@@ -1,8 +1,8 @@
 import Link from "next/link";
+import { StatusBadge } from "@/components/hub/workspace";
 import {
   AlertTriangle,
   ArrowRight,
-  CheckCircle2,
   Clock3,
   LifeBuoy,
   Plus,
@@ -214,9 +214,16 @@ export default async function SupportPage({
                   <div>
                     <div className="hub-support-v2-title-line">
                       <Link href={`/hub/support/${request.id}`}>{request.title}</Link>
-                      <span className={`hub-support-status hub-support-status-${request.status.toLowerCase()}`}>
+                      <StatusBadge
+                        tone={
+                          request.status === "RESOLVED" ? "success"
+                          : request.status === "WAITING_CLIENT" ? "warning"
+                          : request.status === "IN_PROGRESS" ? "info"
+                          : "neutral"
+                        }
+                      >
                         {supportStatusLabels[request.status]}
-                      </span>
+                      </StatusBadge>
                     </div>
                     <span>{requester}</span>
                     {request.project && <small>{request.project.name}</small>}

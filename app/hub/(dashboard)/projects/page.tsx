@@ -15,7 +15,7 @@ import {
 
 import { prisma } from "@/lib/prisma";
 import type { ProjectStatus } from "@/generated/prisma/client";
-import { ActionLink, WorkspacePage, PageHeader, Metrics, Metric, InfoChip } from "@/components/hub/workspace";
+import { ActionLink, WorkspacePage, PageHeader, Metrics, Metric, StatusBadge } from "@/components/hub/workspace";
 
 export const dynamic = "force-dynamic";
 
@@ -255,9 +255,9 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
                     <Link href={"/hub/projects/" + project.id}>{project.name}</Link>
                     <small><Building2 size={13}/>{project.client.name}</small>
                   </span>
-                  <InfoChip tone={project.status === "COMPLETED" ? "success" : project.status === "WAITING_CLIENT" ? "warning" : project.status === "IN_PROGRESS" ? "info" : "neutral"}>
+                  <StatusBadge tone={project.status === "COMPLETED" ? "success" : project.status === "WAITING_CLIENT" ? "warning" : project.status === "IN_PROGRESS" ? "info" : "neutral"}>
                     {statusLabels[project.status]}
-                  </InfoChip>
+                  </StatusBadge>
                 </header>
 
                 <div className="sw-board-card-body">

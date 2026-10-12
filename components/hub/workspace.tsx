@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
 
 /**
@@ -46,6 +46,21 @@ export function Metric({
         {description && <span className="sw-metric-description">{description}</span>}
       </div>
     </div>
+  );
+}
+
+export function Panel({
+  children,
+  className,
+  ...props
+}: ComponentPropsWithoutRef<"section">) {
+  return (
+    <section
+      {...props}
+      className={["sw-panel", className].filter(Boolean).join(" ")}
+    >
+      {children}
+    </section>
   );
 }
 
@@ -102,11 +117,13 @@ export function RecordRow({
   </article>;
 }
 
-export function InfoChip({ children, tone = "neutral", icon }: {
-  children: ReactNode; tone?: "neutral" | "success" | "info" | "warning"; icon?: ReactNode;
+export function StatusBadge({ children, tone = "neutral", icon }: {
+  children: ReactNode; tone?: "neutral" | "success" | "info" | "warning" | "danger"; icon?: ReactNode;
 }) {
   return <span className={`sw-chip sw-chip-${tone}`}>{icon}{children}</span>;
 }
+
+export const InfoChip = StatusBadge;
 
 export function EmptyState({ title, description, action }: {
   title: string; description: string; action?: ReactNode;

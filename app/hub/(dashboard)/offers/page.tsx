@@ -1,4 +1,5 @@
 import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
+import { StatusBadge } from "@/components/hub/workspace";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -192,9 +193,16 @@ export default async function OffersPage({
                     <Link href={`/hub/offers/${offer.id}`}>{offer.title}</Link>
                     <small>{offer.client.name}</small>
                   </div>
-                  <span className={`hub-offer-status hub-offer-status-${offer.status.toLowerCase()}`}>
+                  <StatusBadge
+                    tone={
+                      offer.status === "ACCEPTED" ? "success"
+                      : offer.status === "DECLINED" ? "danger"
+                      : offer.status === "SHARED" || offer.status === "VIEWED"
+                        ? "info" : "neutral"
+                    }
+                  >
                     {offerStatusLabels[offer.status]}
-                  </span>
+                  </StatusBadge>
                 </header>
                 <div className="sw-offer-board-body">
                   <div className="sw-offer-board-price">
