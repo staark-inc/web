@@ -74,12 +74,12 @@ export default async function LeadPage({ params }: PageProps) {
   const canCreateOffer = !["WON", "LOST"].includes(lead.status);
 
   return (
-    <div className="hub-page hub-lead-v2-detail-page">
+    <div className="hub-page hub-lead-v2-detail-page sw-detail-page">
       <div className="hub-detail-back">
         <Link href="/hub/leads"><ArrowLeft size={16} />Leads</Link>
       </div>
 
-      <header className="hub-lead-v2-detail-head">
+      <header className="hub-lead-v2-detail-head sw-detail-header">
         <div>
           <span className="hub-lead-v2-detail-kicker"><Target size={12} />SALES OPPORTUNITY</span>
           <h1>{opportunity}</h1>
@@ -90,7 +90,7 @@ export default async function LeadPage({ params }: PageProps) {
         </span>
       </header>
 
-      <section className="hub-lead-v2-detail-stats">
+      <section className="hub-lead-v2-detail-stats sw-detail-metrics">
         <div>
           <span><UserRound size={15} /> Contact</span>
           <strong>{displayName}</strong>
@@ -114,16 +114,16 @@ export default async function LeadPage({ params }: PageProps) {
       </section>
 
       <section className="hub-lead-v2-detail-grid">
-        <div className="hub-lead-v2-panel hub-lead-v2-message-panel sw-card sw-card-panel">
-          <div className="hub-lead-v2-panel-head">
+        <div className="hub-lead-v2-panel hub-lead-v2-message-panel sw-card sw-card-panel sw-detail-panel">
+          <div className="hub-lead-v2-panel-head sw-detail-panel-head">
             <div><span>ENQUIRY</span><h2>Message</h2></div>
             <MessageSquareText size={17} />
           </div>
           <div className="hub-lead-v2-message-body">{lead.message || "No message was provided."}</div>
         </div>
 
-        <div className="hub-lead-v2-panel sw-card sw-card-panel">
-          <div className="hub-lead-v2-panel-head">
+        <div className="hub-lead-v2-panel sw-card sw-card-panel sw-detail-panel">
+          <div className="hub-lead-v2-panel-head sw-detail-panel-head">
             <div><span>CONTACT</span><h2>Customer</h2></div>
           </div>
 
@@ -151,8 +151,8 @@ export default async function LeadPage({ params }: PageProps) {
           </div>
         </div>
 
-        <div className="hub-lead-v2-panel sw-card sw-card-panel">
-          <div className="hub-lead-v2-panel-head">
+        <div className="hub-lead-v2-panel sw-card sw-card-panel sw-detail-panel">
+          <div className="hub-lead-v2-panel-head sw-detail-panel-head">
             <div><span>PIPELINE</span><h2>Next action</h2></div>
           </div>
 

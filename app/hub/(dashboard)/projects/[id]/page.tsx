@@ -161,7 +161,7 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
   const deploymentTone = project.liveUrl || project.demo ? "good" : "neutral";
 
   return (
-    <div className="hub-page hub-project-detail-page sw-project-detail-workspace">
+    <div className="hub-page hub-project-detail-page sw-project-detail-workspace sw-detail-page">
       <div className="hub-detail-back">
         <Link href="/hub/projects">
           <ArrowLeft size={16} />
@@ -169,7 +169,7 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
         </Link>
       </div>
 
-      <div className="hub-page-header hub-project-detail-header">
+      <div className="hub-page-header hub-project-detail-header sw-detail-header">
         <div>
           <p className="hub-project-eyebrow hub-eyebrow">
             <Building2 size={12} />
@@ -202,7 +202,7 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
         </div>
       </div>
 
-      <section className="sw-project-overview-board" aria-label="Project delivery at a glance">
+      <section className="sw-project-overview-board sw-detail-metrics" aria-label="Project delivery at a glance">
         <div className="sw-project-overview-main">
           <div className="sw-project-overview-kicker"><Gauge size={16}/> DELIVERY PROGRESS</div>
           <div className="sw-project-overview-value">{taskPercent}<span>%</span></div>
@@ -253,7 +253,7 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
 
             <ProjectMaterials projectId={project.id} materials={project.materials} />
 
-            <div className="hub-client-panel sw-card sw-card-panel">
+            <div className="hub-client-panel sw-card sw-card-panel sw-detail-panel">
               <h2>
                 <MessageSquare size={16} />
                 Conversation
@@ -289,7 +289,7 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
       )}
 
       {activeTab === "billing" && (
-        <section className="hub-client-panel sw-card sw-card-panel">
+        <section className="hub-client-panel sw-card sw-card-panel sw-detail-panel">
           <h2>Billing &amp; support</h2>
           <p className="hub-client-empty">
             Billing agreements will appear here once recorded. Support requests for this project are listed below.
@@ -321,7 +321,7 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
       )}
 
       {activeTab === "overview" && (
-        <section className="hub-client-panel hub-project-settings sw-card sw-card-panel">
+        <section className="hub-client-panel hub-project-settings sw-card sw-card-panel sw-detail-panel">
           <details className="hub-project-settings-disclosure">
             <summary>
               <span>

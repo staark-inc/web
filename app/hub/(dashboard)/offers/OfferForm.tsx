@@ -1,5 +1,6 @@
 "use client";
 
+import { HubForm, HubFormField, HubFormActions } from "@/components/hub/workspace";
 import { useActionState, useState } from "react";
 
 import { OFFER_TEMPLATES } from "@/lib/offer-templates";
@@ -62,26 +63,26 @@ export default function OfferForm({
   }
 
   return (
-    <form action={action} className="hub-client-form sw-offer-builder-form">
+    <HubForm action={action} className="hub-client-form sw-offer-builder-form">
       {offer && <input type="hidden" name="offerId" value={offer.id} />}
       {lead && <input type="hidden" name="leadId" value={lead.id} />}
       {lead && <input type="hidden" name="clientId" value={lead.clientId ?? ""} />}
 
       {!offer && (
-        <div className="hub-client-form-field">
+        <HubFormField className="hub-client-form-field">
           <label htmlFor="offer-template">Offer template</label>
           <select
             id="offer-template"
             value={templateId}
             onChange={(event) => applyTemplate(event.target.value)}
             disabled={pending}
-          >
+           className="sw-form-control">
             {OFFER_TEMPLATES.map((template) => (
               <option key={template.id} value={template.id}>{template.name}</option>
             ))}
           </select>
           <small>Choose a preset, then edit anything before saving.</small>
-        </div>
+        </HubFormField>
       )}
 
       {lead && !offer && (
@@ -94,7 +95,7 @@ export default function OfferForm({
 
       <div className="sw-offer-builder-heading"><span>OFFER DETAILS</span><p>Client, title and commercial terms</p></div>
       <div className="hub-client-form-grid">
-        <div className="hub-client-form-field">
+        <HubFormField className="hub-client-form-field">
           <label htmlFor="offer-title">Offer title</label>
           <input
             id="offer-title"
@@ -105,11 +106,11 @@ export default function OfferForm({
             maxLength={160}
             required
             disabled={pending}
-          />
-        </div>
+           className="sw-form-control"/>
+        </HubFormField>
 
         {!lead && (
-          <div className="hub-client-form-field">
+          <HubFormField className="hub-client-form-field">
             <label htmlFor="offer-client">Client</label>
             <select
               id="offer-client"
@@ -117,14 +118,14 @@ export default function OfferForm({
               defaultValue={offer?.clientId ?? defaultClientId ?? ""}
               required
               disabled={pending || Boolean(offer)}
-            >
+             className="sw-form-control">
               <option value="" disabled>Select a client</option>
               {clients.map((client) => <option key={client.id} value={client.id}>{client.name}</option>)}
             </select>
-          </div>
+          </HubFormField>
         )}
 
-        <div className="hub-client-form-field">
+        <HubFormField className="hub-client-form-field">
           <label htmlFor="offer-onetime">Website price (SEK, excl. VAT)</label>
           <input
             id="offer-onetime"
@@ -134,10 +135,10 @@ export default function OfferForm({
             onChange={(event) => setOneTimePrice(event.target.value)}
             placeholder="2999"
             disabled={pending}
-          />
-        </div>
+           className="sw-form-control"/>
+        </HubFormField>
 
-        <div className="hub-client-form-field">
+        <HubFormField className="hub-client-form-field">
           <label htmlFor="offer-monthly">Monthly hosting + support (SEK, excl. VAT)</label>
           <input
             id="offer-monthly"
@@ -147,10 +148,10 @@ export default function OfferForm({
             onChange={(event) => setMonthlyPrice(event.target.value)}
             placeholder="299"
             disabled={pending}
-          />
-        </div>
+           className="sw-form-control"/>
+        </HubFormField>
 
-        <div className="hub-client-form-field">
+        <HubFormField className="hub-client-form-field">
           <label htmlFor="offer-months">Included support (months)</label>
           <input
             id="offer-months"
@@ -162,12 +163,12 @@ export default function OfferForm({
             onChange={(event) => setIncludedMonths(event.target.value)}
             required
             disabled={pending}
-          />
-        </div>
+           className="sw-form-control"/>
+        </HubFormField>
       </div>
 
       <div className="sw-offer-builder-heading"><span>SCOPE & DELIVERY</span><p>Define the deliverables and the agreement clearly</p></div>
-      <div className="hub-client-form-field">
+      <HubFormField className="hub-client-form-field">
         <label htmlFor="offer-scope">Scope and deliverables</label>
         <textarea
           id="offer-scope"
@@ -178,10 +179,10 @@ export default function OfferForm({
           onChange={(event) => setScope(event.target.value)}
           placeholder="What the client will receive..."
           disabled={pending}
-        />
-      </div>
+         className="sw-form-control"/>
+      </HubFormField>
 
-      <div className="hub-client-form-field">
+      <HubFormField className="hub-client-form-field">
         <label htmlFor="offer-terms">Additional terms</label>
         <textarea
           id="offer-terms"
@@ -192,15 +193,15 @@ export default function OfferForm({
           onChange={(event) => setTerms(event.target.value)}
           placeholder="Timeline, revisions, payment terms..."
           disabled={pending}
-        />
-      </div>
+         className="sw-form-control"/>
+      </HubFormField>
 
       <p className="hub-offer-help">Saving creates a draft only. You can review every field before sharing the offer with the client.</p>
       {state.error && <p className="hub-compose-error" role="alert">{state.error}</p>}
       {state.success && <p className="hub-compose-success" role="status">Draft saved.</p>}
-      <div className="hub-client-form-actions">
+      <HubFormActions className="hub-client-form-actions">
         <button type="submit" className="hub-send-button" disabled={pending}>{pending ? "Saving..." : offer ? "Save draft" : "Create draft"}</button>
-      </div>
-    </form>
+      </HubFormActions>
+    </HubForm>
   );
 }

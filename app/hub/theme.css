@@ -1241,3 +1241,41 @@
  .hub-dashboard .sw-entity-footer{align-items:flex-start}
 }
 @media(prefers-reduced-motion:reduce){.hub-dashboard .sw-entity-action{transition:none}}
+
+
+/* STAARK HUB — Foundation 10: canonical details & forms (shared, unversioned). */
+.hub-dashboard .sw-detail-page { width:100%; max-width:none; min-width:0; color:var(--sw-ink); }
+.hub-dashboard .sw-detail-header { min-width:0; gap:16px; }
+.hub-dashboard .sw-detail-header :is(h1) { color:var(--sw-ink); font-size:clamp(25px,2.4vw,34px); font-weight:760; line-height:1.2; letter-spacing:-.035em; overflow-wrap:anywhere; }
+.hub-dashboard .sw-detail-header p { color:var(--sw-muted); font-size:13px; line-height:1.55; }
+.hub-dashboard .sw-detail-metrics { min-width:0; }
+.hub-dashboard .sw-detail-panel { min-width:0; border:1px solid var(--sw-line); border-radius:var(--sw-radius); background:var(--sw-surface); }
+.hub-dashboard .sw-detail-panel-head { min-width:0; border-bottom-color:var(--sw-line); }
+.hub-dashboard .sw-detail-panel-head :is(h2,h3) { font-size:15px; font-weight:730; line-height:1.35; color:var(--sw-ink); }
+.hub-dashboard .sw-detail-panel p { line-height:1.6; overflow-wrap:anywhere; }
+.hub-dashboard .sw-detail-page :is(a,button,input,select,textarea):focus-visible { outline:2px solid var(--sw-accent); outline-offset:2px; }
+
+.hub-dashboard .sw-form { min-width:0; }
+.hub-dashboard .sw-form-field { min-width:0; }
+.hub-dashboard .sw-form-field > label,
+.hub-dashboard .sw-form label:not(.hub-profile-v2-choice) { color:var(--sw-ink); font-size:12px; font-weight:650; line-height:1.45; }
+.hub-dashboard .sw-form-control,
+.hub-dashboard .sw-form :is(input:not([type=hidden]):not([type=radio]):not([type=checkbox]),select,textarea) {
+  box-sizing:border-box; min-width:0; width:100%; min-height:42px;
+  padding:10px 12px; border:1px solid var(--sw-line); border-radius:9px;
+  background:var(--sw-surface); color:var(--sw-ink); font:inherit; font-size:13px;
+}
+.hub-dashboard .sw-form textarea,
+.hub-dashboard textarea.sw-form-control { min-height:108px; resize:vertical; line-height:1.6; }
+.hub-dashboard .sw-form :is(input,select,textarea):disabled { cursor:not-allowed; opacity:.65; background:var(--sw-bg); }
+.hub-dashboard .sw-form :is(input,select,textarea):focus-visible,
+.hub-dashboard .sw-form-control:focus-visible { outline:2px solid var(--sw-accent); outline-offset:1px; border-color:var(--sw-accent); }
+.hub-dashboard .sw-form :is(input,select,textarea)[aria-invalid="true"] { border-color:#c45151; }
+.hub-dashboard .sw-form-actions { display:flex; align-items:center; justify-content:flex-end; flex-wrap:wrap; gap:10px; }
+.hub-dashboard .sw-form-actions :is(button,a) { min-height:40px; font-size:12px; }
+@media(max-width:640px){
+ .hub-dashboard .sw-detail-header { flex-wrap:wrap; align-items:flex-start; }
+ .hub-dashboard .sw-form-actions { justify-content:stretch; }
+ .hub-dashboard .sw-form-actions :is(button,a) { max-width:100%; }
+}
+@media(prefers-reduced-motion:reduce){.hub-dashboard .sw-form-control{transition:none}}

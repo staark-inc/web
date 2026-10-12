@@ -164,3 +164,14 @@ export function CardBody({className,children,...props}:ComponentPropsWithoutRef<
 export function CardFooter({className,children,...props}:ComponentPropsWithoutRef<"footer">){return <footer {...props} className={["sw-entity-footer",className].filter(Boolean).join(" ")}>{children}</footer>}
 export function CardActions({className,children,...props}:ComponentPropsWithoutRef<"div">){return <div {...props} className={["sw-entity-actions",className].filter(Boolean).join(" ")}>{children}</div>}
 export function CardIcon({className,children,...props}:ComponentPropsWithoutRef<"span">){return <span {...props} className={["sw-entity-icon",className].filter(Boolean).join(" ")}>{children}</span>}
+
+/** Foundation 10: the same form structure across Client, Project and Offer editors. */
+export function HubForm({ className, children, ...props }: ComponentPropsWithoutRef<"form">) {
+  return <form {...props} className={["sw-form", className].filter(Boolean).join(" ")}>{children}</form>;
+}
+export function HubFormField({ className, children, ...props }: ComponentPropsWithoutRef<"div">) {
+  return <div {...props} className={["sw-form-field", className].filter(Boolean).join(" ")}>{children}</div>;
+}
+export function HubFormActions({ className, children, ...props }: ComponentPropsWithoutRef<"div">) {
+  return <div {...props} className={["sw-form-actions", className].filter(Boolean).join(" ")}>{children}</div>;
+}

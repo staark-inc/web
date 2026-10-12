@@ -28,11 +28,11 @@ export default async function OfferDetailPage({ params }: { params: Promise<{ id
   if (!offer) notFound();
 
   return (
-    <div className="hub-page sw-offer-detail-page">
+    <div className="hub-page sw-offer-detail-page sw-detail-page">
       <div className="hub-detail-back"><Link href="/hub/offers"><ArrowLeft size={16} />Offers</Link></div>
-      <div className="hub-page-header sw-offer-detail-header"><div><span className="hub-eyebrow">CLIENT OFFER</span><h1>{offer.title}</h1><p>Created {formatDate(offer.createdAt)}</p></div><span className={`hub-offer-status hub-offer-status-${offer.status.toLowerCase()}`}>{offerStatusLabels[offer.status]}</span></div>
+      <div className="hub-page-header sw-offer-detail-header sw-detail-header"><div><span className="hub-eyebrow">CLIENT OFFER</span><h1>{offer.title}</h1><p>Created {formatDate(offer.createdAt)}</p></div><span className={`hub-offer-status hub-offer-status-${offer.status.toLowerCase()}`}>{offerStatusLabels[offer.status]}</span></div>
 
-      <section className="sw-offer-detail-summary" aria-label="Offer summary">
+      <section className="sw-offer-detail-summary sw-detail-metrics" aria-label="Offer summary">
         <div className="sw-offer-detail-pricing">
           <span className="sw-offer-detail-kicker">PROPOSAL VALUE</span>
           <strong>{formatOfferAmount(offer.oneTimePriceOre)}</strong>
@@ -57,8 +57,8 @@ export default async function OfferDetailPage({ params }: { params: Promise<{ id
       </section>
 
       <div className="hub-offer-detail-grid sw-offer-detail-content">
-        <div className="hub-client-panel sw-offer-editor-panel sw-card sw-card-panel">
-          <div className="sw-offer-section-heading"><div><span className="sw-offer-detail-kicker">PROPOSAL CONTENT</span><h2>{offer.status === "DRAFT" ? "Edit draft" : "Offer terms"}</h2></div><span>{offer.status === "DRAFT" ? "Draft — editable" : "Read only after sending"}</span></div>
+        <div className="hub-client-panel sw-offer-editor-panel sw-card sw-card-panel sw-detail-panel">
+          <div className="sw-offer-section-heading sw-detail-panel-head"><div><span className="sw-offer-detail-kicker">PROPOSAL CONTENT</span><h2>{offer.status === "DRAFT" ? "Edit draft" : "Offer terms"}</h2></div><span>{offer.status === "DRAFT" ? "Draft — editable" : "Read only after sending"}</span></div>
           {offer.status === "DRAFT" ? <OfferForm offer={offer} clients={[offer.client]} /> : (
             <div className="hub-offer-terms">
               <h3>Scope and deliverables</h3><p>{offer.scope || "No scope provided."}</p>
@@ -67,7 +67,7 @@ export default async function OfferDetailPage({ params }: { params: Promise<{ id
           )}
         </div>
         <div className="hub-client-side sw-offer-detail-sidebar">
-          <div className="hub-client-panel sw-offer-detail-client sw-card sw-card-panel">
+          <div className="hub-client-panel sw-offer-detail-client sw-card sw-card-panel sw-detail-panel">
             <h2>Client</h2>
             <Link className="hub-offer-client-link" href={`/hub/clients/${offer.clientId}`}><Building2 size={16} />{offer.client.name}</Link>
             {offer.lead && (
@@ -77,7 +77,7 @@ export default async function OfferDetailPage({ params }: { params: Promise<{ id
               </Link>
             )}
           </div>
-          <div className="hub-client-panel sw-offer-detail-actions-panel sw-card sw-card-panel"><h2>Actions &amp; decision</h2>
+          <div className="hub-client-panel sw-offer-detail-actions-panel sw-card sw-card-panel sw-detail-panel"><h2>Actions &amp; decision</h2>
             <p className="hub-client-empty">The client can accept or decline from the secure offer link. Linked leads become won automatically when the offer is accepted.</p>
             {offer.sharedAt && <p className="hub-offer-timestamp hub-offer-timestamp-shared">Shared {formatDate(offer.sharedAt)}</p>}
             {offer.viewedAt && <p className="hub-offer-timestamp hub-offer-timestamp-viewed">Viewed {formatDate(offer.viewedAt)}</p>}
