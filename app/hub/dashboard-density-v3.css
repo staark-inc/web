@@ -1,12 +1,5 @@
 /* HUB UI 03 — measured density and readability pass.
    Loaded after workspace, without replacing legacy module rules. */
-.hub-dashboard {
-  --hub-v3-radius: 14px;
-  --hub-v3-line: #dce3ed;
-  --hub-v3-text: #192337;
-  --hub-v3-muted: #58677e;
-}
-
 /* Keep wide workspaces wide, with a consistent content rhythm. */
 .hub-dashboard .hub-content .hub-page {
   max-width: none;
@@ -27,8 +20,8 @@
   margin-top: 14px;
 }
 .hub-dashboard .hub-overview-page .hub-command-panel {
-  border-color: var(--hub-v3-line);
-  border-radius: var(--hub-v3-radius);
+  border-color: var(--sw-line);
+  border-radius: var(--sw-radius);
   box-shadow: 0 3px 16px rgba(18, 33, 56, .035);
 }
 .hub-dashboard .hub-overview-page .hub-command-panel-header {
@@ -37,7 +30,7 @@
 }
 .hub-dashboard .hub-overview-page .hub-command-panel-header h2 {
   font-size: 15px;
-  color: var(--hub-v3-text);
+  color: var(--sw-ink);
 }
 .hub-dashboard .hub-overview-page .hub-command-panel-header span,
 .hub-dashboard .hub-overview-page .hub-command-metric small {
