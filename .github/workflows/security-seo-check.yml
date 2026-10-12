@@ -22,6 +22,8 @@ jobs:
         with:
           node-version: 22
           cache: npm
+      - name: Enforce Hub design contract
+        run: node scripts/check-hub-theme-contract.mjs
       - run: npm ci
       - run: npm run test:security-seo
       - run: npm run test:news
