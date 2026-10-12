@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
-import { WorkspacePage, PageHeader, Metrics, Metric, InfoChip } from "@/components/hub/workspace";
+import { WorkspacePage, PageHeader, Metrics, Metric, InfoChip, ExpandableCard, CardSummary, CardIcon, CardBody, CardActions } from "@/components/hub/workspace";
 
 export const dynamic = "force-dynamic";
 
@@ -143,10 +143,10 @@ export default async function ContactsPage({ searchParams }: PageProps) {
           {filteredContacts.map((contact) => {
             const fallback = contact.email || contact.phone || contact.facebook || contact.company;
             return (
-              <details key={contact.id} className="sw-contact-entry">
-                <summary>
-                  <span className="sw-contact-avatar">{getInitials(contact.name, fallback)}</span>
-                  <span className="sw-contact-person">
+              <ExpandableCard key={contact.id} className="sw-contact-entry sw-entity-card">
+                <CardSummary>
+                  <CardIcon className="sw-contact-avatar">{getInitials(contact.name, fallback)}</CardIcon>
+                  <span className="sw-contact-person sw-entity-title">
                     <strong>{contact.name || contact.company || "Unknown contact"}</strong>
                     <small>{contact.email || contact.phone || contact.company || "No contact details"}</small>
                   </span>
@@ -157,8 +157,8 @@ export default async function ContactsPage({ searchParams }: PageProps) {
                     <span>{contact._count.messages} messages</span>
                   </span>
                   <span className="sw-contact-entry-open">Details <ArrowRight size={15}/></span>
-                </summary>
-                <div className="sw-contact-entry-detail">
+                </CardSummary>
+                <CardBody className="sw-contact-entry-detail">
                   <div className="sw-contact-details">
                     <span className="sw-eyebrow">CONTACT INFORMATION</span>
                     {contact.email && <p><Mail size={15}/>{contact.email}</p>}
@@ -167,14 +167,14 @@ export default async function ContactsPage({ searchParams }: PageProps) {
                     {contact.facebook && <p><Globe2 size={15}/>Facebook profile recorded</p>}
                     <small>Added {formatDate(contact.createdAt)}</small>
                   </div>
-                  <div className="sw-contact-quick">
+                  <CardActions className="sw-contact-quick">
                     <span className="sw-eyebrow">NEXT ACTION</span>
                     {contact.email && <Link href={`/hub/compose?replyTo=${encodeURIComponent(contact.email)}`}><Mail size={15}/> Compose email</Link>}
                     {contact.phone && <a href={`tel:${contact.phone}`}><Phone size={15}/> Call contact</a>}
-                    <Link className="sw-contact-primary" href={`/hub/contacts/${contact.id}`}>View contact record <ArrowRight size={15}/></Link>
-                  </div>
-                </div>
-              </details>
+                    <Link className="sw-contact-primary sw-entity-action" href={`/hub/contacts/${contact.id}`}>View contact record <ArrowRight size={15}/></Link>
+                  </CardActions>
+                </CardBody>
+              </ExpandableCard>
             );
           })}
         </section>

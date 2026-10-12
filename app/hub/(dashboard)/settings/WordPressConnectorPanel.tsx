@@ -2,6 +2,7 @@
 
 import { CheckCircle2, Copy, KeyRound, RefreshCw, XCircle } from "lucide-react";
 import { useMemo, useState } from "react";
+import { StatusBadge } from "@/components/hub/workspace";
 
 type Site = {
   id: string;
@@ -107,9 +108,9 @@ export default function WordPressConnectorPanel({
           <strong>Staark WordPress Connector</strong>
           <span>Pair managed WordPress websites and sync support requests into Hub.</span>
         </div>
-        <span className={sites.length > 0 ? "hub-settings-v2-status is-connected" : "hub-settings-v2-status is-offline"}>
+        <StatusBadge tone={sites.length > 0 ? "success" : "neutral"}>
           {sites.length > 0 ? `${sites.length} connected` : "No sites"}
-        </span>
+        </StatusBadge>
       </div>
 
       {sites.length > 0 && (

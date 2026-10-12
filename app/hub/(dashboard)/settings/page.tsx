@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
+import { WorkspacePage, PageHeader, StatusBadge } from "@/components/hub/workspace";
 import { redirect } from "next/navigation";
 import {
   AlertCircle,
@@ -169,26 +171,22 @@ export default async function HubSettingsPage({
   }
 
   return (
-    <div className="hub-page hub-settings-page hub-settings-v2-page">
-      <header className="hub-page-header">
-        <div>
-          <span className="hub-eyebrow">STAARK HUB</span>
-          <h1>Settings</h1>
-          <p>Manage communication, templates and connected services.</p>
-        </div>
-      </header>
+    <WorkspacePage className="hub-settings-page hub-settings-v2-page sw-detail-page">
+      <PageHeader
+        eyebrow="STAARK HUB"
+        title="Settings"
+        description="Manage communication, templates and connected services."
+      />
 
-      <nav className="hub-settings-v2-tabs" aria-label="Settings sections">
-        <Link href="/hub/settings?tab=email" className={activeTab === "email" ? "is-active" : undefined}>
-          <Mail size={16} />Email
-        </Link>
-        <Link href="/hub/settings?tab=templates" className={activeTab === "templates" ? "is-active" : undefined}>
-          <Send size={16} />Templates
-        </Link>
-        <Link href="/hub/settings?tab=integrations" className={activeTab === "integrations" ? "is-active" : undefined}>
-          <Plug size={16} />Integrations
-        </Link>
-      </nav>
+      <WorkspaceTabs
+        label="Settings sections"
+        activeKey={activeTab}
+        tabs={[
+          { key: "email", label: "Email", href: "/hub/settings?tab=email", icon: <Mail size={16} /> },
+          { key: "templates", label: "Templates", href: "/hub/settings?tab=templates", icon: <Send size={16} /> },
+          { key: "integrations", label: "Integrations", href: "/hub/settings?tab=integrations", icon: <Plug size={16} /> },
+        ]}
+      />
 
       {params.updated === "1" && (
         <div className="hub-profile-alert hub-profile-alert-success">
@@ -231,30 +229,30 @@ export default async function HubSettingsPage({
 
       {activeTab === "email" && (
         <div className="hub-settings-v2-stack">
-          <form action="/api/hub/settings" method="post">
-            <section className="hub-settings-card">
-              <div className="hub-settings-heading">
+          <form action="/api/hub/settings" method="post" className="sw-form">
+            <section className="hub-settings-card sw-card sw-card-panel sw-detail-panel">
+              <div className="hub-settings-heading sw-detail-panel-head">
                 <div className="hub-settings-icon"><Mail size={19} /></div>
                 <div><h2>Sender identity</h2><p>Default identity used for outgoing client communication.</p></div>
               </div>
 
               <div className="hub-settings-grid">
-                <label className="hub-settings-field">
+                <label className="hub-settings-field sw-form-field">
                   <span>Sender name</span>
-                  <input name="senderName" defaultValue={senderName} required minLength={2} maxLength={80} />
+                  <input name="senderName" defaultValue={senderName} required minLength={2} maxLength={80}  className="sw-form-control"/>
                 </label>
-                <label className="hub-settings-field">
+                <label className="hub-settings-field sw-form-field">
                   <span>From address</span>
-                  <input type="email" name="senderEmail" defaultValue={senderEmail} required maxLength={160} />
+                  <input type="email" name="senderEmail" defaultValue={senderEmail} required maxLength={160}  className="sw-form-control"/>
                 </label>
-                <label className="hub-settings-field hub-settings-full">
+                <label className="hub-settings-field hub-settings-full sw-form-field">
                   <span>Reply-to address</span>
-                  <input type="email" name="replyToEmail" defaultValue={replyToEmail} maxLength={160} />
+                  <input type="email" name="replyToEmail" defaultValue={replyToEmail} maxLength={160}  className="sw-form-control"/>
                   <small>Customer replies will be directed to this mailbox.</small>
                 </label>
-                <label className="hub-settings-field hub-settings-full">
+                <label className="hub-settings-field hub-settings-full sw-form-field">
                   <span>Email signature</span>
-                  <textarea name="signature" rows={6} defaultValue={signature} maxLength={2000} />
+                  <textarea name="signature" rows={6} defaultValue={signature} maxLength={2000}  className="sw-form-control"/>
                 </label>
               </div>
 
@@ -265,8 +263,8 @@ export default async function HubSettingsPage({
           </form>
 
           <div className="hub-settings-v2-two-column">
-            <section className="hub-settings-card">
-              <div className="hub-settings-heading">
+            <section className="hub-settings-card sw-card sw-card-panel sw-detail-panel">
+              <div className="hub-settings-heading sw-detail-panel-head">
                 <div className="hub-settings-icon"><Server size={19} /></div>
                 <div><h2>Mail delivery</h2><p>Current outbound and inbound mail configuration.</p></div>
               </div>
@@ -276,13 +274,13 @@ export default async function HubSettingsPage({
                 <div><span>Gmail sync</span><strong className={gmailConnected ? "is-good" : "is-bad"}>{gmailConnected ? "Connected" : "Not connected"}</strong></div>
                 <div><span>Inbound watch</span><strong className={gmailWatchActive ? "is-good" : "is-bad"}>{gmailWatchActive ? "Active" : "Inactive"}</strong></div>
               </div>
-              <form action="/api/hub/email-test" method="post">
+              <form action="/api/hub/email-test" method="post" className="sw-form">
                 <button type="submit" className="hub-secondary-button"><Send size={14} />Send test email</button>
               </form>
             </section>
 
-            <section className="hub-settings-card">
-              <div className="hub-settings-heading">
+            <section className="hub-settings-card sw-card sw-card-panel sw-detail-panel">
+              <div className="hub-settings-heading sw-detail-panel-head">
                 <div className="hub-settings-icon"><ShieldCheck size={19} /></div>
                 <div><h2>Domain authentication</h2><p>DNS checks that influence deliverability.</p></div>
               </div>
@@ -350,16 +348,14 @@ export default async function HubSettingsPage({
           <section className="hub-settings-v2-integration-grid">
             <WordPressConnectorPanel sites={wordpressSites} clients={wordpressClients} />
 
-            <article className="hub-settings-v2-integration-card">
+            <article className="hub-settings-v2-integration-card sw-card sw-card-panel">
               <div className="hub-settings-v2-integration-card-head">
                 <span className="hub-settings-v2-integration-icon"><Mail size={19} /></span>
                 <div>
                   <strong>Google Workspace</strong>
                   <span>Mailbox sync, inbound watch and SMTP relay.</span>
                 </div>
-                <span className={gmailConnected ? "hub-settings-v2-status is-connected" : "hub-settings-v2-status is-offline"}>
-                  {gmailConnected ? "Connected" : "Not connected"}
-                </span>
+                <StatusBadge tone={gmailConnected ? "success" : "neutral"}>{gmailConnected ? "Connected" : "Not connected"}</StatusBadge>
               </div>
 
               <div className="hub-settings-v2-integration-facts">
@@ -378,16 +374,14 @@ export default async function HubSettingsPage({
               </div>
             </article>
 
-            <article className="hub-settings-v2-integration-card">
+            <article className="hub-settings-v2-integration-card sw-card sw-card-panel">
               <div className="hub-settings-v2-integration-card-head">
                 <span className="hub-settings-v2-integration-icon"><BarChart3 size={19} /></span>
                 <div>
                   <strong>Google Analytics</strong>
                   <span>Traffic and website performance data.</span>
                 </div>
-                <span className={analyticsConnected ? "hub-settings-v2-status is-connected" : "hub-settings-v2-status is-offline"}>
-                  {analyticsConnected ? "Connected" : "Not connected"}
-                </span>
+                <StatusBadge tone={analyticsConnected ? "success" : "neutral"}>{analyticsConnected ? "Connected" : "Not connected"}</StatusBadge>
               </div>
 
               <div className="hub-settings-v2-integration-facts">
@@ -403,16 +397,14 @@ export default async function HubSettingsPage({
               </div>
             </article>
 
-            <article className="hub-settings-v2-integration-card">
+            <article className="hub-settings-v2-integration-card sw-card sw-card-panel">
               <div className="hub-settings-v2-integration-card-head">
                 <span className="hub-settings-v2-integration-icon"><Search size={19} /></span>
                 <div>
                   <strong>Google Search Console</strong>
                   <span>Search visibility and ranking data.</span>
                 </div>
-                <span className={analyticsConnected ? "hub-settings-v2-status is-connected" : "hub-settings-v2-status is-offline"}>
-                  {analyticsConnected ? "Connected" : "Not connected"}
-                </span>
+                <StatusBadge tone={analyticsConnected ? "success" : "neutral"}>{analyticsConnected ? "Connected" : "Not connected"}</StatusBadge>
               </div>
 
               <div className="hub-settings-v2-integration-facts">
@@ -428,16 +420,14 @@ export default async function HubSettingsPage({
               </div>
             </article>
 
-            <article className="hub-settings-v2-integration-card">
+            <article className="hub-settings-v2-integration-card sw-card sw-card-panel">
               <div className="hub-settings-v2-integration-card-head">
                 <span className="hub-settings-v2-integration-icon"><GitMerge size={19} /></span>
                 <div>
                   <strong>GitHub</strong>
                   <span>Repository, branch and deployment visibility.</span>
                 </div>
-                <span className={githubResult.connected ? "hub-settings-v2-status is-connected" : "hub-settings-v2-status is-offline"}>
-                  {githubResult.connected ? "Connected" : "Unavailable"}
-                </span>
+                <StatusBadge tone={githubResult.connected ? "success" : "neutral"}>{githubResult.connected ? "Connected" : "Unavailable"}</StatusBadge>
               </div>
 
               <div className="hub-settings-v2-integration-facts">
@@ -448,16 +438,14 @@ export default async function HubSettingsPage({
               </div>
             </article>
 
-            <article className="hub-settings-v2-integration-card hub-settings-v2-integration-card-stripe">
+            <article className="hub-settings-v2-integration-card hub-settings-v2-integration-card-stripe sw-card sw-card-panel">
               <div className="hub-settings-v2-integration-card-head">
                 <span className="hub-settings-v2-integration-icon"><CreditCard size={19} /></span>
                 <div>
                   <strong>Stripe</strong>
                   <span>Payments, invoices and future Billing sync.</span>
                 </div>
-                <span className={stripeStatus.configured ? "hub-settings-v2-status is-connected" : "hub-settings-v2-status is-offline"}>
-                  {stripeStatus.configured ? "Configured" : "Not configured"}
-                </span>
+                <StatusBadge tone={stripeStatus.configured ? "success" : "neutral"}>{stripeStatus.configured ? "Configured" : "Not configured"}</StatusBadge>
               </div>
 
               <div className="hub-settings-v2-integration-facts">
@@ -480,6 +468,6 @@ export default async function HubSettingsPage({
           </section>
         </div>
       )}
-    </div>
+    </WorkspacePage>
   );
 }

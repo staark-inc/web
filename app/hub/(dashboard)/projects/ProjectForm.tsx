@@ -1,5 +1,6 @@
 "use client";
 
+import { HubForm, HubFormField, HubFormActions } from "@/components/hub/workspace";
 import { useActionState } from "react";
 
 import {
@@ -65,7 +66,7 @@ export default function ProjectForm({
   );
 
   return (
-    <form action={formAction} className="hub-client-form">
+    <HubForm action={formAction} className="hub-client-form">
       {project && (
         <input type="hidden" name="projectId" value={project.id} />
       )}
@@ -90,7 +91,7 @@ export default function ProjectForm({
       )}
 
       <div className="hub-client-form-grid">
-        <div className="hub-client-form-field">
+        <HubFormField className="hub-client-form-field">
           <label htmlFor="project-name">Project name</label>
           <input
             id="project-name"
@@ -99,10 +100,10 @@ export default function ProjectForm({
             maxLength={160}
             required
             disabled={pending}
-          />
-        </div>
+           className="sw-form-control"/>
+        </HubFormField>
 
-        <div className="hub-client-form-field">
+        <HubFormField className="hub-client-form-field">
           <label htmlFor="project-client">Client</label>
           <select
             id="project-client"
@@ -110,7 +111,7 @@ export default function ProjectForm({
             defaultValue={project?.clientId ?? defaultClientId ?? ""}
             required
             disabled={pending || Boolean(sourceOffer && !project)}
-          >
+           className="sw-form-control">
             <option value="" disabled>
               Select a client
             </option>
@@ -121,25 +122,25 @@ export default function ProjectForm({
               </option>
             ))}
           </select>
-        </div>
+        </HubFormField>
 
-        <div className="hub-client-form-field">
+        <HubFormField className="hub-client-form-field">
           <label htmlFor="project-status">Status</label>
           <select
             id="project-status"
             name="status"
             defaultValue={project?.status ?? "PLANNING"}
             disabled={pending}
-          >
+           className="sw-form-control">
             {statusOptions.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
             ))}
           </select>
-        </div>
+        </HubFormField>
 
-        <div className="hub-client-form-field">
+        <HubFormField className="hub-client-form-field">
           <label htmlFor="project-budget">Budget</label>
           <input
             id="project-budget"
@@ -147,10 +148,10 @@ export default function ProjectForm({
             defaultValue={project?.budget ?? defaultBudget ?? ""}
             placeholder="24 900 SEK"
             disabled={pending}
-          />
-        </div>
+           className="sw-form-control"/>
+        </HubFormField>
 
-        <div className="hub-client-form-field">
+        <HubFormField className="hub-client-form-field">
           <label htmlFor="project-started">Start date</label>
           <input
             id="project-started"
@@ -158,10 +159,10 @@ export default function ProjectForm({
             type="date"
             defaultValue={toDateValue(project?.startedAt ?? null)}
             disabled={pending}
-          />
-        </div>
+           className="sw-form-control"/>
+        </HubFormField>
 
-        <div className="hub-client-form-field">
+        <HubFormField className="hub-client-form-field">
           <label htmlFor="project-due">Launch date</label>
           <input
             id="project-due"
@@ -169,11 +170,11 @@ export default function ProjectForm({
             type="date"
             defaultValue={toDateValue(project?.dueAt ?? null)}
             disabled={pending}
-          />
-        </div>
+           className="sw-form-control"/>
+        </HubFormField>
       </div>
 
-      <div className="hub-client-form-field">
+      <HubFormField className="hub-client-form-field">
         <label htmlFor="project-url">Live URL</label>
         <input
           id="project-url"
@@ -182,10 +183,10 @@ export default function ProjectForm({
           defaultValue={project?.liveUrl ?? ""}
           placeholder="https://example.com"
           disabled={pending}
-        />
-      </div>
+         className="sw-form-control"/>
+      </HubFormField>
 
-      <div className="hub-client-form-field">
+      <HubFormField className="hub-client-form-field">
         <label htmlFor="project-description">Description</label>
         <textarea
           id="project-description"
@@ -194,8 +195,8 @@ export default function ProjectForm({
           defaultValue={project?.description ?? defaultDescription ?? ""}
           placeholder="Scope, deliverables and notes..."
           disabled={pending}
-        />
-      </div>
+         className="sw-form-control"/>
+      </HubFormField>
 
       {state.error && (
         <div className="hub-compose-error">{state.error}</div>
@@ -205,7 +206,7 @@ export default function ProjectForm({
         <div className="hub-compose-success">Project saved.</div>
       )}
 
-      <div className="hub-client-form-actions">
+      <HubFormActions className="hub-client-form-actions">
         <button
           type="submit"
           className="hub-send-button"
@@ -217,7 +218,7 @@ export default function ProjectForm({
               ? "Save changes"
               : "Create project"}
         </button>
-      </div>
-    </form>
+      </HubFormActions>
+    </HubForm>
   );
 }

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
 
 /**
@@ -7,8 +7,11 @@ import { ArrowRight } from "lucide-react";
  * Use sw-* classes from app/hub/theme.css. These are intentionally
  * presentation-only: fetching, navigation state and mutation stay in pages.
  */
-export function WorkspacePage({ children }: { children: ReactNode }) {
-  return <div className="hub-page sw-page">{children}</div>;
+export function WorkspacePage({ children, className }: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return <div className={["hub-page", "sw-page", className].filter(Boolean).join(" ")}>{children}</div>;
 }
 
 export function PageHeader({
@@ -38,7 +41,7 @@ export function Metric({
   label: string; value: ReactNode; description?: string; icon?: ReactNode;
 }) {
   return (
-    <div className="sw-metric">
+    <div className="sw-metric sw-card sw-card-metric">
       {icon && <span className="sw-metric-icon" aria-hidden="true">{icon}</span>}
       <div className="sw-metric-body">
         <span className="sw-metric-label">{label}</span>
@@ -46,6 +49,37 @@ export function Metric({
         {description && <span className="sw-metric-description">{description}</span>}
       </div>
     </div>
+  );
+}
+
+export function Panel({
+  children,
+  className,
+  ...props
+}: ComponentPropsWithoutRef<"section">) {
+  return (
+    <section
+      {...props}
+      className={["sw-panel", "sw-card", "sw-card-panel", className].filter(Boolean).join(" ")}
+    >
+      {children}
+    </section>
+  );
+}
+
+export function ActionLink({
+  href,
+  children,
+  variant = "primary",
+}: {
+  href: string;
+  children: ReactNode;
+  variant?: "primary" | "secondary";
+}) {
+  return (
+    <Link href={href} className={`sw-button sw-button-${variant}`}>
+      {children}
+    </Link>
   );
 }
 
@@ -68,7 +102,7 @@ export function RecordRow({
   href: string; initials: string; name: string; subtitle?: ReactNode;
   details?: ReactNode; meta?: ReactNode;
 }) {
-  return <article className="sw-record">
+  return <article className="sw-record sw-card sw-card-record">
     <div className="sw-record-person">
       <span className="sw-avatar" aria-hidden="true">{initials || "—"}</span>
       <div className="sw-record-identity">
@@ -86,11 +120,13 @@ export function RecordRow({
   </article>;
 }
 
-export function InfoChip({ children, tone = "neutral", icon }: {
-  children: ReactNode; tone?: "neutral" | "success" | "info" | "warning"; icon?: ReactNode;
+export function StatusBadge({ children, tone = "neutral", icon }: {
+  children: ReactNode; tone?: "neutral" | "success" | "info" | "warning" | "danger"; icon?: ReactNode;
 }) {
   return <span className={`sw-chip sw-chip-${tone}`}>{icon}{children}</span>;
 }
+
+export const InfoChip = StatusBadge;
 
 export function EmptyState({ title, description, action }: {
   title: string; description: string; action?: ReactNode;
@@ -98,4 +134,44 @@ export function EmptyState({ title, description, action }: {
   return <div className="sw-empty">
     <h2>{title}</h2><p>{description}</p>{action}
   </div>;
+}
+
+/** Unified card surfaces for Hub list/grid pages. Keep page-specific classes
+ * for layout; this contract owns only the outer surface and focus treatment. */
+export function BoardCard({ className, children, ...props }: ComponentPropsWithoutRef<"article">) {
+  return <article {...props} className={["sw-card", "sw-card-board", className].filter(Boolean).join(" ")}>{children}</article>;
+}
+
+/** Native details/summary behavior is preserved (keyboard, open state, forms). */
+export function ExpandableCard({ className, children, ...props }: ComponentPropsWithoutRef<"details">) {
+  return <details {...props} className={["sw-card", "sw-card-expandable", className].filter(Boolean).join(" ")}>{children}</details>;
+}
+
+/** Foundation 08: semantic card composition shared by operational workspaces. */
+export function ListCard({className,children,...props}:ComponentPropsWithoutRef<"article">){return <article {...props} className={["sw-card","sw-list-card",className].filter(Boolean).join(" ")}>{children}</article>}
+export function ListCardHeader({icon,title,subtitle,status}:{icon:ReactNode;title:ReactNode;subtitle?:ReactNode;status?:ReactNode}){
+  return <header className="sw-list-card-head"><span className="sw-list-card-icon" aria-hidden="true">{icon}</span><div className="sw-list-card-identity"><h2>{title}</h2>{subtitle&&<div className="sw-list-card-subtitle">{subtitle}</div>}</div>{status&&<div className="sw-list-card-status">{status}</div>}</header>
+}
+export function ListCardFacts({children}:{children:ReactNode}){return <div className="sw-list-card-facts">{children}</div>}
+export function ListCardFact({label,children}:{label:string;children:ReactNode}){return <div className="sw-list-card-fact"><span>{label}</span><div>{children}</div></div>}
+export function ListCardFooter({children}:{children:ReactNode}){return <footer className="sw-list-card-footer">{children}</footer>}
+
+/** Foundation 09: consistent card slots; all preserve their native DOM tags. */
+export function CardHeader({className,children,...props}:ComponentPropsWithoutRef<"header">){return <header {...props} className={["sw-entity-header",className].filter(Boolean).join(" ")}>{children}</header>}
+export function CardTop({className,children,...props}:ComponentPropsWithoutRef<"div">){return <div {...props} className={["sw-entity-header",className].filter(Boolean).join(" ")}>{children}</div>}
+export function CardSummary({className,children,...props}:ComponentPropsWithoutRef<"summary">){return <summary {...props} className={["sw-entity-header","sw-entity-summary",className].filter(Boolean).join(" ")}>{children}</summary>}
+export function CardBody({className,children,...props}:ComponentPropsWithoutRef<"div">){return <div {...props} className={["sw-entity-body",className].filter(Boolean).join(" ")}>{children}</div>}
+export function CardFooter({className,children,...props}:ComponentPropsWithoutRef<"footer">){return <footer {...props} className={["sw-entity-footer",className].filter(Boolean).join(" ")}>{children}</footer>}
+export function CardActions({className,children,...props}:ComponentPropsWithoutRef<"div">){return <div {...props} className={["sw-entity-actions",className].filter(Boolean).join(" ")}>{children}</div>}
+export function CardIcon({className,children,...props}:ComponentPropsWithoutRef<"span">){return <span {...props} className={["sw-entity-icon",className].filter(Boolean).join(" ")}>{children}</span>}
+
+/** Foundation 10: the same form structure across Client, Project and Offer editors. */
+export function HubForm({ className, children, ...props }: ComponentPropsWithoutRef<"form">) {
+  return <form {...props} className={["sw-form", className].filter(Boolean).join(" ")}>{children}</form>;
+}
+export function HubFormField({ className, children, ...props }: ComponentPropsWithoutRef<"div">) {
+  return <div {...props} className={["sw-form-field", className].filter(Boolean).join(" ")}>{children}</div>;
+}
+export function HubFormActions({ className, children, ...props }: ComponentPropsWithoutRef<"div">) {
+  return <div {...props} className={["sw-form-actions", className].filter(Boolean).join(" ")}>{children}</div>;
 }

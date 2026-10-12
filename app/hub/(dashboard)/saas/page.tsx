@@ -1,3 +1,4 @@
+import { BoardCard, CardTop, CardIcon, CardBody, CardFooter } from "@/components/hub/workspace";
 import Link from "next/link";
 import {
   Activity,
@@ -140,20 +141,20 @@ export default async function SaaSOverviewPage() {
         {workspaces.map((workspace) => {
           const Icon = workspace.icon;
           return (
-            <article key={workspace.href} className="sw-saas-workspace-card">
-              <div className="sw-saas-card-top">
-                <span className="sw-saas-card-icon"><Icon size={20}/></span>
+            <BoardCard key={workspace.href} className="sw-saas-workspace-card sw-entity-card">
+              <CardTop className="sw-saas-card-top">
+                <CardIcon className="sw-saas-card-icon"><Icon size={20}/></CardIcon>
                 <span className="sw-saas-card-value">{workspace.value}</span>
-              </div>
-              <div className="sw-saas-card-main">
+              </CardTop>
+              <CardBody className="sw-saas-card-main sw-entity-title">
                 <h2><Link href={workspace.href}>{workspace.title}</Link></h2>
                 <p>{workspace.description}</p>
-              </div>
-              <footer className="sw-saas-card-footer">
+              </CardBody>
+              <CardFooter className="sw-saas-card-footer">
                 <span>{workspace.meta}</span>
-                <Link href={workspace.href} aria-label={`Open ${workspace.title}`}>Open <ArrowRight size={15}/></Link>
-              </footer>
-            </article>
+                <Link href={workspace.href} aria-label={`Open ${workspace.title}`} className="sw-entity-action">Open <ArrowRight size={15}/></Link>
+              </CardFooter>
+            </BoardCard>
           );
         })}
       </section>

@@ -1,8 +1,9 @@
 import Link from "next/link";
+import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
+import { StatusBadge, WorkspacePage, PageHeader, Metrics, Metric, ActionLink, ListCard, ListCardHeader, ListCardFacts, ListCardFact, ListCardFooter } from "@/components/hub/workspace";
 import {
   AlertTriangle,
   ArrowRight,
-  CheckCircle2,
   Clock3,
   LifeBuoy,
   Plus,
@@ -104,81 +105,29 @@ export default async function SupportPage({
   const activeCount = count("OPEN") + count("IN_PROGRESS");
 
   return (
-    <div className="hub-page hub-support-v2-page">
-      <header className="hub-workspace-head">
-        <div>
-          <span className="hub-workspace-kicker">OPERATIONS / SUPPORT</span>
-          <h1>Support</h1>
-          <p>
-            Follow client requests, project context, urgency and work recorded in one place.
-          </p>
-        </div>
+    <WorkspacePage className="hub-support-v2-page">
+            <PageHeader
+        eyebrow="OPERATIONS / SUPPORT"
+        title="Support"
+        description="Follow client requests, project context, urgency and work recorded in one place."
+        action={<ActionLink href="/hub/support/new"><Plus size={16} /> New request</ActionLink>}
+      />
 
-        <Link href="/hub/support/new" className="hub-workspace-primary-action">
-          <Plus size={15} />
-          New request
-        </Link>
-      </header>
+            <Metrics label="Support overview">
+        <Metric label="Needs action" value={activeCount} description={"Open or in progress"} icon={<LifeBuoy size={18} />} />
+        <Metric label="Waiting on client" value={count("WAITING_CLIENT")} description={"Reply or materials needed"} icon={<Clock3 size={18} />} />
+        <Metric label="Attention" value={urgentCount} description={`${extraCount} extra-scope request${extraCount === 1 ? "" : "s"}`} icon={<AlertTriangle size={18} />} />
+        <Metric label="Open work logged" value={`${timeAggregate._sum.timeSpentMinutes ?? 0} min`} description={`${count("RESOLVED")} resolved total`} icon={<Timer size={18} />} />
+      </Metrics>
 
-      <section className="hub-workspace-stats" aria-label="Support overview">
-        <div className="hub-workspace-stat">
-          <span className="hub-workspace-stat-icon">
-            <LifeBuoy size={16} />
-          </span>
-          <div>
-            <small>Needs action</small>
-            <strong>{activeCount}</strong>
-            <span>Open or in progress</span>
-          </div>
-        </div>
-
-        <div className="hub-workspace-stat">
-          <span className="hub-workspace-stat-icon hub-workspace-stat-icon-info">
-            <Clock3 size={16} />
-          </span>
-          <div>
-            <small>Waiting on client</small>
-            <strong>{count("WAITING_CLIENT")}</strong>
-            <span>Reply or materials needed</span>
-          </div>
-        </div>
-
-        <div className="hub-workspace-stat">
-          <span className="hub-workspace-stat-icon hub-workspace-stat-icon-value">
-            <AlertTriangle size={16} />
-          </span>
-          <div>
-            <small>Attention</small>
-            <strong>{urgentCount}</strong>
-            <span>{extraCount} extra-scope request{extraCount === 1 ? "" : "s"}</span>
-          </div>
-        </div>
-
-        <div className="hub-workspace-stat">
-          <span className="hub-workspace-stat-icon hub-workspace-stat-icon-good">
-            <Timer size={16} />
-          </span>
-          <div>
-            <small>Open work logged</small>
-            <strong>{timeAggregate._sum.timeSpentMinutes ?? 0} min</strong>
-            <span>{count("RESOLVED")} resolved total</span>
-          </div>
-        </div>
-      </section>
-
-      <nav className="hub-workspace-filters" aria-label="Support filters">
-        {filters.map((value) => (
-          <Link
-            key={value}
-            href={value === "ALL" ? "/hub/support" : `/hub/support?status=${value}`}
-            className={active === value ? "hub-workspace-filter-active" : undefined}
-            aria-current={active === value ? "page" : undefined}
-          >
-            <span>{value === "ALL" ? "All" : supportStatusLabels[value]}</span>
-            <strong>{count(value)}</strong>
-          </Link>
-        ))}
-      </nav>
+            <WorkspaceTabs label="Support filters" activeKey={active}
+        tabs={filters.map((value) => ({
+          key: value,
+          label: value === "ALL" ? "All" : supportStatusLabels[value],
+          href: value === "ALL" ? "/hub/support" : `/hub/support?status=${value}`,
+          count: count(value),
+        }))}
+      />
 
       {requests.length === 0 ? (
         <div className="hub-empty-state">
@@ -190,72 +139,39 @@ export default async function SupportPage({
               : "Choose another filter to see more requests."}
           </p>
           {active === "ALL" && (
-            <Link href="/hub/support/new" className="hub-secondary-button">
+            <ActionLink href="/hub/support/new" variant="secondary">
               Create request
-            </Link>
+            </ActionLink>
           )}
         </div>
       ) : (
-        <section className="hub-support-v2-list" aria-label="Support requests">
-          {requests.map((request) => {
-            const requester =
-              request.client?.name ??
-              request.requesterCompany ??
-              request.requesterEmail ??
-              "Unmatched requester";
-
-            return (
-              <article key={request.id} className="hub-support-v2-row">
-                <div className="hub-support-v2-main">
-                  <span className="hub-support-v2-icon">
-                    <LifeBuoy size={16} />
-                  </span>
-
-                  <div>
-                    <div className="hub-support-v2-title-line">
-                      <Link href={`/hub/support/${request.id}`}>{request.title}</Link>
-                      <span className={`hub-support-status hub-support-status-${request.status.toLowerCase()}`}>
-                        {supportStatusLabels[request.status]}
-                      </span>
-                    </div>
-                    <span>{requester}</span>
-                    {request.project && <small>{request.project.name}</small>}
-                  </div>
-                </div>
-
-                <div className="hub-support-v2-context">
-                  <small>Request</small>
-                  <strong>{supportCategoryLabels[request.category]}</strong>
-                  <span>{request.reference ?? "No public reference"}</span>
-                </div>
-
-                <div className="hub-support-v2-signals">
-                  <span className={request.priority === "URGENT" ? "hub-support-v2-chip hub-support-v2-chip-danger" : "hub-support-v2-chip"}>
-                    {supportPriorityLabels[request.priority]}
-                  </span>
-                  <span className={request.coverage === "EXTRA" ? "hub-support-v2-chip hub-support-v2-chip-warning" : request.coverage === "INCLUDED" ? "hub-support-v2-chip hub-support-v2-chip-good" : "hub-support-v2-chip"}>
-                    {supportCoverageLabels[request.coverage]}
-                  </span>
-                  <span className="hub-support-v2-chip">
-                    <Timer size={12} />
-                    {request.timeSpentMinutes} min
-                  </span>
-                </div>
-
-                <div className="hub-support-v2-tail">
-                  <time dateTime={request.updatedAt.toISOString()}>
-                    Updated {formatDate(request.updatedAt)}
-                  </time>
-                  <Link href={`/hub/support/${request.id}`}>
-                    Open
-                    <ArrowRight size={13} />
-                  </Link>
-                </div>
-              </article>
-            );
+        <section className="sw-list-card-stack" aria-label="Support requests">
+          {requests.map(request => {
+            const requester=request.client?.name??request.requesterCompany??request.requesterEmail??'Unmatched requester';
+            return <ListCard key={request.id}>
+              <ListCardHeader
+                icon={<LifeBuoy size={19}/>}
+                title={<Link href={'/hub/support/'+request.id}>{request.title}</Link>}
+                subtitle={<><span>{requester}</span>{request.project&&<small>{request.project.name}</small>}</>}
+                status={<div className="sw-list-card-badges">
+                  <StatusBadge tone={request.status==='RESOLVED'?'success':request.status==='WAITING_CLIENT'?'warning':request.status==='IN_PROGRESS'?'info':'neutral'}>{supportStatusLabels[request.status]}</StatusBadge>
+                  {request.priority==='URGENT'&&<StatusBadge tone="danger">Urgent</StatusBadge>}
+                </div>}
+              />
+              <ListCardFacts>
+                <ListCardFact label="Request"><strong>{supportCategoryLabels[request.category]}</strong><small>{request.reference??'No public reference'}</small></ListCardFact>
+                <ListCardFact label="Priority"><strong>{supportPriorityLabels[request.priority]}</strong></ListCardFact>
+                <ListCardFact label="Coverage"><strong>{supportCoverageLabels[request.coverage]}</strong></ListCardFact>
+                <ListCardFact label="Work recorded"><strong>{request.timeSpentMinutes} min</strong></ListCardFact>
+              </ListCardFacts>
+              <ListCardFooter>
+                <time dateTime={request.updatedAt.toISOString()}>Updated {formatDate(request.updatedAt)}</time>
+                <Link href={'/hub/support/'+request.id}>Open request <ArrowRight size={15}/></Link>
+              </ListCardFooter>
+            </ListCard>;
           })}
         </section>
       )}
-    </div>
+    </WorkspacePage>
   );
 }

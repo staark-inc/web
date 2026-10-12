@@ -79,3 +79,111 @@
 @media (prefers-reduced-motion: reduce) {
   .hub-dashboard .hub-sidebar .hub-nav-item { transition: none; }
 }
+
+/* HUB UI 03 — measured density and readability pass.
+   Loaded after workspace, without replacing legacy module rules. */
+/* Keep wide workspaces wide, with a consistent content rhythm. */
+.hub-dashboard .hub-content .hub-page {
+  max-width: none;
+  padding-inline: clamp(20px, 2.35vw, 42px);
+}
+.hub-dashboard .hub-content .hub-page > header {
+  margin-bottom: 20px;
+  padding-bottom: 18px;
+}
+.hub-dashboard .hub-content .hub-page > header h1 {
+  font-size: clamp(26px, 2.1vw, 34px);
+}/* Command-center panels: make the status scannable, not decorative. */
+/* Empty priority queue gets the size it deserves, not a giant placeholder. */
+
+
+/* Restore some prominence to sidebar labels without increasing height. */
+.hub-dashboard .hub-sidebar .hub-nav-item {
+  font-size: 13px;
+  letter-spacing: 0;
+}
+.hub-dashboard .hub-sidebar .hub-nav-item-active {
+  font-weight: 650;
+}
+
+@media (max-width: 760px) {
+  .hub-dashboard .hub-content .hub-page {
+    padding-inline: 16px;
+  }
+}
+
+/* HUB-UI-04: contextual header + actionable dashboard density. */
+.hub-dashboard .hub-shell-header {
+  min-height: 76px;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px 20px;
+  padding: 12px clamp(20px, 2.35vw, 42px);
+  background: rgba(255, 255, 255, .97);
+  border-bottom: 1px solid var(--sw-line);
+}
+.hub-shell-heading { min-width: 0; gap: 3px; }
+.hub-dashboard .hub-shell-heading .hub-shell-title {
+  font-size: 17px;
+  line-height: 1.25;
+  font-weight: 750;
+  color: var(--sw-ink);
+}
+.hub-shell-breadcrumbs, .hub-shell-crumb {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+.hub-shell-breadcrumbs { flex-wrap: wrap; color: var(--sw-muted); font-size: 11px; }
+.hub-shell-breadcrumbs a { color: inherit; text-decoration: none; }
+.hub-shell-breadcrumbs a:hover { color: #315cf5; }
+.hub-shell-crumb:last-child { color: #2f4668; font-weight: 650; }
+.hub-shell-actions { display: flex; align-items: center; gap: 8px; }
+.hub-shell-actions .hub-shell-site-link { display: inline-flex; align-items: center; gap: 7px; min-height: 36px; white-space: nowrap; }
+.hub-shell-compose-link { color: #2e4d87; }/* Empty priority queues should not reserve the space of a full dashboard widget. *//* Single source of truth for the overview panels (replaces workspace.css hotfix).
+   Keep both widgets side by side on desktop; stack them on smaller screens. */
+/* Text legibility improvement without touching every module-specific stylesheet. */
+
+@media (max-width: 760px) {
+  .hub-dashboard .hub-shell-header { min-height: 66px; padding: 10px 16px; }
+  .hub-shell-actions .hub-shell-compose-link { display: none; }
+  .hub-dashboard .hub-shell-heading .hub-shell-title { font-size: 15px; }
+}
+
+/* HUB-UI-06: cohesive workspace rhythm and resilient responsive layout. */
+.hub-dashboard .hub-shell-header {
+  min-height: 72px;
+  border-bottom: 1px solid var(--sw-line);
+  box-shadow: 0 2px 12px rgba(20, 39, 72, .025);
+}
+.hub-dashboard .hub-shell-heading { gap: 5px; }
+.hub-dashboard .hub-shell-breadcrumbs { font-size: 12px; }
+.hub-dashboard .hub-shell-heading .hub-shell-title {
+  font-size: clamp(18px, 1.35vw, 21px);
+  letter-spacing: -.025em;
+}
+.hub-dashboard .hub-shell-actions .hub-shell-site-link {
+  border-radius: 10px;
+  padding: 8px 13px;
+  font-size: 12px;
+}
+.hub-dashboard .hub-content {
+  min-width: 0;
+  background: var(--sw-bg);
+}
+.hub-dashboard .hub-content .hub-page {
+  min-width: 0;
+  padding-top: clamp(22px, 2vw, 32px);
+}
+@media (max-width: 600px) {
+  .hub-dashboard .hub-shell-header {
+    min-height: 62px;
+    padding: 10px 16px;
+  }
+  .hub-dashboard .hub-shell-heading .hub-shell-title { font-size: 17px; }
+  .hub-dashboard .hub-shell-breadcrumbs { font-size: 11px; }
+  .hub-dashboard .hub-content .hub-page { padding: 20px 14px 38px; }
+}

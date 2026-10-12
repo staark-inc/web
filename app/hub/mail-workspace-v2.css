@@ -988,3 +988,32 @@
     -webkit-box-orient: vertical;
   }
 }
+
+/* Inbox search clear button — migrated from retired Overview CSS (06G). */
+.hub-search-clear {
+  position: absolute;
+  right: 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 22px;
+  height: 22px;
+  padding: 0;
+
+  border: 0;
+  border-radius: 50%;
+
+  background: transparent;
+  color: #a1a7b0;
+
+  cursor: pointer;
+}
+.hub-search-clear:hover {
+  background: #eef1f4;
+  color: #4b5563;
+}
+.hub-search-clear svg {
+  position: static;
+}
