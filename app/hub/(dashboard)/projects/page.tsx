@@ -15,7 +15,7 @@ import {
 
 import { prisma } from "@/lib/prisma";
 import type { ProjectStatus } from "@/generated/prisma/client";
-import { WorkspacePage, PageHeader, Metrics, Metric, InfoChip } from "@/components/hub/workspace";
+import { ActionLink, WorkspacePage, PageHeader, Metrics, Metric, StatusBadge, BoardCard, CardHeader, CardIcon, CardBody, CardFooter } from "@/components/hub/workspace";
 
 export const dynamic = "force-dynamic";
 
@@ -165,7 +165,7 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
       <div className="sw-projects-page sw-projects-board-page">
         <PageHeader eyebrow="WORK / DELIVERY" title="Projects"
           description={deliverySummary}
-          action={<Link href="/hub/projects/new" className="sw-primary-link"><Plus size={16}/> New project</Link>}
+          action={<ActionLink href="/hub/projects/new"><Plus size={16}/> New project</ActionLink>}
         />
         <Metrics label="Delivery overview">
           <Metric label="Active" value={activeCount} description="In progress or review" icon={<FolderKanban size={18}/>}/>
@@ -200,9 +200,9 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
               : "Try a different status filter."}
           </p>
           {activeStatus === "ALL" && (
-            <Link href="/hub/projects/new" className="hub-secondary-button">
+            <ActionLink href="/hub/projects/new" variant="secondary">
               New project
-            </Link>
+            </ActionLink>
           )}
         </div>
       ) : (
@@ -248,19 +248,19 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
                 : "Not deployed";
 
             return (
-              <article key={project.id} className="sw-board-card">
-                <header className="sw-board-card-head">
-                  <span className="sw-board-icon"><FolderKanban size={19}/></span>
-                  <span className="sw-board-title">
+              <BoardCard key={project.id} className="sw-board-card sw-entity-card">
+                <CardHeader className="sw-board-card-head">
+                  <CardIcon className="sw-board-icon"><FolderKanban size={19}/></CardIcon>
+                  <span className="sw-board-title sw-entity-title">
                     <Link href={"/hub/projects/" + project.id}>{project.name}</Link>
                     <small><Building2 size={13}/>{project.client.name}</small>
                   </span>
-                  <InfoChip tone={project.status === "COMPLETED" ? "success" : project.status === "WAITING_CLIENT" ? "warning" : project.status === "IN_PROGRESS" ? "info" : "neutral"}>
+                  <StatusBadge tone={project.status === "COMPLETED" ? "success" : project.status === "WAITING_CLIENT" ? "warning" : project.status === "IN_PROGRESS" ? "info" : "neutral"}>
                     {statusLabels[project.status]}
-                  </InfoChip>
-                </header>
+                  </StatusBadge>
+                </CardHeader>
 
-                <div className="sw-board-card-body">
+                <CardBody className="sw-board-card-body">
                   <div className="sw-board-progress-heading">
                     <span>Task progress</span>
                     <strong>{totalTasks ? progress + "%" : "Not started"}</strong>
@@ -279,15 +279,15 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
                     {awaitingMaterials > 0 && <span className="is-urgent"><Package size={15}/>{awaitingMaterials} materials waiting</span>}
                     {openSupport > 0 && <span className="is-urgent"><LifeBuoy size={15}/>{openSupport} support requests</span>}
                   </div>
-                </div>
+                </CardBody>
 
-                <footer className="sw-board-footer">
+                <CardFooter className="sw-board-footer">
                   <small>Updated {formatDate(project.updatedAt)}</small>
-                  <Link href={"/hub/projects/" + project.id} className="sw-board-open">
+                  <Link href={"/hub/projects/" + project.id} className="sw-board-open sw-entity-action">
                     Open project <ArrowRight size={15}/>
                   </Link>
-                </footer>
-              </article>
+                </CardFooter>
+              </BoardCard>
             );
           })}
         </section>

@@ -82,7 +82,7 @@ export default async function ContactDetailPage({ params, searchParams }: PagePr
   const whatsappNumber = contact.phone?.replace(/\D/g, "") || "";
 
   return (
-    <div className="hub-page hub-contact-v2-detail-page">
+    <div className="hub-page hub-contact-v2-detail-page sw-detail-page">
       <Link href="/hub/contacts" className="hub-contact-v2-back">
         <ArrowLeft size={14} />
         Contacts
@@ -95,7 +95,7 @@ export default async function ContactDetailPage({ params, searchParams }: PagePr
         </div>
       ) : null}
 
-      <header className="hub-contact-v2-hero">
+      <header className="hub-contact-v2-hero sw-detail-header">
         <div className="hub-contact-v2-avatar">{getInitials(contact.name, fallback)}</div>
 
         <div className="hub-contact-v2-title">
@@ -151,7 +151,7 @@ export default async function ContactDetailPage({ params, searchParams }: PagePr
         </div>
       </header>
 
-      <section className="hub-contact-v2-stats" aria-label="Contact summary">
+      <section className="hub-contact-v2-stats sw-detail-metrics" aria-label="Contact summary">
         <div>
           <Target size={15} />
           <span><small>Leads</small><strong>{contact.leads.length}</strong></span>
@@ -171,8 +171,8 @@ export default async function ContactDetailPage({ params, searchParams }: PagePr
       </section>
 
       <div className="hub-contact-v2-grid">
-        <section className="hub-contact-v2-panel">
-          <div className="hub-contact-v2-panel-head">
+        <section className="hub-contact-v2-panel sw-card sw-card-panel sw-detail-panel">
+          <div className="hub-contact-v2-panel-head sw-detail-panel-head">
             <div><span>PROFILE</span><h2>Contact information</h2></div>
             <UserRound size={16} />
           </div>
@@ -224,8 +224,8 @@ export default async function ContactDetailPage({ params, searchParams }: PagePr
           ) : null}
         </section>
 
-        <section className="hub-contact-v2-panel">
-          <div className="hub-contact-v2-panel-head">
+        <section className="hub-contact-v2-panel sw-card sw-card-panel sw-detail-panel">
+          <div className="hub-contact-v2-panel-head sw-detail-panel-head">
             <div><span>PIPELINE</span><h2>Lead history</h2></div>
             <strong>{contact.leads.length}</strong>
           </div>
@@ -249,8 +249,8 @@ export default async function ContactDetailPage({ params, searchParams }: PagePr
         </section>
       </div>
 
-      <section className="hub-contact-v2-panel hub-contact-v2-messages-panel">
-        <div className="hub-contact-v2-panel-head">
+      <section className="hub-contact-v2-panel hub-contact-v2-messages-panel sw-card sw-card-panel sw-detail-panel">
+        <div className="hub-contact-v2-panel-head sw-detail-panel-head">
           <div><span>COMMUNICATION</span><h2>Message history</h2></div>
           <strong>{messages.length}</strong>
         </div>

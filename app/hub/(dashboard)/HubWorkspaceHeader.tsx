@@ -30,8 +30,8 @@ export default function HubWorkspaceHeader() {
   }));
 
   return (
-    <header className="hub-shell-header hub-shell-header-v4" aria-label="Workspace toolbar">
-      <div className="hub-shell-heading hub-shell-heading-v4">
+    <header className="hub-shell-header" aria-label="Workspace toolbar">
+      <div className="hub-shell-heading">
         <nav className="hub-shell-breadcrumbs" aria-label="Breadcrumb">
           <Link href="/hub" aria-label="Hub overview"><Home size={15} aria-hidden="true" /></Link>
           {breadcrumbs.map((crumb, index) => (
@@ -48,7 +48,7 @@ export default function HubWorkspaceHeader() {
         </nav>
         {!isOverview && <strong className="hub-shell-title">{title}</strong>}
       </div>
-      <div className="hub-shell-actions hub-shell-actions-v4" aria-label="Quick links">
+      <div className="hub-shell-actions" aria-label="Quick links">
         <a href="https://staarkinc.com" className="hub-shell-site-link" target="_blank" rel="noopener noreferrer">
           Website <ArrowUpRight size={14} aria-hidden="true" />
         </a>

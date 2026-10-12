@@ -1,4 +1,6 @@
 import NewsAction from "@/components/news/NewsAction";
+import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
+import { WorkspacePage, PageHeader, Metrics, Metric, ActionLink, StatusBadge, ListCard, ListCardHeader, ListCardFacts, ListCardFact, ListCardFooter } from "@/components/hub/workspace";
 import { NEWS_KINDS } from "@/lib/news-policy";
 import Link from "next/link";
 import {
@@ -211,115 +213,19 @@ export default async function UpdatesPage({
     );
 
   return (
-    <div className="hub-page hub-updates-page">
-      <header className="hub-workspace-head">
-        <div>
-          <span className="hub-workspace-kicker">
-            PLATFORM / COMMUNICATION
-          </span>
-
-          <h1>
-            News & Updates
-          </h1>
-
-          <p>
-            Publish product news, feature releases and service announcements directly to tenant dashboards.
-          </p>
-        </div>
-
-        <Link
-          href="/hub/updates/new"
-          className="hub-workspace-primary-action"
-        >
-          <Plus size={15} />
-          New update
-        </Link>
-      </header>
-
-      <section
-        className="hub-workspace-stats hub-updates-stats"
-        aria-label="News overview"
-      >
-        <div className="hub-workspace-stat">
-          <span className="hub-workspace-stat-icon">
-            <Megaphone size={16} />
-          </span>
-
-          <div>
-            <small>
-              Total updates
-            </small>
-
-            <strong>
-              {allUpdates.length}
-            </strong>
-
-            <span>
-              All announcements
-            </span>
-          </div>
-        </div>
-
-        <div className="hub-workspace-stat">
-          <span className="hub-workspace-stat-icon hub-workspace-stat-icon-good">
-            <Radio size={16} />
-          </span>
-
-          <div>
-            <small>
-              Published
-            </small>
-
-            <strong>
-              {publishedCount}
-            </strong>
-
-            <span>
-              Visible to tenants
-            </span>
-          </div>
-        </div>
-
-        <div className="hub-workspace-stat">
-          <span className="hub-workspace-stat-icon hub-workspace-stat-icon-info">
-            <FilePenLine size={16} />
-          </span>
-
-          <div>
-            <small>
-              Drafts
-            </small>
-
-            <strong>
-              {draftCount}
-            </strong>
-
-            <span>
-              Waiting for review
-            </span>
-          </div>
-        </div>
-
-        <div className="hub-workspace-stat">
-          <span className="hub-workspace-stat-icon hub-workspace-stat-icon-value">
-            <BellRing size={16} />
-          </span>
-
-          <div>
-            <small>
-              Audience
-            </small>
-
-            <strong>
-              All plans
-            </strong>
-
-            <span>
-              Or target one package
-            </span>
-          </div>
-        </div>
-      </section>
+    <WorkspacePage className="hub-updates-page sw-operations-page">
+      <PageHeader
+        eyebrow="PLATFORM / COMMUNICATION"
+        title="News & Updates"
+        description="Publish product news, feature releases and service announcements directly to tenant dashboards."
+        action={<ActionLink href="/hub/updates/new"><Plus size={16}/> New update</ActionLink>}
+      />
+      <Metrics label="News overview">
+        <Metric label="Total updates" value={allUpdates.length} description="All announcements" icon={<Megaphone size={18}/>}/>
+        <Metric label="Published" value={publishedCount} description="Visible to tenants" icon={<Radio size={18}/>}/>
+        <Metric label="Drafts" value={draftCount} description="Waiting for review" icon={<FilePenLine size={18}/>}/>
+        <Metric label="Audience" value="All plans" description="Or target one package" icon={<BellRing size={18}/>}/>
+      </Metrics>
 
       {notice ? (
         <div
@@ -341,44 +247,16 @@ export default async function UpdatesPage({
         <button className="hub-updates-primary-button">Filter</button>
       </form>
 
-      <nav
-        className="hub-workspace-filters"
-        aria-label="Update filters"
-      >
-        {FILTERS.map(
-          (value) => (
-            <Link
-              key={value}
-              href={`/hub/updates?${new URLSearchParams({ status: value, q: query, kind: selectedKind ?? "" })}`}
-              className={
-                active === value
-                  ? "hub-workspace-filter-active"
-                  : undefined
-              }
-              aria-current={
-                active === value
-                  ? "page"
-                  : undefined
-              }
-            >
-              <span>
-                {value === "ALL"
-                  ? "All"
-                  : value ===
-                      "PUBLISHED"
-                    ? "Published"
-                    : "Drafts"}
-              </span>
-
-              <strong>
-                {countFor(
-                  value,
-                )}
-              </strong>
-            </Link>
-          ),
-        )}
-      </nav>
+      <WorkspaceTabs
+        label="Update filters"
+        activeKey={active}
+        tabs={FILTERS.map(value=>({
+          key:value,
+          label:value==='ALL'?'All':value==='PUBLISHED'?'Published':'Drafts',
+          href:'/hub/updates?'+new URLSearchParams({status:value,q:query,kind:selectedKind??''}).toString(),
+          count:countFor(value),
+        }))}
+      />
 
       {updates.length === 0 ? (
         <div className="hub-empty-state">
@@ -402,94 +280,31 @@ export default async function UpdatesPage({
           </p>
         </div>
       ) : (
-        <section
-          className="hub-updates-list"
-          aria-label="News and updates"
-        >
-          {updates.map(
-            (update) => (
-              <article
-                key={update.id}
-                className="hub-updates-row"
-              >
-                <div className="hub-updates-row-main">
-                  <span
-                    className={`hub-updates-kind hub-updates-kind-${update.kind}`}
-                  >
-                    <Megaphone
-                      size={15}
-                    />
-                  </span>
-
-                  <div>
-                    <div className="hub-updates-title-line">
-                      <strong>
-                        {update.pinned ? "📌 " : ""}{update.title}
-                      </strong>
-
-                      <span
-                        className={
-                          update.published
-                            ? "hub-updates-status hub-updates-status-published"
-                            : "hub-updates-status hub-updates-status-draft"
-                        }
-                      >
-                        {update.published
-                          ? "Published"
-                          : "Draft"}
-                      </span>
-                    </div>
-
-                    <p>
-                      {update.summary}
-                    </p>
-                  </div>
+        <section className="sw-list-card-stack" aria-label="News and updates">
+          {updates.map(update => (
+            <ListCard key={update.id}>
+              <ListCardHeader
+                icon={<Megaphone size={19}/>}
+                title={<Link href={'/hub/updates/'+update.id}>{update.pinned?'📌 ':''}{update.title}</Link>}
+                subtitle={<span>{update.summary}</span>}
+                status={<StatusBadge tone={update.published?'success':'neutral'}>{update.published?'Published':'Draft'}</StatusBadge>}
+              />
+              <ListCardFacts>
+                <ListCardFact label="Audience"><strong>{audienceLabel(update.audiencePlan)}</strong></ListCardFact>
+                <ListCardFact label="Type"><strong>{kindLabel(update.kind)}</strong></ListCardFact>
+                <ListCardFact label={update.published?'Published':'Created'}><time dateTime={(update.published&&update.publishedAt?update.publishedAt:update.createdAt).toISOString()}>{formatDate(update.published?update.publishedAt:update.createdAt)}</time></ListCardFact>
+              </ListCardFacts>
+              <ListCardFooter>
+                <Link href={'/hub/updates/'+update.id}>Edit & preview</Link>
+                <div className="sw-list-card-footer-actions">
+                  <NewsAction id={update.id} title={update.title} action={update.published?'unpublish':'publish'}/>
+                  <NewsAction id={update.id} title={update.title} action="delete"/>
                 </div>
-
-                <div className="hub-updates-row-meta">
-                  <small>
-                    Audience
-                  </small>
-
-                  <strong>
-                    {audienceLabel(
-                      update.audiencePlan,
-                    )}
-                  </strong>
-
-                  <span>
-                    {kindLabel(
-                      update.kind,
-                    )}
-                  </span>
-                </div>
-
-                <div className="hub-updates-row-date">
-                  <small>
-                    {update.published
-                      ? "Published"
-                      : "Created"}
-                  </small>
-
-                  <strong>
-                    {formatDate(
-                      update.published
-                        ? update.publishedAt
-                        : update.createdAt,
-                    )}
-                  </strong>
-                </div>
-
-                <div className="hub-updates-row-actions">
-                  <Link className="hub-updates-button" href={`/hub/updates/${update.id}`}>Edit & preview</Link>
-                  <NewsAction id={update.id} title={update.title} action={update.published ? "unpublish" : "publish"} />
-                  <NewsAction id={update.id} title={update.title} action="delete" />
-                </div>
-              </article>
-            ),
-          )}
+              </ListCardFooter>
+            </ListCard>
+          ))}
         </section>
       )}
-    </div>
+    </WorkspacePage>
   );
 }

@@ -1,10 +1,10 @@
 import Link from "next/link";
+import { WorkspacePage, PageHeader, Metrics, Metric, ActionLink, StatusBadge, ListCard, ListCardHeader, ListCardFacts, ListCardFact, ListCardFooter } from "@/components/hub/workspace";
 import {
   ArrowRight,
   CalendarClock,
   CircleDollarSign,
   CreditCard,
-  FileText,
   RefreshCw,
   Rocket,
 } from "lucide-react";
@@ -80,67 +80,20 @@ export default async function BillingPage() {
   ).length;
 
   return (
-    <div className="hub-page hub-billing-v2-page hub-crm-workspace">
-      <header className="hub-workspace-head">
-        <div>
-          <span className="hub-workspace-kicker">FINANCE / CONTRACTS</span>
-          <h1>Billing</h1>
-          <p>
-            Follow accepted agency contracts here. Stripe-backed SaaS subscriptions are managed in their own workspace.
-          </p>
-        </div>
+    <WorkspacePage className="hub-billing-v2-page hub-crm-workspace">
+            <PageHeader
+        eyebrow="FINANCE / CONTRACTS"
+        title="Billing"
+        description="Follow accepted agency contracts here. Stripe-backed SaaS subscriptions are managed in their own workspace."
+        action={<ActionLink href="/hub/saas/subscriptions"><CreditCard size={16} /> SaaS subscriptions</ActionLink>}
+      />
 
-        <Link href="/hub/saas/subscriptions" className="hub-workspace-primary-action">
-          <CreditCard size={15} />
-          SaaS subscriptions
-        </Link>
-      </header>
-
-      <section className="hub-workspace-stats" aria-label="Billing overview">
-        <div className="hub-workspace-stat">
-          <span className="hub-workspace-stat-icon hub-workspace-stat-icon-good">
-            <CircleDollarSign size={16} />
-          </span>
-          <div>
-            <small>Accepted value</small>
-            <strong>{formatOfferAmount(acceptedOneTimeOre)}</strong>
-            <span>{acceptedOffers.length} accepted contract{acceptedOffers.length === 1 ? "" : "s"}</span>
-          </div>
-        </div>
-
-        <div className="hub-workspace-stat">
-          <span className="hub-workspace-stat-icon hub-workspace-stat-icon-info">
-            <RefreshCw size={16} />
-          </span>
-          <div>
-            <small>Contracted monthly</small>
-            <strong>{formatOfferAmount(contractedMonthlyOre)}</strong>
-            <span>{monthlyContracts} monthly plan{monthlyContracts === 1 ? "" : "s"}</span>
-          </div>
-        </div>
-
-        <div className="hub-workspace-stat">
-          <span className="hub-workspace-stat-icon">
-            <CalendarClock size={16} />
-          </span>
-          <div>
-            <small>Included periods</small>
-            <strong>{acceptedOffers.length}</strong>
-            <span>Billing start date still manual</span>
-          </div>
-        </div>
-
-        <div className="hub-workspace-stat">
-          <span className="hub-workspace-stat-icon hub-workspace-stat-icon-good">
-            <Rocket size={16} />
-          </span>
-          <div>
-            <small>Launched projects</small>
-            <strong>{launchedProjects}</strong>
-            <span>Live URL recorded</span>
-          </div>
-        </div>
-      </section>
+            <Metrics label="Billing overview">
+        <Metric label="Accepted value" value={formatOfferAmount(acceptedOneTimeOre)} description={`${acceptedOffers.length} accepted contract${acceptedOffers.length === 1 ? "" : "s"}`} icon={<CircleDollarSign size={18} />} />
+        <Metric label="Contracted monthly" value={formatOfferAmount(contractedMonthlyOre)} description={`${monthlyContracts} monthly plan${monthlyContracts === 1 ? "" : "s"}`} icon={<RefreshCw size={18} />} />
+        <Metric label="Included periods" value={acceptedOffers.length} description={"Billing start date still manual"} icon={<CalendarClock size={18} />} />
+        <Metric label="Launched projects" value={launchedProjects} description={"Live URL recorded"} icon={<Rocket size={18} />} />
+      </Metrics>
 
       {acceptedOffers.length === 0 ? (
         <div className="hub-empty-state">
@@ -149,76 +102,36 @@ export default async function BillingPage() {
           <p>
             Accepted offers will appear here with their one-time and recurring commercial terms.
           </p>
-          <Link href="/hub/offers" className="hub-secondary-button">
+          <ActionLink href="/hub/offers" variant="secondary">
             View offers
-          </Link>
+          </ActionLink>
         </div>
       ) : (
-        <section className="hub-billing-v2-list" aria-label="Accepted billing contracts">
-          {acceptedOffers.map((offer) => (
-            <article key={offer.id} className="hub-billing-v2-row">
-              <div className="hub-billing-v2-main">
-                <span className="hub-billing-v2-icon">
-                  <CreditCard size={16} />
-                </span>
-
-                <div>
-                  <Link href={`/hub/offers/${offer.id}`}>{offer.client.name}</Link>
-                  <span>{offer.title}</span>
-                  {offer.client.billingEmail && <small>{offer.client.billingEmail}</small>}
-                </div>
-              </div>
-
-              <div className="hub-billing-v2-amounts">
-                <div>
-                  <small>One-time</small>
-                  <strong>{formatOfferAmount(offer.oneTimePriceOre)}</strong>
-                </div>
-                <div>
-                  <small>Monthly</small>
-                  <strong>{formatOfferAmount(offer.monthlyPriceOre)}</strong>
-                </div>
-              </div>
-
-              <div className="hub-billing-v2-terms">
-                <small>Contract terms</small>
-                <strong>{offer.includedMonths} months included</strong>
-                <span>
-                  {offer.decidedAt
-                    ? `Accepted ${formatDate(offer.decidedAt)}`
-                    : `Updated ${formatDate(offer.updatedAt)}`}
-                </span>
-              </div>
-
-              <div className="hub-billing-v2-project">
-                <small>Delivery</small>
-                {offer.project ? (
-                  <>
-                    <Link href={`/hub/projects/${offer.project.id}`}>{offer.project.name}</Link>
-                    <span>
-                      {offer.project.liveUrl
-                        ? "Live"
-                        : formatProjectStatus(offer.project.status)}
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <strong>No project yet</strong>
-                    <span>Accepted offer not linked to delivery</span>
-                  </>
-                )}
-              </div>
-
-              <div className="hub-billing-v2-tail">
-                <Link href={`/hub/offers/${offer.id}`}>
-                  Open
-                  <ArrowRight size={13} />
-                </Link>
-              </div>
-            </article>
+        <section className="sw-list-card-stack" aria-label="Accepted billing contracts">
+          {acceptedOffers.map(offer => (
+            <ListCard key={offer.id}>
+              <ListCardHeader
+                icon={<CreditCard size={19}/>}
+                title={<Link href={'/hub/offers/'+offer.id}>{offer.client.name}</Link>}
+                subtitle={<><span>{offer.title}</span>{offer.client.billingEmail&&<small>{offer.client.billingEmail}</small>}</>}
+                status={<StatusBadge tone="success">Accepted</StatusBadge>}
+              />
+              <ListCardFacts>
+                <ListCardFact label="One-time"><strong>{formatOfferAmount(offer.oneTimePriceOre)}</strong></ListCardFact>
+                <ListCardFact label="Monthly"><strong>{formatOfferAmount(offer.monthlyPriceOre)}</strong></ListCardFact>
+                <ListCardFact label="Contract terms"><strong>{offer.includedMonths} months included</strong><small>{(offer.decidedAt?'Accepted ':'Updated ')+formatDate(offer.decidedAt??offer.updatedAt)}</small></ListCardFact>
+                <ListCardFact label="Delivery">
+                  {offer.project?<><Link href={'/hub/projects/'+offer.project.id}>{offer.project.name}</Link><small>{offer.project.liveUrl?'Live':formatProjectStatus(offer.project.status)}</small></>:<><strong>No project yet</strong><small>Accepted offer not linked to delivery</small></>}
+                </ListCardFact>
+              </ListCardFacts>
+              <ListCardFooter>
+                <span>Agency contract · {(offer.decidedAt?'Accepted ':'Updated ')+formatDate(offer.decidedAt??offer.updatedAt)}</span>
+                <Link href={'/hub/offers/'+offer.id}>Open contract <ArrowRight size={15}/></Link>
+              </ListCardFooter>
+            </ListCard>
           ))}
         </section>
       )}
-    </div>
+    </WorkspacePage>
   );
 }

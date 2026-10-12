@@ -137,7 +137,7 @@ export default async function ClientDetailPage({ params }: PageProps) {
   ).length;
 
   return (
-    <div className="hub-page hub-client-v2-detail-page">
+    <div className="hub-page hub-client-v2-detail-page sw-detail-page">
       <div className="hub-detail-back">
         <Link href="/hub/clients">
           <ArrowLeft size={16} />
@@ -145,7 +145,7 @@ export default async function ClientDetailPage({ params }: PageProps) {
         </Link>
       </div>
 
-      <header className="hub-client-v2-detail-head">
+      <header className="hub-client-v2-detail-head sw-detail-header">
         <div>
           <span className="hub-client-v2-detail-kicker">
             <Building2 size={12} />
@@ -173,7 +173,7 @@ export default async function ClientDetailPage({ params }: PageProps) {
         </div>
       </header>
 
-      <section className="hub-client-v2-detail-stats">
+      <section className="hub-client-v2-detail-stats sw-detail-metrics">
         <div>
           <span><UserRound size={15} /> Contacts</span>
           <strong>{client.contacts.length}</strong>
@@ -201,8 +201,8 @@ export default async function ClientDetailPage({ params }: PageProps) {
 
       <section className="hub-client-v2-detail-grid">
         <div className="hub-client-v2-detail-column hub-client-v2-detail-column-main">
-          <div className="hub-client-v2-panel">
-            <div className="hub-client-v2-panel-head">
+          <div className="hub-client-v2-panel sw-card sw-card-panel sw-detail-panel">
+            <div className="hub-client-v2-panel-head sw-detail-panel-head">
               <div>
                 <span>DELIVERY</span>
                 <h2>Projects</h2>
@@ -258,8 +258,8 @@ export default async function ClientDetailPage({ params }: PageProps) {
             )}
           </div>
 
-          <div className="hub-client-v2-panel">
-            <div className="hub-client-v2-panel-head">
+          <div className="hub-client-v2-panel sw-card sw-card-panel sw-detail-panel">
+            <div className="hub-client-v2-panel-head sw-detail-panel-head">
               <div>
                 <span>COMMERCIAL</span>
                 <h2>Offers</h2>
@@ -290,8 +290,8 @@ export default async function ClientDetailPage({ params }: PageProps) {
         </div>
 
         <div className="hub-client-v2-detail-column">
-          <div className="hub-client-v2-panel">
-            <div className="hub-client-v2-panel-head">
+          <div className="hub-client-v2-panel sw-card sw-card-panel sw-detail-panel">
+            <div className="hub-client-v2-panel-head sw-detail-panel-head">
               <div>
                 <span>PEOPLE</span>
                 <h2>Contacts</h2>
@@ -316,8 +316,8 @@ export default async function ClientDetailPage({ params }: PageProps) {
             )}
           </div>
 
-          <div className="hub-client-v2-panel">
-            <div className="hub-client-v2-panel-head">
+          <div className="hub-client-v2-panel sw-card sw-card-panel sw-detail-panel">
+            <div className="hub-client-v2-panel-head sw-detail-panel-head">
               <div>
                 <span>SERVICE</span>
                 <h2>Support</h2>
@@ -345,8 +345,8 @@ export default async function ClientDetailPage({ params }: PageProps) {
             )}
           </div>
 
-          <div className="hub-client-v2-panel">
-            <div className="hub-client-v2-panel-head">
+          <div className="hub-client-v2-panel sw-card sw-card-panel sw-detail-panel">
+            <div className="hub-client-v2-panel-head sw-detail-panel-head">
               <div>
                 <span>HISTORY</span>
                 <h2>Leads</h2>

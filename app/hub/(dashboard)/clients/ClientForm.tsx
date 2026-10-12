@@ -1,5 +1,6 @@
 "use client";
 
+import { HubForm, HubFormField, HubFormActions } from "@/components/hub/workspace";
 import { useActionState } from "react";
 
 import {
@@ -43,7 +44,7 @@ export default function ClientForm({
   );
 
   return (
-    <form action={formAction} className="hub-client-form">
+    <HubForm action={formAction} className="hub-client-form">
       {client && (
         <input type="hidden" name="clientId" value={client.id} />
       )}
@@ -53,7 +54,7 @@ export default function ClientForm({
       )}
 
       <div className="hub-client-form-grid">
-        <div className="hub-client-form-field">
+        <HubFormField className="hub-client-form-field">
           <label htmlFor="client-name">Company name</label>
           <input
             id="client-name"
@@ -62,10 +63,10 @@ export default function ClientForm({
             maxLength={160}
             required
             disabled={pending}
-          />
-        </div>
+           className="sw-form-control"/>
+        </HubFormField>
 
-        <div className="hub-client-form-field">
+        <HubFormField className="hub-client-form-field">
           <label htmlFor="client-org">Organisation number</label>
           <input
             id="client-org"
@@ -73,10 +74,10 @@ export default function ClientForm({
             defaultValue={client?.organizationNumber ?? ""}
             placeholder="559123-4567"
             disabled={pending}
-          />
-        </div>
+           className="sw-form-control"/>
+        </HubFormField>
 
-        <div className="hub-client-form-field">
+        <HubFormField className="hub-client-form-field">
           <label htmlFor="client-email">Billing email</label>
           <input
             id="client-email"
@@ -85,21 +86,21 @@ export default function ClientForm({
             defaultValue={client?.billingEmail ?? defaultEmail ?? ""}
             placeholder="faktura@example.com"
             disabled={pending}
-          />
-        </div>
+           className="sw-form-control"/>
+        </HubFormField>
 
-        <div className="hub-client-form-field">
+        <HubFormField className="hub-client-form-field">
           <label htmlFor="client-phone">Phone</label>
           <input
             id="client-phone"
             name="phone"
             defaultValue={client?.phone ?? ""}
             disabled={pending}
-          />
-        </div>
+           className="sw-form-control"/>
+        </HubFormField>
       </div>
 
-      <div className="hub-client-form-field">
+      <HubFormField className="hub-client-form-field">
         <label htmlFor="client-address">Billing address</label>
         <textarea
           id="client-address"
@@ -107,10 +108,10 @@ export default function ClientForm({
           rows={2}
           defaultValue={client?.billingAddress ?? ""}
           disabled={pending}
-        />
-      </div>
+         className="sw-form-control"/>
+      </HubFormField>
 
-      <div className="hub-client-form-field">
+      <HubFormField className="hub-client-form-field">
         <label htmlFor="client-notes">Notes</label>
         <textarea
           id="client-notes"
@@ -119,8 +120,8 @@ export default function ClientForm({
           defaultValue={client?.notes ?? ""}
           placeholder="Internal notes about this client..."
           disabled={pending}
-        />
-      </div>
+         className="sw-form-control"/>
+      </HubFormField>
 
       {state.error && (
         <div className="hub-compose-error">{state.error}</div>
@@ -130,7 +131,7 @@ export default function ClientForm({
         <div className="hub-compose-success">Client saved.</div>
       )}
 
-      <div className="hub-client-form-actions">
+      <HubFormActions className="hub-client-form-actions">
         <button
           type="submit"
           className="hub-send-button"
@@ -142,7 +143,7 @@ export default function ClientForm({
               ? "Save changes"
               : "Create client"}
         </button>
-      </div>
-    </form>
+      </HubFormActions>
+    </HubForm>
   );
 }

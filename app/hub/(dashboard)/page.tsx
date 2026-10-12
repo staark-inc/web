@@ -1,6 +1,6 @@
 import Link from "next/link";
 import UnifiedAnalyticsChart from "@/components/hub/unified-analytics-chart";
-import { PageHeader, Metrics, Metric, SectionHeader, EmptyState, InfoChip } from "@/components/hub/workspace";
+import { Panel, ActionLink, PageHeader, Metrics, Metric, SectionHeader, EmptyState, StatusBadge } from "@/components/hub/workspace";
 
 import {
   ArrowRight,
@@ -463,9 +463,9 @@ const githubPromise = getGitHubOverview()
         description={formatDashboardDate(now)}
         action={
           <div className="sw-overview-actions">
-            <Link href="/hub/offers/new" className="sw-overview-primary"><Plus size={16} /> New offer</Link>
-            <Link href="/hub/compose" className="sw-overview-secondary"><MailPlus size={15} /> Compose</Link>
-            <Link href="/hub/projects/new" className="sw-overview-secondary"><FolderKanban size={15} /> New project</Link>
+            <ActionLink href="/hub/offers/new"><Plus size={16} /> New offer</ActionLink>
+            <ActionLink href="/hub/compose" variant="secondary"><MailPlus size={15} /> Compose</ActionLink>
+            <ActionLink href="/hub/projects/new" variant="secondary"><FolderKanban size={15} /> New project</ActionLink>
           </div>
         }
       />
@@ -484,7 +484,7 @@ const githubPromise = getGitHubOverview()
       </Metrics>
 
       <div className={`sw-overview-primary-grid ${attentionItems.length === 0 ? "sw-overview-priorities-clear" : ""}`}>
-        <section className="sw-overview-panel sw-priority-panel" aria-label="Needs attention">
+        <Panel className="sw-priority-panel" aria-label="Needs attention">
           <div className="sw-overview-panel-heading">
             <div><span className="sw-eyebrow">YOUR PRIORITIES</span><h2>Needs attention</h2></div>
             <span className="sw-attention-counter">{attentionCount}</span>
@@ -501,8 +501,8 @@ const githubPromise = getGitHubOverview()
             </div>
           ) : <div className="sw-overview-clear"><CheckCircle2 size={20}/><span>All caught up. No urgent items right now.</span></div>}
           <Link href="/hub/inbox" className="sw-overview-text-link">Open inbox <ArrowRight size={15}/></Link>
-        </section>
-        <section className="sw-overview-panel sw-sales-panel" aria-label="Monthly sales">
+        </Panel>
+        <Panel className="sw-sales-panel" aria-label="Monthly sales">
           <div className="sw-overview-panel-heading"><div><span className="sw-eyebrow">SALES SNAPSHOT</span><h2>This month</h2></div><CircleDollarSign size={18}/></div>
           <span className="sw-sales-label">Accepted offer value</span>
           <strong className="sw-sales-value">{formatMoneyOre(acceptedThisMonthValueOre)}</strong>
@@ -513,7 +513,7 @@ const githubPromise = getGitHubOverview()
             <div><span>Contacts</span><strong>{contactCount}</strong></div>
           </div>
           <Link href="/hub/offers" className="sw-overview-text-link">View sales pipeline <ArrowRight size={15}/></Link>
-        </section>
+        </Panel>
       </div>
 
       <SectionHeader title="Analytics" description="Your website audience and Google Search performance, together."/>
@@ -537,7 +537,7 @@ const githubPromise = getGitHubOverview()
         searchConnected={searchConsoleResult.connected}
       />
       <div className="sw-overview-secondary-grid">
-        <section className="sw-overview-panel" aria-label="Top website pages">
+        <Panel aria-label="Top website pages">
           <div className="sw-overview-panel-heading">
             <div><span className="sw-eyebrow">GOOGLE ANALYTICS</span><h2>Top pages</h2></div>
             <span className="sw-panel-micro">Page views</span>
@@ -553,8 +553,8 @@ const githubPromise = getGitHubOverview()
               ))}
             </div>
           ) : <EmptyState title="No page data" description="Popular pages will appear here when GA4 reports traffic." />}
-        </section>
-        <section className="sw-overview-panel" aria-label="Top search queries">
+        </Panel>
+        <Panel aria-label="Top search queries">
           <div className="sw-overview-panel-heading">
             <div><span className="sw-eyebrow">SEARCH CONSOLE</span><h2>Top queries</h2></div>
             <span className="sw-panel-micro">Clicks</span>
@@ -570,17 +570,17 @@ const githubPromise = getGitHubOverview()
               ))}
             </div>
           ) : <EmptyState title="No search queries" description="Your Google Search queries will appear here." />}
-        </section>
+        </Panel>
       </div>
 
       <SectionHeader title="Operations" description="Production status and latest customer activity."/>
       <div className="sw-overview-operations-grid">
-        <section className="sw-overview-panel" aria-label="Production deployment">
+        <Panel aria-label="Production deployment">
           <div className="sw-overview-panel-heading">
             <div><span className="sw-eyebrow">GITHUB DEPLOYMENT</span><h2>Production</h2></div>
-            <InfoChip tone={workflowStatus.className === "healthy" ? "success" : workflowStatus.className === "failed" ? "warning" : "neutral"}>
+            <StatusBadge tone={workflowStatus.className === "healthy" ? "success" : workflowStatus.className === "failed" ? "warning" : "neutral"}>
               {githubResult.connected ? workflowStatus.label : "Unavailable"}
-            </InfoChip>
+            </StatusBadge>
           </div>
           {github ? (
             <div className="sw-deploy-info">
@@ -595,8 +595,8 @@ const githubPromise = getGitHubOverview()
               </div>
             </div>
           ) : <EmptyState title="GitHub unavailable" description="We could not retrieve the latest production deployment." />}
-        </section>
-        <section className="sw-overview-panel" aria-label="Recent leads">
+        </Panel>
+        <Panel aria-label="Recent leads">
           <div className="sw-overview-panel-heading">
             <div><span className="sw-eyebrow">CUSTOMER RELATIONSHIPS</span><h2>Recent leads</h2></div>
             <Link href="/hub/leads" className="sw-overview-text-link">View all <ArrowRight size={14}/></Link>
@@ -607,13 +607,13 @@ const githubPromise = getGitHubOverview()
                 <Link href={`/hub/leads/${lead.id}`} key={lead.id} className="sw-simple-row sw-link-row">
                   <span className="sw-simple-avatar"><Users size={16}/></span>
                   <span className="sw-simple-main"><strong>{lead.contact.name || lead.contact.email || lead.contact.phone || lead.contact.facebook || "Unknown contact"}</strong><small>{lead.service || "General enquiry"}</small></span>
-                  <InfoChip tone={lead.status === "WON" ? "success" : lead.status === "NEW" ? "info" : "neutral"}>{lead.status}</InfoChip>
+                  <StatusBadge tone={lead.status === "WON" ? "success" : lead.status === "NEW" ? "info" : "neutral"}>{lead.status}</StatusBadge>
                 </Link>
               ))}
             </div>
           ) : <EmptyState title="No leads yet" description="New opportunities will appear here." />}
-        </section>
-        <section className="sw-overview-panel" aria-label="Recent messages">
+        </Panel>
+        <Panel aria-label="Recent messages">
           <div className="sw-overview-panel-heading">
             <div><span className="sw-eyebrow">COMMUNICATION</span><h2>Recent messages</h2></div>
             <Link href="/hub/inbox" className="sw-overview-text-link">View inbox <ArrowRight size={14}/></Link>
@@ -629,7 +629,7 @@ const githubPromise = getGitHubOverview()
               ))}
             </div>
           ) : <EmptyState title="No messages yet" description="Customer messages will appear here." />}
-        </section>
+        </Panel>
       </div>
     </main>
   );

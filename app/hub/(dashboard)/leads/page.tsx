@@ -1,7 +1,7 @@
 import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
 import Link from "next/link";
 import { CircleDollarSign, Target, Trophy, UserRoundSearch, MessageCircle, Mail, ArrowRight, ChevronRight, CalendarDays } from "lucide-react";
-import { WorkspacePage, PageHeader, Metrics, Metric, InfoChip, EmptyState, SectionHeader } from "@/components/hub/workspace";
+import { WorkspacePage, PageHeader, Metrics, Metric, StatusBadge, EmptyState, SectionHeader, ExpandableCard, CardSummary, CardIcon, CardBody, CardActions } from "@/components/hub/workspace";
 
 import { prisma } from "@/lib/prisma";
 import { formatAmount } from "@/lib/format";
@@ -153,10 +153,10 @@ export default async function LeadsPage({ searchParams }: PageProps) {
                 const initials = getInitials(lead.contact.name, fallback);
                 const label = contactLabel(lead);
                 return (
-                  <details key={lead.id} role="listitem" className="sw-lead-card">
-                    <summary>
-                      <span className="sw-lead-avatar" aria-hidden="true">{initials}</span>
-                      <span className="sw-lead-person">
+                  <ExpandableCard key={lead.id} role="listitem" className="sw-lead-card sw-entity-card">
+                    <CardSummary>
+                      <CardIcon className="sw-lead-avatar" aria-hidden="true">{initials}</CardIcon>
+                      <span className="sw-lead-person sw-entity-title">
                         <strong>{lead.contact.name || lead.contact.company || "Unknown contact"}</strong>
                         <small>{channelLabels[lead.contactChannel]} · {label}</small>
                       </span>
@@ -164,28 +164,28 @@ export default async function LeadsPage({ searchParams }: PageProps) {
                         <strong>{lead.service || "General enquiry"}</strong>
                         <small>{formatAmount(lead.budget) || "Budget not specified"}</small>
                       </span>
-                      <InfoChip tone={lead.status === "WON" ? "success" : lead.status === "LOST" ? "warning" : lead.status === "NEW" ? "info" : "neutral"}>
+                      <StatusBadge tone={lead.status === "WON" ? "success" : lead.status === "LOST" ? "warning" : lead.status === "NEW" ? "info" : "neutral"}>
                         {statusLabels[lead.status]}
-                      </InfoChip>
+                      </StatusBadge>
                       <span className="sw-lead-summary-arrow"><ChevronRight size={17}/></span>
-                    </summary>
-                    <div className="sw-lead-expanded">
+                    </CardSummary>
+                    <CardBody className="sw-lead-expanded">
                       <div>
                         <span className="sw-eyebrow">ENQUIRY</span>
                         <p className="sw-lead-full-message">{lead.message || "No message provided."}</p>
                         <span className="sw-lead-date"><CalendarDays size={14}/> Received {formatDate(lead.createdAt)}</span>
                       </div>
-                      <div className="sw-lead-quick-actions">
+                      <CardActions className="sw-lead-quick-actions">
                         <span className="sw-eyebrow">NEXT STEP</span>
                         {lead.contactChannel === "EMAIL" && lead.contact.email && (
                           <Link href={`/hub/compose?replyTo=${encodeURIComponent(lead.contact.email)}`}><Mail size={15}/> Compose email</Link>
                         )}
                         {lead.contact.phone && <a href={`tel:${lead.contact.phone}`}><MessageCircle size={15}/> Call {lead.contact.phone}</a>}
                         {lead.client && <Link href={`/hub/clients/${lead.client.id}`}>View client <ArrowRight size={15}/></Link>}
-                        <Link className="sw-lead-open" href={`/hub/leads/${lead.id}`}>Open lead &amp; update status <ArrowRight size={15}/></Link>
-                      </div>
-                    </div>
-                  </details>
+                        <Link className="sw-lead-open sw-entity-action" href={`/hub/leads/${lead.id}`}>Open lead &amp; update status <ArrowRight size={15}/></Link>
+                      </CardActions>
+                    </CardBody>
+                  </ExpandableCard>
                 );
               })}
             </div>

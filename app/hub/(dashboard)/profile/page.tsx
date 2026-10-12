@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { WorkspacePage, PageHeader, StatusBadge } from "@/components/hub/workspace";
 import { cookies } from "next/headers";
 import {
   BellDot,
@@ -99,18 +100,14 @@ export default async function HubProfilePage({
     "Europe/Stockholm";
 
   return (
-    <div className="hub-page hub-profile-v2-page">
-      <header className="hub-page-header">
-        <div>
-          <span className="hub-eyebrow">STAARK HUB</span>
-          <h1>Profile</h1>
-          <p>
-            Your identity, access, preferences and security settings in one place.
-          </p>
-        </div>
-      </header>
+    <WorkspacePage className="hub-profile-v2-page sw-detail-page">
+      <PageHeader
+        eyebrow="STAARK HUB"
+        title="Profile"
+        description="Your identity, access, preferences and security settings in one place."
+      />
 
-      <section className="hub-profile-v2-hero">
+      <section className="hub-profile-v2-hero sw-detail-header">
         <div className="hub-profile-v2-identity">
           <div className="hub-profile-v2-avatar">{initials}</div>
 
@@ -120,14 +117,8 @@ export default async function HubProfilePage({
             <p>{user.email}</p>
 
             <div className="hub-profile-v2-badges">
-              <span className="hub-profile-v2-badge is-active">
-                <CircleCheck size={13} />
-                Active account
-              </span>
-              <span className="hub-profile-v2-badge">
-                <ShieldCheck size={13} />
-                {roleLabel}
-              </span>
+              <StatusBadge tone="success" icon={<CircleCheck size={13} />}>Active account</StatusBadge>
+              <StatusBadge icon={<ShieldCheck size={13} />}>{roleLabel}</StatusBadge>
             </div>
           </div>
         </div>
@@ -197,8 +188,8 @@ export default async function HubProfilePage({
       ) : null}
 
       <div className="hub-profile-v2-grid">
-        <section className="hub-profile-v2-card">
-          <div className="hub-profile-v2-card-head">
+        <section className="hub-profile-v2-card sw-card sw-card-panel sw-detail-panel">
+          <div className="hub-profile-v2-card-head sw-detail-panel-head">
             <div className="hub-profile-v2-card-icon">
               <UserRound size={18} />
             </div>
@@ -217,11 +208,11 @@ export default async function HubProfilePage({
               </div>
             </div>
 
-            <form action="/api/hub/profile" method="post">
+            <form action="/api/hub/profile" method="post" className="sw-form">
               <input type="hidden" name="action" value="profile" />
 
               <div className="hub-settings-grid">
-                <label className="hub-settings-field">
+                <label className="hub-settings-field sw-form-field">
                   <span>Name</span>
                   <input
                     type="text"
@@ -231,15 +222,15 @@ export default async function HubProfilePage({
                     minLength={2}
                     maxLength={80}
                     autoComplete="name"
-                  />
+                   className="sw-form-control"/>
                 </label>
 
-                <label className="hub-settings-field">
+                <label className="hub-settings-field sw-form-field">
                   <span>Role</span>
-                  <input type="text" value={roleLabel} readOnly disabled />
+                  <input type="text" value={roleLabel} readOnly disabled  className="sw-form-control"/>
                 </label>
 
-                <label className="hub-settings-field hub-settings-full">
+                <label className="hub-settings-field hub-settings-full sw-form-field">
                   <span>Email</span>
                   <div className="hub-input-icon">
                     <Mail size={16} />
@@ -250,7 +241,7 @@ export default async function HubProfilePage({
                       required
                       maxLength={160}
                       autoComplete="email"
-                    />
+                     className="sw-form-control"/>
                   </div>
                 </label>
               </div>
@@ -265,8 +256,8 @@ export default async function HubProfilePage({
           </div>
         </section>
 
-        <section className="hub-profile-v2-card">
-          <div className="hub-profile-v2-card-head">
+        <section className="hub-profile-v2-card sw-card sw-card-panel sw-detail-panel">
+          <div className="hub-profile-v2-card-head sw-detail-panel-head">
             <div className="hub-profile-v2-card-icon">
               <IdCard size={18} />
             </div>
@@ -331,8 +322,8 @@ export default async function HubProfilePage({
           </div>
         </section>
 
-        <section className="hub-profile-v2-card hub-profile-v2-card-full">
-          <div className="hub-profile-v2-card-head hub-profile-v2-card-head-actions">
+        <section className="hub-profile-v2-card hub-profile-v2-card-full sw-card sw-card-panel sw-detail-panel">
+          <div className="hub-profile-v2-card-head hub-profile-v2-card-head-actions sw-detail-panel-head">
             <div className="hub-profile-v2-card-icon">
               <SlidersHorizontal size={18} />
             </div>
@@ -360,7 +351,7 @@ export default async function HubProfilePage({
           </div>
 
           <div className="hub-profile-v2-card-body">
-            <form action="/api/hub/profile" method="post">
+            <form action="/api/hub/profile" method="post" className="sw-form">
               <input type="hidden" name="action" value="preferences" />
 
               <div className="hub-profile-v2-preferences-grid">
@@ -442,7 +433,7 @@ export default async function HubProfilePage({
                     Timezone
                   </span>
                   <p>Used as your personal time display preference inside Hub.</p>
-                  <select name="timezone" defaultValue={timezone}>
+                  <select name="timezone" defaultValue={timezone} className="sw-form-control">
                     <option value="Europe/Stockholm">Europe/Stockholm</option>
                     <option value="Europe/Bucharest">Europe/Bucharest</option>
                     <option value="UTC">UTC</option>
@@ -467,8 +458,8 @@ export default async function HubProfilePage({
           </div>
         </section>
 
-        <section className="hub-profile-v2-card hub-profile-v2-card-full">
-          <div className="hub-profile-v2-card-head">
+        <section className="hub-profile-v2-card hub-profile-v2-card-full sw-card sw-card-panel sw-detail-panel">
+          <div className="hub-profile-v2-card-head sw-detail-panel-head">
             <div className="hub-profile-v2-card-icon">
               <KeyRound size={18} />
             </div>
@@ -480,11 +471,11 @@ export default async function HubProfilePage({
 
           <div className="hub-profile-v2-card-body">
             <div className="hub-profile-v2-security-layout">
-              <form action="/api/hub/profile" method="post">
+              <form action="/api/hub/profile" method="post" className="sw-form">
                 <input type="hidden" name="action" value="password" />
 
                 <div className="hub-settings-grid">
-                  <label className="hub-settings-field hub-settings-full">
+                  <label className="hub-settings-field hub-settings-full sw-form-field">
                     <span>Current password</span>
                     <div className="hub-input-icon">
                       <LockKeyhole size={16} />
@@ -494,11 +485,11 @@ export default async function HubProfilePage({
                         required
                         autoComplete="current-password"
                         placeholder="Enter current password"
-                      />
+                       className="sw-form-control"/>
                     </div>
                   </label>
 
-                  <label className="hub-settings-field">
+                  <label className="hub-settings-field sw-form-field">
                     <span>New password</span>
                     <input
                       type="password"
@@ -507,10 +498,10 @@ export default async function HubProfilePage({
                       minLength={8}
                       autoComplete="new-password"
                       placeholder="Minimum 8 characters"
-                    />
+                     className="sw-form-control"/>
                   </label>
 
-                  <label className="hub-settings-field">
+                  <label className="hub-settings-field sw-form-field">
                     <span>Confirm new password</span>
                     <input
                       type="password"
@@ -519,7 +510,7 @@ export default async function HubProfilePage({
                       minLength={8}
                       autoComplete="new-password"
                       placeholder="Repeat new password"
-                    />
+                     className="sw-form-control"/>
                   </label>
                 </div>
 
@@ -574,6 +565,6 @@ export default async function HubProfilePage({
           </div>
         </section>
       </div>
-    </div>
+    </WorkspacePage>
   );
 }

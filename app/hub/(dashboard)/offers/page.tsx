@@ -1,4 +1,5 @@
 import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
+import { StatusBadge, WorkspacePage, PageHeader, Metrics, Metric, ActionLink, BoardCard, CardHeader, CardIcon, CardBody, CardFooter } from "@/components/hub/workspace";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -89,67 +90,20 @@ export default async function OffersPage({
   const liveCount = countFor("SHARED") + countFor("VIEWED");
 
   return (
-    <div className="hub-page hub-offers-v2-page hub-crm-workspace sw-offers-board-page">
-      <header className="hub-workspace-head">
-        <div>
-          <span className="hub-workspace-kicker">SALES / PROPOSALS</span>
-          <h1>Offers</h1>
-          <p>
-            Prepare proposals, follow client engagement and move accepted work into delivery.
-          </p>
-        </div>
+    <WorkspacePage className="hub-offers-v2-page hub-crm-workspace sw-offers-board-page">
+            <PageHeader
+        eyebrow="SALES / PROPOSALS"
+        title="Offers"
+        description="Prepare proposals, follow client engagement and move accepted work into delivery."
+        action={<ActionLink href="/hub/offers/new"><Plus size={16} /> New offer</ActionLink>}
+      />
 
-        <Link href="/hub/offers/new" className="hub-workspace-primary-action">
-          <Plus size={15} />
-          New offer
-        </Link>
-      </header>
-
-      <section className="hub-workspace-stats" aria-label="Offer overview">
-        <div className="hub-workspace-stat">
-          <span className="hub-workspace-stat-icon">
-            <FileText size={16} />
-          </span>
-          <div>
-            <small>Drafts</small>
-            <strong>{countFor("DRAFT")}</strong>
-            <span>Being prepared</span>
-          </div>
-        </div>
-
-        <div className="hub-workspace-stat">
-          <span className="hub-workspace-stat-icon hub-workspace-stat-icon-info">
-            <Eye size={16} />
-          </span>
-          <div>
-            <small>Live offers</small>
-            <strong>{liveCount}</strong>
-            <span>{countFor("VIEWED")} viewed by client</span>
-          </div>
-        </div>
-
-        <div className="hub-workspace-stat">
-          <span className="hub-workspace-stat-icon hub-workspace-stat-icon-value">
-            <CircleDollarSign size={16} />
-          </span>
-          <div>
-            <small>Live proposal value</small>
-            <strong>{formatOfferAmount(liveValue._sum.oneTimePriceOre)}</strong>
-            <span>One-time value in play</span>
-          </div>
-        </div>
-
-        <div className="hub-workspace-stat">
-          <span className="hub-workspace-stat-icon hub-workspace-stat-icon-good">
-            <CheckCircle2 size={16} />
-          </span>
-          <div>
-            <small>Accepted value</small>
-            <strong>{formatOfferAmount(acceptedValue._sum.oneTimePriceOre)}</strong>
-            <span>{countFor("ACCEPTED")} accepted offer{countFor("ACCEPTED") === 1 ? "" : "s"}</span>
-          </div>
-        </div>
-      </section>
+            <Metrics label="Offer overview">
+        <Metric label="Drafts" value={countFor("DRAFT")} description={"Being prepared"} icon={<FileText size={18} />} />
+        <Metric label="Live offers" value={liveCount} description={`${countFor("VIEWED")} viewed by client`} icon={<Eye size={18} />} />
+        <Metric label="Live proposal value" value={formatOfferAmount(liveValue._sum.oneTimePriceOre)} description={"One-time value in play"} icon={<CircleDollarSign size={18} />} />
+        <Metric label="Accepted value" value={formatOfferAmount(acceptedValue._sum.oneTimePriceOre)} description={`${countFor("ACCEPTED")} accepted offer${countFor("ACCEPTED") === 1 ? "" : "s"}`} icon={<CheckCircle2 size={18} />} />
+      </Metrics>
 
       <WorkspaceTabs label="Offer filters" activeKey={active}
         tabs={filters.map((value) => ({
@@ -168,9 +122,9 @@ export default async function OffersPage({
               : "Choose another status to see more offers."}
           </p>
           {active === "ALL" && (
-            <Link href="/hub/offers/new" className="hub-secondary-button">
+            <ActionLink href="/hub/offers/new" variant="secondary">
               Create offer
-            </Link>
+            </ActionLink>
           )}
         </div>
       ) : (
@@ -185,18 +139,25 @@ export default async function OffersPage({
                   : `Created ${formatDate(offer.createdAt)}`;
 
             return (
-              <article key={offer.id} className="sw-offer-board-card">
-                <header className="sw-offer-board-header">
-                  <span className="sw-offer-board-icon"><FileText size={18}/></span>
-                  <div className="sw-offer-board-title">
+              <BoardCard key={offer.id} className="sw-offer-board-card sw-entity-card">
+                <CardHeader className="sw-offer-board-header">
+                  <CardIcon className="sw-offer-board-icon"><FileText size={18}/></CardIcon>
+                  <div className="sw-offer-board-title sw-entity-title">
                     <Link href={`/hub/offers/${offer.id}`}>{offer.title}</Link>
                     <small>{offer.client.name}</small>
                   </div>
-                  <span className={`hub-offer-status hub-offer-status-${offer.status.toLowerCase()}`}>
+                  <StatusBadge
+                    tone={
+                      offer.status === "ACCEPTED" ? "success"
+                      : offer.status === "DECLINED" ? "danger"
+                      : offer.status === "SHARED" || offer.status === "VIEWED"
+                        ? "info" : "neutral"
+                    }
+                  >
                     {offerStatusLabels[offer.status]}
-                  </span>
-                </header>
-                <div className="sw-offer-board-body">
+                  </StatusBadge>
+                </CardHeader>
+                <CardBody className="sw-offer-board-body">
                   <div className="sw-offer-board-price">
                     <span>One-time proposal</span>
                     <strong>{formatOfferAmount(offer.oneTimePriceOre)}</strong>
@@ -211,16 +172,16 @@ export default async function OffersPage({
                     <Clock3 size={14}/><span>{activityLabel}</span>
                   </div>
                   {offer.project && <span className="sw-offer-board-project"><CheckCircle2 size={14}/> Project created</span>}
-                </div>
-                <footer className="sw-offer-board-footer">
+                </CardBody>
+                <CardFooter className="sw-offer-board-footer">
                   <time dateTime={offer.updatedAt.toISOString()}>Updated {formatDate(offer.updatedAt)}</time>
-                  <Link href={`/hub/offers/${offer.id}`}>Open offer <ArrowRight size={15}/></Link>
-                </footer>
-              </article>
+                  <Link href={`/hub/offers/${offer.id}`} className="sw-entity-action">Open offer <ArrowRight size={15}/></Link>
+                </CardFooter>
+              </BoardCard>
             );
           })}
         </section>
       )}
-    </div>
+    </WorkspacePage>
   );
 }

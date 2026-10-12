@@ -1,6 +1,8 @@
 // Copied into app/hub-ui-fixture only for browser checks. Never a production route.
 import Link from "next/link";
-import { Bell, FolderKanban, Inbox, LogOut, PenSquare, Plus } from "lucide-react";
+import { ArrowRight, Bell, Building2, Clock3, FolderKanban, Inbox, LogOut, PenSquare, Plus, Rocket } from "lucide-react";
+import { ActionLink, Metric, Metrics, PageHeader, StatusBadge, WorkspacePage } from "@/components/hub/workspace";
+import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
 import HubLayout from "@/app/hub/layout";
 import HubSidebar from "@/app/hub/(dashboard)/HubSidebar";
 import HubNav from "@/app/hub/(dashboard)/HubNav";
@@ -9,6 +11,11 @@ import NotificationCenter from "@/app/hub/(dashboard)/NotificationCenter";
 export const dynamic = "force-dynamic";
 export const metadata = { robots: { index: false, follow: false } };
 const url = "/hub-ui-fixture";
+const fixtureProjects = [
+  { name: "Website redesign", progress: 75, done: 3 },
+  { name: "Customer booking platform", progress: 50, done: 2 },
+  { name: "Brand and content launch", progress: 25, done: 1 },
+];
 
 export default async function HubUiFixture({ searchParams }: { searchParams: Promise<{ compact?: string; view?: string }> }) {
   const { compact, view } = await searchParams;
@@ -30,17 +37,69 @@ export default async function HubUiFixture({ searchParams }: { searchParams: Pro
           <div className="hub-notification-preferences-list">{["New emails", "New leads", "Offer activity", "Support requests", "Billing events"].map((name) => <label className="hub-notification-preference-row" key={name}><span className="hub-notification-preference-icon"><Inbox size={17} /></span><span className="hub-notification-preference-copy"><strong>{name}</strong><small>Incoming customer messages and activity from your workspace.</small></span><span className="hub-notification-switch"><input type="checkbox" defaultChecked /><span aria-hidden="true" /></span></label>)}</div>
           <div className="hub-notification-preferences-footer"><div><strong>Persistent by design</strong><span>Disabled categories stop creating new notifications; existing history stays intact.</span></div><button className="hub-send-button">Save notification settings</button></div>
         </section>
-      </div> : <div className="hub-page hub-projects-v2-page">
-        <header className="hub-projects-v2-head"><div className="hub-projects-v2-title"><span>WORK / DELIVERY</span><h1>Projects</h1><p>Delivery is clear. No overdue or near-term deadlines.</p></div><Link href={url} className="hub-projects-v2-new"><Plus size={15} />New project</Link></header>
-        <section className="hub-projects-v2-stats" aria-label="Delivery overview">{[["Active", "8", "In progress or review"], ["Waiting", "2", "Client input needed"], ["Due soon", "3", "Next 7 days"], ["Overdue", "0", "All clear"]].map(([name, count, text]) => <div className="hub-projects-v2-stat" key={name}><span className="hub-projects-v2-stat-icon"><FolderKanban size={16} /></span><div><small>{name}</small><strong>{count}</strong><span>{text}</span></div></div>)}</section>
-        <nav className="hub-projects-v2-filters" aria-label="Project filters">{["All", "Planning", "In progress", "Waiting on client", "Review", "Completed", "Maintenance"].map((name, i) => <Link href={url} className={i === 0 ? "hub-projects-v2-filter-active" : undefined} key={name}><span>{name}</span><strong>{i === 0 ? 12 : 2}</strong></Link>)}</nav>
-        <section className="hub-projects-v2-list" aria-label="Projects">{["Website redesign", "Customer booking platform", "Brand and content launch"].map((name, i) => <article className="hub-projects-v2-item" key={name}>
-          <div className="hub-projects-v2-item-main"><span className="hub-projects-v2-avatar"><FolderKanban size={17} /></span><div className="hub-projects-v2-identity"><div className="hub-projects-v2-name-line"><Link href={url}>{name}</Link><span className="hub-project-status hub-project-status-in_progress">In progress</span></div><span className="hub-projects-v2-client">Example Studio</span><p>A clear, accessible experience for customers across every device.</p></div></div>
-          <div className="hub-projects-v2-progress"><div className="hub-projects-v2-progress-top"><span>Progress</span><strong>{75 - i * 25}%</strong></div><div className="hub-projects-v2-progress-bar"><span style={{ width: `${75 - i * 25}%` }} /></div><span className="hub-projects-v2-progress-sub">Next: Review the first design</span></div>
-          <div className="hub-projects-v2-meta"><span className="hub-projects-v2-chip">20 Oct 2026</span><span className="hub-projects-v2-chip hub-projects-v2-chip-good">Materials clear</span><span className="hub-projects-v2-chip hub-projects-v2-chip-good">Support clear</span><span className="hub-projects-v2-chip">Not deployed</span></div>
-          <div className="hub-projects-v2-item-footer"><span>Updated today</span><Link href={url}>Open project</Link></div>
-        </article>)}</section>
-      </div>}
+      </div> : <WorkspacePage>
+        <div className="sw-projects-page sw-projects-board-page">
+          <PageHeader
+            eyebrow="WORK / DELIVERY"
+            title="Projects"
+            description="Delivery is clear. No overdue or near-term deadlines."
+            action={<ActionLink href={url}><Plus size={16} /> New project</ActionLink>}
+          />
+          <Metrics label="Delivery overview">
+            <Metric label="Active" value={8} description="In progress or review" icon={<FolderKanban size={18} />} />
+            <Metric label="Waiting" value={2} description="Client input needed" icon={<Clock3 size={18} />} />
+            <Metric label="Due soon" value={3} description="Within the next 7 days" icon={<Clock3 size={18} />} />
+            <Metric label="Overdue" value={0} description="All clear" icon={<FolderKanban size={18} />} />
+          </Metrics>
+          <div className="sw-projects-section-heading">
+            <div><span className="sw-eyebrow">DELIVERY</span><h2>Project portfolio</h2></div>
+            <span>{fixtureProjects.length} shown</span>
+          </div>
+          <WorkspaceTabs
+            label="Project filters"
+            activeKey="ALL"
+            tabs={[
+              { key: "ALL", label: "All", href: url, count: 12 },
+              { key: "PLANNING", label: "Planning", href: url, count: 2 },
+              { key: "IN_PROGRESS", label: "In progress", href: url, count: 5 },
+              { key: "WAITING_CLIENT", label: "Waiting on client", href: url, count: 2 },
+              { key: "REVIEW", label: "Review", href: url, count: 1 },
+              { key: "COMPLETED", label: "Completed", href: url, count: 2 },
+            ]}
+          />
+          <section className="sw-board-grid" aria-label="Projects">
+            {fixtureProjects.map((project) => (
+              <article className="sw-board-card" key={project.name}>
+                <header className="sw-board-card-head">
+                  <span className="sw-board-icon"><FolderKanban size={19} /></span>
+                  <span className="sw-board-title">
+                    <Link href={url}>{project.name}</Link>
+                    <small><Building2 size={13} />Example Studio</small>
+                  </span>
+                  <StatusBadge tone="info">In progress</StatusBadge>
+                </header>
+                <div className="sw-board-card-body">
+                  <div className="sw-board-progress-heading"><span>Task progress</span><strong>{project.progress}%</strong></div>
+                  <progress max={100} value={project.progress} aria-label={project.name + " task completion"} />
+                  <div className="sw-board-task-count">{project.done} of 4 tasks complete</div>
+                  <div className="sw-board-next-task">
+                    <span className="sw-eyebrow">NEXT STEP</span>
+                    <strong>Review the first design</strong>
+                  </div>
+                  <div className="sw-board-facts">
+                    <span><Clock3 size={15} />20 Oct 2026</span>
+                    <span><Rocket size={15} />Demo ready</span>
+                  </div>
+                </div>
+                <footer className="sw-board-footer">
+                  <small>Updated today</small>
+                  <Link href={url} className="sw-board-open">Open project <ArrowRight size={15} /></Link>
+                </footer>
+              </article>
+            ))}
+          </section>
+        </div>
+      </WorkspacePage>}
     </main>
   </div></HubLayout>;
 }

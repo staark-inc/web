@@ -129,7 +129,7 @@ export default async function SupportRequestPage({
   }
 
   return (
-    <div className="hub-page hub-support-v2-detail-page">
+    <div className="hub-page hub-support-v2-detail-page sw-detail-page">
       <div className="hub-detail-back">
         <Link href="/hub/support">
           <ArrowLeft size={16} />
@@ -158,7 +158,7 @@ export default async function SupportRequestPage({
         </p>
       )}
 
-      <header className="hub-support-v2-detail-head">
+      <header className="hub-support-v2-detail-head sw-detail-header">
         <div>
           <span className="hub-support-v2-detail-kicker">SUPPORT / REQUEST</span>
           <h1>{request.title}</h1>
@@ -173,7 +173,7 @@ export default async function SupportRequestPage({
         </span>
       </header>
 
-      <section className="hub-support-v2-detail-stats">
+      <section className="hub-support-v2-detail-stats sw-detail-metrics">
         <div>
           <span>Coverage</span>
           <strong>{supportCoverageLabels[request.coverage]}</strong>
@@ -204,8 +204,8 @@ export default async function SupportRequestPage({
       </section>
 
       <div className="hub-support-v2-detail-grid">
-        <section className="hub-support-v2-panel">
-          <div className="hub-support-v2-panel-head">
+        <section className="hub-support-v2-panel sw-card sw-card-panel sw-detail-panel">
+          <div className="hub-support-v2-panel-head sw-detail-panel-head">
             <span>WORKSPACE</span>
             <h2>Request and work notes</h2>
           </div>
@@ -246,7 +246,7 @@ export default async function SupportRequestPage({
                     </div>
                   )}
 
-                  <form action={replyToWordPressTicket} className="hub-wp-support-form">
+                  <form action={replyToWordPressTicket} className="hub-wp-support-form sw-form">
                     <input type="hidden" name="requestId" value={request.id} />
                     <div className="hub-client-form-field">
                       <label htmlFor="wordpress-support-reply">Response shown to the client</label>
@@ -257,7 +257,7 @@ export default async function SupportRequestPage({
                         maxLength={5000}
                         required
                         placeholder="Write the update or answer that should appear inside the client's WordPress support ticket..."
-                      />
+                       className="sw-form-control"/>
                     </div>
                     <div className="hub-wp-support-form-footer">
                       <p className="hub-support-help">
@@ -276,8 +276,8 @@ export default async function SupportRequestPage({
         </section>
 
         <aside>
-          <section className="hub-support-v2-panel">
-            <div className="hub-support-v2-panel-head">
+          <section className="hub-support-v2-panel sw-card sw-card-panel sw-detail-panel">
+            <div className="hub-support-v2-panel-head sw-detail-panel-head">
               <span>LINKED CONTEXT</span>
               <h2>Client and delivery</h2>
             </div>
@@ -312,8 +312,8 @@ export default async function SupportRequestPage({
           </section>
 
           {(request.requesterEmail || request.reference) && (
-            <section className="hub-support-v2-panel">
-              <div className="hub-support-v2-panel-head">
+            <section className="hub-support-v2-panel sw-card sw-card-panel sw-detail-panel">
+              <div className="hub-support-v2-panel-head sw-detail-panel-head">
                 <span>PUBLIC INTAKE</span>
                 <h2>Requester details</h2>
               </div>
@@ -347,8 +347,8 @@ export default async function SupportRequestPage({
           )}
 
           {request.coverage === "EXTRA" && request.clientId && (
-            <section className="hub-support-v2-panel">
-              <div className="hub-support-v2-panel-head">
+            <section className="hub-support-v2-panel sw-card sw-card-panel sw-detail-panel">
+              <div className="hub-support-v2-panel-head sw-detail-panel-head">
                 <span>COMMERCIAL</span>
                 <h2>Separate offer</h2>
               </div>

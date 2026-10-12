@@ -44,6 +44,7 @@
 .sw-chip-success { color: #19734a; background: #eaf8f0; }
 .sw-chip-info { color: #2454b1; background: #edf3ff; }
 .sw-chip-warning { color: #946000; background: #fff6df; }
+.sw-chip-danger { color: #a13232; background: #fff0f0; }
 .sw-record-end { display: flex; align-items: center; gap: 14px; justify-content: flex-end; }
 .sw-record-meta { font-size: 11px; color: var(--sw-muted); white-space: nowrap; }
 .sw-record-open { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; font-size: 12px; color: var(--sw-accent); font-weight: 700; text-decoration: none; }
@@ -97,8 +98,8 @@
 .sw-overview-priorities-clear .sw-priority-panel { align-self: start; }
 .sw-overview-priorities-clear .sw-overview-clear { padding: 8px 0 12px; }
 .sw-overview-priorities-clear .sw-overview-text-link { margin-top: 4px; }
-.sw-overview-panel, .sw-analytics-panel { min-width: 0; border: 1px solid var(--sw-line); border-radius: var(--sw-radius); background: var(--sw-surface); box-shadow: 0 2px 8px rgba(20, 40, 76, .025); }
-.sw-overview-panel { padding: 22px 24px; }
+.sw-panel, .sw-analytics-panel { min-width: 0; border: 1px solid var(--sw-line); border-radius: var(--sw-radius); background: var(--sw-surface); box-shadow: 0 2px 8px rgba(20, 40, 76, .025); }
+.sw-panel { padding: 22px 24px; }
 .sw-overview-panel-heading { display: flex; align-items: start; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
 .sw-overview-panel-heading h2, .sw-analytics-heading h2 { font-size: 18px; letter-spacing: -.025em; line-height: 1.3; color: var(--sw-ink); margin: 5px 0 0; font-weight: 750; }
 .sw-attention-counter { display: grid; place-items: center; flex: 0 0 30px; min-height: 30px; padding: 0 7px; border-radius: 9px; background: #edf2fb; color: #365580; font-size: 13px; font-weight: 750; }
@@ -177,7 +178,7 @@
   .sw-overview-actions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); width: 100%; }
   .sw-overview-primary { grid-column: 1/-1; }
   .sw-overview-primary, .sw-overview-secondary { min-width: 0; }
-  .sw-overview-panel, .sw-analytics-panel { padding: 16px; }
+  .sw-panel, .sw-analytics-panel { padding: 16px; }
   .sw-overview-secondary-grid, .sw-overview-operations-grid { grid-template-columns: minmax(0,1fr); gap: 12px; }
   .sw-overview-operations-grid > :first-child { grid-column: auto; }
   .sw-unified-chart { height: 275px; }
@@ -868,7 +869,7 @@
 .sw-offer-board-title>a {font-size:14px;font-weight:750;line-height:1.4;color:var(--sw-ink);text-decoration:none;overflow-wrap:anywhere}
 .sw-offer-board-title>a:hover {color:var(--sw-accent)}
 .sw-offer-board-title small {font-size:11px;color:var(--sw-muted);overflow-wrap:anywhere}
-.sw-offer-board-header .hub-offer-status {flex-shrink:0;max-width:40%;font-size:10px;text-align:center}
+.sw-offer-board-header .sw-chip {flex-shrink:0;max-width:40%;font-size:10px;text-align:center}
 .sw-offer-board-body {display:flex;flex:1;flex-direction:column;gap:12px;padding:16px}
 .sw-offer-board-price {display:grid;gap:5px;padding:13px;border-radius:9px;background:#f5f8fc;border:1px solid #eaf0f7}
 .sw-offer-board-price span,.sw-offer-board-monthly span {font-size:11px;color:var(--sw-muted)}
@@ -1084,3 +1085,197 @@
 .sw-saas-detail-page .sw-saas-data-card:focus-within{border-color:#b8c9ff}
 @media(max-width:1160px){.sw-saas-detail-page .sw-saas-detail-grid{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:720px){.sw-saas-detail-page .sw-saas-detail-grid{gap:10px}.sw-saas-detail-page .sw-saas-data-card>:is(.hub-billing-v2-main,.hub-saas-subscription-main){padding:14px}.sw-saas-detail-page .sw-saas-data-card>:is(.hub-billing-v2-terms,.hub-billing-v2-project,.hub-saas-subscription-plan,.hub-saas-subscription-state,.hub-saas-subscription-lifecycle){padding:12px 14px}.sw-saas-detail-page .sw-saas-data-card>:is(.hub-billing-v2-tail,.hub-saas-subscription-tail){padding:12px 14px}}
+
+
+/* Canonical Hub action component */
+.hub-dashboard .sw-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.3;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.hub-dashboard .sw-button-primary {
+  background: var(--sw-accent);
+  color: #fff;
+}
+
+.hub-dashboard .sw-button-primary:hover {
+  background: #244bd1;
+}
+
+.hub-dashboard .sw-button-secondary {
+  background: var(--sw-surface);
+  color: var(--sw-ink);
+  border-color: var(--sw-line);
+}
+
+.hub-dashboard .sw-button-secondary:hover {
+  background: var(--sw-bg);
+}
+
+.hub-dashboard .sw-button:focus-visible {
+  outline: 2px solid var(--sw-accent);
+  outline-offset: 3px;
+}
+
+/* STAARK HUB — Foundation 07 shared card contract */
+/* All Hub cards share a single outline/radius/focus language, while
+ * existing layouts control their inner grid, spacing and actions. */
+.hub-dashboard .sw-card {
+  min-width: 0;
+  border: 1px solid var(--sw-line);
+  border-radius: var(--sw-radius);
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+.hub-dashboard .sw-card-board,
+.hub-dashboard .sw-card-expandable,
+.hub-dashboard .sw-card-panel,
+.hub-dashboard .sw-card-record,
+.hub-dashboard .sw-card-metric {
+  background-color: var(--sw-surface);
+}
+.hub-dashboard .sw-card-expandable[open] {
+  border-color: #b8c9ea;
+  box-shadow: 0 6px 20px rgba(25, 42, 76, 0.045);
+}
+.hub-dashboard .sw-card-expandable > summary:focus-visible {
+  outline: 2px solid var(--sw-accent);
+  outline-offset: -3px;
+  border-radius: 8px;
+}
+.hub-dashboard .sw-card-board:focus-within,
+.hub-dashboard .sw-card-record:focus-within,
+.hub-dashboard .sw-card-panel:focus-within {
+  border-color: #b8c9ea;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hub-dashboard .sw-card { transition: none; }
+}
+
+/* STAARK HUB — Foundation 08 operational records */
+.hub-dashboard .sw-operations-page{width:100%;max-width:none;min-width:0}
+.hub-dashboard .sw-list-card-stack{display:grid;gap:12px;min-width:0}
+.hub-dashboard .sw-list-card{display:flex;flex-direction:column;min-width:0;overflow:hidden;background:var(--sw-surface);color:var(--sw-ink);padding:0}
+.hub-dashboard .sw-list-card-head{display:flex;align-items:center;gap:14px;min-width:0;padding:18px 20px;border-bottom:1px solid var(--sw-line)}
+.hub-dashboard .sw-list-card-icon{flex:0 0 42px;width:42px;height:42px;display:grid;place-items:center;border-radius:11px;background:#eef3fb;color:#41649a}
+.hub-dashboard .sw-list-card-identity{display:grid;align-content:center;min-width:0;flex:1;gap:6px}
+.hub-dashboard .sw-list-card-identity h2{min-width:0;margin:0;font-size:15px;font-weight:750;line-height:1.35;letter-spacing:-.012em;overflow-wrap:anywhere}
+.hub-dashboard .sw-list-card-identity h2 a{color:var(--sw-ink);text-decoration:none}
+.hub-dashboard .sw-list-card-identity h2 a:hover{color:var(--sw-accent)}
+.hub-dashboard .sw-list-card-subtitle{display:grid;gap:3px;min-width:0;color:var(--sw-muted);font-size:12px;line-height:1.45;overflow-wrap:anywhere}
+.hub-dashboard .sw-list-card-subtitle small{font-size:11px;color:var(--sw-muted)}
+.hub-dashboard .sw-list-card-status{flex:0 0 auto;align-self:flex-start}
+.hub-dashboard .sw-list-card-badges{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px}
+.hub-dashboard .sw-list-card-facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));min-width:0;background:#f9fbff}
+.hub-dashboard .sw-list-card-fact{display:grid;align-content:center;min-width:0;gap:6px;padding:16px 20px}
+.hub-dashboard .sw-list-card-fact+.sw-list-card-fact{border-left:1px solid var(--sw-line)}
+.hub-dashboard .sw-list-card-fact>span{color:var(--sw-muted);font-size:10px;font-weight:700;letter-spacing:.055em;text-transform:uppercase}
+.hub-dashboard .sw-list-card-fact>div{display:grid;min-width:0;gap:5px;color:var(--sw-ink);font-size:13px;overflow-wrap:anywhere}
+.hub-dashboard .sw-list-card-fact strong,.hub-dashboard .sw-list-card-fact a,.hub-dashboard .sw-list-card-fact time{font-size:13px;font-weight:700;color:var(--sw-ink);text-decoration:none;overflow-wrap:anywhere}
+.hub-dashboard .sw-list-card-fact a:hover{color:var(--sw-accent)}
+.hub-dashboard .sw-list-card-fact small{color:var(--sw-muted);font-size:11px;line-height:1.45;overflow-wrap:anywhere}
+.hub-dashboard .sw-list-card-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;min-height:54px;padding:11px 20px;border-top:1px solid var(--sw-line);color:var(--sw-muted);font-size:12px}
+.hub-dashboard .sw-list-card-footer>a{display:inline-flex;align-items:center;gap:7px;min-height:34px;padding:0 12px;border-radius:8px;background:#edf3ff;color:#2953c3;font-size:12px;font-weight:750;text-decoration:none}
+.hub-dashboard .sw-list-card-footer>a:hover{background:#e0eaff}
+.hub-dashboard .sw-list-card-footer-actions{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:8px;min-width:0}
+.hub-dashboard .sw-list-card-footer-actions :is(button,a){min-height:34px;font-size:12px}
+.hub-dashboard .sw-list-card :is(a,button,summary):focus-visible{outline:2px solid var(--sw-accent);outline-offset:2px}
+.hub-dashboard .sw-list-card:hover{border-color:#bdcce6;box-shadow:0 6px 18px rgba(25,42,76,.035)}
+.hub-dashboard .sw-operations-page .news-search{margin-bottom:14px}
+.hub-dashboard .sw-operations-page .hub-updates-notice{font-size:12px;padding:12px 14px;line-height:1.5}
+@media(max-width:1100px){
+  .hub-dashboard .sw-list-card-facts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .hub-dashboard .sw-list-card-fact{border-bottom:1px solid var(--sw-line)}
+  .hub-dashboard .sw-list-card-fact:nth-child(odd){border-left:0}
+  .hub-dashboard .sw-list-card-fact:nth-last-child(-n+2){border-bottom:0}
+}
+@media(max-width:640px){
+  .hub-dashboard .sw-list-card-head{flex-wrap:wrap;align-items:flex-start;padding:15px;gap:10px}
+  .hub-dashboard .sw-list-card-identity{flex-basis:calc(100% - 55px)}
+  .hub-dashboard .sw-list-card-status{flex:1 0 100%;padding-left:52px}
+  .hub-dashboard .sw-list-card-badges{justify-content:flex-start}
+  .hub-dashboard .sw-list-card-fact{padding:13px 15px}
+  .hub-dashboard .sw-list-card-footer{padding:12px 15px}
+  .hub-dashboard .sw-list-card-footer-actions{justify-content:flex-start}
+}
+@media(max-width:420px){
+  .hub-dashboard .sw-list-card-facts{grid-template-columns:1fr}
+  .hub-dashboard .sw-list-card-fact{border-left:0!important;border-bottom:1px solid var(--sw-line)!important}
+  .hub-dashboard .sw-list-card-fact:last-child{border-bottom:0!important}
+}
+@media(prefers-reduced-motion:reduce){.hub-dashboard .sw-list-card{transition:none}}
+
+/* STAARK HUB — Foundation 09 shared card interiors */
+/* Shared slots also render native header/summary/div/footer/span elements.
+   Keep per-page classes for grids, statuses, forms and existing responsive logic. */
+.hub-dashboard .sw-entity-card{--sw-entity-pad:18px;--sw-entity-icon:42px}
+.hub-dashboard .sw-entity-header{min-width:0;gap:12px;padding:var(--sw-entity-pad);border-bottom:1px solid var(--sw-line)}
+.hub-dashboard .sw-entity-summary{cursor:pointer;list-style:none}
+.hub-dashboard .sw-entity-summary::-webkit-details-marker{display:none}
+.hub-dashboard .sw-card-expandable>.sw-entity-summary{border-bottom:0}
+.hub-dashboard .sw-card-expandable[open]>.sw-entity-summary{border-bottom:1px solid var(--sw-line)}
+.hub-dashboard .sw-entity-icon{display:grid;place-items:center;flex:0 0 var(--sw-entity-icon);width:var(--sw-entity-icon);height:var(--sw-entity-icon);border-radius:11px;background:#eef3fb;color:#41649a;font-size:12px;font-weight:750}
+.hub-dashboard .sw-entity-title{min-width:0;overflow-wrap:anywhere}
+.hub-dashboard .sw-entity-title :is(a,strong,h2){color:var(--sw-ink);font-size:14px;font-weight:750;line-height:1.4;letter-spacing:-.012em;overflow-wrap:anywhere}
+.hub-dashboard .sw-entity-title :is(small,p){color:var(--sw-muted);font-size:11px;line-height:1.5;overflow-wrap:anywhere}
+.hub-dashboard .sw-entity-body{min-width:0;padding:var(--sw-entity-pad)}
+.hub-dashboard .sw-entity-actions{min-width:0;gap:10px}
+.hub-dashboard .sw-entity-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;min-height:54px;padding:11px var(--sw-entity-pad);border-top:1px solid var(--sw-line);color:var(--sw-muted);font-size:12px}
+.hub-dashboard .sw-entity-action{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:34px;padding:7px 12px;border:1px solid transparent;border-radius:8px;background:#edf3ff;color:#2953c3;font-size:12px;font-weight:750;line-height:1.35;text-decoration:none;white-space:normal;overflow-wrap:anywhere}
+.hub-dashboard .sw-entity-action:hover{background:#e0eaff;color:#2449ac}
+.hub-dashboard .sw-entity-action:focus-visible{outline:2px solid var(--sw-accent);outline-offset:2px}
+@media(max-width:640px){
+ .hub-dashboard .sw-entity-card{--sw-entity-pad:14px}
+ .hub-dashboard .sw-entity-header{gap:10px}
+ .hub-dashboard .sw-entity-footer{align-items:flex-start}
+}
+@media(prefers-reduced-motion:reduce){.hub-dashboard .sw-entity-action{transition:none}}
+
+
+/* STAARK HUB — Foundation 10: canonical details & forms (shared, unversioned). */
+.hub-dashboard .sw-detail-page { width:100%; max-width:none; min-width:0; color:var(--sw-ink); }
+.hub-dashboard .sw-detail-header { min-width:0; gap:16px; }
+.hub-dashboard .sw-detail-header :is(h1) { color:var(--sw-ink); font-size:clamp(25px,2.4vw,34px); font-weight:760; line-height:1.2; letter-spacing:-.035em; overflow-wrap:anywhere; }
+.hub-dashboard .sw-detail-header p { color:var(--sw-muted); font-size:13px; line-height:1.55; }
+.hub-dashboard .sw-detail-metrics { min-width:0; }
+.hub-dashboard .sw-detail-panel { min-width:0; border:1px solid var(--sw-line); border-radius:var(--sw-radius); background:var(--sw-surface); }
+.hub-dashboard .sw-detail-panel-head { min-width:0; border-bottom-color:var(--sw-line); }
+.hub-dashboard .sw-detail-panel-head :is(h2,h3) { font-size:15px; font-weight:730; line-height:1.35; color:var(--sw-ink); }
+.hub-dashboard .sw-detail-panel p { line-height:1.6; overflow-wrap:anywhere; }
+.hub-dashboard .sw-detail-page :is(a,button,input,select,textarea):focus-visible { outline:2px solid var(--sw-accent); outline-offset:2px; }
+
+.hub-dashboard .sw-form { min-width:0; }
+.hub-dashboard .sw-form-field { min-width:0; }
+.hub-dashboard .sw-form-field > label,
+.hub-dashboard .sw-form label:not(.hub-profile-v2-choice) { color:var(--sw-ink); font-size:12px; font-weight:650; line-height:1.45; }
+.hub-dashboard .sw-form-control,
+.hub-dashboard .sw-form :is(input:not([type=hidden]):not([type=radio]):not([type=checkbox]),select,textarea) {
+  box-sizing:border-box; min-width:0; width:100%; min-height:42px;
+  padding:10px 12px; border:1px solid var(--sw-line); border-radius:9px;
+  background:var(--sw-surface); color:var(--sw-ink); font:inherit; font-size:13px;
+}
+.hub-dashboard .sw-form textarea,
+.hub-dashboard textarea.sw-form-control { min-height:108px; resize:vertical; line-height:1.6; }
+.hub-dashboard .sw-form :is(input,select,textarea):disabled { cursor:not-allowed; opacity:.65; background:var(--sw-bg); }
+.hub-dashboard .sw-form :is(input,select,textarea):focus-visible,
+.hub-dashboard .sw-form-control:focus-visible { outline:2px solid var(--sw-accent); outline-offset:1px; border-color:var(--sw-accent); }
+.hub-dashboard .sw-form :is(input,select,textarea)[aria-invalid="true"] { border-color:#c45151; }
+.hub-dashboard .sw-form-actions { display:flex; align-items:center; justify-content:flex-end; flex-wrap:wrap; gap:10px; }
+.hub-dashboard .sw-form-actions :is(button,a) { min-height:40px; font-size:12px; }
+@media(max-width:640px){
+ .hub-dashboard .sw-detail-header { flex-wrap:wrap; align-items:flex-start; }
+ .hub-dashboard .sw-form-actions { justify-content:stretch; }
+ .hub-dashboard .sw-form-actions :is(button,a) { max-width:100%; }
+}
+@media(prefers-reduced-motion:reduce){.hub-dashboard .sw-form-control{transition:none}}

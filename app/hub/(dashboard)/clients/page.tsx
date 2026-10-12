@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
-import { WorkspacePage, PageHeader, Metrics, Metric } from "@/components/hub/workspace";
+import { ActionLink, WorkspacePage, PageHeader, Metrics, Metric, ExpandableCard, CardSummary, CardIcon, CardBody, CardActions } from "@/components/hub/workspace";
 
 export const dynamic = "force-dynamic";
 
@@ -108,7 +108,7 @@ export default async function ClientsPage() {
       <div className="sw-clients-page">
         <PageHeader eyebrow="CUSTOMERS / CRM" title="Clients"
           description="Manage client relationships, active delivery, offers and support in one workspace."
-          action={<Link href="/hub/clients/new" className="sw-primary-link"><Plus size={16}/> New client</Link>}/>
+          action={<ActionLink href="/hub/clients/new"><Plus size={16}/> New client</ActionLink>}/>
         <Metrics label="Client overview">
           <Metric label="Clients" value={totalClients} description="Confirmed customer records" icon={<Building2 size={18}/>}/>
           <Metric label="Linked contacts" value={linkedContacts} description="People connected to clients" icon={<UsersRound size={18}/>}/>
@@ -126,9 +126,9 @@ export default async function ClientsPage() {
           <p>
             Once a lead becomes a client, their company and activity will appear here.
           </p>
-          <Link href="/hub/clients/new" className="hub-secondary-button">
+          <ActionLink href="/hub/clients/new" variant="secondary">
             New client
-          </Link>
+          </ActionLink>
         </div>
       ) : (
         <section className="sw-client-portfolio" aria-label="Clients">
@@ -138,30 +138,30 @@ export default async function ClientsPage() {
             const liveOfferCount = client.offers.filter(offer => offer.status === "SHARED" || offer.status === "VIEWED").length;
             const openSupportCount = client.supportRequests.filter(request => request.status !== "RESOLVED").length;
             return (
-              <details key={client.id} className="sw-client-account">
-                <summary>
-                  <span className="sw-client-avatar">{getInitials(client.name) || <Building2 size={17}/>}</span>
-                  <span className="sw-client-identity"><strong>{client.name}</strong><small>{email || "No billing email added"}</small></span>
+              <ExpandableCard key={client.id} className="sw-client-account sw-entity-card">
+                <CardSummary>
+                  <CardIcon className="sw-client-avatar">{getInitials(client.name) || <Building2 size={17}/>}</CardIcon>
+                  <span className="sw-client-identity sw-entity-title"><strong>{client.name}</strong><small>{email || "No billing email added"}</small></span>
                   <span className="sw-client-health">
                     <span><FolderKanban size={14}/>{activeProjectCount} projects</span>
                     <span><FileText size={14}/>{liveOfferCount} offers</span>
                     {openSupportCount > 0 && <span className="is-attention"><LifeBuoy size={14}/>{openSupportCount} support</span>}
                   </span>
                   <span className="sw-client-open">Details <ArrowRight size={16}/></span>
-                </summary>
-                <div className="sw-client-account-detail">
+                </CardSummary>
+                <CardBody className="sw-client-account-detail">
                   <div><span className="sw-eyebrow">RELATIONSHIP</span><h3>{client.name}</h3>
                     <p><Mail size={15}/>{email || "No email on record"}</p>
                     <p><UsersRound size={15}/>{client.contacts.length} linked contacts</p>
                     <p>Client since {formatDate(client.createdAt)}</p>
                   </div>
-                  <div className="sw-client-detail-actions">
+                  <CardActions className="sw-client-detail-actions">
                     <span className="sw-eyebrow">NEXT ACTION</span>
                     {email && <Link href={`/hub/compose?replyTo=${encodeURIComponent(email)}`}><Mail size={15}/> Compose email</Link>}
-                    <Link className="sw-client-primary-action" href={`/hub/clients/${client.id}`}>Open client workspace <ArrowRight size={16}/></Link>
-                  </div>
-                </div>
-              </details>
+                    <Link className="sw-client-primary-action sw-entity-action" href={`/hub/clients/${client.id}`}>Open client workspace <ArrowRight size={16}/></Link>
+                  </CardActions>
+                </CardBody>
+              </ExpandableCard>
             );
           })}
         </section>
