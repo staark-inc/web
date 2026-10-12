@@ -83,40 +83,9 @@
   background: #fff;
 }
 
-.hub-clients-v2-stat {
-  min-width: 0;
-  min-height: 92px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px 18px;
-}
-
 .hub-clients-v2-stat + .hub-clients-v2-stat,
 .hub-client-v2-detail-stats > div + div {
   border-left: 1px solid #edf0f2;
-}
-
-.hub-clients-v2-stat-icon {
-  width: 34px;
-  height: 34px;
-  flex: 0 0 34px;
-  display: grid;
-  place-items: center;
-  border-radius: 10px;
-  background: #f2f3f5;
-  color: #747b84;
-}
-
-.hub-clients-v2-stat-warning .hub-clients-v2-stat-icon {
-  background: #fff6e8;
-  color: #ae6a0a;
-}
-
-.hub-clients-v2-stat > div {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
 }
 
 .hub-clients-v2-stat small,
@@ -142,139 +111,6 @@
   margin-top: 5px;
   color: #969ca5;
   font-size: 9px;
-}
-
-.hub-clients-v2-list {
-  overflow: hidden;
-  border: 1px solid #e0e3e7;
-  border-radius: 15px;
-  background: #fff;
-}
-
-.hub-clients-v2-row {
-  min-height: 86px;
-  display: grid;
-  grid-template-columns: minmax(260px, 1.15fr) minmax(420px, 1.7fr) minmax(180px, .7fr);
-  align-items: center;
-  gap: 18px;
-  padding: 15px 17px;
-}
-
-.hub-clients-v2-row + .hub-clients-v2-row {
-  border-top: 1px solid #edf0f2;
-}
-
-.hub-clients-v2-row:hover {
-  background: #fbfcfd;
-}
-
-.hub-clients-v2-main {
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.hub-clients-v2-avatar {
-  width: 38px;
-  height: 38px;
-  flex: 0 0 38px;
-  display: grid;
-  place-items: center;
-  border-radius: 10px;
-  background: #f1f3f5;
-  color: #5f6670;
-  font-size: 11px;
-  font-weight: 800;
-}
-
-.hub-clients-v2-identity {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.hub-clients-v2-identity > a {
-  overflow: hidden;
-  color: #202328;
-  font-size: 12px;
-  font-weight: 730;
-  text-decoration: none;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.hub-clients-v2-identity > span {
-  min-width: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  overflow: hidden;
-  color: #969ca5;
-  font-size: 9px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.hub-clients-v2-signals {
-  min-width: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-}
-
-.hub-clients-v2-signals > span {
-  min-height: 27px;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 0 8px;
-  border-radius: 999px;
-  background: #f2f3f5;
-  color: #717883;
-  font-size: 8.5px;
-  font-weight: 650;
-  white-space: nowrap;
-}
-
-.hub-clients-v2-signal-active {
-  background: #eef4ff !important;
-  color: #4267a8 !important;
-}
-
-.hub-clients-v2-signal-info {
-  background: #f3efff !important;
-  color: #7254ad !important;
-}
-
-.hub-clients-v2-signal-warning {
-  background: #fff5e6 !important;
-  color: #a6660b !important;
-}
-
-.hub-clients-v2-tail {
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 14px;
-}
-
-.hub-clients-v2-tail time {
-  color: #a0a5ad;
-  font-size: 8px;
-  white-space: nowrap;
-}
-
-.hub-clients-v2-tail a {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  color: #4c535c;
-  font-size: 9px;
-  font-weight: 700;
-  text-decoration: none;
 }
 
 .hub-client-v2-detail-stats > div {
@@ -567,15 +403,6 @@
 }
 
 @media (max-width: 1100px) {
-  .hub-clients-v2-row {
-    grid-template-columns: minmax(240px, 1fr) minmax(0, 1.4fr);
-  }
-
-  .hub-clients-v2-tail {
-    grid-column: 1 / -1;
-    justify-content: space-between;
-    padding-left: 50px;
-  }
 
   .hub-client-v2-detail-grid {
     grid-template-columns: 1fr;
@@ -598,16 +425,6 @@
   .hub-clients-v2-stat:nth-child(3),
   .hub-client-v2-detail-stats > div:nth-child(3) {
     border-left: 0;
-  }
-
-  .hub-clients-v2-row {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  .hub-clients-v2-tail {
-    grid-column: auto;
-    padding-left: 50px;
   }
 
   .hub-client-v2-project-row {
@@ -650,14 +467,6 @@
   .hub-client-v2-detail-stats > div:nth-child(4) {
     border-top: 1px solid #edf0f2;
     border-left: 0;
-  }
-
-  .hub-clients-v2-signals {
-    padding-left: 50px;
-  }
-
-  .hub-clients-v2-tail {
-    padding-left: 50px;
   }
 
   .hub-client-v2-project-row {
