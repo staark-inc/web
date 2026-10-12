@@ -37,9 +37,7 @@ import "./mail-workspace-v2.css";
 import "./thread-v2.css";
 import "./workspace.css";
 import "./workspace-shell-v3.css";
-import "./hub-nav-groups-v3.css";
-import "./dashboard-density-v3.css";
-import "./hub-ui-04.css";
+import "./hub-chrome.css";
 import "./crm-workspace-v7.css";
 import "./theme.css";
 
