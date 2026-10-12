@@ -7,8 +7,11 @@ import { ArrowRight } from "lucide-react";
  * Use sw-* classes from app/hub/theme.css. These are intentionally
  * presentation-only: fetching, navigation state and mutation stay in pages.
  */
-export function WorkspacePage({ children }: { children: ReactNode }) {
-  return <div className="hub-page sw-page">{children}</div>;
+export function WorkspacePage({ children, className }: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return <div className={["hub-page", "sw-page", className].filter(Boolean).join(" ")}>{children}</div>;
 }
 
 export function PageHeader({

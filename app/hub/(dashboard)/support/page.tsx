@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { StatusBadge } from "@/components/hub/workspace";
+import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
+import { StatusBadge, WorkspacePage, PageHeader, Metrics, Metric, ActionLink } from "@/components/hub/workspace";
 import {
   AlertTriangle,
   ArrowRight,
@@ -104,81 +105,29 @@ export default async function SupportPage({
   const activeCount = count("OPEN") + count("IN_PROGRESS");
 
   return (
-    <div className="hub-page hub-support-v2-page">
-      <header className="hub-workspace-head">
-        <div>
-          <span className="hub-workspace-kicker">OPERATIONS / SUPPORT</span>
-          <h1>Support</h1>
-          <p>
-            Follow client requests, project context, urgency and work recorded in one place.
-          </p>
-        </div>
+    <WorkspacePage className="hub-support-v2-page">
+            <PageHeader
+        eyebrow="OPERATIONS / SUPPORT"
+        title="Support"
+        description="Follow client requests, project context, urgency and work recorded in one place."
+        action={<ActionLink href="/hub/support/new"><Plus size={16} /> New request</ActionLink>}
+      />
 
-        <Link href="/hub/support/new" className="hub-workspace-primary-action">
-          <Plus size={15} />
-          New request
-        </Link>
-      </header>
+            <Metrics label="Support overview">
+        <Metric label="Needs action" value={activeCount} description={"Open or in progress"} icon={<LifeBuoy size={18} />} />
+        <Metric label="Waiting on client" value={count("WAITING_CLIENT")} description={"Reply or materials needed"} icon={<Clock3 size={18} />} />
+        <Metric label="Attention" value={urgentCount} description={`${extraCount} extra-scope request${extraCount === 1 ? "" : "s"}`} icon={<AlertTriangle size={18} />} />
+        <Metric label="Open work logged" value={`${timeAggregate._sum.timeSpentMinutes ?? 0} min`} description={`${count("RESOLVED")} resolved total`} icon={<Timer size={18} />} />
+      </Metrics>
 
-      <section className="hub-workspace-stats" aria-label="Support overview">
-        <div className="hub-workspace-stat">
-          <span className="hub-workspace-stat-icon">
-            <LifeBuoy size={16} />
-          </span>
-          <div>
-            <small>Needs action</small>
-            <strong>{activeCount}</strong>
-            <span>Open or in progress</span>
-          </div>
-        </div>
-
-        <div className="hub-workspace-stat">
-          <span className="hub-workspace-stat-icon hub-workspace-stat-icon-info">
-            <Clock3 size={16} />
-          </span>
-          <div>
-            <small>Waiting on client</small>
-            <strong>{count("WAITING_CLIENT")}</strong>
-            <span>Reply or materials needed</span>
-          </div>
-        </div>
-
-        <div className="hub-workspace-stat">
-          <span className="hub-workspace-stat-icon hub-workspace-stat-icon-value">
-            <AlertTriangle size={16} />
-          </span>
-          <div>
-            <small>Attention</small>
-            <strong>{urgentCount}</strong>
-            <span>{extraCount} extra-scope request{extraCount === 1 ? "" : "s"}</span>
-          </div>
-        </div>
-
-        <div className="hub-workspace-stat">
-          <span className="hub-workspace-stat-icon hub-workspace-stat-icon-good">
-            <Timer size={16} />
-          </span>
-          <div>
-            <small>Open work logged</small>
-            <strong>{timeAggregate._sum.timeSpentMinutes ?? 0} min</strong>
-            <span>{count("RESOLVED")} resolved total</span>
-          </div>
-        </div>
-      </section>
-
-      <nav className="hub-workspace-filters" aria-label="Support filters">
-        {filters.map((value) => (
-          <Link
-            key={value}
-            href={value === "ALL" ? "/hub/support" : `/hub/support?status=${value}`}
-            className={active === value ? "hub-workspace-filter-active" : undefined}
-            aria-current={active === value ? "page" : undefined}
-          >
-            <span>{value === "ALL" ? "All" : supportStatusLabels[value]}</span>
-            <strong>{count(value)}</strong>
-          </Link>
-        ))}
-      </nav>
+            <WorkspaceTabs label="Support filters" activeKey={active}
+        tabs={filters.map((value) => ({
+          key: value,
+          label: value === "ALL" ? "All" : supportStatusLabels[value],
+          href: value === "ALL" ? "/hub/support" : `/hub/support?status=${value}`,
+          count: count(value),
+        }))}
+      />
 
       {requests.length === 0 ? (
         <div className="hub-empty-state">
@@ -190,9 +139,9 @@ export default async function SupportPage({
               : "Choose another filter to see more requests."}
           </p>
           {active === "ALL" && (
-            <Link href="/hub/support/new" className="hub-secondary-button">
+            <ActionLink href="/hub/support/new" variant="secondary">
               Create request
-            </Link>
+            </ActionLink>
           )}
         </div>
       ) : (
@@ -263,6 +212,6 @@ export default async function SupportPage({
           })}
         </section>
       )}
-    </div>
+    </WorkspacePage>
   );
 }

@@ -1,5 +1,5 @@
 import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
-import { StatusBadge } from "@/components/hub/workspace";
+import { StatusBadge, WorkspacePage, PageHeader, Metrics, Metric, ActionLink } from "@/components/hub/workspace";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -90,67 +90,20 @@ export default async function OffersPage({
   const liveCount = countFor("SHARED") + countFor("VIEWED");
 
   return (
-    <div className="hub-page hub-offers-v2-page hub-crm-workspace sw-offers-board-page">
-      <header className="hub-workspace-head">
-        <div>
-          <span className="hub-workspace-kicker">SALES / PROPOSALS</span>
-          <h1>Offers</h1>
-          <p>
-            Prepare proposals, follow client engagement and move accepted work into delivery.
-          </p>
-        </div>
+    <WorkspacePage className="hub-offers-v2-page hub-crm-workspace sw-offers-board-page">
+            <PageHeader
+        eyebrow="SALES / PROPOSALS"
+        title="Offers"
+        description="Prepare proposals, follow client engagement and move accepted work into delivery."
+        action={<ActionLink href="/hub/offers/new"><Plus size={16} /> New offer</ActionLink>}
+      />
 
-        <Link href="/hub/offers/new" className="hub-workspace-primary-action">
-          <Plus size={15} />
-          New offer
-        </Link>
-      </header>
-
-      <section className="hub-workspace-stats" aria-label="Offer overview">
-        <div className="hub-workspace-stat">
-          <span className="hub-workspace-stat-icon">
-            <FileText size={16} />
-          </span>
-          <div>
-            <small>Drafts</small>
-            <strong>{countFor("DRAFT")}</strong>
-            <span>Being prepared</span>
-          </div>
-        </div>
-
-        <div className="hub-workspace-stat">
-          <span className="hub-workspace-stat-icon hub-workspace-stat-icon-info">
-            <Eye size={16} />
-          </span>
-          <div>
-            <small>Live offers</small>
-            <strong>{liveCount}</strong>
-            <span>{countFor("VIEWED")} viewed by client</span>
-          </div>
-        </div>
-
-        <div className="hub-workspace-stat">
-          <span className="hub-workspace-stat-icon hub-workspace-stat-icon-value">
-            <CircleDollarSign size={16} />
-          </span>
-          <div>
-            <small>Live proposal value</small>
-            <strong>{formatOfferAmount(liveValue._sum.oneTimePriceOre)}</strong>
-            <span>One-time value in play</span>
-          </div>
-        </div>
-
-        <div className="hub-workspace-stat">
-          <span className="hub-workspace-stat-icon hub-workspace-stat-icon-good">
-            <CheckCircle2 size={16} />
-          </span>
-          <div>
-            <small>Accepted value</small>
-            <strong>{formatOfferAmount(acceptedValue._sum.oneTimePriceOre)}</strong>
-            <span>{countFor("ACCEPTED")} accepted offer{countFor("ACCEPTED") === 1 ? "" : "s"}</span>
-          </div>
-        </div>
-      </section>
+            <Metrics label="Offer overview">
+        <Metric label="Drafts" value={countFor("DRAFT")} description={"Being prepared"} icon={<FileText size={18} />} />
+        <Metric label="Live offers" value={liveCount} description={`${countFor("VIEWED")} viewed by client`} icon={<Eye size={18} />} />
+        <Metric label="Live proposal value" value={formatOfferAmount(liveValue._sum.oneTimePriceOre)} description={"One-time value in play"} icon={<CircleDollarSign size={18} />} />
+        <Metric label="Accepted value" value={formatOfferAmount(acceptedValue._sum.oneTimePriceOre)} description={`${countFor("ACCEPTED")} accepted offer${countFor("ACCEPTED") === 1 ? "" : "s"}`} icon={<CheckCircle2 size={18} />} />
+      </Metrics>
 
       <WorkspaceTabs label="Offer filters" activeKey={active}
         tabs={filters.map((value) => ({
@@ -169,9 +122,9 @@ export default async function OffersPage({
               : "Choose another status to see more offers."}
           </p>
           {active === "ALL" && (
-            <Link href="/hub/offers/new" className="hub-secondary-button">
+            <ActionLink href="/hub/offers/new" variant="secondary">
               Create offer
-            </Link>
+            </ActionLink>
           )}
         </div>
       ) : (
@@ -229,6 +182,6 @@ export default async function OffersPage({
           })}
         </section>
       )}
-    </div>
+    </WorkspacePage>
   );
 }
