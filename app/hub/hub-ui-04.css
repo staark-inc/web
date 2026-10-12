@@ -1,5 +1,5 @@
 /* HUB-UI-04: contextual header + actionable dashboard density. */
-.hub-dashboard .hub-shell-header-v4 {
+.hub-dashboard .hub-shell-header {
   min-height: 76px;
   height: auto;
   display: flex;
@@ -8,14 +8,14 @@
   gap: 12px 20px;
   padding: 12px clamp(20px, 2.35vw, 42px);
   background: rgba(255, 255, 255, .97);
-  border-bottom: 1px solid #dee5f0;
+  border-bottom: 1px solid var(--sw-line);
 }
-.hub-shell-heading-v4 { min-width: 0; gap: 3px; }
-.hub-dashboard .hub-shell-heading-v4 .hub-shell-title {
+.hub-shell-heading { min-width: 0; gap: 3px; }
+.hub-dashboard .hub-shell-heading .hub-shell-title {
   font-size: 17px;
   line-height: 1.25;
   font-weight: 750;
-  color: #172337;
+  color: var(--sw-ink);
 }
 .hub-shell-breadcrumbs, .hub-shell-crumb {
   display: inline-flex;
@@ -23,12 +23,12 @@
   gap: 7px;
   min-width: 0;
 }
-.hub-shell-breadcrumbs { flex-wrap: wrap; color: #62728b; font-size: 11px; }
+.hub-shell-breadcrumbs { flex-wrap: wrap; color: var(--sw-muted); font-size: 11px; }
 .hub-shell-breadcrumbs a { color: inherit; text-decoration: none; }
 .hub-shell-breadcrumbs a:hover { color: #315cf5; }
 .hub-shell-crumb:last-child { color: #2f4668; font-weight: 650; }
-.hub-shell-actions-v4 { display: flex; align-items: center; gap: 8px; }
-.hub-shell-actions-v4 .hub-shell-site-link { display: inline-flex; align-items: center; gap: 7px; min-height: 36px; white-space: nowrap; }
+.hub-shell-actions { display: flex; align-items: center; gap: 8px; }
+.hub-shell-actions .hub-shell-site-link { display: inline-flex; align-items: center; gap: 7px; min-height: 36px; white-space: nowrap; }
 .hub-shell-compose-link { color: #2e4d87; }
 
 /* Empty priority queues should not reserve the space of a full dashboard widget. */
@@ -89,9 +89,9 @@
 .hub-overview-page .hub-command-metric > div > span,
 .hub-overview-page .hub-command-summary { font-size: 12px; line-height: 1.5; }
 @media (max-width: 760px) {
-  .hub-dashboard .hub-shell-header-v4 { min-height: 66px; padding: 10px 16px; }
-  .hub-shell-actions-v4 .hub-shell-compose-link { display: none; }
-  .hub-dashboard .hub-shell-heading-v4 .hub-shell-title { font-size: 15px; }
+  .hub-dashboard .hub-shell-header { min-height: 66px; padding: 10px 16px; }
+  .hub-shell-actions .hub-shell-compose-link { display: none; }
+  .hub-dashboard .hub-shell-heading .hub-shell-title { font-size: 15px; }
   .hub-overview-page .hub-command-grid:has(.hub-command-clear) .hub-command-sales {
     display: block;
   }
@@ -112,30 +112,25 @@
 }
 
 /* HUB-UI-06: cohesive workspace rhythm and resilient responsive layout. */
-.hub-dashboard {
-  --hub-ui06-border: #e2e8f1;
-  --hub-ui06-muted: #60708a;
-  --hub-ui06-radius: 15px;
-}
-.hub-dashboard .hub-shell-header-v4 {
+.hub-dashboard .hub-shell-header {
   min-height: 72px;
-  border-bottom: 1px solid var(--hub-ui06-border);
+  border-bottom: 1px solid var(--sw-line);
   box-shadow: 0 2px 12px rgba(20, 39, 72, .025);
 }
-.hub-dashboard .hub-shell-heading-v4 { gap: 5px; }
+.hub-dashboard .hub-shell-heading { gap: 5px; }
 .hub-dashboard .hub-shell-breadcrumbs { font-size: 12px; }
-.hub-dashboard .hub-shell-heading-v4 .hub-shell-title {
+.hub-dashboard .hub-shell-heading .hub-shell-title {
   font-size: clamp(18px, 1.35vw, 21px);
   letter-spacing: -.025em;
 }
-.hub-dashboard .hub-shell-actions-v4 .hub-shell-site-link {
+.hub-dashboard .hub-shell-actions .hub-shell-site-link {
   border-radius: 10px;
   padding: 8px 13px;
   font-size: 12px;
 }
 .hub-dashboard .hub-content {
   min-width: 0;
-  background: #f6f8fc;
+  background: var(--sw-bg);
 }
 .hub-dashboard .hub-content .hub-page {
   min-width: 0;
@@ -143,8 +138,8 @@
 }
 .hub-dashboard .hub-overview-page .hub-command-panel,
 .hub-dashboard .hub-overview-page .hub-stat-card {
-  border-radius: var(--hub-ui06-radius);
-  border-color: var(--hub-ui06-border);
+  border-radius: var(--sw-radius);
+  border-color: var(--sw-line);
 }
 .hub-dashboard .hub-overview-page .hub-command-panel-header h2 {
   font-size: 15px;
@@ -174,11 +169,11 @@
   }
 }
 @media (max-width: 600px) {
-  .hub-dashboard .hub-shell-header-v4 {
+  .hub-dashboard .hub-shell-header {
     min-height: 62px;
     padding: 10px 16px;
   }
-  .hub-dashboard .hub-shell-heading-v4 .hub-shell-title { font-size: 17px; }
+  .hub-dashboard .hub-shell-heading .hub-shell-title { font-size: 17px; }
   .hub-dashboard .hub-shell-breadcrumbs { font-size: 11px; }
   .hub-dashboard .hub-content .hub-page { padding: 20px 14px 38px; }
   .hub-dashboard .hub-overview-page .hub-command-panel-header { padding-inline: 14px; }
