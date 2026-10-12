@@ -204,7 +204,7 @@ export default async function SupportRequestPage({
       </section>
 
       <div className="hub-support-v2-detail-grid">
-        <section className="hub-support-v2-panel">
+        <section className="hub-support-v2-panel sw-card sw-card-panel">
           <div className="hub-support-v2-panel-head">
             <span>WORKSPACE</span>
             <h2>Request and work notes</h2>
@@ -276,7 +276,7 @@ export default async function SupportRequestPage({
         </section>
 
         <aside>
-          <section className="hub-support-v2-panel">
+          <section className="hub-support-v2-panel sw-card sw-card-panel">
             <div className="hub-support-v2-panel-head">
               <span>LINKED CONTEXT</span>
               <h2>Client and delivery</h2>
@@ -312,7 +312,7 @@ export default async function SupportRequestPage({
           </section>
 
           {(request.requesterEmail || request.reference) && (
-            <section className="hub-support-v2-panel">
+            <section className="hub-support-v2-panel sw-card sw-card-panel">
               <div className="hub-support-v2-panel-head">
                 <span>PUBLIC INTAKE</span>
                 <h2>Requester details</h2>
@@ -347,7 +347,7 @@ export default async function SupportRequestPage({
           )}
 
           {request.coverage === "EXTRA" && request.clientId && (
-            <section className="hub-support-v2-panel">
+            <section className="hub-support-v2-panel sw-card sw-card-panel">
               <div className="hub-support-v2-panel-head">
                 <span>COMMERCIAL</span>
                 <h2>Separate offer</h2>

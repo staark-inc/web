@@ -57,7 +57,7 @@ export default async function OfferDetailPage({ params }: { params: Promise<{ id
       </section>
 
       <div className="hub-offer-detail-grid sw-offer-detail-content">
-        <div className="hub-client-panel sw-offer-editor-panel">
+        <div className="hub-client-panel sw-offer-editor-panel sw-card sw-card-panel">
           <div className="sw-offer-section-heading"><div><span className="sw-offer-detail-kicker">PROPOSAL CONTENT</span><h2>{offer.status === "DRAFT" ? "Edit draft" : "Offer terms"}</h2></div><span>{offer.status === "DRAFT" ? "Draft — editable" : "Read only after sending"}</span></div>
           {offer.status === "DRAFT" ? <OfferForm offer={offer} clients={[offer.client]} /> : (
             <div className="hub-offer-terms">
@@ -67,7 +67,7 @@ export default async function OfferDetailPage({ params }: { params: Promise<{ id
           )}
         </div>
         <div className="hub-client-side sw-offer-detail-sidebar">
-          <div className="hub-client-panel sw-offer-detail-client">
+          <div className="hub-client-panel sw-offer-detail-client sw-card sw-card-panel">
             <h2>Client</h2>
             <Link className="hub-offer-client-link" href={`/hub/clients/${offer.clientId}`}><Building2 size={16} />{offer.client.name}</Link>
             {offer.lead && (
@@ -77,7 +77,7 @@ export default async function OfferDetailPage({ params }: { params: Promise<{ id
               </Link>
             )}
           </div>
-          <div className="hub-client-panel sw-offer-detail-actions-panel"><h2>Actions &amp; decision</h2>
+          <div className="hub-client-panel sw-offer-detail-actions-panel sw-card sw-card-panel"><h2>Actions &amp; decision</h2>
             <p className="hub-client-empty">The client can accept or decline from the secure offer link. Linked leads become won automatically when the offer is accepted.</p>
             {offer.sharedAt && <p className="hub-offer-timestamp hub-offer-timestamp-shared">Shared {formatDate(offer.sharedAt)}</p>}
             {offer.viewedAt && <p className="hub-offer-timestamp hub-offer-timestamp-viewed">Viewed {formatDate(offer.viewedAt)}</p>}

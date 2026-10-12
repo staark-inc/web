@@ -230,7 +230,7 @@ export default async function HubSettingsPage({
       {activeTab === "email" && (
         <div className="hub-settings-v2-stack">
           <form action="/api/hub/settings" method="post">
-            <section className="hub-settings-card">
+            <section className="hub-settings-card sw-card sw-card-panel">
               <div className="hub-settings-heading">
                 <div className="hub-settings-icon"><Mail size={19} /></div>
                 <div><h2>Sender identity</h2><p>Default identity used for outgoing client communication.</p></div>
@@ -263,7 +263,7 @@ export default async function HubSettingsPage({
           </form>
 
           <div className="hub-settings-v2-two-column">
-            <section className="hub-settings-card">
+            <section className="hub-settings-card sw-card sw-card-panel">
               <div className="hub-settings-heading">
                 <div className="hub-settings-icon"><Server size={19} /></div>
                 <div><h2>Mail delivery</h2><p>Current outbound and inbound mail configuration.</p></div>
@@ -279,7 +279,7 @@ export default async function HubSettingsPage({
               </form>
             </section>
 
-            <section className="hub-settings-card">
+            <section className="hub-settings-card sw-card sw-card-panel">
               <div className="hub-settings-heading">
                 <div className="hub-settings-icon"><ShieldCheck size={19} /></div>
                 <div><h2>Domain authentication</h2><p>DNS checks that influence deliverability.</p></div>
@@ -348,7 +348,7 @@ export default async function HubSettingsPage({
           <section className="hub-settings-v2-integration-grid">
             <WordPressConnectorPanel sites={wordpressSites} clients={wordpressClients} />
 
-            <article className="hub-settings-v2-integration-card">
+            <article className="hub-settings-v2-integration-card sw-card sw-card-panel">
               <div className="hub-settings-v2-integration-card-head">
                 <span className="hub-settings-v2-integration-icon"><Mail size={19} /></span>
                 <div>
@@ -374,7 +374,7 @@ export default async function HubSettingsPage({
               </div>
             </article>
 
-            <article className="hub-settings-v2-integration-card">
+            <article className="hub-settings-v2-integration-card sw-card sw-card-panel">
               <div className="hub-settings-v2-integration-card-head">
                 <span className="hub-settings-v2-integration-icon"><BarChart3 size={19} /></span>
                 <div>
@@ -397,7 +397,7 @@ export default async function HubSettingsPage({
               </div>
             </article>
 
-            <article className="hub-settings-v2-integration-card">
+            <article className="hub-settings-v2-integration-card sw-card sw-card-panel">
               <div className="hub-settings-v2-integration-card-head">
                 <span className="hub-settings-v2-integration-icon"><Search size={19} /></span>
                 <div>
@@ -420,7 +420,7 @@ export default async function HubSettingsPage({
               </div>
             </article>
 
-            <article className="hub-settings-v2-integration-card">
+            <article className="hub-settings-v2-integration-card sw-card sw-card-panel">
               <div className="hub-settings-v2-integration-card-head">
                 <span className="hub-settings-v2-integration-icon"><GitMerge size={19} /></span>
                 <div>
@@ -438,7 +438,7 @@ export default async function HubSettingsPage({
               </div>
             </article>
 
-            <article className="hub-settings-v2-integration-card hub-settings-v2-integration-card-stripe">
+            <article className="hub-settings-v2-integration-card hub-settings-v2-integration-card-stripe sw-card sw-card-panel">
               <div className="hub-settings-v2-integration-card-head">
                 <span className="hub-settings-v2-integration-icon"><CreditCard size={19} /></span>
                 <div>

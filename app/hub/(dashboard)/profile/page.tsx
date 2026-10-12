@@ -188,7 +188,7 @@ export default async function HubProfilePage({
       ) : null}
 
       <div className="hub-profile-v2-grid">
-        <section className="hub-profile-v2-card">
+        <section className="hub-profile-v2-card sw-card sw-card-panel">
           <div className="hub-profile-v2-card-head">
             <div className="hub-profile-v2-card-icon">
               <UserRound size={18} />
@@ -256,7 +256,7 @@ export default async function HubProfilePage({
           </div>
         </section>
 
-        <section className="hub-profile-v2-card">
+        <section className="hub-profile-v2-card sw-card sw-card-panel">
           <div className="hub-profile-v2-card-head">
             <div className="hub-profile-v2-card-icon">
               <IdCard size={18} />
@@ -322,7 +322,7 @@ export default async function HubProfilePage({
           </div>
         </section>
 
-        <section className="hub-profile-v2-card hub-profile-v2-card-full">
+        <section className="hub-profile-v2-card hub-profile-v2-card-full sw-card sw-card-panel">
           <div className="hub-profile-v2-card-head hub-profile-v2-card-head-actions">
             <div className="hub-profile-v2-card-icon">
               <SlidersHorizontal size={18} />
@@ -458,7 +458,7 @@ export default async function HubProfilePage({
           </div>
         </section>
 
-        <section className="hub-profile-v2-card hub-profile-v2-card-full">
+        <section className="hub-profile-v2-card hub-profile-v2-card-full sw-card sw-card-panel">
           <div className="hub-profile-v2-card-head">
             <div className="hub-profile-v2-card-icon">
               <KeyRound size={18} />

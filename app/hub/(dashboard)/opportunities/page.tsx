@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
-import { WorkspacePage, PageHeader, Metrics, Metric, InfoChip } from "@/components/hub/workspace";
+import { WorkspacePage, PageHeader, Metrics, Metric, InfoChip, ExpandableCard } from "@/components/hub/workspace";
 import {
   rankOpportunity,
   readinessLabel,
@@ -237,7 +237,7 @@ export default async function OpportunitiesPage({ searchParams }: PageProps) {
             const rank = offset + index + 1;
 
             return (
-              <details key={opportunity.id} className="sw-opportunity-card">
+              <ExpandableCard key={opportunity.id} className="sw-opportunity-card">
                 <summary className="sw-opportunity-summary">
                   <span className="sw-opportunity-position">#{rank}</span>
                   <span className="sw-opportunity-identity">
@@ -297,7 +297,7 @@ export default async function OpportunitiesPage({ searchParams }: PageProps) {
                     <Link className="sw-opportunity-review-link" href={`/hub/prospects?q=${encodeURIComponent(opportunity.name)}`}>Review prospect <ArrowUpRight size={14}/></Link>
                   </aside>
                 </div>
-              </details>
+              </ExpandableCard>
             );
           })}
         </section>

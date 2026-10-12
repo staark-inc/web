@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
-import { ActionLink, WorkspacePage, PageHeader, Metrics, Metric } from "@/components/hub/workspace";
+import { ActionLink, WorkspacePage, PageHeader, Metrics, Metric, ExpandableCard } from "@/components/hub/workspace";
 
 export const dynamic = "force-dynamic";
 
@@ -138,7 +138,7 @@ export default async function ClientsPage() {
             const liveOfferCount = client.offers.filter(offer => offer.status === "SHARED" || offer.status === "VIEWED").length;
             const openSupportCount = client.supportRequests.filter(request => request.status !== "RESOLVED").length;
             return (
-              <details key={client.id} className="sw-client-account">
+              <ExpandableCard key={client.id} className="sw-client-account">
                 <summary>
                   <span className="sw-client-avatar">{getInitials(client.name) || <Building2 size={17}/>}</span>
                   <span className="sw-client-identity"><strong>{client.name}</strong><small>{email || "No billing email added"}</small></span>
@@ -161,7 +161,7 @@ export default async function ClientsPage() {
                     <Link className="sw-client-primary-action" href={`/hub/clients/${client.id}`}>Open client workspace <ArrowRight size={16}/></Link>
                   </div>
                 </div>
-              </details>
+              </ExpandableCard>
             );
           })}
         </section>

@@ -114,7 +114,7 @@ export default async function LeadPage({ params }: PageProps) {
       </section>
 
       <section className="hub-lead-v2-detail-grid">
-        <div className="hub-lead-v2-panel hub-lead-v2-message-panel">
+        <div className="hub-lead-v2-panel hub-lead-v2-message-panel sw-card sw-card-panel">
           <div className="hub-lead-v2-panel-head">
             <div><span>ENQUIRY</span><h2>Message</h2></div>
             <MessageSquareText size={17} />
@@ -122,7 +122,7 @@ export default async function LeadPage({ params }: PageProps) {
           <div className="hub-lead-v2-message-body">{lead.message || "No message was provided."}</div>
         </div>
 
-        <div className="hub-lead-v2-panel">
+        <div className="hub-lead-v2-panel sw-card sw-card-panel">
           <div className="hub-lead-v2-panel-head">
             <div><span>CONTACT</span><h2>Customer</h2></div>
           </div>
@@ -151,7 +151,7 @@ export default async function LeadPage({ params }: PageProps) {
           </div>
         </div>
 
-        <div className="hub-lead-v2-panel">
+        <div className="hub-lead-v2-panel sw-card sw-card-panel">
           <div className="hub-lead-v2-panel-head">
             <div><span>PIPELINE</span><h2>Next action</h2></div>
           </div>

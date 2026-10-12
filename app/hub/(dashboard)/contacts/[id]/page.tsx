@@ -171,7 +171,7 @@ export default async function ContactDetailPage({ params, searchParams }: PagePr
       </section>
 
       <div className="hub-contact-v2-grid">
-        <section className="hub-contact-v2-panel">
+        <section className="hub-contact-v2-panel sw-card sw-card-panel">
           <div className="hub-contact-v2-panel-head">
             <div><span>PROFILE</span><h2>Contact information</h2></div>
             <UserRound size={16} />
@@ -224,7 +224,7 @@ export default async function ContactDetailPage({ params, searchParams }: PagePr
           ) : null}
         </section>
 
-        <section className="hub-contact-v2-panel">
+        <section className="hub-contact-v2-panel sw-card sw-card-panel">
           <div className="hub-contact-v2-panel-head">
             <div><span>PIPELINE</span><h2>Lead history</h2></div>
             <strong>{contact.leads.length}</strong>
@@ -249,7 +249,7 @@ export default async function ContactDetailPage({ params, searchParams }: PagePr
         </section>
       </div>
 
-      <section className="hub-contact-v2-panel hub-contact-v2-messages-panel">
+      <section className="hub-contact-v2-panel hub-contact-v2-messages-panel sw-card sw-card-panel">
         <div className="hub-contact-v2-panel-head">
           <div><span>COMMUNICATION</span><h2>Message history</h2></div>
           <strong>{messages.length}</strong>

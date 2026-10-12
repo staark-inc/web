@@ -253,7 +253,7 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
 
             <ProjectMaterials projectId={project.id} materials={project.materials} />
 
-            <div className="hub-client-panel">
+            <div className="hub-client-panel sw-card sw-card-panel">
               <h2>
                 <MessageSquare size={16} />
                 Conversation
@@ -289,7 +289,7 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
       )}
 
       {activeTab === "billing" && (
-        <section className="hub-client-panel">
+        <section className="hub-client-panel sw-card sw-card-panel">
           <h2>Billing &amp; support</h2>
           <p className="hub-client-empty">
             Billing agreements will appear here once recorded. Support requests for this project are listed below.
@@ -321,7 +321,7 @@ export default async function ProjectDetailPage({ params, searchParams }: PagePr
       )}
 
       {activeTab === "overview" && (
-        <section className="hub-client-panel hub-project-settings">
+        <section className="hub-client-panel hub-project-settings sw-card sw-card-panel">
           <details className="hub-project-settings-disclosure">
             <summary>
               <span>

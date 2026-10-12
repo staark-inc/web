@@ -15,7 +15,7 @@ import {
 
 import { prisma } from "@/lib/prisma";
 import type { ProjectStatus } from "@/generated/prisma/client";
-import { ActionLink, WorkspacePage, PageHeader, Metrics, Metric, StatusBadge } from "@/components/hub/workspace";
+import { ActionLink, WorkspacePage, PageHeader, Metrics, Metric, StatusBadge, BoardCard } from "@/components/hub/workspace";
 
 export const dynamic = "force-dynamic";
 
@@ -248,7 +248,7 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
                 : "Not deployed";
 
             return (
-              <article key={project.id} className="sw-board-card">
+              <BoardCard key={project.id} className="sw-board-card">
                 <header className="sw-board-card-head">
                   <span className="sw-board-icon"><FolderKanban size={19}/></span>
                   <span className="sw-board-title">
@@ -287,7 +287,7 @@ export default async function ProjectsPage({ searchParams }: PageProps) {
                     Open project <ArrowRight size={15}/>
                   </Link>
                 </footer>
-              </article>
+              </BoardCard>
             );
           })}
         </section>

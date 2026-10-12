@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
-import { WorkspacePage, PageHeader, Metrics, Metric, InfoChip } from "@/components/hub/workspace";
+import { WorkspacePage, PageHeader, Metrics, Metric, InfoChip, ExpandableCard } from "@/components/hub/workspace";
 
 export const dynamic = "force-dynamic";
 
@@ -143,7 +143,7 @@ export default async function ContactsPage({ searchParams }: PageProps) {
           {filteredContacts.map((contact) => {
             const fallback = contact.email || contact.phone || contact.facebook || contact.company;
             return (
-              <details key={contact.id} className="sw-contact-entry">
+              <ExpandableCard key={contact.id} className="sw-contact-entry">
                 <summary>
                   <span className="sw-contact-avatar">{getInitials(contact.name, fallback)}</span>
                   <span className="sw-contact-person">
@@ -174,7 +174,7 @@ export default async function ContactsPage({ searchParams }: PageProps) {
                     <Link className="sw-contact-primary" href={`/hub/contacts/${contact.id}`}>View contact record <ArrowRight size={15}/></Link>
                   </div>
                 </div>
-              </details>
+              </ExpandableCard>
             );
           })}
         </section>

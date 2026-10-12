@@ -1,3 +1,4 @@
+import { BoardCard } from "@/components/hub/workspace";
 import Link from "next/link";
 import {
   Activity,
@@ -140,7 +141,7 @@ export default async function SaaSOverviewPage() {
         {workspaces.map((workspace) => {
           const Icon = workspace.icon;
           return (
-            <article key={workspace.href} className="sw-saas-workspace-card">
+            <BoardCard key={workspace.href} className="sw-saas-workspace-card">
               <div className="sw-saas-card-top">
                 <span className="sw-saas-card-icon"><Icon size={20}/></span>
                 <span className="sw-saas-card-value">{workspace.value}</span>
@@ -153,7 +154,7 @@ export default async function SaaSOverviewPage() {
                 <span>{workspace.meta}</span>
                 <Link href={workspace.href} aria-label={`Open ${workspace.title}`}>Open <ArrowRight size={15}/></Link>
               </footer>
-            </article>
+            </BoardCard>
           );
         })}
       </section>

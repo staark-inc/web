@@ -1,7 +1,7 @@
 import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
 import Link from "next/link";
 import { CircleDollarSign, Target, Trophy, UserRoundSearch, MessageCircle, Mail, ArrowRight, ChevronRight, CalendarDays } from "lucide-react";
-import { WorkspacePage, PageHeader, Metrics, Metric, StatusBadge, EmptyState, SectionHeader } from "@/components/hub/workspace";
+import { WorkspacePage, PageHeader, Metrics, Metric, StatusBadge, EmptyState, SectionHeader, ExpandableCard } from "@/components/hub/workspace";
 
 import { prisma } from "@/lib/prisma";
 import { formatAmount } from "@/lib/format";
@@ -153,7 +153,7 @@ export default async function LeadsPage({ searchParams }: PageProps) {
                 const initials = getInitials(lead.contact.name, fallback);
                 const label = contactLabel(lead);
                 return (
-                  <details key={lead.id} role="listitem" className="sw-lead-card">
+                  <ExpandableCard key={lead.id} role="listitem" className="sw-lead-card">
                     <summary>
                       <span className="sw-lead-avatar" aria-hidden="true">{initials}</span>
                       <span className="sw-lead-person">
@@ -185,7 +185,7 @@ export default async function LeadsPage({ searchParams }: PageProps) {
                         <Link className="sw-lead-open" href={`/hub/leads/${lead.id}`}>Open lead &amp; update status <ArrowRight size={15}/></Link>
                       </div>
                     </div>
-                  </details>
+                  </ExpandableCard>
                 );
               })}
             </div>

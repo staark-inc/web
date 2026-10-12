@@ -1128,3 +1128,37 @@
   outline: 2px solid var(--sw-accent);
   outline-offset: 3px;
 }
+
+/* STAARK HUB — Foundation 07 shared card contract */
+/* All Hub cards share a single outline/radius/focus language, while
+ * existing layouts control their inner grid, spacing and actions. */
+.hub-dashboard .sw-card {
+  min-width: 0;
+  border: 1px solid var(--sw-line);
+  border-radius: var(--sw-radius);
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+.hub-dashboard .sw-card-board,
+.hub-dashboard .sw-card-expandable,
+.hub-dashboard .sw-card-panel,
+.hub-dashboard .sw-card-record,
+.hub-dashboard .sw-card-metric {
+  background-color: var(--sw-surface);
+}
+.hub-dashboard .sw-card-expandable[open] {
+  border-color: #b8c9ea;
+  box-shadow: 0 6px 20px rgba(25, 42, 76, 0.045);
+}
+.hub-dashboard .sw-card-expandable > summary:focus-visible {
+  outline: 2px solid var(--sw-accent);
+  outline-offset: -3px;
+  border-radius: 8px;
+}
+.hub-dashboard .sw-card-board:focus-within,
+.hub-dashboard .sw-card-record:focus-within,
+.hub-dashboard .sw-card-panel:focus-within {
+  border-color: #b8c9ea;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hub-dashboard .sw-card { transition: none; }
+}

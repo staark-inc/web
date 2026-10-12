@@ -18,7 +18,7 @@ import {
 import { prisma } from "@/lib/prisma";
 import type { Prisma } from "@/generated/prisma/client";
 import ProspectImportButton from "./ProspectImportButton";
-import { PageHeader, Metrics, Metric, WorkspacePage, InfoChip } from "@/components/hub/workspace";
+import { PageHeader, Metrics, Metric, WorkspacePage, InfoChip, ExpandableCard } from "@/components/hub/workspace";
 import ProspectTop10 from "./ProspectTop10";
 import {
   ProspectFilterBar,
@@ -205,7 +205,7 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
             ].filter((channel): channel is { value: string; label: string } => Boolean(channel));
 
             return (
-              <details key={prospect.id} className="hub-prospect-row sw-prospect-card">
+              <ExpandableCard key={prospect.id} className="hub-prospect-row sw-prospect-card">
                 <summary className="sw-prospect-summary">
                   <div className="sw-prospect-main">
                     <span className="sw-prospect-logo" aria-hidden="true">{prospect.name.slice(0, 2).toUpperCase()}</span>
@@ -316,7 +316,7 @@ export default async function ProspectsPage({ searchParams }: PageProps) {
                     </div>
                   </aside>
                 </div>
-              </details>
+              </ExpandableCard>
             );
           })}
         </section>

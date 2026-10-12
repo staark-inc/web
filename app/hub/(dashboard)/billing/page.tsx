@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { WorkspacePage, PageHeader, Metrics, Metric, ActionLink } from "@/components/hub/workspace";
+import { WorkspacePage, PageHeader, Metrics, Metric, ActionLink, BoardCard } from "@/components/hub/workspace";
 import {
   ArrowRight,
   CalendarClock,
@@ -109,7 +109,7 @@ export default async function BillingPage() {
       ) : (
         <section className="hub-billing-v2-list" aria-label="Accepted billing contracts">
           {acceptedOffers.map((offer) => (
-            <article key={offer.id} className="hub-billing-v2-row">
+            <BoardCard key={offer.id} className="hub-billing-v2-row">
               <div className="hub-billing-v2-main">
                 <span className="hub-billing-v2-icon">
                   <CreditCard size={16} />
@@ -168,7 +168,7 @@ export default async function BillingPage() {
                   <ArrowRight size={13} />
                 </Link>
               </div>
-            </article>
+            </BoardCard>
           ))}
         </section>
       )}

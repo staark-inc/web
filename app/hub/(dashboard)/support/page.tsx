@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
-import { StatusBadge, WorkspacePage, PageHeader, Metrics, Metric, ActionLink } from "@/components/hub/workspace";
+import { StatusBadge, WorkspacePage, PageHeader, Metrics, Metric, ActionLink, BoardCard } from "@/components/hub/workspace";
 import {
   AlertTriangle,
   ArrowRight,
@@ -154,7 +154,7 @@ export default async function SupportPage({
               "Unmatched requester";
 
             return (
-              <article key={request.id} className="hub-support-v2-row">
+              <BoardCard key={request.id} className="hub-support-v2-row">
                 <div className="hub-support-v2-main">
                   <span className="hub-support-v2-icon">
                     <LifeBuoy size={16} />
@@ -207,7 +207,7 @@ export default async function SupportPage({
                     <ArrowRight size={13} />
                   </Link>
                 </div>
-              </article>
+              </BoardCard>
             );
           })}
         </section>

@@ -41,7 +41,7 @@ export function Metric({
   label: string; value: ReactNode; description?: string; icon?: ReactNode;
 }) {
   return (
-    <div className="sw-metric">
+    <div className="sw-metric sw-card sw-card-metric">
       {icon && <span className="sw-metric-icon" aria-hidden="true">{icon}</span>}
       <div className="sw-metric-body">
         <span className="sw-metric-label">{label}</span>
@@ -60,7 +60,7 @@ export function Panel({
   return (
     <section
       {...props}
-      className={["sw-panel", className].filter(Boolean).join(" ")}
+      className={["sw-panel", "sw-card", "sw-card-panel", className].filter(Boolean).join(" ")}
     >
       {children}
     </section>
@@ -102,7 +102,7 @@ export function RecordRow({
   href: string; initials: string; name: string; subtitle?: ReactNode;
   details?: ReactNode; meta?: ReactNode;
 }) {
-  return <article className="sw-record">
+  return <article className="sw-record sw-card sw-card-record">
     <div className="sw-record-person">
       <span className="sw-avatar" aria-hidden="true">{initials || "—"}</span>
       <div className="sw-record-identity">
@@ -134,4 +134,15 @@ export function EmptyState({ title, description, action }: {
   return <div className="sw-empty">
     <h2>{title}</h2><p>{description}</p>{action}
   </div>;
+}
+
+/** Unified card surfaces for Hub list/grid pages. Keep page-specific classes
+ * for layout; this contract owns only the outer surface and focus treatment. */
+export function BoardCard({ className, children, ...props }: ComponentPropsWithoutRef<"article">) {
+  return <article {...props} className={["sw-card", "sw-card-board", className].filter(Boolean).join(" ")}>{children}</article>;
+}
+
+/** Native details/summary behavior is preserved (keyboard, open state, forms). */
+export function ExpandableCard({ className, children, ...props }: ComponentPropsWithoutRef<"details">) {
+  return <details {...props} className={["sw-card", "sw-card-expandable", className].filter(Boolean).join(" ")}>{children}</details>;
 }

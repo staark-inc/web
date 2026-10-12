@@ -1,5 +1,5 @@
 import { WorkspaceTabs } from "@/components/hub/WorkspaceTabs";
-import { StatusBadge, WorkspacePage, PageHeader, Metrics, Metric, ActionLink } from "@/components/hub/workspace";
+import { StatusBadge, WorkspacePage, PageHeader, Metrics, Metric, ActionLink, BoardCard } from "@/components/hub/workspace";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -139,7 +139,7 @@ export default async function OffersPage({
                   : `Created ${formatDate(offer.createdAt)}`;
 
             return (
-              <article key={offer.id} className="sw-offer-board-card">
+              <BoardCard key={offer.id} className="sw-offer-board-card">
                 <header className="sw-offer-board-header">
                   <span className="sw-offer-board-icon"><FileText size={18}/></span>
                   <div className="sw-offer-board-title">
@@ -177,7 +177,7 @@ export default async function OffersPage({
                   <time dateTime={offer.updatedAt.toISOString()}>Updated {formatDate(offer.updatedAt)}</time>
                   <Link href={`/hub/offers/${offer.id}`}>Open offer <ArrowRight size={15}/></Link>
                 </footer>
-              </article>
+              </BoardCard>
             );
           })}
         </section>
