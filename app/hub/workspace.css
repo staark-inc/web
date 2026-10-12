@@ -171,13 +171,6 @@
   .hub-content :is(.hub-settings-field input, .hub-settings-field select, .hub-settings-field textarea) { font-size: 16px; }
 }
 
-/* Overview uses its own hero instead of the standard page header. */
-.hub-command-copy h1 { font-size: clamp(29px, 3vw, 38px); line-height: 1.15; letter-spacing: -.04em; }
-.hub-command-summary { font-size: 13px; line-height: 1.6; }
-.hub-command-date { font-size: 12px; }
-.hub-command-action { min-height: 40px; padding: 10px 14px; font-size: 12px; border-radius: 10px; }
-.hub-command-action-primary { background: #315cf5; border-color: #315cf5; color: #fff; }
-
 /* Project summaries remain readable alongside the larger workspace controls. */
 .hub-projects-v2-item { border-color: #dfe5ee; box-shadow: 0 3px 12px #1f355006; }
 .hub-projects-v2-name-line { flex-wrap: wrap; }
