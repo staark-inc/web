@@ -11,6 +11,7 @@ import {
 } from "@/lib/saas/runtime-provisioning";
 import {
   fallbackPlatformHostname,
+  platformDomain,
   normalizeCustomHostname,
   normalizeDomainMode,
   normalizePlatformSubdomain,
@@ -114,7 +115,7 @@ export async function POST(
       domainMode === "platform"
         ? `${normalizePlatformSubdomain(
             body.subdomain,
-          )}.staark.app`
+          )}.${platformDomain()}`
         : fallbackPlatformHostname(
             claim.provisioningId,
           );

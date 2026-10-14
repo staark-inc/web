@@ -166,6 +166,8 @@ export async function provisionNextSite(
   }
 
   const payload = {
+    runtimeKind: "saas" as const,
+
     hubSubscriptionId:
       subscription.id,
 
