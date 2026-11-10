@@ -24,7 +24,10 @@ jobs:
           cache: npm
       - name: Enforce Hub design contract
         run: node scripts/check-hub-theme-contract.mjs
+      - name: Enforce Hub UI foundation contract
+        run: npm run check:hub-ui-contract
       - run: npm ci
+      - run: npm run test:hub-ui
       - run: npm run test:security-seo
       - run: npm run test:news
       - run: npm run test:public-website
@@ -56,3 +59,5 @@ jobs:
           CHECK_ERROR_FIXTURE=1 npm run check:public-browser
           npm run check:google-ads-browser
           npm run check:hub-browser
+          npm run check:hub-ui-browser
+          npm run check:hub-visual

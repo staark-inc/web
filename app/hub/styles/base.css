@@ -1,0 +1,56 @@
+/*
+ * Staark Hub Design System 2.0 - scoped base layer.
+ *
+ * This layer intentionally targets [data-sw-ui]. Legacy Hub pages do not carry
+ * that marker, so importing this file cannot change their layout, typography or
+ * focus behavior. New primitives add the marker at their root.
+ */
+@layer sw-base {
+  [data-sw-ui] {
+    box-sizing: border-box;
+    color: var(--sw-ink);
+    font-family: var(--sw-font-sans);
+    font-size: var(--sw-text-base);
+    line-height: var(--sw-line-normal);
+  }
+
+  [data-sw-ui] *,
+  [data-sw-ui] *::before,
+  [data-sw-ui] *::after {
+    box-sizing: border-box;
+  }
+
+  [data-sw-ui] :where(h1, h2, h3, h4, p, figure, blockquote, dl, dd) {
+    margin: 0;
+  }
+
+  [data-sw-ui] :where(button, input, select, textarea) {
+    color: inherit;
+    font: inherit;
+  }
+
+  [data-sw-ui] :where(a) {
+    color: inherit;
+  }
+
+  [data-sw-ui] :where(img, svg, video, canvas) {
+    display: block;
+    max-width: 100%;
+  }
+
+  [data-sw-ui] :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: var(--sw-focus-width) solid var(--sw-focus-color);
+    outline-offset: var(--sw-focus-offset);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-sw-ui] *,
+    [data-sw-ui] *::before,
+    [data-sw-ui] *::after {
+      animation-duration: 0.01ms;
+      animation-iteration-count: 1;
+      scroll-behavior: auto;
+      transition-duration: 0.01ms;
+    }
+  }
+}

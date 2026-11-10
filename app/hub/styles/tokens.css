@@ -1,0 +1,124 @@
+/*
+ * Staark Hub Design System 2.0 - canonical tokens.
+ *
+ * These values preserve the current Hub identity: light canvas, white
+ * surfaces, navy navigation and a restrained blue accent. Legacy pages keep
+ * their existing CSS until their template migration; new primitives read from
+ * this file only.
+ *
+ * Do not add page-specific values here. If a value is needed by one workspace,
+ * it belongs in that workspace's CSS Module.
+ */
+.hub-dashboard,
+.hub-login-page,
+[data-sw-ui] {
+  color-scheme: light;
+
+  /* Typography */
+  --sw-font-sans: var(--font-geist-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --sw-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --sw-weight-regular: 400;
+  --sw-weight-medium: 500;
+  --sw-weight-semibold: 600;
+  --sw-weight-bold: 700;
+  --sw-weight-heavy: 750;
+
+  --sw-text-xs: 12px;
+  --sw-text-sm: 13px;
+  --sw-text-base: 14px;
+  --sw-text-md: 16px;
+  --sw-text-lg: 18px;
+  --sw-text-xl: 20px;
+  --sw-text-2xl: 24px;
+  --sw-text-3xl: 30px;
+  --sw-text-4xl: 36px;
+
+  --sw-line-tight: 1.25;
+  --sw-line-snug: 1.4;
+  --sw-line-normal: 1.5;
+  --sw-line-relaxed: 1.6;
+
+  /* Color */
+  --sw-bg: #f6f8fb;
+  --sw-surface: #ffffff;
+  --sw-surface-muted: #f9fbff;
+  --sw-surface-subtle: #f2f5fa;
+  --sw-ink: #172238;
+  --sw-body: #344258;
+  --sw-muted: #62718a;
+  --sw-line: #dfe6f0;
+  --sw-line-strong: #b8c9ea;
+  --sw-accent: #315cf5;
+  --sw-accent-hover: #244bd1;
+  --sw-accent-soft: #edf3ff;
+  --sw-on-accent: #ffffff;
+
+  --sw-success: #19734a;
+  --sw-success-soft: #eaf8f0;
+  --sw-info: #2454b1;
+  --sw-info-soft: #edf3ff;
+  --sw-warning: #946000;
+  --sw-warning-soft: #fff6df;
+  --sw-danger: #a13232;
+  --sw-danger-hover: #892929;
+  --sw-danger-soft: #fff0f0;
+
+  --sw-sidebar-bg: #101827;
+  --sw-sidebar-text: #ffffff;
+  --sw-sidebar-muted: #92969e;
+  --sw-sidebar-active: #1e2a40;
+  --sw-sidebar-line: rgba(255, 255, 255, 0.08);
+
+  /* Focus */
+  --sw-focus-color: #315cf5;
+  --sw-focus-ring: 0 0 0 3px rgba(49, 92, 245, 0.24);
+  --sw-focus-width: 2px;
+  --sw-focus-offset: 2px;
+
+  /* Space */
+  --sw-space-1: 4px;
+  --sw-space-2: 8px;
+  --sw-space-3: 12px;
+  --sw-space-4: 16px;
+  --sw-space-5: 20px;
+  --sw-space-6: 24px;
+  --sw-space-7: 28px;
+  --sw-space-8: 32px;
+  --sw-space-10: 40px;
+  --sw-space-12: 48px;
+
+  /* Radius */
+  --sw-radius-sm: 8px;
+  --sw-radius-md: 10px;
+  --sw-radius: 14px;
+  --sw-radius-lg: 14px;
+  --sw-radius-xl: 16px;
+  --sw-radius-full: 999px;
+
+  /* Elevation */
+  --sw-shadow-subtle: 0 2px 8px rgba(20, 40, 76, 0.025);
+  --sw-shadow-raised: 0 6px 20px rgba(25, 42, 76, 0.045);
+
+  /* Layout */
+  --sw-sidebar-width: 260px;
+  --sw-sidebar-compact-width: 76px;
+  --sw-topbar-height: 72px;
+  --sw-topbar-height-mobile: 62px;
+  --sw-content-narrow: 720px;
+  --sw-content-default: 960px;
+  --sw-content-wide: 1180px;
+  --sw-control-height: 40px;
+  --sw-touch-target: 44px;
+
+  /* Motion */
+  --sw-duration-fast: 120ms;
+  --sw-duration-normal: 160ms;
+  --sw-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  /* Breakpoints are documentation tokens. Media queries use the same values
+     because CSS custom properties cannot be evaluated in media conditions. */
+  --sw-breakpoint-sm: 480px;
+  --sw-breakpoint-md: 768px;
+  --sw-breakpoint-lg: 1024px;
+  --sw-breakpoint-xl: 1280px;
+}

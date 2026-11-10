@@ -1,0 +1,102 @@
+.button {
+  --sw-button-bg: var(--sw-accent);
+  --sw-button-bg-hover: var(--sw-accent-hover);
+  --sw-button-border: transparent;
+  --sw-button-fg: var(--sw-on-accent);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sw-space-2);
+  min-height: var(--sw-control-height);
+  padding: 0 var(--sw-space-4);
+  border: 1px solid var(--sw-button-border);
+  border-radius: var(--sw-radius-md);
+  background: var(--sw-button-bg);
+  color: var(--sw-button-fg);
+  font-family: var(--sw-font-sans);
+  font-size: var(--sw-text-sm);
+  font-weight: var(--sw-weight-semibold);
+  line-height: var(--sw-line-tight);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--sw-duration-fast) var(--sw-easing-standard),
+    border-color var(--sw-duration-fast) var(--sw-easing-standard),
+    color var(--sw-duration-fast) var(--sw-easing-standard);
+}
+
+.button:hover:not(:disabled) {
+  background: var(--sw-button-bg-hover);
+  border-color: var(--sw-button-border-hover, var(--sw-button-border));
+}
+
+.button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.button:focus-visible {
+  outline: var(--sw-focus-width) solid var(--sw-focus-color);
+  outline-offset: var(--sw-focus-offset);
+  box-shadow: var(--sw-focus-ring);
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.primary {
+  --sw-button-bg: var(--sw-accent);
+  --sw-button-bg-hover: var(--sw-accent-hover);
+}
+
+.secondary {
+  --sw-button-bg: var(--sw-surface);
+  --sw-button-bg-hover: var(--sw-bg);
+  --sw-button-border: var(--sw-line);
+  --sw-button-border-hover: var(--sw-line-strong);
+  --sw-button-fg: var(--sw-ink);
+}
+
+.ghost {
+  --sw-button-bg: transparent;
+  --sw-button-bg-hover: var(--sw-accent-soft);
+  --sw-button-fg: var(--sw-accent);
+}
+
+.danger {
+  --sw-button-bg: var(--sw-danger);
+  --sw-button-bg-hover: var(--sw-danger-hover);
+  --sw-button-fg: #ffffff;
+}
+
+.md {
+  min-height: var(--sw-control-height);
+  padding-inline: var(--sw-space-4);
+  font-size: var(--sw-text-sm);
+}
+
+.sm {
+  min-height: 34px;
+  padding-inline: var(--sw-space-3);
+  font-size: var(--sw-text-xs);
+}
+
+.block {
+  width: 100%;
+}
+
+@media (pointer: coarse) {
+  .button {
+    min-height: var(--sw-touch-target);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+}
