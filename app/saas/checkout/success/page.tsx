@@ -37,7 +37,7 @@ export default async function SaaSCheckoutSuccessPage({
 
               <small>
                 Checkout reference:{" "}
-                {sessionId}
+                …{sessionId.slice(-8)}
               </small>
             </>
           ) : (

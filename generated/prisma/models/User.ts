@@ -20,8 +20,18 @@ export type UserModel = runtime.Types.Result.DefaultSelection<Prisma.$UserPayloa
 
 export type AggregateUser = {
   _count: UserCountAggregateOutputType | null
+  _avg: UserAvgAggregateOutputType | null
+  _sum: UserSumAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
+}
+
+export type UserAvgAggregateOutputType = {
+  sessionVersion: number | null
+}
+
+export type UserSumAggregateOutputType = {
+  sessionVersion: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -30,6 +40,8 @@ export type UserMinAggregateOutputType = {
   email: string | null
   passwordHash: string | null
   role: $Enums.UserRole | null
+  sessionVersion: number | null
+  disabledAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -40,6 +52,8 @@ export type UserMaxAggregateOutputType = {
   email: string | null
   passwordHash: string | null
   role: $Enums.UserRole | null
+  sessionVersion: number | null
+  disabledAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -50,6 +64,8 @@ export type UserCountAggregateOutputType = {
   email: number
   passwordHash: number
   role: number
+  sessionVersion: number
+  disabledAt: number
   notificationPreferences: number
   createdAt: number
   updatedAt: number
@@ -57,12 +73,22 @@ export type UserCountAggregateOutputType = {
 }
 
 
+export type UserAvgAggregateInputType = {
+  sessionVersion?: true
+}
+
+export type UserSumAggregateInputType = {
+  sessionVersion?: true
+}
+
 export type UserMinAggregateInputType = {
   id?: true
   name?: true
   email?: true
   passwordHash?: true
   role?: true
+  sessionVersion?: true
+  disabledAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -73,6 +99,8 @@ export type UserMaxAggregateInputType = {
   email?: true
   passwordHash?: true
   role?: true
+  sessionVersion?: true
+  disabledAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -83,6 +111,8 @@ export type UserCountAggregateInputType = {
   email?: true
   passwordHash?: true
   role?: true
+  sessionVersion?: true
+  disabledAt?: true
   notificationPreferences?: true
   createdAt?: true
   updatedAt?: true
@@ -127,6 +157,18 @@ export type UserAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: UserAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: UserSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: UserMinAggregateInputType
@@ -157,6 +199,8 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   _count?: UserCountAggregateInputType | true
+  _avg?: UserAvgAggregateInputType
+  _sum?: UserSumAggregateInputType
   _min?: UserMinAggregateInputType
   _max?: UserMaxAggregateInputType
 }
@@ -167,10 +211,14 @@ export type UserGroupByOutputType = {
   email: string
   passwordHash: string
   role: $Enums.UserRole
+  sessionVersion: number
+  disabledAt: Date | null
   notificationPreferences: runtime.JsonValue | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
+  _avg: UserAvgAggregateOutputType | null
+  _sum: UserSumAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
 }
@@ -199,6 +247,8 @@ export type UserWhereInput = {
   email?: Prisma.StringFilter<"User"> | string
   passwordHash?: Prisma.StringFilter<"User"> | string
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
+  sessionVersion?: Prisma.IntFilter<"User"> | number
+  disabledAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   notificationPreferences?: Prisma.JsonNullableFilter<"User">
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
@@ -211,6 +261,8 @@ export type UserOrderByWithRelationInput = {
   email?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  sessionVersion?: Prisma.SortOrder
+  disabledAt?: Prisma.SortOrderInput | Prisma.SortOrder
   notificationPreferences?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -226,6 +278,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"User"> | string
   passwordHash?: Prisma.StringFilter<"User"> | string
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
+  sessionVersion?: Prisma.IntFilter<"User"> | number
+  disabledAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   notificationPreferences?: Prisma.JsonNullableFilter<"User">
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
@@ -238,12 +292,16 @@ export type UserOrderByWithAggregationInput = {
   email?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  sessionVersion?: Prisma.SortOrder
+  disabledAt?: Prisma.SortOrderInput | Prisma.SortOrder
   notificationPreferences?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
+  _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
+  _sum?: Prisma.UserSumOrderByAggregateInput
 }
 
 export type UserScalarWhereWithAggregatesInput = {
@@ -255,6 +313,8 @@ export type UserScalarWhereWithAggregatesInput = {
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
   passwordHash?: Prisma.StringWithAggregatesFilter<"User"> | string
   role?: Prisma.EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
+  sessionVersion?: Prisma.IntWithAggregatesFilter<"User"> | number
+  disabledAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   notificationPreferences?: Prisma.JsonNullableWithAggregatesFilter<"User">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -266,6 +326,8 @@ export type UserCreateInput = {
   email: string
   passwordHash: string
   role?: $Enums.UserRole
+  sessionVersion?: number
+  disabledAt?: Date | string | null
   notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -278,6 +340,8 @@ export type UserUncheckedCreateInput = {
   email: string
   passwordHash: string
   role?: $Enums.UserRole
+  sessionVersion?: number
+  disabledAt?: Date | string | null
   notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -290,6 +354,8 @@ export type UserUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -302,6 +368,8 @@ export type UserUncheckedUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -314,6 +382,8 @@ export type UserCreateManyInput = {
   email: string
   passwordHash: string
   role?: $Enums.UserRole
+  sessionVersion?: number
+  disabledAt?: Date | string | null
   notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -325,6 +395,8 @@ export type UserUpdateManyMutationInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -336,6 +408,8 @@ export type UserUncheckedUpdateManyInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -347,9 +421,15 @@ export type UserCountOrderByAggregateInput = {
   email?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  sessionVersion?: Prisma.SortOrder
+  disabledAt?: Prisma.SortOrder
   notificationPreferences?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type UserAvgOrderByAggregateInput = {
+  sessionVersion?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -358,6 +438,8 @@ export type UserMaxOrderByAggregateInput = {
   email?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  sessionVersion?: Prisma.SortOrder
+  disabledAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -368,8 +450,14 @@ export type UserMinOrderByAggregateInput = {
   email?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  sessionVersion?: Prisma.SortOrder
+  disabledAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type UserSumOrderByAggregateInput = {
+  sessionVersion?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
@@ -383,6 +471,18 @@ export type StringFieldUpdateOperationsInput = {
 
 export type EnumUserRoleFieldUpdateOperationsInput = {
   set?: $Enums.UserRole
+}
+
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -409,6 +509,8 @@ export type UserCreateWithoutNotificationsInput = {
   email: string
   passwordHash: string
   role?: $Enums.UserRole
+  sessionVersion?: number
+  disabledAt?: Date | string | null
   notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -420,6 +522,8 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   email: string
   passwordHash: string
   role?: $Enums.UserRole
+  sessionVersion?: number
+  disabledAt?: Date | string | null
   notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -447,6 +551,8 @@ export type UserUpdateWithoutNotificationsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -458,6 +564,8 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -500,6 +608,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   email?: boolean
   passwordHash?: boolean
   role?: boolean
+  sessionVersion?: boolean
+  disabledAt?: boolean
   notificationPreferences?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -513,6 +623,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   email?: boolean
   passwordHash?: boolean
   role?: boolean
+  sessionVersion?: boolean
+  disabledAt?: boolean
   notificationPreferences?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -524,6 +636,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   email?: boolean
   passwordHash?: boolean
   role?: boolean
+  sessionVersion?: boolean
+  disabledAt?: boolean
   notificationPreferences?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -535,12 +649,14 @@ export type UserSelectScalar = {
   email?: boolean
   passwordHash?: boolean
   role?: boolean
+  sessionVersion?: boolean
+  disabledAt?: boolean
   notificationPreferences?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "passwordHash" | "role" | "notificationPreferences" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "passwordHash" | "role" | "sessionVersion" | "disabledAt" | "notificationPreferences" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -559,6 +675,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     email: string
     passwordHash: string
     role: $Enums.UserRole
+    sessionVersion: number
+    disabledAt: Date | null
     notificationPreferences: runtime.JsonValue | null
     createdAt: Date
     updatedAt: Date
@@ -991,6 +1109,8 @@ export interface UserFieldRefs {
   readonly email: Prisma.FieldRef<"User", 'String'>
   readonly passwordHash: Prisma.FieldRef<"User", 'String'>
   readonly role: Prisma.FieldRef<"User", 'UserRole'>
+  readonly sessionVersion: Prisma.FieldRef<"User", 'Int'>
+  readonly disabledAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly notificationPreferences: Prisma.FieldRef<"User", 'Json'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>

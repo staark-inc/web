@@ -2,9 +2,18 @@ import { NextRequest } from "next/server";
 
 import bcrypt from "bcryptjs";
 
+import {
+  updateUserIdentity,
+  updateUserPassword,
+} from "@/lib/account-security";
 import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { redirectTo } from "@/lib/redirect";
+import {
+  SESSION_COOKIE,
+  createSessionToken,
+  sessionCookieOptions,
+} from "@/lib/session";
 
 const SIDEBAR_OPTIONS = new Set(["standard", "compact"]);
 const COUNT_OPTIONS = new Set(["show", "hide"]);
@@ -22,6 +31,31 @@ function redirectToProfile(
     `/hub/profile?${params}`,
     request
   );
+}
+
+async function rotateCurrentSession(
+  response: ReturnType<typeof redirectToProfile>,
+  account: {
+    id: string;
+    email: string;
+    role: "ADMIN";
+    sessionVersion: number;
+  }
+) {
+  const token = await createSessionToken({
+    userId: account.id,
+    email: account.email,
+    role: "ADMIN",
+    sessionVersion: account.sessionVersion,
+  });
+
+  response.cookies.set({
+    name: SESSION_COOKIE,
+    value: token,
+    ...sessionCookieOptions(),
+  });
+
+  return response;
 }
 
 export async function POST(
@@ -100,21 +134,31 @@ export async function POST(
     }
 
     try {
-      await prisma.user.update({
-        where: {
-          id: user.id,
-        },
+      const invalidateSessions =
+        email !== user.email.toLowerCase();
 
-        data: {
+      const updated = await updateUserIdentity(
+        user.id,
+        {
           name,
           email,
         },
-      });
+        {
+          invalidateSessions,
+        }
+      );
 
-      return redirectToProfile(
+      const response = redirectToProfile(
         request,
         "updated=1"
       );
+
+      return invalidateSessions
+        ? rotateCurrentSession(
+            response,
+            updated
+          )
+        : response;
     } catch (error) {
       console.error(
         "Profile update failed:",
@@ -278,19 +322,17 @@ export async function POST(
           12
         );
 
-      await prisma.user.update({
-        where: {
-          id: user.id,
-        },
+      const updated = await updateUserPassword(
+        user.id,
+        passwordHash
+      );
 
-        data: {
-          passwordHash,
-        },
-      });
-
-      return redirectToProfile(
-        request,
-        "password=1"
+      return rotateCurrentSession(
+        redirectToProfile(
+          request,
+          "password=1"
+        ),
+        updated
       );
     } catch (error) {
       console.error(

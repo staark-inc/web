@@ -52,6 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
+  RateLimitBucket: 'RateLimitBucket',
   Notification: 'Notification',
   Settings: 'Settings',
   Contact: 'Contact',
@@ -101,12 +102,24 @@ export const UserScalarFieldEnum = {
   email: 'email',
   passwordHash: 'passwordHash',
   role: 'role',
+  sessionVersion: 'sessionVersion',
+  disabledAt: 'disabledAt',
   notificationPreferences: 'notificationPreferences',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const RateLimitBucketScalarFieldEnum = {
+  key: 'key',
+  count: 'count',
+  resetAt: 'resetAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RateLimitBucketScalarFieldEnum = (typeof RateLimitBucketScalarFieldEnum)[keyof typeof RateLimitBucketScalarFieldEnum]
 
 
 export const NotificationScalarFieldEnum = {

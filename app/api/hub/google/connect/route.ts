@@ -1,5 +1,11 @@
 import { google } from "googleapis";
+
 import { getSession } from "@/lib/auth";
+import {
+  GOOGLE_OAUTH_STATE_COOKIE,
+  createOAuthState,
+  oauthStateCookieOptions,
+} from "@/lib/oauth-state";
 import { redirectTo } from "@/lib/redirect";
 
 export async function GET(request: Request) {
@@ -39,6 +45,8 @@ export async function GET(request: Request) {
       redirectUri
     );
 
+  const oauthState = createOAuthState();
+
   const url =
     oauth2Client.generateAuthUrl({
       access_type: "offline",
@@ -47,7 +55,24 @@ export async function GET(request: Request) {
         "https://www.googleapis.com/auth/analytics.readonly",
         "https://www.googleapis.com/auth/webmasters.readonly",
       ],
+      state: oauthState.state,
     });
 
-  return redirectTo(url, request);
+  const response = redirectTo(
+    url,
+    request
+  );
+
+  response.cookies.set({
+    name: GOOGLE_OAUTH_STATE_COOKIE,
+    value: oauthState.cookieValue,
+    ...oauthStateCookieOptions(),
+  });
+
+  response.headers.set(
+    "Cache-Control",
+    "no-store"
+  );
+
+  return response;
 }

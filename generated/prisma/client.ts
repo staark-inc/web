@@ -47,6 +47,11 @@ export { Prisma }
  */
 export type User = Prisma.UserModel
 /**
+ * Model RateLimitBucket
+ * 
+ */
+export type RateLimitBucket = Prisma.RateLimitBucketModel
+/**
  * Model Notification
  * 
  */
