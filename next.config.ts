@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+import { serverActionAllowedOrigins } from "./lib/origin-policy.ts";
+
 const isDevelopment = process.env.NODE_ENV === "development";
 
 // Keep public pages statically rendered. Next's inline hydration scripts and
@@ -21,6 +23,12 @@ const contentSecurityPolicy = [
 
 const nextConfig: NextConfig = {
   output: "standalone",
+
+  experimental: {
+    serverActions: {
+      allowedOrigins: serverActionAllowedOrigins(),
+    },
+  },
 
   // Inlined into the compiled proxy; changes with every actual HTML build.
   env: { PUBLIC_HTTP_BUILD_TIME: new Date().toUTCString() },
@@ -95,8 +103,26 @@ const nextConfig: NextConfig = {
       },
       ...["/hub/:path*", "/offert/:path*", "/saas/setup/:path*", "/saas/checkout/:path*"].map((source) => ({
         source,
-        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" }],
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" },
+          { key: "Cache-Control", value: "private, no-store, max-age=0, must-revalidate" },
+          { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+        ],
       })),
+      {
+        source: "/api/hub/:path*",
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" },
+          { key: "Cache-Control", value: "private, no-store, max-age=0, must-revalidate" },
+        ],
+      },
+      {
+        source: "/api/saas/:path*",
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" },
+          { key: "Cache-Control", value: "private, no-store, max-age=0, must-revalidate" },
+        ],
+      },
       { source: "/llms.txt", headers: [{ key: "Content-Type", value: "text/markdown; charset=utf-8" }] },
       { source: "/ai-catalog.json", headers: [{ key: "Content-Type", value: "application/ai-catalog+json" }] },
       {

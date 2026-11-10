@@ -26,9 +26,24 @@ function inspectPublicLinks(html, path) {
 }
 const home = await fetch(origin);
 assert.equal(home.status, 200);
-for (const header of ["content-security-policy", "strict-transport-security", "x-content-type-options", "x-frame-options", "referrer-policy"]) {
+for (const header of ["content-security-policy", "strict-transport-security", "x-content-type-options", "x-frame-options", "referrer-policy", "permissions-policy"]) {
   assert.ok(home.headers.get(header), `Missing ${header}`);
 }
+assert.equal(home.headers.get("x-powered-by"), null, "X-Powered-By must not be exposed");
+assert.equal(home.headers.get("access-control-allow-origin"), null, "Public HTML must not send permissive CORS");
+const hubLogin = await fetch(new URL("/hub/login", origin), { redirect: "manual" });
+assert.equal(hubLogin.status, 200);
+assert.match(hubLogin.headers.get("cache-control") || "", /no-store/, "Authenticated Hub HTML must not be cacheable");
+assert.match(hubLogin.headers.get("x-robots-tag") || "", /noindex/, "Hub HTML must be noindex");
+assert.equal(hubLogin.headers.get("access-control-allow-origin"), null, "Hub HTML must not send CORS");
+const hubApi = await fetch(new URL("/api/hub/login", origin), {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: "{}",
+});
+assert.equal(hubApi.status, 400);
+assert.match(hubApi.headers.get("cache-control") || "", /no-store/, "Hub API responses must not be cacheable");
+assert.equal(hubApi.headers.get("access-control-allow-origin"), null, "Hub API must not send permissive CORS");
 const html = await home.text();
 inspectPublicLinks(html, "/");
 const modified = home.headers.get("last-modified");
