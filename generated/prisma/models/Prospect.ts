@@ -1034,19 +1034,7 @@ export type ProspectUncheckedUpdateOneWithoutImportedLeadNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProspectUpdateToOneWithWhereWithoutImportedLeadInput, Prisma.ProspectUpdateWithoutImportedLeadInput>, Prisma.ProspectUncheckedUpdateWithoutImportedLeadInput>
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type NullableFloatFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
-export type NullableIntFieldUpdateOperationsInput = {
   set?: number | null
   increment?: number
   decrement?: number

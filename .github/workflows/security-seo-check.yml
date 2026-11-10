@@ -2,7 +2,11 @@ name: Security and SEO checks
 
 on:
   pull_request:
-    branches: [main, dev, fix/public-website-ssr-contact-accessibility]
+    branches:
+      - main
+      - dev
+      - fix/public-website-ssr-contact-accessibility
+      - fix/staark-sec-002-auth-hardening
 
 permissions:
   contents: read
@@ -14,6 +18,9 @@ jobs:
     env:
       DATABASE_URL: postgresql://staark:build-only@localhost:5432/staark
       NEXT_TELEMETRY_DISABLED: "1"
+      AUTH_SECRET: sec002-ci-auth-secret-0123456789abcdef
+      MFA_ENCRYPTION_KEY: BwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwc=
+      MFA_BROWSER_SECRET: JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP
     services:
       postgres:
         image: postgres:17-alpine
@@ -42,6 +49,7 @@ jobs:
       - name: Apply migrations to disposable CI database
         run: npx prisma migrate deploy
       - run: npm run test:security-hardening
+      - run: npm run test:mfa
       - run: npm run test:security-seo
       - run: npm run test:news
       - run: npm run test:public-website
@@ -60,6 +68,7 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Check production HTTP responses
         run: |
+          npm run seed:mfa-browser
           npm start -- --hostname 127.0.0.1 > /tmp/next-start.log 2>&1 &
           server_pid=$!
           trap 'kill "$server_pid"' EXIT
@@ -73,3 +82,4 @@ jobs:
           CHECK_ERROR_FIXTURE=1 npm run check:public-browser
           npm run check:google-ads-browser
           npm run check:hub-browser
+          npm run check:mfa-browser

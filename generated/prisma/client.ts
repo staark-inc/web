@@ -52,6 +52,16 @@ export type User = Prisma.UserModel
  */
 export type RateLimitBucket = Prisma.RateLimitBucketModel
 /**
+ * Model MfaRecoveryCode
+ * 
+ */
+export type MfaRecoveryCode = Prisma.MfaRecoveryCodeModel
+/**
+ * Model SecurityAuditEvent
+ * 
+ */
+export type SecurityAuditEvent = Prisma.SecurityAuditEventModel
+/**
  * Model Notification
  * 
  */

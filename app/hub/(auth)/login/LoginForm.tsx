@@ -96,6 +96,11 @@ export default function LoginForm() {
         );
       }
 
+      if (data.mfaRequired) {
+        window.location.assign("/hub/mfa");
+        return;
+      }
+
       // Full navigation intenționat.
       // După login serverul va primi noul
       // HttpOnly session cookie.

@@ -53,6 +53,8 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   User: 'User',
   RateLimitBucket: 'RateLimitBucket',
+  MfaRecoveryCode: 'MfaRecoveryCode',
+  SecurityAuditEvent: 'SecurityAuditEvent',
   Notification: 'Notification',
   Settings: 'Settings',
   Contact: 'Contact',
@@ -104,6 +106,11 @@ export const UserScalarFieldEnum = {
   role: 'role',
   sessionVersion: 'sessionVersion',
   disabledAt: 'disabledAt',
+  mfaEnabled: 'mfaEnabled',
+  mfaSecretEncrypted: 'mfaSecretEncrypted',
+  mfaPendingSecretEncrypted: 'mfaPendingSecretEncrypted',
+  mfaPendingExpiresAt: 'mfaPendingExpiresAt',
+  mfaLastUsedStep: 'mfaLastUsedStep',
   notificationPreferences: 'notificationPreferences',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -120,6 +127,29 @@ export const RateLimitBucketScalarFieldEnum = {
 } as const
 
 export type RateLimitBucketScalarFieldEnum = (typeof RateLimitBucketScalarFieldEnum)[keyof typeof RateLimitBucketScalarFieldEnum]
+
+
+export const MfaRecoveryCodeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  codeHash: 'codeHash',
+  usedAt: 'usedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type MfaRecoveryCodeScalarFieldEnum = (typeof MfaRecoveryCodeScalarFieldEnum)[keyof typeof MfaRecoveryCodeScalarFieldEnum]
+
+
+export const SecurityAuditEventScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  ipHash: 'ipHash',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+} as const
+
+export type SecurityAuditEventScalarFieldEnum = (typeof SecurityAuditEventScalarFieldEnum)[keyof typeof SecurityAuditEventScalarFieldEnum]
 
 
 export const NotificationScalarFieldEnum = {
