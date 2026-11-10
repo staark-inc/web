@@ -26,8 +26,10 @@
     "check:public-browser": "node scripts/check-public-browser.mjs",
     "check:hub-browser": "node scripts/check-hub-browser.mjs",
     "test:hub-ui": "node --experimental-strip-types --test test/hub-ui-contract.test.ts",
+    "test:hub-preview": "node --experimental-strip-types --test test/hub-preview.test.ts",
     "check:hub-ui-contract": "node scripts/check-hub-ui-contract.mjs",
     "check:hub-ui-browser": "node scripts/check-hub-ui-browser.mjs",
+    "check:hub-preview": "node scripts/check-hub-preview.mjs",
     "check:hub-visual": "node scripts/check-hub-visual.mjs"
   },
   "dependencies": {

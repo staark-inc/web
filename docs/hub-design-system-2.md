@@ -15,6 +15,8 @@ This document is the working contract for the Hub UI migration. It records the U
 
 The migration order is deliberate: tokens and primitives first, then shell, then page templates, then legacy CSS removal.
 
+The isolated interactive approval surface is documented in [`hub-design-preview.md`](./hub-design-preview.md). It is not part of production navigation and must be approved before UI-02.
+
 ## 2. Token architecture
 
 `app/hub/styles/tokens.css` is the canonical vocabulary. It keeps the current visual identity and expands the existing `--sw-*` values into a complete contract.
@@ -29,7 +31,7 @@ The migration order is deliberate: tokens and primitives first, then shell, then
 | Elevation | `--sw-shadow-subtle`, `--sw-shadow-raised` | One restrained elevation language |
 | Layout | `--sw-sidebar-width`, `--sw-sidebar-compact-width`, `--sw-topbar-height*`, `--sw-content-*`, `--sw-control-height`, `--sw-touch-target` | Shell values are defined now, consumed by UI-02 |
 | Motion | `--sw-duration-*`, `--sw-easing-standard` | Disabled by the scoped reduced-motion layer |
-| Breakpoints | `--sw-breakpoint-sm|md|lg|xl` | Documentation tokens; media queries use 480/768/1024/1280 px |
+| Breakpoints | `--sw-breakpoint-sm`, `--sw-breakpoint-md`, `--sw-breakpoint-lg`, `--sw-breakpoint-xl` | Documentation tokens; media queries use 480/768/1024/1280 px |
 
 Token scope is `.hub-dashboard`, `.hub-login-page` and `[data-sw-ui]`. The legacy files still contain their historical `--sw-*` definitions until UI-02/UI-07 remove them; new code must treat `tokens.css` as authoritative.
 
@@ -117,7 +119,9 @@ The four unimported legacy stylesheets remain in place. Removing classes based o
 
 The script blocks external requests, disables animation and transitions, hides the caret, waits for bundled fonts, uses a fixed timezone/locale/device scale and compares PNGs against `test/visual/hub/`.
 
-UI-01 result on the Playwright 1.62.1 Linux image: **15/15 baselines, 0 pixels differ** at 320, 390, 768, 1024 and 1440 px. Baselines cover the unchanged legacy fixture, the new foundation fixture and login.
+UI-01 result on the Playwright 1.62.1 Linux image: **15/15 foundation baselines, 0 pixels differ** at 320, 390, 768, 1024 and 1440 px. Baselines cover the unchanged legacy fixture, the new foundation fixture and login. UI-PREVIEW-001 adds six authenticated preview routes at the same five widths, for 45 total baselines.
+
+The preview visual run requires `AUTH_SECRET` to match the running server; see [`hub-design-preview.md`](./hub-design-preview.md).
 
 Refresh baselines only on the same Playwright Linux image used by CI:
 

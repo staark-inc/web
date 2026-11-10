@@ -217,8 +217,10 @@ test("legacy Hub stylesheets stay imported and new primitives stay opt-in", () =
 });
 
 test("visual baselines cover every foundation route and viewport", () => {
-  const baselines = walk("test/visual/hub").filter((file) => file.endsWith(".png"));
-  assert.equal(baselines.length, 15, "Expected 15 deterministic visual baselines");
+  const baselines = walk("test/visual/hub").filter(
+    (file) => file.endsWith(".png") && !file.includes("preview-"),
+  );
+  assert.equal(baselines.length, 15, "Expected 15 foundation visual baselines");
   for (const route of ["foundation", "hub-workspace", "login"]) {
     for (const viewport of ["320x568", "390x844", "768x900", "1024x768", "1440x900"]) {
       assert.ok(
