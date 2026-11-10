@@ -30,10 +30,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(
       {
-        error:
-          error instanceof Error
-            ? error.message
-            : "Could not connect to Stripe.",
+        error: "Stripe connection failed.",
       },
       { status: 500 }
     );

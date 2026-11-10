@@ -25,6 +25,8 @@ jobs:
       - name: Enforce Hub design contract
         run: node scripts/check-hub-theme-contract.mjs
       - run: npm ci
+      - run: npm run check:server-boundary
+      - run: npm run test:server-boundary
       - run: npm run test:security-seo
       - run: npm run test:news
       - run: npm run test:public-website

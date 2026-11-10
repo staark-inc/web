@@ -27,8 +27,6 @@ export async function GET() {
     return NextResponse.json({
       ok: true,
       period: "last 30 days",
-      site:
-        process.env.SEARCH_CONSOLE_SITE_URL,
       searchConsole: analytics,
     });
   } catch (error) {
@@ -40,10 +38,7 @@ export async function GET() {
     return NextResponse.json(
       {
         ok: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : "Search Console request failed.",
+        error: "Search Console request failed.",
       },
       {
         status: 500,
