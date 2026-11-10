@@ -461,6 +461,38 @@ export default async function HubProfilePage({
         <section className="hub-profile-v2-card hub-profile-v2-card-full sw-card sw-card-panel sw-detail-panel">
           <div className="hub-profile-v2-card-head sw-detail-panel-head">
             <div className="hub-profile-v2-card-icon">
+              <ShieldCheck size={18} />
+            </div>
+            <div>
+              <h2>Two-factor authentication</h2>
+              <p>Require a one-time authenticator code after your password.</p>
+            </div>
+          </div>
+
+          <div className="hub-profile-v2-card-body">
+            <p>
+              {user.mfaEnabled
+                ? "Two-factor authentication is enabled for this account."
+                : "Two-factor authentication is not enabled for this account."}
+            </p>
+
+            <div className="hub-settings-actions">
+              <Link
+                href="/hub/profile/mfa"
+                className="hub-secondary-button"
+              >
+                <ShieldCheck size={15} />
+                {user.mfaEnabled
+                  ? "Manage two-factor authentication"
+                  : "Enable two-factor authentication"}
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        <section className="hub-profile-v2-card hub-profile-v2-card-full sw-card sw-card-panel sw-detail-panel">
+          <div className="hub-profile-v2-card-head sw-detail-panel-head">
+            <div className="hub-profile-v2-card-icon">
               <KeyRound size={18} />
             </div>
             <div>
@@ -532,7 +564,11 @@ export default async function HubProfilePage({
                     </div>
                     <div>
                       <span>Authentication</span>
-                      <strong>Password required</strong>
+                      <strong>
+                        {user.mfaEnabled
+                          ? "Password + authenticator"
+                          : "Password required"}
+                      </strong>
                     </div>
                   </div>
 

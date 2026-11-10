@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 
 import { authenticateLogin } from "@/lib/login";
+import {
+  MFA_COOKIE,
+  mfaCookieOptions,
+} from "@/lib/mfa-challenge";
 import { redirectTo } from "@/lib/redirect";
 import {
   RequestBodyError,
@@ -107,6 +111,27 @@ export async function POST(request: Request) {
           ),
         }
       );
+    }
+
+    if (result.kind === "mfa_required") {
+      const response = isJson
+        ? NextResponse.json({
+            ok: true,
+            mfaRequired: true,
+          })
+        : redirectTo(
+            "/hub/mfa",
+            request,
+            303
+          );
+
+      response.cookies.set({
+        name: MFA_COOKIE,
+        value: result.token,
+        ...mfaCookieOptions(),
+      });
+
+      return noStore(response);
     }
 
     if (result.kind === "invalid") {

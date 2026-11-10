@@ -142,6 +142,13 @@ model User {
   role                    UserRole       @default(ADMIN)
   sessionVersion          Int            @default(0)
   disabledAt              DateTime?
+  mfaEnabled              Boolean        @default(false)
+  mfaSecretEncrypted      String?
+  mfaPendingSecretEncrypted String?
+  mfaPendingExpiresAt     DateTime?
+  mfaLastUsedStep         Int?
+  mfaRecoveryCodes        MfaRecoveryCode[]
+  securityAuditEvents     SecurityAuditEvent[]
   notificationPreferences Json?
   createdAt               DateTime       @default(now())
   updatedAt               DateTime       @updatedAt
@@ -155,6 +162,30 @@ model RateLimitBucket {
   updatedAt DateTime @updatedAt
 
   @@index([resetAt])
+}
+
+model MfaRecoveryCode {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  codeHash  String    @unique
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId, usedAt])
+}
+
+model SecurityAuditEvent {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  type      String
+  ipHash    String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([type, createdAt])
 }
 
 model Notification {

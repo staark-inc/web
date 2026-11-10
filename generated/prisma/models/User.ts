@@ -28,10 +28,12 @@ export type AggregateUser = {
 
 export type UserAvgAggregateOutputType = {
   sessionVersion: number | null
+  mfaLastUsedStep: number | null
 }
 
 export type UserSumAggregateOutputType = {
   sessionVersion: number | null
+  mfaLastUsedStep: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -42,6 +44,11 @@ export type UserMinAggregateOutputType = {
   role: $Enums.UserRole | null
   sessionVersion: number | null
   disabledAt: Date | null
+  mfaEnabled: boolean | null
+  mfaSecretEncrypted: string | null
+  mfaPendingSecretEncrypted: string | null
+  mfaPendingExpiresAt: Date | null
+  mfaLastUsedStep: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -54,6 +61,11 @@ export type UserMaxAggregateOutputType = {
   role: $Enums.UserRole | null
   sessionVersion: number | null
   disabledAt: Date | null
+  mfaEnabled: boolean | null
+  mfaSecretEncrypted: string | null
+  mfaPendingSecretEncrypted: string | null
+  mfaPendingExpiresAt: Date | null
+  mfaLastUsedStep: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -66,6 +78,11 @@ export type UserCountAggregateOutputType = {
   role: number
   sessionVersion: number
   disabledAt: number
+  mfaEnabled: number
+  mfaSecretEncrypted: number
+  mfaPendingSecretEncrypted: number
+  mfaPendingExpiresAt: number
+  mfaLastUsedStep: number
   notificationPreferences: number
   createdAt: number
   updatedAt: number
@@ -75,10 +92,12 @@ export type UserCountAggregateOutputType = {
 
 export type UserAvgAggregateInputType = {
   sessionVersion?: true
+  mfaLastUsedStep?: true
 }
 
 export type UserSumAggregateInputType = {
   sessionVersion?: true
+  mfaLastUsedStep?: true
 }
 
 export type UserMinAggregateInputType = {
@@ -89,6 +108,11 @@ export type UserMinAggregateInputType = {
   role?: true
   sessionVersion?: true
   disabledAt?: true
+  mfaEnabled?: true
+  mfaSecretEncrypted?: true
+  mfaPendingSecretEncrypted?: true
+  mfaPendingExpiresAt?: true
+  mfaLastUsedStep?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -101,6 +125,11 @@ export type UserMaxAggregateInputType = {
   role?: true
   sessionVersion?: true
   disabledAt?: true
+  mfaEnabled?: true
+  mfaSecretEncrypted?: true
+  mfaPendingSecretEncrypted?: true
+  mfaPendingExpiresAt?: true
+  mfaLastUsedStep?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -113,6 +142,11 @@ export type UserCountAggregateInputType = {
   role?: true
   sessionVersion?: true
   disabledAt?: true
+  mfaEnabled?: true
+  mfaSecretEncrypted?: true
+  mfaPendingSecretEncrypted?: true
+  mfaPendingExpiresAt?: true
+  mfaLastUsedStep?: true
   notificationPreferences?: true
   createdAt?: true
   updatedAt?: true
@@ -213,6 +247,11 @@ export type UserGroupByOutputType = {
   role: $Enums.UserRole
   sessionVersion: number
   disabledAt: Date | null
+  mfaEnabled: boolean
+  mfaSecretEncrypted: string | null
+  mfaPendingSecretEncrypted: string | null
+  mfaPendingExpiresAt: Date | null
+  mfaLastUsedStep: number | null
   notificationPreferences: runtime.JsonValue | null
   createdAt: Date
   updatedAt: Date
@@ -249,9 +288,16 @@ export type UserWhereInput = {
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
   sessionVersion?: Prisma.IntFilter<"User"> | number
   disabledAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  mfaEnabled?: Prisma.BoolFilter<"User"> | boolean
+  mfaSecretEncrypted?: Prisma.StringNullableFilter<"User"> | string | null
+  mfaPendingSecretEncrypted?: Prisma.StringNullableFilter<"User"> | string | null
+  mfaPendingExpiresAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  mfaLastUsedStep?: Prisma.IntNullableFilter<"User"> | number | null
   notificationPreferences?: Prisma.JsonNullableFilter<"User">
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  mfaRecoveryCodes?: Prisma.MfaRecoveryCodeListRelationFilter
+  securityAuditEvents?: Prisma.SecurityAuditEventListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
 }
 
@@ -263,9 +309,16 @@ export type UserOrderByWithRelationInput = {
   role?: Prisma.SortOrder
   sessionVersion?: Prisma.SortOrder
   disabledAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  mfaEnabled?: Prisma.SortOrder
+  mfaSecretEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
+  mfaPendingSecretEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
+  mfaPendingExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  mfaLastUsedStep?: Prisma.SortOrderInput | Prisma.SortOrder
   notificationPreferences?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  mfaRecoveryCodes?: Prisma.MfaRecoveryCodeOrderByRelationAggregateInput
+  securityAuditEvents?: Prisma.SecurityAuditEventOrderByRelationAggregateInput
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
 }
 
@@ -280,9 +333,16 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
   sessionVersion?: Prisma.IntFilter<"User"> | number
   disabledAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  mfaEnabled?: Prisma.BoolFilter<"User"> | boolean
+  mfaSecretEncrypted?: Prisma.StringNullableFilter<"User"> | string | null
+  mfaPendingSecretEncrypted?: Prisma.StringNullableFilter<"User"> | string | null
+  mfaPendingExpiresAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  mfaLastUsedStep?: Prisma.IntNullableFilter<"User"> | number | null
   notificationPreferences?: Prisma.JsonNullableFilter<"User">
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  mfaRecoveryCodes?: Prisma.MfaRecoveryCodeListRelationFilter
+  securityAuditEvents?: Prisma.SecurityAuditEventListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
 }, "id" | "email">
 
@@ -294,6 +354,11 @@ export type UserOrderByWithAggregationInput = {
   role?: Prisma.SortOrder
   sessionVersion?: Prisma.SortOrder
   disabledAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  mfaEnabled?: Prisma.SortOrder
+  mfaSecretEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
+  mfaPendingSecretEncrypted?: Prisma.SortOrderInput | Prisma.SortOrder
+  mfaPendingExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  mfaLastUsedStep?: Prisma.SortOrderInput | Prisma.SortOrder
   notificationPreferences?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -315,6 +380,11 @@ export type UserScalarWhereWithAggregatesInput = {
   role?: Prisma.EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
   sessionVersion?: Prisma.IntWithAggregatesFilter<"User"> | number
   disabledAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  mfaEnabled?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  mfaSecretEncrypted?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  mfaPendingSecretEncrypted?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  mfaPendingExpiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  mfaLastUsedStep?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
   notificationPreferences?: Prisma.JsonNullableWithAggregatesFilter<"User">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -328,9 +398,16 @@ export type UserCreateInput = {
   role?: $Enums.UserRole
   sessionVersion?: number
   disabledAt?: Date | string | null
+  mfaEnabled?: boolean
+  mfaSecretEncrypted?: string | null
+  mfaPendingSecretEncrypted?: string | null
+  mfaPendingExpiresAt?: Date | string | null
+  mfaLastUsedStep?: number | null
   notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  mfaRecoveryCodes?: Prisma.MfaRecoveryCodeCreateNestedManyWithoutUserInput
+  securityAuditEvents?: Prisma.SecurityAuditEventCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
 }
 
@@ -342,9 +419,16 @@ export type UserUncheckedCreateInput = {
   role?: $Enums.UserRole
   sessionVersion?: number
   disabledAt?: Date | string | null
+  mfaEnabled?: boolean
+  mfaSecretEncrypted?: string | null
+  mfaPendingSecretEncrypted?: string | null
+  mfaPendingExpiresAt?: Date | string | null
+  mfaLastUsedStep?: number | null
   notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  mfaRecoveryCodes?: Prisma.MfaRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  securityAuditEvents?: Prisma.SecurityAuditEventUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -356,9 +440,16 @@ export type UserUpdateInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mfaEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mfaSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mfaPendingSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mfaPendingExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mfaLastUsedStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  mfaRecoveryCodes?: Prisma.MfaRecoveryCodeUpdateManyWithoutUserNestedInput
+  securityAuditEvents?: Prisma.SecurityAuditEventUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
 }
 
@@ -370,9 +461,16 @@ export type UserUncheckedUpdateInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mfaEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mfaSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mfaPendingSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mfaPendingExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mfaLastUsedStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  mfaRecoveryCodes?: Prisma.MfaRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  securityAuditEvents?: Prisma.SecurityAuditEventUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -384,6 +482,11 @@ export type UserCreateManyInput = {
   role?: $Enums.UserRole
   sessionVersion?: number
   disabledAt?: Date | string | null
+  mfaEnabled?: boolean
+  mfaSecretEncrypted?: string | null
+  mfaPendingSecretEncrypted?: string | null
+  mfaPendingExpiresAt?: Date | string | null
+  mfaLastUsedStep?: number | null
   notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -397,6 +500,11 @@ export type UserUpdateManyMutationInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mfaEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mfaSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mfaPendingSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mfaPendingExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mfaLastUsedStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -410,6 +518,11 @@ export type UserUncheckedUpdateManyInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mfaEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mfaSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mfaPendingSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mfaPendingExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mfaLastUsedStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -423,6 +536,11 @@ export type UserCountOrderByAggregateInput = {
   role?: Prisma.SortOrder
   sessionVersion?: Prisma.SortOrder
   disabledAt?: Prisma.SortOrder
+  mfaEnabled?: Prisma.SortOrder
+  mfaSecretEncrypted?: Prisma.SortOrder
+  mfaPendingSecretEncrypted?: Prisma.SortOrder
+  mfaPendingExpiresAt?: Prisma.SortOrder
+  mfaLastUsedStep?: Prisma.SortOrder
   notificationPreferences?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -430,6 +548,7 @@ export type UserCountOrderByAggregateInput = {
 
 export type UserAvgOrderByAggregateInput = {
   sessionVersion?: Prisma.SortOrder
+  mfaLastUsedStep?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -440,6 +559,11 @@ export type UserMaxOrderByAggregateInput = {
   role?: Prisma.SortOrder
   sessionVersion?: Prisma.SortOrder
   disabledAt?: Prisma.SortOrder
+  mfaEnabled?: Prisma.SortOrder
+  mfaSecretEncrypted?: Prisma.SortOrder
+  mfaPendingSecretEncrypted?: Prisma.SortOrder
+  mfaPendingExpiresAt?: Prisma.SortOrder
+  mfaLastUsedStep?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -452,17 +576,28 @@ export type UserMinOrderByAggregateInput = {
   role?: Prisma.SortOrder
   sessionVersion?: Prisma.SortOrder
   disabledAt?: Prisma.SortOrder
+  mfaEnabled?: Prisma.SortOrder
+  mfaSecretEncrypted?: Prisma.SortOrder
+  mfaPendingSecretEncrypted?: Prisma.SortOrder
+  mfaPendingExpiresAt?: Prisma.SortOrder
+  mfaLastUsedStep?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
   sessionVersion?: Prisma.SortOrder
+  mfaLastUsedStep?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
   is?: Prisma.UserWhereInput
   isNot?: Prisma.UserWhereInput
+}
+
+export type UserNullableScalarRelationFilter = {
+  is?: Prisma.UserWhereInput | null
+  isNot?: Prisma.UserWhereInput | null
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -485,8 +620,54 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
 }
 
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type UserCreateNestedOneWithoutMfaRecoveryCodesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMfaRecoveryCodesInput, Prisma.UserUncheckedCreateWithoutMfaRecoveryCodesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMfaRecoveryCodesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutMfaRecoveryCodesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMfaRecoveryCodesInput, Prisma.UserUncheckedCreateWithoutMfaRecoveryCodesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMfaRecoveryCodesInput
+  upsert?: Prisma.UserUpsertWithoutMfaRecoveryCodesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMfaRecoveryCodesInput, Prisma.UserUpdateWithoutMfaRecoveryCodesInput>, Prisma.UserUncheckedUpdateWithoutMfaRecoveryCodesInput>
+}
+
+export type UserCreateNestedOneWithoutSecurityAuditEventsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSecurityAuditEventsInput, Prisma.UserUncheckedCreateWithoutSecurityAuditEventsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSecurityAuditEventsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutSecurityAuditEventsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSecurityAuditEventsInput, Prisma.UserUncheckedCreateWithoutSecurityAuditEventsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSecurityAuditEventsInput
+  upsert?: Prisma.UserUpsertWithoutSecurityAuditEventsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSecurityAuditEventsInput, Prisma.UserUpdateWithoutSecurityAuditEventsInput>, Prisma.UserUncheckedUpdateWithoutSecurityAuditEventsInput>
 }
 
 export type UserCreateNestedOneWithoutNotificationsInput = {
@@ -503,6 +684,198 @@ export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutNotificationsInput, Prisma.UserUpdateWithoutNotificationsInput>, Prisma.UserUncheckedUpdateWithoutNotificationsInput>
 }
 
+export type UserCreateWithoutMfaRecoveryCodesInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  sessionVersion?: number
+  disabledAt?: Date | string | null
+  mfaEnabled?: boolean
+  mfaSecretEncrypted?: string | null
+  mfaPendingSecretEncrypted?: string | null
+  mfaPendingExpiresAt?: Date | string | null
+  mfaLastUsedStep?: number | null
+  notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  securityAuditEvents?: Prisma.SecurityAuditEventCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutMfaRecoveryCodesInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  sessionVersion?: number
+  disabledAt?: Date | string | null
+  mfaEnabled?: boolean
+  mfaSecretEncrypted?: string | null
+  mfaPendingSecretEncrypted?: string | null
+  mfaPendingExpiresAt?: Date | string | null
+  mfaLastUsedStep?: number | null
+  notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  securityAuditEvents?: Prisma.SecurityAuditEventUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutMfaRecoveryCodesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutMfaRecoveryCodesInput, Prisma.UserUncheckedCreateWithoutMfaRecoveryCodesInput>
+}
+
+export type UserUpsertWithoutMfaRecoveryCodesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutMfaRecoveryCodesInput, Prisma.UserUncheckedUpdateWithoutMfaRecoveryCodesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutMfaRecoveryCodesInput, Prisma.UserUncheckedCreateWithoutMfaRecoveryCodesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutMfaRecoveryCodesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutMfaRecoveryCodesInput, Prisma.UserUncheckedUpdateWithoutMfaRecoveryCodesInput>
+}
+
+export type UserUpdateWithoutMfaRecoveryCodesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mfaEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mfaSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mfaPendingSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mfaPendingExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mfaLastUsedStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  securityAuditEvents?: Prisma.SecurityAuditEventUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutMfaRecoveryCodesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mfaEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mfaSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mfaPendingSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mfaPendingExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mfaLastUsedStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  securityAuditEvents?: Prisma.SecurityAuditEventUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutSecurityAuditEventsInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  sessionVersion?: number
+  disabledAt?: Date | string | null
+  mfaEnabled?: boolean
+  mfaSecretEncrypted?: string | null
+  mfaPendingSecretEncrypted?: string | null
+  mfaPendingExpiresAt?: Date | string | null
+  mfaLastUsedStep?: number | null
+  notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  mfaRecoveryCodes?: Prisma.MfaRecoveryCodeCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSecurityAuditEventsInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  role?: $Enums.UserRole
+  sessionVersion?: number
+  disabledAt?: Date | string | null
+  mfaEnabled?: boolean
+  mfaSecretEncrypted?: string | null
+  mfaPendingSecretEncrypted?: string | null
+  mfaPendingExpiresAt?: Date | string | null
+  mfaLastUsedStep?: number | null
+  notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  mfaRecoveryCodes?: Prisma.MfaRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSecurityAuditEventsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSecurityAuditEventsInput, Prisma.UserUncheckedCreateWithoutSecurityAuditEventsInput>
+}
+
+export type UserUpsertWithoutSecurityAuditEventsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSecurityAuditEventsInput, Prisma.UserUncheckedUpdateWithoutSecurityAuditEventsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSecurityAuditEventsInput, Prisma.UserUncheckedCreateWithoutSecurityAuditEventsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSecurityAuditEventsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSecurityAuditEventsInput, Prisma.UserUncheckedUpdateWithoutSecurityAuditEventsInput>
+}
+
+export type UserUpdateWithoutSecurityAuditEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mfaEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mfaSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mfaPendingSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mfaPendingExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mfaLastUsedStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  mfaRecoveryCodes?: Prisma.MfaRecoveryCodeUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSecurityAuditEventsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
+  disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mfaEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mfaSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mfaPendingSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mfaPendingExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mfaLastUsedStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  mfaRecoveryCodes?: Prisma.MfaRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+}
+
 export type UserCreateWithoutNotificationsInput = {
   id?: string
   name: string
@@ -511,9 +884,16 @@ export type UserCreateWithoutNotificationsInput = {
   role?: $Enums.UserRole
   sessionVersion?: number
   disabledAt?: Date | string | null
+  mfaEnabled?: boolean
+  mfaSecretEncrypted?: string | null
+  mfaPendingSecretEncrypted?: string | null
+  mfaPendingExpiresAt?: Date | string | null
+  mfaLastUsedStep?: number | null
   notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  mfaRecoveryCodes?: Prisma.MfaRecoveryCodeCreateNestedManyWithoutUserInput
+  securityAuditEvents?: Prisma.SecurityAuditEventCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -524,9 +904,16 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   role?: $Enums.UserRole
   sessionVersion?: number
   disabledAt?: Date | string | null
+  mfaEnabled?: boolean
+  mfaSecretEncrypted?: string | null
+  mfaPendingSecretEncrypted?: string | null
+  mfaPendingExpiresAt?: Date | string | null
+  mfaLastUsedStep?: number | null
   notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  mfaRecoveryCodes?: Prisma.MfaRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  securityAuditEvents?: Prisma.SecurityAuditEventUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -553,9 +940,16 @@ export type UserUpdateWithoutNotificationsInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mfaEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mfaSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mfaPendingSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mfaPendingExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mfaLastUsedStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  mfaRecoveryCodes?: Prisma.MfaRecoveryCodeUpdateManyWithoutUserNestedInput
+  securityAuditEvents?: Prisma.SecurityAuditEventUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -566,9 +960,16 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   sessionVersion?: Prisma.IntFieldUpdateOperationsInput | number
   disabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mfaEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mfaSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mfaPendingSecretEncrypted?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mfaPendingExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mfaLastUsedStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   notificationPreferences?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  mfaRecoveryCodes?: Prisma.MfaRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  securityAuditEvents?: Prisma.SecurityAuditEventUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -577,10 +978,14 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
  */
 
 export type UserCountOutputType = {
+  mfaRecoveryCodes: number
+  securityAuditEvents: number
   notifications: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  mfaRecoveryCodes?: boolean | UserCountOutputTypeCountMfaRecoveryCodesArgs
+  securityAuditEvents?: boolean | UserCountOutputTypeCountSecurityAuditEventsArgs
   notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
 }
 
@@ -592,6 +997,20 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
    * Select specific fields to fetch from the UserCountOutputType
    */
   select?: Prisma.UserCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountMfaRecoveryCodesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MfaRecoveryCodeWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSecurityAuditEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SecurityAuditEventWhereInput
 }
 
 /**
@@ -610,9 +1029,16 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   role?: boolean
   sessionVersion?: boolean
   disabledAt?: boolean
+  mfaEnabled?: boolean
+  mfaSecretEncrypted?: boolean
+  mfaPendingSecretEncrypted?: boolean
+  mfaPendingExpiresAt?: boolean
+  mfaLastUsedStep?: boolean
   notificationPreferences?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  mfaRecoveryCodes?: boolean | Prisma.User$mfaRecoveryCodesArgs<ExtArgs>
+  securityAuditEvents?: boolean | Prisma.User$securityAuditEventsArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
@@ -625,6 +1051,11 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   role?: boolean
   sessionVersion?: boolean
   disabledAt?: boolean
+  mfaEnabled?: boolean
+  mfaSecretEncrypted?: boolean
+  mfaPendingSecretEncrypted?: boolean
+  mfaPendingExpiresAt?: boolean
+  mfaLastUsedStep?: boolean
   notificationPreferences?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -638,6 +1069,11 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   role?: boolean
   sessionVersion?: boolean
   disabledAt?: boolean
+  mfaEnabled?: boolean
+  mfaSecretEncrypted?: boolean
+  mfaPendingSecretEncrypted?: boolean
+  mfaPendingExpiresAt?: boolean
+  mfaLastUsedStep?: boolean
   notificationPreferences?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -651,13 +1087,20 @@ export type UserSelectScalar = {
   role?: boolean
   sessionVersion?: boolean
   disabledAt?: boolean
+  mfaEnabled?: boolean
+  mfaSecretEncrypted?: boolean
+  mfaPendingSecretEncrypted?: boolean
+  mfaPendingExpiresAt?: boolean
+  mfaLastUsedStep?: boolean
   notificationPreferences?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "passwordHash" | "role" | "sessionVersion" | "disabledAt" | "notificationPreferences" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "passwordHash" | "role" | "sessionVersion" | "disabledAt" | "mfaEnabled" | "mfaSecretEncrypted" | "mfaPendingSecretEncrypted" | "mfaPendingExpiresAt" | "mfaLastUsedStep" | "notificationPreferences" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  mfaRecoveryCodes?: boolean | Prisma.User$mfaRecoveryCodesArgs<ExtArgs>
+  securityAuditEvents?: boolean | Prisma.User$securityAuditEventsArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -667,6 +1110,8 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
+    mfaRecoveryCodes: Prisma.$MfaRecoveryCodePayload<ExtArgs>[]
+    securityAuditEvents: Prisma.$SecurityAuditEventPayload<ExtArgs>[]
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -677,6 +1122,11 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     role: $Enums.UserRole
     sessionVersion: number
     disabledAt: Date | null
+    mfaEnabled: boolean
+    mfaSecretEncrypted: string | null
+    mfaPendingSecretEncrypted: string | null
+    mfaPendingExpiresAt: Date | null
+    mfaLastUsedStep: number | null
     notificationPreferences: runtime.JsonValue | null
     createdAt: Date
     updatedAt: Date
@@ -1074,6 +1524,8 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  mfaRecoveryCodes<T extends Prisma.User$mfaRecoveryCodesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$mfaRecoveryCodesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MfaRecoveryCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  securityAuditEvents<T extends Prisma.User$securityAuditEventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$securityAuditEventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SecurityAuditEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1111,6 +1563,11 @@ export interface UserFieldRefs {
   readonly role: Prisma.FieldRef<"User", 'UserRole'>
   readonly sessionVersion: Prisma.FieldRef<"User", 'Int'>
   readonly disabledAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly mfaEnabled: Prisma.FieldRef<"User", 'Boolean'>
+  readonly mfaSecretEncrypted: Prisma.FieldRef<"User", 'String'>
+  readonly mfaPendingSecretEncrypted: Prisma.FieldRef<"User", 'String'>
+  readonly mfaPendingExpiresAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly mfaLastUsedStep: Prisma.FieldRef<"User", 'Int'>
   readonly notificationPreferences: Prisma.FieldRef<"User", 'Json'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
@@ -1504,6 +1961,54 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Limit how many Users to delete.
    */
   limit?: number
+}
+
+/**
+ * User.mfaRecoveryCodes
+ */
+export type User$mfaRecoveryCodesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MfaRecoveryCode
+   */
+  select?: Prisma.MfaRecoveryCodeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MfaRecoveryCode
+   */
+  omit?: Prisma.MfaRecoveryCodeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MfaRecoveryCodeInclude<ExtArgs> | null
+  where?: Prisma.MfaRecoveryCodeWhereInput
+  orderBy?: Prisma.MfaRecoveryCodeOrderByWithRelationInput | Prisma.MfaRecoveryCodeOrderByWithRelationInput[]
+  cursor?: Prisma.MfaRecoveryCodeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MfaRecoveryCodeScalarFieldEnum | Prisma.MfaRecoveryCodeScalarFieldEnum[]
+}
+
+/**
+ * User.securityAuditEvents
+ */
+export type User$securityAuditEventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SecurityAuditEvent
+   */
+  select?: Prisma.SecurityAuditEventSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SecurityAuditEvent
+   */
+  omit?: Prisma.SecurityAuditEventOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SecurityAuditEventInclude<ExtArgs> | null
+  where?: Prisma.SecurityAuditEventWhereInput
+  orderBy?: Prisma.SecurityAuditEventOrderByWithRelationInput | Prisma.SecurityAuditEventOrderByWithRelationInput[]
+  cursor?: Prisma.SecurityAuditEventWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SecurityAuditEventScalarFieldEnum | Prisma.SecurityAuditEventScalarFieldEnum[]
 }
 
 /**

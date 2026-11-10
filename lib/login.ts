@@ -5,6 +5,7 @@ import {
 import { verifyPassword } from "@/lib/passwords";
 import { prisma } from "@/lib/prisma";
 import { hashIdentifier } from "@/lib/request-security";
+import { createMfaChallengeToken } from "@/lib/mfa-challenge";
 import { createSessionToken } from "@/lib/session";
 
 const LOGIN_GLOBAL_LIMIT = 300;
@@ -30,6 +31,10 @@ export type LoginResult =
         email: string;
         role: "ADMIN";
       };
+      token: string;
+    }
+  | {
+      kind: "mfa_required";
       token: string;
     }
   | {
@@ -106,6 +111,7 @@ export async function authenticateLogin(input: {
       role: true,
       sessionVersion: true,
       disabledAt: true,
+      mfaEnabled: true,
     },
   });
 
@@ -132,6 +138,19 @@ export async function authenticateLogin(input: {
   } catch {
     // The login itself is already authorized; do not turn a cleanup failure
     // into a failed sign-in.
+  }
+
+  if (user.mfaEnabled) {
+    const token = await createMfaChallengeToken({
+      userId: user.id,
+      email: user.email,
+      sessionVersion: user.sessionVersion,
+    });
+
+    return {
+      kind: "mfa_required",
+      token,
+    };
   }
 
   const token = await createSessionToken({

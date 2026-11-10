@@ -10,6 +10,8 @@
  */
 export type * from './models/User.ts'
 export type * from './models/RateLimitBucket.ts'
+export type * from './models/MfaRecoveryCode.ts'
+export type * from './models/SecurityAuditEvent.ts'
 export type * from './models/Notification.ts'
 export type * from './models/Settings.ts'
 export type * from './models/Contact.ts'
