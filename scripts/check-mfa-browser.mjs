@@ -120,7 +120,7 @@ try {
   const settingsAxe = await new AxeBuilder({
     page,
   })
-    .include(".hub-profile-v2-page")
+    .include(".hub-settings-page")
     .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
     .analyze();
 
