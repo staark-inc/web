@@ -24,7 +24,11 @@
     "check:security-seo": "node scripts/check-security-seo.mjs",
     "test:public-website": "node --experimental-strip-types --test test/contact-intake.test.ts test/public-http-cache.test.ts",
     "check:public-browser": "node scripts/check-public-browser.mjs",
-    "check:hub-browser": "node scripts/check-hub-browser.mjs"
+    "check:hub-browser": "node scripts/check-hub-browser.mjs",
+    "test:hub-ui": "node --experimental-strip-types --test test/hub-ui-contract.test.ts",
+    "check:hub-ui-contract": "node scripts/check-hub-ui-contract.mjs",
+    "check:hub-ui-browser": "node scripts/check-hub-ui-browser.mjs",
+    "check:hub-visual": "node scripts/check-hub-visual.mjs"
   },
   "dependencies": {
     "@google-analytics/data": "^7.1.0",

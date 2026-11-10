@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import "./styles/tokens.css";
+import "./styles/base.css";
 import "./hub.css";
 import "./offer-project-link.css";
 import "./project-demo-management.css";

@@ -43,3 +43,7 @@ prisma/migrations-old/
 
 # Generated only for browser checks
 app/hub-ui-fixture/
+app/hub-ui-foundation/
+
+# Playwright visual output
+/test-results/

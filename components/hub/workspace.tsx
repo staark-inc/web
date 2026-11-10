@@ -3,9 +3,12 @@ import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { ArrowRight } from "lucide-react";
 
 /**
- * Staark Workspace primitives.
- * Use sw-* classes from app/hub/theme.css. These are intentionally
- * presentation-only: fetching, navigation state and mutation stay in pages.
+ * Staark Workspace compatibility facade.
+ *
+ * UI-01 freezes these exports and their DOM/class output so existing pages stay
+ * visually and functionally unchanged. New work should import the canonical
+ * CSS-Module primitives from "@/components/hub/ui". Keep this facade until the
+ * page-template migrations replace it route by route.
  */
 export function WorkspacePage({ children, className }: {
   children: ReactNode;

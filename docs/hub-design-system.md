@@ -1,4 +1,6 @@
-# Staark Hub — Unified Workspace Design Contract
+# Staark Hub - Unified Workspace Design Contract
+
+> UI-01 update: the canonical Design System 2.0 foundation, CSS ownership rules and token contract are now documented in [`hub-design-system-2.md`](./hub-design-system-2.md). This document remains the historical contract for PR #103.
 
 Status: **implementation contract for PR #103**. Scope: `staark-inc/web` Hub UI only. Target branch: `dev`.
 
