@@ -458,9 +458,9 @@ export default async function HubProfilePage({
           </div>
         </section>
 
-        <section className="hub-profile-v2-card hub-profile-v2-card-full sw-card sw-card-panel sw-detail-panel">
-          <div className="hub-profile-v2-card-head sw-detail-panel-head">
-            <div className="hub-profile-v2-card-icon">
+        <section className="sw-card sw-card-panel sw-detail-panel">
+          <div className="sw-detail-panel-head">
+            <div>
               <ShieldCheck size={18} />
             </div>
             <div>
@@ -469,7 +469,7 @@ export default async function HubProfilePage({
             </div>
           </div>
 
-          <div className="hub-profile-v2-card-body">
+          <div className="hub-settings-grid">
             <p>
               {user.mfaEnabled
                 ? "Two-factor authentication is enabled for this account."

@@ -34,7 +34,7 @@ export default async function HubMfaSettingsPage() {
   }
 
   return (
-    <WorkspacePage className="hub-profile-v2-page sw-detail-page">
+    <WorkspacePage className="hub-settings-page sw-detail-page">
       <PageHeader
         eyebrow="STAARK HUB"
         title="Two-factor authentication"
@@ -51,9 +51,9 @@ export default async function HubMfaSettingsPage() {
         </Link>
       </div>
 
-      <section className="hub-profile-v2-card sw-card sw-card-panel sw-detail-panel">
-        <div className="hub-profile-v2-card-head sw-detail-panel-head">
-          <div className="hub-profile-v2-card-icon">
+      <section className="sw-card sw-card-panel sw-detail-panel">
+        <div className="sw-detail-panel-head">
+          <div>
             <ShieldCheck size={18} />
           </div>
           <div>
@@ -66,11 +66,7 @@ export default async function HubMfaSettingsPage() {
           </div>
         </div>
 
-        <div className="hub-profile-v2-card-body">
-          <MfaSettings
-            enabled={user.mfaEnabled}
-          />
-        </div>
+        <MfaSettings enabled={user.mfaEnabled} />
       </section>
     </WorkspacePage>
   );

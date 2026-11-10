@@ -142,7 +142,7 @@ export default function MfaSettings({
 
   if (recoveryCodes.length > 0) {
     return (
-      <div className="hub-profile-v2-alert hub-profile-v2-alert-success">
+      <div className="hub-profile-alert hub-profile-alert-success">
         <CheckCircle2 size={18} />
         <div>
           <strong>
@@ -177,7 +177,7 @@ export default function MfaSettings({
   if (enabled) {
     return (
       <div className="hub-settings-grid">
-        <div className="hub-profile-v2-alert hub-profile-v2-alert-success">
+        <div className="hub-profile-alert hub-profile-alert-success">
           <ShieldCheck size={18} />
           <div>
             <strong>Enabled</strong>
@@ -190,7 +190,7 @@ export default function MfaSettings({
 
         {error ? (
           <div
-            className="hub-profile-v2-alert hub-profile-v2-alert-error"
+            className="hub-profile-alert hub-profile-alert-error"
             role="alert"
           >
             <ShieldOff size={18} />
@@ -252,7 +252,7 @@ export default function MfaSettings({
       <div className="hub-settings-grid">
         {error ? (
           <div
-            className="hub-profile-v2-alert hub-profile-v2-alert-error"
+            className="hub-profile-alert hub-profile-alert-error"
             role="alert"
           >
             <ShieldOff size={18} />
@@ -334,7 +334,7 @@ export default function MfaSettings({
     <div className="hub-settings-grid">
       {error ? (
         <div
-          className="hub-profile-v2-alert hub-profile-v2-alert-error"
+          className="hub-profile-alert hub-profile-alert-error"
           role="alert"
         >
           <ShieldOff size={18} />
