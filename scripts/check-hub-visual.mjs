@@ -49,7 +49,7 @@ const routes = [
   { name: "foundation", path: "/hub-ui-foundation", ready: "[data-sw-ui] h1" },
   { name: "login", path: "/hub/login", ready: ".hub-login-card" },
   ...previewSections.map((section) => ({
-    name: `preview-${section}`,
+    name: `preview-v2-${section}`,
     path: `/hub/design-preview?section=${section}`,
     ready: "#preview-main h1",
     auth: true,

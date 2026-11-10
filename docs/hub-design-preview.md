@@ -1,4 +1,6 @@
-# Staark Hub Design Preview
+# Staark Hub Design Preview V1
+
+> V2 redesign: see [`hub-design-preview-v2.md`](./hub-design-preview-v2.md). The V1 preview screenshots are retained as the before state.
 
 Status: **UI-PREVIEW-001 implemented and pending review.** Stacked on `fix/staark-hub-ui-01-foundation`; retarget to `dev` after UI-01 merges.
 

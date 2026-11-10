@@ -61,10 +61,19 @@ test("preview does not leak into production navigation", () => {
   }
 });
 
+test("preview extends the canonical token set for the V2 direction", () => {
+  const tokens = read("app/hub/styles/tokens.css");
+  for (const token of ["--sw-midnight", "--sw-electric", "--sw-cloud", "--sw-signal", "--sw-font-display"]) {
+    assert.match(tokens, new RegExp(token + ":"), "Missing V2 token " + token);
+  }
+});
+
 test("preview uses scoped CSS Modules, canonical tokens and approved breakpoints", () => {
   const css = read(previewRoot + "/preview.module.css");
   assert.doesNotMatch(css, /!important/);
   assert.doesNotMatch(css, /:global/);
+  assert.doesNotMatch(css, /linear-gradient|radial-gradient/);
+  assert.doesNotMatch(css, /backdrop-filter/);
   assert.doesNotMatch(css, /^\s*\.(?:hub|sw)-/m);
   assert.match(css, /var\(--sw-/);
   assert.doesNotMatch(
@@ -101,16 +110,32 @@ test("preview has all six sections and deterministic visual baselines", () => {
     );
   }
 
-  const baselines = walk("test/visual/hub").filter((file) => file.includes("preview-"));
-  assert.equal(baselines.length, 30, "Expected six preview sections at five widths");
+  const allPreviewBaselines = walk("test/visual/hub").filter((file) => file.includes("preview-"));
+  const v1Baselines = allPreviewBaselines.filter((file) => !file.includes("preview-v2-"));
+  const v2Baselines = allPreviewBaselines.filter((file) => file.includes("preview-v2-"));
+  assert.equal(v1Baselines.length, 30, "Expected 30 retained V1 preview baselines");
+  assert.equal(v2Baselines.length, 30, "Expected six V2 preview sections at five widths");
   for (const section of ["dashboard", "collection", "detail", "forms", "settings", "shell"]) {
     for (const viewport of ["320x568", "390x844", "768x900", "1024x768", "1440x900"]) {
       assert.ok(
-        baselines.includes(`test/visual/hub/preview-${section}-${viewport}.png`),
-        `Missing preview baseline preview-${section}-${viewport}.png`,
+        v1Baselines.includes(`test/visual/hub/preview-${section}-${viewport}.png`),
+        `Missing V1 comparison baseline preview-${section}-${viewport}.png`,
+      );
+      assert.ok(
+        v2Baselines.includes(`test/visual/hub/preview-v2-${section}-${viewport}.png`),
+        `Missing V2 baseline preview-v2-${section}-${viewport}.png`,
       );
     }
   }
+});
+
+test("V2 shell, search, quick create and security surfaces exist", () => {
+  const shell = read(previewRoot + "/DesignPreview.tsx");
+  for (const marker of ["data-compact", "Search Staark", "Quick create", "Collapse navigation"]) {
+    assert.match(shell, new RegExp(marker), "Missing V2 shell marker: " + marker);
+  }
+  assert.match(read(previewRoot + "/sections/SettingsSection.tsx"), /TOTP authenticator enabled/);
+  assert.match(read(previewRoot + "/sections/FormsSection.tsx"), /Discard this draft\?/);
 });
 
 test("preview scripts are wired into package commands", () => {

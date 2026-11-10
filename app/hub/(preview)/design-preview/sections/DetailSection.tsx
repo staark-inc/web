@@ -2,6 +2,7 @@
 
 import {
   ArrowLeft,
+  ArrowUpRight,
   CalendarDays,
   CheckCircle2,
   Clock3,
@@ -19,7 +20,6 @@ import {
   ActionLink,
   Button,
   Card,
-  PageHeader,
   StatusBadge,
 } from "@/components/hub/ui";
 
@@ -35,7 +35,6 @@ const detailTabs = [
 ] as const;
 
 type DetailTab = (typeof detailTabs)[number]["id"];
-
 type TimelineItem = (typeof previewTimeline)[number];
 
 const files = [
@@ -43,6 +42,11 @@ const files = [
   { name: "Homepage concept v2.fig", meta: "18.1 MB · Shared today", icon: Sparkles },
   { name: "Brand photography.zip", meta: "84 MB · Received yesterday", icon: FileText },
   { name: "Invoice 1042.pdf", meta: "Paid · 1 week ago", icon: ReceiptText },
+];
+
+const relatedContacts = [
+  { initials: "ES", name: "Elin Sandberg", role: "Marketing director", primary: true },
+  { initials: "JL", name: "Johan Lind", role: "Clinic owner", primary: false },
 ];
 
 function Timeline({ items }: { items: TimelineItem[] }) {
@@ -100,16 +104,10 @@ function NextStepPanel({ onPreview }: { onPreview: () => void }) {
         Client feedback is due Friday. Confirm the hero direction before the build handover.
       </p>
       <div className={styles.sideList}>
-        <span className={styles.sideRow}>
-          <CalendarDays size={15} aria-hidden="true" />
-          Due 14 Nov
-        </span>
-        <span className={styles.sideRow}>
-          <ShieldCheck size={15} aria-hidden="true" />
-          Accessibility review included
-        </span>
+        <span className={styles.sideRow}><CalendarDays size={15} aria-hidden="true" /> Due 14 Nov</span>
+        <span className={styles.sideRow}><ShieldCheck size={15} aria-hidden="true" /> Accessibility review included</span>
       </div>
-      <Button type="button" variant="secondary" size="sm" block>
+      <Button type="button" variant="secondary" size="sm" block onClick={onPreview}>
         Open task preview
       </Button>
     </Card>
@@ -141,12 +139,7 @@ export function DetailSection({
     const body = draft.trim();
     if (!body) return;
     setTimeline((current) => [
-      {
-        title: "Note added in preview",
-        meta: "Just now · Alexandra",
-        body,
-        tone: "info",
-      },
+      { title: "Note added in preview", meta: "Just now · Alexandra", body, tone: "info" },
       ...current,
     ]);
     setDraft("");
@@ -156,33 +149,32 @@ export function DetailSection({
 
   return (
     <div className={styles.sectionStack}>
-      <PageHeader
-        className={styles.pageHeader}
-        eyebrow="CRM / CLIENT DETAIL"
-        title="Northstar Dental"
-        description="A single detail template for identity, status, action priority, activity and supporting context."
-        action={
-          <Button type="button" variant="secondary" onClick={() => onNavigate("collection")}>
-            <ArrowLeft size={16} aria-hidden="true" />
-            Back to collection
-          </Button>
-        }
-      />
+      <header className={styles.detailHero}>
+        <div className={styles.detailTopRow}>
+          <button type="button" className={styles.backLink} onClick={() => onNavigate("collection")}>
+            <ArrowLeft size={15} aria-hidden="true" />
+            Clients
+          </button>
+          <span className={styles.signalBadge}><span aria-hidden="true" /> On track · signal healthy</span>
+        </div>
 
-      <Card padding="lg" className={styles.entityCard}>
         <div className={styles.entityHeader}>
-          <span className={styles.entityAvatar}>ND</span>
+          <span className={styles.entityMark}>
+            ND
+            <span aria-hidden="true" />
+          </span>
           <div className={styles.entityIdentity}>
             <div className={styles.entityTags}>
               <StatusBadge tone="success">Active client</StatusBadge>
               <StatusBadge tone="info">Website redesign</StatusBadge>
               <StatusBadge>Enterprise</StatusBadge>
             </div>
-            <h2>Northstar Dental</h2>
+            <h1>Northstar Dental</h1>
             <p>Dental care · Jonkoping · Client since March 2025</p>
           </div>
           <div className={styles.entityActions}>
             <ActionLink href="mailto:elin@northstar.example" variant="secondary">
+              <Mail size={15} aria-hidden="true" />
               Email client
             </ActionLink>
             <Button type="button" onClick={() => setActivityOpen(true)}>
@@ -191,13 +183,14 @@ export function DetailSection({
             </Button>
           </div>
         </div>
-        <dl className={styles.entityStats}>
+
+        <dl className={styles.dealStrip}>
           <div><dt>Contract value</dt><dd>SEK 184,000</dd></div>
           <div><dt>Open tasks</dt><dd>6</dd></div>
           <div><dt>Next review</dt><dd>14 Nov</dd></div>
-          <div><dt>Health</dt><dd><StatusBadge tone="success">On track</StatusBadge></dd></div>
+          <div><dt>Health</dt><dd><span className={styles.signalText}>On track</span></dd></div>
         </dl>
-      </Card>
+      </header>
 
       {notice && (
         <div className={styles.successAlert} role="status">
@@ -221,6 +214,7 @@ export function DetailSection({
             onKeyDown={(event) => handleTabKey(event, index)}
           >
             {item.label}
+            {item.id === "activity" && <span className={styles.tabCount}>{timeline.length}</span>}
           </button>
         ))}
       </div>
@@ -233,6 +227,18 @@ export function DetailSection({
       >
         <div className={styles.detailGrid}>
           <div className={styles.detailMain}>
+            <section className={styles.nextActionCard}>
+              <span className={styles.nextActionBar} aria-hidden="true" />
+              <div>
+                <span className={styles.eyebrow}>NEXT BEST ACTION</span>
+                <h2>Send homepage direction for approval</h2>
+                <p>Concept v2 is ready. The client is waiting for the hero and booking flow decision.</p>
+              </div>
+              <Button type="button" variant="secondary" size="sm" onClick={() => setActivityOpen(true)}>
+                Add context
+              </Button>
+            </section>
+
             <Card padding="none">
               <div className={styles.panelHeaderCompact}>
                 <div>
@@ -245,6 +251,23 @@ export function DetailSection({
               </div>
               <div className={styles.timelineWrap}>
                 <Timeline items={timeline.slice(0, 3)} />
+              </div>
+            </Card>
+
+            <Card padding="none">
+              <div className={styles.panelHeaderCompact}>
+                <div>
+                  <span className={styles.eyebrow}>NOTES</span>
+                  <h2>Pinned context</h2>
+                </div>
+                <Button type="button" size="sm" onClick={() => setActivityOpen(true)}>
+                  <Plus size={15} aria-hidden="true" />
+                  Add note
+                </Button>
+              </div>
+              <div className={styles.noteBlock}>
+                <p>“Client wants the booking journey to feel calmer and faster. Keep the team page simple.”</p>
+                <span>Alexandra · 3 days ago</span>
               </div>
             </Card>
 
@@ -268,6 +291,21 @@ export function DetailSection({
           <aside className={styles.detailSidebar} aria-label="Client context">
             <ContactPanel />
             <NextStepPanel onPreview={() => setNotice("Task preview is a visual-only interaction in this static design preview.")} />
+            <Card className={styles.sidePanel}>
+              <span className={styles.eyebrow}>RELATED CONTACTS</span>
+              <div className={styles.relatedContacts}>
+                {relatedContacts.map((contact) => (
+                  <div className={styles.relatedContact} key={contact.name}>
+                    <span>{contact.initials}</span>
+                    <div>
+                      <strong>{contact.name}</strong>
+                      <small>{contact.role}</small>
+                    </div>
+                    {contact.primary && <span className={styles.primaryTag}>Primary</span>}
+                  </div>
+                ))}
+              </div>
+            </Card>
             <Card className={styles.sidePanel}>
               <span className={styles.eyebrow}>TAGS</span>
               <div className={styles.tagList}>
@@ -298,9 +336,7 @@ export function DetailSection({
               Add note
             </Button>
           </div>
-          <div className={styles.timelineWrap}>
-            <Timeline items={timeline} />
-          </div>
+          <div className={styles.timelineWrap}><Timeline items={timeline} /></div>
         </Card>
       </div>
 
@@ -342,6 +378,7 @@ export function DetailSection({
                     onClick={() => setNotice(`Preview file: ${file.name}`)}
                   >
                     Open
+                    <ArrowUpRight size={14} aria-hidden="true" />
                   </Button>
                 </div>
               );
@@ -361,12 +398,8 @@ export function DetailSection({
         description="This demonstrates the detail-page dialog contract. Nothing is sent to a server."
         footer={
           <>
-            <Button type="button" variant="secondary" onClick={() => setActivityOpen(false)}>
-              Cancel
-            </Button>
-            <Button type="button" onClick={saveActivity} disabled={!draft.trim()}>
-              Add note
-            </Button>
+            <Button type="button" variant="secondary" onClick={() => setActivityOpen(false)}>Cancel</Button>
+            <Button type="button" onClick={saveActivity} disabled={!draft.trim()}>Add note</Button>
           </>
         }
       >

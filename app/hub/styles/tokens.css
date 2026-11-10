@@ -16,6 +16,7 @@
 
   /* Typography */
   --sw-font-sans: var(--font-geist-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --sw-font-display: var(--font-unbounded), var(--sw-font-sans);
   --sw-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --sw-weight-regular: 400;
   --sw-weight-medium: 500;
@@ -46,6 +47,7 @@
   --sw-ink: #172238;
   --sw-body: #344258;
   --sw-muted: #62718a;
+  --sw-muted-on-cloud: #52617a;
   --sw-line: #dfe6f0;
   --sw-line-strong: #b8c9ea;
   --sw-accent: #315cf5;
@@ -68,6 +70,16 @@
   --sw-sidebar-muted: #92969e;
   --sw-sidebar-active: #1e2a40;
   --sw-sidebar-line: rgba(255, 255, 255, 0.08);
+
+  /* Design Preview V2 direction. These are additive and unused by legacy pages. */
+  --sw-midnight: #0b1220;
+  --sw-electric: #315cf5;
+  --sw-cloud: #eef2f8;
+  --sw-signal: #c6ff70;
+  --sw-signal-ink: #1b2a05;
+  --sw-navy-raised: #141f33;
+  --sw-navy-muted: #8b98ad;
+  --sw-navy-line: rgba(255, 255, 255, 0.1);
 
   /* Focus */
   --sw-focus-color: #315cf5;

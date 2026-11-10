@@ -1,10 +1,11 @@
 "use client";
 
 import {
-  ArrowRight,
+  ArrowUpRight,
   CalendarClock,
+  CheckCircle2,
   CircleDollarSign,
-  Sparkles,
+  ArrowRight,
   Target,
   TrendingUp,
   UsersRound,
@@ -12,90 +13,70 @@ import {
 import { useState } from "react";
 
 import {
-  ActionLink,
   Button,
   Card,
-  Metric,
-  Metrics,
   PageHeader,
   StatusBadge,
 } from "@/components/hub/ui";
 
 import {
-  formatPreviewAmount,
   previewActivity,
   previewAttention,
   previewSources,
-  previewTrendLabels,
   previewTrendSeries,
   type PreviewTrendRange,
 } from "../preview-data";
 import type { PreviewSectionId } from "../preview-sections";
 import styles from "../preview.module.css";
 
-const chartWidth = 640;
-const chartHeight = 220;
-const chartPadding = 18;
+const chartWidth = 360;
+const chartHeight = 112;
+const chartPadding = 8;
 
-function TrendChart({ range }: { range: PreviewTrendRange }) {
+const priorityLabels = {
+  danger: "Critical",
+  warning: "Due today",
+  info: "Review",
+  success: "Clear",
+} as const;
+
+function HeroChart({ range }: { range: PreviewTrendRange }) {
   const values = previewTrendSeries[range];
   const max = Math.max(...values) * 1.12;
   const points = values.map((value, index) => {
     const x = chartPadding + (index / (values.length - 1)) * (chartWidth - chartPadding * 2);
     const y = chartHeight - chartPadding - (value / max) * (chartHeight - chartPadding * 2);
-    return { x, y, value };
+    return { x, y };
   });
   const line = points.map((point) => `${point.x},${point.y}`).join(" ");
   const area = `M ${chartPadding} ${chartHeight - chartPadding} L ${line.replaceAll(" ", " L ")} L ${chartWidth - chartPadding} ${chartHeight - chartPadding} Z`;
   const last = points[points.length - 1];
-  const labelIndexes = [0, 3, 6, 9, 11];
 
   return (
-    <div className={styles.chartPlot}>
-      <svg
-        className={styles.chartSvg}
-        viewBox={`0 0 ${chartWidth} ${chartHeight}`}
-        role="img"
-        aria-label={`Qualified lead trend for the last ${range}, ending at ${values[values.length - 1]} qualified leads.`}
-      >
-        <defs>
-          <linearGradient id="preview-trend-fill" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="#315cf5" stopOpacity="0.22" />
-            <stop offset="100%" stopColor="#315cf5" stopOpacity="0.02" />
-          </linearGradient>
-        </defs>
-        {[0, 1, 2, 3].map((lineIndex) => {
-          const y = chartPadding + (lineIndex / 3) * (chartHeight - chartPadding * 2);
-          return (
-            <line
-              key={lineIndex}
-              x1={chartPadding}
-              x2={chartWidth - chartPadding}
-              y1={y}
-              y2={y}
-              className={styles.chartGridLine}
-            />
-          );
-        })}
-        <path d={area} fill="url(#preview-trend-fill)" />
-        <polyline points={line} className={styles.chartLine} />
-        {points.map((point, index) => (
-          <circle
-            key={index}
-            cx={point.x}
-            cy={point.y}
-            r={index === points.length - 1 ? 4.5 : 2.5}
-            className={styles.chartPoint}
+    <svg
+      className={styles.heroChartSvg}
+      viewBox={`0 0 ${chartWidth} ${chartHeight}`}
+      role="img"
+      aria-label={`Pipeline trend for the last ${range}, ending at ${values[values.length - 1]} qualified opportunities.`}
+    >
+      {[0, 1, 2].map((lineIndex) => {
+        const y = chartPadding + (lineIndex / 2) * (chartHeight - chartPadding * 2);
+        return (
+          <line
+            key={lineIndex}
+            x1={chartPadding}
+            x2={chartWidth - chartPadding}
+            y1={y}
+            y2={y}
+            className={styles.heroChartGrid}
           />
-        ))}
-        <circle cx={last.x} cy={last.y} r="9" className={styles.chartPulse} />
-      </svg>
-      <div className={styles.chartLabels}>
-        {labelIndexes.map((index) => (
-          <span key={index}>{previewTrendLabels[index]}</span>
-        ))}
-      </div>
-    </div>
+        );
+      })}
+      <path d={area} className={styles.heroChartArea} />
+      <polyline points={line} className={styles.heroChartLine} />
+      <circle cx={last.x} cy={last.y} r="4" className={styles.heroChartPoint} />
+      <circle cx={last.x} cy={last.y} r="10" className={styles.heroChartSignal} />
+    </svg>
   );
 }
 
@@ -111,64 +92,38 @@ export function DashboardSection({
     <div className={styles.sectionStack}>
       <PageHeader
         className={styles.pageHeader}
-        eyebrow="WORKSPACE / OVERVIEW"
+        eyebrow="NOVEMBER / OPERATIONS"
         title="Good morning, Alexandra"
-        description="A calm operational view of pipeline, delivery and the work that needs attention today."
+        description="A live operational view of the pipeline, the decisions waiting today and the work that keeps delivery moving."
         action={
-          <ActionLink
-            href="/hub/design-preview?section=collection"
-            onClick={(event) => {
-              event.preventDefault();
-              onNavigate("collection");
-            }}
-          >
-            Review pipeline
-            <ArrowRight size={16} aria-hidden="true" />
-          </ActionLink>
+          <div className={styles.headerActions}>
+            <Button type="button" variant="secondary" onClick={() => onNavigate("detail")}>
+              Open priorities
+            </Button>
+            <Button type="button" onClick={() => onNavigate("collection")}>
+              Open pipeline
+              <ArrowUpRight size={16} aria-hidden="true" />
+            </Button>
+          </div>
         }
       />
 
-      <Metrics label="Workspace overview">
-        <Metric
-          label="Open pipeline"
-          value="SEK 1.41M"
-          description="+12.4% vs last month"
-          icon={<CircleDollarSign size={18} />}
-        />
-        <Metric
-          label="New leads"
-          value="24"
-          description="8 need qualification"
-          icon={<Target size={18} />}
-        />
-        <Metric
-          label="Active clients"
-          value="38"
-          description="4 reviews this week"
-          icon={<UsersRound size={18} />}
-        />
-        <Metric
-          label="Qualified leads"
-          value={currentValue}
-          description="Last 30 days trend"
-          icon={<TrendingUp size={18} />}
-        />
-      </Metrics>
-
-      <div className={styles.dashboardGrid}>
-        <Card padding="none" className={styles.chartCard}>
-          <div className={styles.panelHeader}>
+      <div className={styles.heroGrid}>
+        <section className={styles.heroPanel} aria-labelledby="pipeline-hero-title">
+          <div className={styles.heroHeader}>
             <div>
-              <span className={styles.eyebrow}>PIPELINE SIGNAL</span>
-              <h2>Qualified leads</h2>
-              <p>Movement from first conversation to sales-ready opportunity.</p>
+              <span className={styles.heroEyebrow}>
+                <span className={styles.signalDot} aria-hidden="true" />
+                LIVE PIPELINE
+              </span>
+              <p>Commercial momentum, not vanity metrics.</p>
             </div>
-            <div className={styles.rangeGroup} role="group" aria-label="Chart range">
+            <div className={styles.heroRange} role="group" aria-label="Pipeline chart period">
               {(["7d", "30d", "90d"] as const).map((option) => (
                 <button
                   key={option}
                   type="button"
-                  className={`${styles.rangeButton} ${range === option ? styles.rangeActive : ""}`}
+                  className={`${styles.heroRangeButton} ${range === option ? styles.heroRangeActive : ""}`}
                   aria-pressed={range === option}
                   onClick={() => setRange(option)}
                 >
@@ -177,64 +132,117 @@ export function DashboardSection({
               ))}
             </div>
           </div>
-          <div className={styles.chartSummary}>
-            <strong>{currentValue}</strong>
-            <StatusBadge tone="success" icon={<TrendingUp size={13} />}>+18%</StatusBadge>
-            <span>qualified leads this period</span>
-          </div>
-          <div className={styles.chartWrap}>
-            <TrendChart range={range} />
-          </div>
-          <div className={styles.chartFooter}>
-            <span className={styles.legendItem}>
-              <span className={styles.legendDot} /> Qualified leads
-            </span>
-            <span>Updated 09:41 · static preview data</span>
-          </div>
-        </Card>
 
-        <Card padding="none" className={styles.attentionCard}>
-          <div className={styles.panelHeaderCompact}>
-            <div>
-              <span className={styles.eyebrow}>ATTENTION</span>
-              <h2>Needs a decision</h2>
+          <div className={styles.heroMain}>
+            <div className={styles.heroValueBlock}>
+              <span>Open pipeline</span>
+              <strong id="pipeline-hero-title">
+                <span className={styles.heroCurrency}>SEK</span>
+                2.48M
+              </strong>
+              <div className={styles.heroDelta}>
+                <TrendingUp size={16} aria-hidden="true" />
+                <strong>+18.2%</strong>
+                <span>vs previous period</span>
+              </div>
+              <Button type="button" variant="secondary" size="sm" onClick={() => onNavigate("collection")}>
+                Inspect opportunities
+                <ArrowRight size={15} aria-hidden="true" />
+              </Button>
             </div>
-            <span className={styles.countBadge}>4</span>
+            <div className={styles.heroChartWrap}>
+              <div className={styles.heroChartTopline}>
+                <span>Qualified opportunities</span>
+                <strong>{currentValue}</strong>
+              </div>
+              <HeroChart range={range} />
+              <div className={styles.heroChartRange}>Sep 1 — Oct 4 · static preview data</div>
+            </div>
           </div>
-          <div className={styles.attentionList}>
-            {previewAttention.map((item) => (
+
+          <div className={styles.heroFooter}>
+            <span><span className={styles.heroFooterNumber}>14</span> opportunities need a next step</span>
+            <span><span className={styles.heroFooterNumber}>4</span> high-priority decisions</span>
+            <span className={styles.heroFooterLink}>Updated 09:41</span>
+          </div>
+        </section>
+
+        <section className={styles.priorityPanel} aria-labelledby="priority-title">
+          <header className={styles.priorityHeader}>
+            <div>
+              <span className={styles.eyebrow}>ACTION QUEUE</span>
+              <h2 id="priority-title">Priority queue</h2>
+            </div>
+            <span className={styles.queueCount}>4</span>
+          </header>
+          <div className={styles.priorityList}>
+            {previewAttention.map((item, index) => (
               <button
                 type="button"
                 key={item.title}
-                className={styles.attentionItem}
+                className={styles.priorityItem}
                 onClick={() => onNavigate(item.section)}
               >
-                <span className={`${styles.attentionDot} ${styles[`tone-${item.tone}`]}`} aria-hidden="true" />
-                <span className={styles.attentionCopy}>
+                <span className={`${styles.priorityRail} ${styles[`tone-${item.tone}`]}`} aria-hidden="true" />
+                <span className={styles.priorityRank}>{String(index + 1).padStart(2, "0")}</span>
+                <span className={styles.priorityCopy}>
                   <strong>{item.title}</strong>
                   <small>{item.meta}</small>
                 </span>
-                <ArrowRight size={15} aria-hidden="true" />
+                <span className={styles.priorityMeta}>
+                  <span className={`${styles.priorityLabel} ${styles[`toneText-${item.tone}`]}`}>
+                    {priorityLabels[item.tone]}
+                  </span>
+                  <ArrowRight size={14} aria-hidden="true" />
+                </span>
               </button>
             ))}
           </div>
-          <div className={styles.panelFooter}>
-            <Button variant="secondary" size="sm" onClick={() => onNavigate("detail")}>
-              Open priority record
-            </Button>
-          </div>
-        </Card>
+          <footer className={styles.priorityFooter}>
+            <button type="button" onClick={() => onNavigate("detail")}>
+              Open full priority view
+              <ArrowUpRight size={15} aria-hidden="true" />
+            </button>
+          </footer>
+        </section>
       </div>
 
-      <div className={styles.dashboardLowerGrid}>
-        <Card padding="none">
+      <Card padding="none" className={styles.kpiRail}>
+        <div className={styles.kpiModule}>
+          <span className={styles.kpiIcon}><Target size={17} aria-hidden="true" /></span>
+          <span className={styles.kpiLabel}>New leads</span>
+          <strong>24</strong>
+          <small className={styles.kpiPositive}>+6 this week</small>
+        </div>
+        <div className={styles.kpiModule}>
+          <span className={styles.kpiIcon}><UsersRound size={17} aria-hidden="true" /></span>
+          <span className={styles.kpiLabel}>Active clients</span>
+          <strong>38</strong>
+          <small>4 reviews this week</small>
+        </div>
+        <div className={styles.kpiModule}>
+          <span className={styles.kpiIcon}><CircleDollarSign size={17} aria-hidden="true" /></span>
+          <span className={styles.kpiLabel}>Qualified opportunities</span>
+          <strong>69</strong>
+          <small className={styles.kpiSignal}><span aria-hidden="true" /> 12 are offer-ready</small>
+        </div>
+        <div className={`${styles.kpiModule} ${styles.kpiProgressModule}`}>
+          <span className={styles.kpiIcon}><CheckCircle2 size={17} aria-hidden="true" /></span>
+          <span className={styles.kpiLabel}>Delivery progress</span>
+          <strong>72%</strong>
+          <span className={styles.kpiProgress}><span style={{ width: "72%" }} /></span>
+        </div>
+      </Card>
+
+      <div className={styles.lowerGrid}>
+        <Card padding="none" className={styles.activityPanel}>
           <div className={styles.panelHeaderCompact}>
             <div>
-              <span className={styles.eyebrow}>ACTIVITY</span>
-              <h2>Latest movement</h2>
+              <span className={styles.eyebrow}>LIVE ACTIVITY</span>
+              <h2>What changed</h2>
             </div>
-            <Button variant="ghost" size="sm" onClick={() => onNavigate("detail")}>
-              View all
+            <Button type="button" variant="ghost" size="sm" onClick={() => onNavigate("detail")}>
+              View timeline
             </Button>
           </div>
           <div className={styles.activityList}>
@@ -251,60 +259,44 @@ export function DashboardSection({
           </div>
         </Card>
 
-        <Card padding="none">
+        <Card padding="none" className={styles.sourcePanel}>
           <div className={styles.panelHeaderCompact}>
             <div>
-              <span className={styles.eyebrow}>SOURCE MIX</span>
-              <h2>Where pipeline comes from</h2>
+              <span className={styles.eyebrow}>PIPELINE SOURCE</span>
+              <h2>Where it comes from</h2>
             </div>
-            <Sparkles size={18} className={styles.panelIcon} aria-hidden="true" />
+            <CalendarClock size={18} className={styles.panelIcon} aria-hidden="true" />
           </div>
-          <div className={styles.sourceList}>
+          <div className={styles.sourceBar} aria-hidden="true">
             {previewSources.map((source) => (
-              <div className={styles.sourceItem} key={source.label}>
-                <div className={styles.sourceHead}>
-                  <span>{source.label}</span>
-                  <strong>{source.value}%</strong>
-                </div>
-                <div className={styles.sourceTrack}>
-                  <span
-                    className={`${styles.sourceBar} ${styles[`source-${source.color}`]}`}
-                    style={{ width: `${source.value}%` }}
-                  />
-                </div>
+              <span
+                key={source.label}
+                className={styles[`source-${source.color}`]}
+                style={{ width: `${source.value}%` }}
+              />
+            ))}
+          </div>
+          <div className={styles.sourceLegend}>
+            {previewSources.map((source) => (
+              <div key={source.label}>
+                <span className={`${styles.sourceDot} ${styles[`source-${source.color}`]}`} />
+                <span>{source.label}</span>
+                <strong>{source.value}%</strong>
               </div>
             ))}
           </div>
-          <div className={styles.panelFooter}>
-            <span className={styles.footnote}>
-              <CalendarClock size={15} aria-hidden="true" />
-              Snapshot for the last 30 days
-            </span>
+          <div className={styles.sourceFooter}>
+            <span>Referrals convert 1.7× faster than outbound.</span>
+            <button type="button" onClick={() => onNavigate("collection")}>
+              Inspect source data <ArrowUpRight size={14} aria-hidden="true" />
+            </button>
           </div>
         </Card>
       </div>
 
-      <Card className={styles.insightCard}>
-        <div className={styles.insightIcon}>
-          <TrendingUp size={20} aria-hidden="true" />
-        </div>
-        <div>
-          <span className={styles.eyebrow}>PREVIEW INSIGHT</span>
-          <h2>Pipeline quality is improving, but follow-up is uneven.</h2>
-          <p>
-            Referral leads convert 1.7× faster than outbound. The next design pass should make
-            ownership and the next action visible in every list row.
-          </p>
-        </div>
-        <Button variant="secondary" onClick={() => onNavigate("collection")}>
-          Inspect collection
-        </Button>
-      </Card>
-
       <p className={styles.dataNote}>
         All dashboard values are deterministic mock data. No Prisma query, analytics call or external request is made.
       </p>
-      <span className={styles.srOnly}>{formatPreviewAmount(1410000)} open pipeline.</span>
     </div>
   );
 }
