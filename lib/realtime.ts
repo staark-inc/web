@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { getCustomerUnreadCount } from "@/lib/crm-unread";
+import { assertConfiguredServiceUrl } from "@/lib/network-policy";
 
 const REALTIME_URL =
   process.env.REALTIME_URL ??
@@ -30,8 +31,13 @@ export async function publishRealtimeEvent(
   }
 
   try {
-    const response = await fetch(
+    const url = assertConfiguredServiceUrl(
       `${REALTIME_URL}/publish`,
+      "REALTIME_URL"
+    );
+
+    const response = await fetch(
+      url,
       {
         method: "POST",
         headers: {

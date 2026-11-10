@@ -2,6 +2,11 @@ import { NextResponse, type NextRequest } from "next/server";
 import { posts } from "./app/data/posts";
 import { projects } from "./app/data/projects";
 import { services } from "./app/data/services";
+import {
+  httpsRedirectUrl,
+  isAllowedHost,
+  requestHost,
+} from "./lib/origin-policy";
 import { canReturnNotModified, publicHtmlCacheHeaders } from "./lib/public-http-cache";
 
 const staticPublicPages = new Set([
@@ -42,8 +47,36 @@ const publicImages = new Set([
 ]);
 
 export function proxy(request: NextRequest) {
-  if (process.env.NODE_ENV !== "production" || !["GET", "HEAD"].includes(request.method)) return NextResponse.next();
+  const httpsUrl = httpsRedirectUrl(request);
+
+  if (httpsUrl) {
+    return NextResponse.redirect(httpsUrl, 308);
+  }
+
   const path = request.nextUrl.pathname;
+  const authenticatedPath =
+    path === "/hub" ||
+    path.startsWith("/hub/") ||
+    path === "/api/hub" ||
+    path.startsWith("/api/hub/");
+
+  // A production Hub request must arrive through an approved host. This runs
+  // after the HTTPS redirect and uses forwarded headers only when the proxy is
+  // explicitly trusted.
+  if (
+    process.env.NODE_ENV === "production" &&
+    authenticatedPath &&
+    !isAllowedHost(requestHost(request))
+  ) {
+    return new NextResponse("Misdirected Request", {
+      status: 421,
+      headers: {
+        "Cache-Control": "no-store",
+      },
+    });
+  }
+
+  if (process.env.NODE_ENV !== "production" || !["GET", "HEAD"].includes(request.method)) return NextResponse.next();
   // Only files from public/, never private API attachments or uploaded media.
   if (publicImages.has(path)) {
     const response = NextResponse.next();
@@ -60,5 +93,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api/|hub/|offert/|_next/).*)"],
+  matcher: ["/((?!_next/).*)"],
 };

@@ -1,3 +1,5 @@
+import { assertConfiguredServiceUrl } from "@/lib/network-policy";
+
 const BASE_URL =
   process.env.DEMO_MANAGER_URL ||
   (process.env.NODE_ENV === "development"
@@ -17,8 +19,13 @@ async function request<T>(
     );
   }
 
-  const response = await fetch(
+  const url = assertConfiguredServiceUrl(
     `${BASE_URL}${path}`,
+    "DEMO_MANAGER_URL"
+  );
+
+  const response = await fetch(
+    url,
     {
       ...options,
       cache: "no-store",

@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
 
+import {
+  assertPublicHttpsUrl,
+  safeExternalFetch,
+} from "@/lib/network-policy";
 import { prisma } from "@/lib/prisma";
 import { verifyWordPressRequest } from "@/lib/wordpress-connector";
 
@@ -9,6 +13,11 @@ export const dynamic = "force-dynamic";
 const WORDPRESS_RELEASE_REPO = "staark-inc/wordpress";
 const MANIFEST_ASSET_NAME = "staark-wordpress-manifest.json";
 const GITHUB_USER_AGENT = "Staark-Hub-WordPress-Release-Endpoint";
+const GITHUB_RELEASE_HOSTS = [
+  "api.github.com",
+  "github.com",
+  "objects.githubusercontent.com",
+];
 
 type ReleaseChannel = "stable" | "beta";
 type ReleaseKey = "core" | "theme" | "salong" | "bygg" | "gastfrihet";
@@ -98,26 +107,51 @@ function manifestOverride(channel: ReleaseChannel) {
 
 function validHttpsUrl(value: string) {
   try {
-    return new URL(value).protocol === "https:";
+    assertPublicHttpsUrl(value);
+    return true;
   } catch {
     return false;
   }
+}
+
+function configuredManifestHosts() {
+  const hosts = [...GITHUB_RELEASE_HOSTS];
+
+  for (const value of [
+    process.env.STAARK_WORDPRESS_STABLE_MANIFEST_URL,
+    process.env.STAARK_WORDPRESS_BETA_MANIFEST_URL,
+  ]) {
+    if (!value?.trim()) continue;
+
+    try {
+      hosts.push(new URL(value.trim()).hostname);
+    } catch {
+      // The URL is rejected later by validHttpsUrl().
+    }
+  }
+
+  return [...new Set(hosts)];
 }
 
 async function fetchJson(
   url: string,
   revalidate: number | null = 300
 ): Promise<unknown> {
-  const response = await fetch(url, {
-    headers: {
-      Accept: "application/json",
-      "User-Agent": GITHUB_USER_AGENT,
+  const response = await safeExternalFetch(
+    url,
+    {
+      headers: {
+        Accept: "application/json",
+        "User-Agent": GITHUB_USER_AGENT,
+      },
+      ...(revalidate === null
+        ? { cache: "no-store" as const }
+        : { next: { revalidate } }),
     },
-    redirect: "follow",
-    ...(revalidate === null
-      ? { cache: "no-store" as const }
-      : { next: { revalidate } }),
-  });
+    {
+      allowedHosts: configuredManifestHosts(),
+    }
+  );
 
   if (!response.ok) {
     throw new Error(`HTTP ${response.status}`);

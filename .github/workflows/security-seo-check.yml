@@ -14,6 +14,8 @@ jobs:
     env:
       DATABASE_URL: postgresql://staark:build-only@localhost:5432/staark
       NEXT_TELEMETRY_DISABLED: "1"
+      APP_URL: http://localhost:3000
+      STAARK_ENFORCE_HTTPS: "0"
     steps:
       - uses: actions/checkout@v6
         with:
@@ -25,6 +27,7 @@ jobs:
       - name: Enforce Hub design contract
         run: node scripts/check-hub-theme-contract.mjs
       - run: npm ci
+      - run: npm run test:http-security
       - run: npm run test:security-seo
       - run: npm run test:news
       - run: npm run test:public-website
@@ -39,6 +42,7 @@ jobs:
       - name: Add CI-only Hub UI fixture
         run: node scripts/create-hub-ui-fixture.mjs
       - run: npm run build
+      - run: npm run check:secret-exposure
       - run: npm run typecheck
       - run: npx playwright install --with-deps chromium
       - name: Check production HTTP responses
