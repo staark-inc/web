@@ -21,7 +21,6 @@ export async function GET() {
     return NextResponse.json({
       ok: true,
       period: "last 30 days",
-      propertyId: process.env.GA4_PROPERTY_ID,
       analytics,
     });
   } catch (error) {
@@ -30,10 +29,7 @@ export async function GET() {
     return NextResponse.json(
       {
         ok: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : "Unknown error",
+        error: "Analytics test failed.",
       },
       { status: 500 }
     );

@@ -21,7 +21,9 @@
     "test:google-ads": "node --experimental-strip-types --test test/google-tag.test.ts",
     "check:google-ads-browser": "node scripts/check-google-ads-browser.mjs",
     "test:security-seo": "node --experimental-strip-types --test test/security-seo.test.ts",
+    "test:server-boundary": "node --experimental-strip-types --test test/server-boundary.test.ts",
     "check:security-seo": "node scripts/check-security-seo.mjs",
+    "check:server-boundary": "node scripts/check-server-boundary.mjs",
     "test:public-website": "node --experimental-strip-types --test test/contact-intake.test.ts test/public-http-cache.test.ts",
     "check:public-browser": "node scripts/check-public-browser.mjs",
     "check:hub-browser": "node scripts/check-hub-browser.mjs"
