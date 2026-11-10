@@ -140,10 +140,21 @@ model User {
   email                   String         @unique
   passwordHash            String
   role                    UserRole       @default(ADMIN)
+  sessionVersion          Int            @default(0)
+  disabledAt              DateTime?
   notificationPreferences Json?
   createdAt               DateTime       @default(now())
   updatedAt               DateTime       @updatedAt
   notifications           Notification[]
+}
+
+model RateLimitBucket {
+  key       String   @id
+  count     Int      @default(0)
+  resetAt   DateTime
+  updatedAt DateTime @updatedAt
+
+  @@index([resetAt])
 }
 
 model Notification {

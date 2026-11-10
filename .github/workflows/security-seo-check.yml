@@ -10,10 +10,24 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     env:
       DATABASE_URL: postgresql://staark:build-only@localhost:5432/staark
       NEXT_TELEMETRY_DISABLED: "1"
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: staark
+          POSTGRES_PASSWORD: build-only
+          POSTGRES_DB: staark
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U staark -d staark"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     steps:
       - uses: actions/checkout@v6
         with:
@@ -25,6 +39,9 @@ jobs:
       - name: Enforce Hub design contract
         run: node scripts/check-hub-theme-contract.mjs
       - run: npm ci
+      - name: Apply migrations to disposable CI database
+        run: npx prisma migrate deploy
+      - run: npm run test:security-hardening
       - run: npm run test:security-seo
       - run: npm run test:news
       - run: npm run test:public-website

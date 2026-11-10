@@ -8,7 +8,9 @@ import {
   publishCurrentBadges,
 } from "@/lib/realtime";
 
-import { ContactInputError, contactLimiter, contactSameOrigin, readContactBody } from "@/lib/contact-intake";
+import { ContactInputError, contactSameOrigin, readContactBody } from "@/lib/contact-intake";
+import { consumeRateLimit } from "@/lib/rate-limit";
+import { clientIp, hashIdentifier } from "@/lib/request-security";
 
 function rateLimitResponse(retryAfter: number) {
   return NextResponse.json(
@@ -53,8 +55,26 @@ export async function POST(
     if (!contactSameOrigin(request)) {
       return NextResponse.json({ error: "Förfrågan kommer från en annan webbplats." }, { status: 403 });
     }
-    const requestWait = contactLimiter.request(request);
-    if (requestWait) return rateLimitResponse(requestWait);
+    const globalLimit = await consumeRateLimit({
+      key: "contact:global",
+      limit: 60,
+      windowMs: 60 * 1000,
+    });
+    if (!globalLimit.allowed) {
+      return rateLimitResponse(globalLimit.retryAfter);
+    }
+
+    const ip = clientIp(request);
+    if (ip) {
+      const ipLimit = await consumeRateLimit({
+        key: `contact:ip:${hashIdentifier(ip)}`,
+        limit: 5,
+        windowMs: 10 * 60 * 1000,
+      });
+      if (!ipLimit.allowed) {
+        return rateLimitResponse(ipLimit.retryAfter);
+      }
+    }
 
     const body = await readContactBody(request);
     if (typeof body.fax === "string" && body.fax.trim()) {
@@ -98,8 +118,14 @@ export async function POST(
       );
     }
 
-    const emailWait = contactLimiter.email(email);
-    if (emailWait) return rateLimitResponse(emailWait);
+    const emailLimit = await consumeRateLimit({
+      key: `contact:email:${hashIdentifier(email)}`,
+      limit: 3,
+      windowMs: 10 * 60 * 1000,
+    });
+    if (!emailLimit.allowed) {
+      return rateLimitResponse(emailLimit.retryAfter);
+    }
 
     /*
      * Shared values.

@@ -1,172 +1,173 @@
-import { randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
-import type {
-  SupportCategory,
-  SupportPriority,
-} from "@/generated/prisma/client";
 import { createAdminNotification } from "@/lib/notifications";
-import { prisma } from "@/lib/prisma";
+import {
+  RequestBodyError,
+  readBoundedBody,
+} from "@/lib/request-body";
+import {
+  clientIp,
+  sameOriginRequest,
+} from "@/lib/request-security";
+import {
+  SUPPORT_MAX_BYTES,
+  submitSupportRequest,
+} from "@/lib/support-intake";
 
 export const runtime = "nodejs";
 
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-const categories: SupportCategory[] = [
-  "WEBSITE",
-  "HOSTING",
-  "EMAIL",
-  "BUG",
-  "CHANGE",
-  "OTHER",
-];
-
-const priorities: SupportPriority[] = [
-  "NORMAL",
-  "URGENT",
-];
-
-type RateEntry = {
-  count: number;
-  resetAt: number;
-};
-
-const globalForSupport = globalThis as typeof globalThis & {
-  staarkSupportRate?: Map<string, RateEntry>;
-};
-
-const rateStore = globalForSupport.staarkSupportRate ?? new Map<string, RateEntry>();
-globalForSupport.staarkSupportRate = rateStore;
-
-function value(input: unknown, max: number) {
-  return typeof input === "string" ? input.trim().slice(0, max) : "";
+function noStore(
+  response: NextResponse
+): NextResponse {
+  response.headers.set(
+    "Cache-Control",
+    "no-store"
+  );
+  return response;
 }
 
-function clientIp(request: Request) {
-  return request.headers.get("cf-connecting-ip") || request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-}
-
-function rateLimited(request: Request) {
-  const key = clientIp(request);
-  const now = Date.now();
-  const windowMs = 10 * 60 * 1000;
-  const current = rateStore.get(key);
-
-  if (!current || current.resetAt <= now) {
-    rateStore.set(key, { count: 1, resetAt: now + windowMs });
-    return false;
-  }
-
-  current.count += 1;
-  return current.count > 5;
-}
-
-function reference() {
-  return `SUP-${randomUUID().replaceAll("-", "").slice(0, 8).toUpperCase()}`;
+function errorResponse(
+  status: number,
+  error: string,
+  headers?: Record<string, string>
+) {
+  return noStore(
+    NextResponse.json(
+      {
+        error,
+      },
+      {
+        status,
+        headers,
+      }
+    )
+  );
 }
 
 export async function POST(request: Request) {
-  if (rateLimited(request)) {
-    return NextResponse.json(
-      { error: "För många supportärenden. Vänta en stund och försök igen." },
-      { status: 429 }
+  if (!sameOriginRequest(request)) {
+    return errorResponse(
+      403,
+      "Förfrågan kommer från en annan webbplats."
+    );
+  }
+
+  let body: Record<string, unknown>;
+
+  try {
+    body = await readBoundedBody(
+      request,
+      SUPPORT_MAX_BYTES
+    );
+  } catch (error) {
+    if (error instanceof RequestBodyError) {
+      return errorResponse(
+        error.status,
+        error.code === "too_large"
+          ? "Supportärendet är för stort."
+          : error.code === "unsupported"
+            ? "Supportärendets format stöds inte."
+            : "Kontrollera supportärendets uppgifter."
+      );
+    }
+
+    console.error(
+      "[SUPPORT] Could not read public intake body."
+    );
+
+    return errorResponse(
+      500,
+      "Supportärendet kunde inte skickas. Försök igen."
     );
   }
 
   try {
-    const body = (await request.json()) as Record<string, unknown>;
+    const result = await submitSupportRequest(
+      body,
+      {
+        ip: clientIp(request),
+      }
+    );
 
-    if (value(body.fax, 200)) {
-      return NextResponse.json({ ok: true, reference: "SUP-RECEIVED" });
-    }
-
-    const name = value(body.name, 120);
-    const email = value(body.email, 320).toLowerCase();
-    const company = value(body.company, 160);
-    const website = value(body.website, 300);
-    const title = value(body.title, 160);
-    const description = value(body.description, 10000);
-    const category = value(body.category, 40) as SupportCategory;
-    const priority = value(body.priority, 40) as SupportPriority;
-
-    if (
-      name.length < 2 ||
-      !emailPattern.test(email) ||
-      title.length < 2 ||
-      description.length < 10 ||
-      !categories.includes(category) ||
-      !priorities.includes(priority)
-    ) {
-      return NextResponse.json(
-        { error: "Kontrollera namn, e-post, kategori och beskrivning." },
-        { status: 400 }
+    if (result.kind === "rate_limited") {
+      return errorResponse(
+        429,
+        "För många supportärenden. Vänta en stund och försök igen.",
+        {
+          "Retry-After": String(
+            result.retryAfter
+          ),
+        }
       );
     }
 
-    const client = await prisma.client.findFirst({
-      where: {
-        OR: [
-          { billingEmail: { equals: email, mode: "insensitive" } },
-          { contacts: { some: { email: { equals: email, mode: "insensitive" } } } },
-        ],
-      },
-      select: { id: true },
-    });
-
-    let ticketReference = reference();
-
-    while (
-      await prisma.supportRequest.findUnique({
-        where: { reference: ticketReference },
-        select: { id: true },
-      })
-    ) {
-      ticketReference = reference();
+    if (result.kind === "invalid") {
+      return errorResponse(
+        400,
+        result.message
+      );
     }
 
-    const supportRequest = await prisma.supportRequest.create({
-      data: {
-        clientId: client?.id ?? null,
-        reference: ticketReference,
-        requesterName: name,
-        requesterEmail: email,
-        requesterCompany: company || null,
-        requesterWebsite: website || null,
-        title,
-        description,
-        category,
-        priority,
-        status: "OPEN",
-        coverage: "UNASSESSED",
-        timeSpentMinutes: 0,
-      },
-      select: { id: true, clientId: true, reference: true },
-    });
+    if (
+      result.created &&
+      result.supportRequestId &&
+      result.notification
+    ) {
+      try {
+        await createAdminNotification({
+          type: "support.created",
+          title: "New support request",
+          message: `${result.notification.name} – ${result.notification.title}`,
+          href: `/hub/support/${result.supportRequestId}`,
+          metadata: {
+            supportRequestId:
+              result.supportRequestId,
+            reference: result.reference,
+            priority:
+              result.notification.priority,
+          },
+          dedupeKey: `support:${result.supportRequestId}`,
+          preference: "support",
+        });
 
-    await createAdminNotification({
-      type: "support.created",
-      title: "New support request",
-      message: `${name} · ${title}`,
-      href: `/hub/support/${supportRequest.id}`,
-      metadata: {
-        supportRequestId: supportRequest.id,
-        reference: supportRequest.reference,
-        priority,
-      },
-      dedupeKey: `support:${supportRequest.id}`,
-      preference: "support",
-    });
+        revalidatePath("/hub/support");
 
-    revalidatePath("/hub/support");
-    if (supportRequest.clientId) revalidatePath(`/hub/clients/${supportRequest.clientId}`);
+        if (result.clientId) {
+          revalidatePath(
+            `/hub/clients/${result.clientId}`
+          );
+        }
+      } catch (error) {
+        // The ticket already exists. A notification failure must not invite
+        // the visitor to submit it again.
+        console.error(
+          "[SUPPORT] Could not publish admin notification.",
+          error
+        );
+      }
+    }
 
-    return NextResponse.json({ ok: true, reference: supportRequest.reference });
+    return noStore(
+      NextResponse.json({
+        ok: true,
+        reference: result.reference,
+        ...(result.created
+          ? {}
+          : {
+              duplicate: true,
+            }),
+      })
+    );
   } catch (error) {
-    console.error("[SUPPORT] Public intake failed:", error);
-    return NextResponse.json(
-      { error: "Supportärendet kunde inte skickas. Försök igen." },
-      { status: 500 }
+    console.error(
+      "[SUPPORT] Public intake failed.",
+      error
+    );
+
+    return errorResponse(
+      503,
+      "Supportärendet kunde inte skickas just nu. Försök igen."
     );
   }
 }

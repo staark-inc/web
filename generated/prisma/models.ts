@@ -9,6 +9,7 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User.ts'
+export type * from './models/RateLimitBucket.ts'
 export type * from './models/Notification.ts'
 export type * from './models/Settings.ts'
 export type * from './models/Contact.ts'

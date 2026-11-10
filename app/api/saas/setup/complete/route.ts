@@ -1,5 +1,15 @@
 import { NextResponse } from "next/server";
 
+import { consumeRateLimit } from "@/lib/rate-limit";
+import {
+  RequestBodyError,
+  readBoundedBody,
+} from "@/lib/request-body";
+import {
+  clientIp,
+  hashIdentifier,
+  sameOriginRequest,
+} from "@/lib/request-security";
 import {
   inspectSetupClaimToken,
   markSetupClaimTokenUsed,
@@ -37,12 +47,85 @@ function email(
 export async function POST(
   request: Request,
 ) {
+  if (!sameOriginRequest(request)) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error:
+          "Setup is not allowed from this origin.",
+      },
+      {
+        status: 403,
+        headers: {
+          "Cache-Control": "no-store",
+        },
+      },
+    );
+  }
+
   try {
-    const body =
-      await request.json() as Record<
-        string,
-        unknown
-      >;
+    const globalLimit =
+      await consumeRateLimit({
+        key: "saas:setup:global",
+        limit: 100,
+        windowMs: 60 * 60 * 1000,
+      });
+
+    if (!globalLimit.allowed) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error:
+            "Too many setup attempts. Try again later.",
+        },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(
+              globalLimit.retryAfter,
+            ),
+            "Cache-Control": "no-store",
+          },
+        },
+      );
+    }
+
+    const ip = clientIp(request);
+
+    if (ip) {
+      const ipLimit =
+        await consumeRateLimit({
+          key: `saas:setup:ip:${hashIdentifier(
+            ip,
+          )}`,
+          limit: 20,
+          windowMs: 60 * 60 * 1000,
+        });
+
+      if (!ipLimit.allowed) {
+        return NextResponse.json(
+          {
+            ok: false,
+            error:
+              "Too many setup attempts. Try again later.",
+          },
+          {
+            status: 429,
+            headers: {
+              "Retry-After": String(
+                ipLimit.retryAfter,
+              ),
+              "Cache-Control": "no-store",
+            },
+          },
+        );
+      }
+    }
+
+    const body = await readBoundedBody(
+      request,
+      64 * 1024,
+    );
 
     const token =
       text(body.token);
@@ -212,8 +295,32 @@ export async function POST(
 
       customDomainPending:
         result.customDomainPending,
+    }, {
+      headers: {
+        "Cache-Control": "no-store",
+      },
     });
   } catch (error) {
+    if (error instanceof RequestBodyError) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error:
+            error.code === "too_large"
+              ? "Request body is too large."
+              : error.code === "unsupported"
+                ? "Unsupported content type."
+                : "Could not read the setup request.",
+        },
+        {
+          status: error.status,
+          headers: {
+            "Cache-Control": "no-store",
+          },
+        },
+      );
+    }
+
     console.error(
       "[SAAS SETUP] Complete failed:",
       error,
@@ -230,6 +337,9 @@ export async function POST(
       },
       {
         status: 400,
+        headers: {
+          "Cache-Control": "no-store",
+        },
       },
     );
   }

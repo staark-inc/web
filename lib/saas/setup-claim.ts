@@ -14,6 +14,15 @@ import {
 
 export const SAAS_SETUP_CLAIM_TTL_MINUTES = 15;
 const CLAIM_PREFIX = "stk_claim_";
+const ACTIVE_CLAIM_LIMIT = 10;
+
+export function isStripeCheckoutSessionId(
+  value: string
+): boolean {
+  return /^cs_(?:test|live)_[A-Za-z0-9]{10,200}$/.test(
+    value
+  );
+}
 
 type StripeCheckoutSession = {
   id: string;
@@ -89,7 +98,7 @@ function generateSetupClaimToken(): string {
 }
 
 export async function createSetupClaimFromCheckoutSession(sessionId: string) {
-  if (!sessionId.startsWith("cs_")) {
+  if (!isStripeCheckoutSessionId(sessionId)) {
     throw new Error("Invalid Stripe Checkout Session id.");
   }
 
@@ -144,22 +153,34 @@ export async function createSetupClaimFromCheckoutSession(sessionId: string) {
     );
   }
 
-  const provisioning = subscription.provisioning;
+  return createSetupClaimForProvisioning(
+    subscription.provisioning.id,
+  );
+}
+
+/**
+ * Create a new one-time setup link without revoking links that are still
+ * valid. Refreshing the success page or clicking "configure" twice must not
+ * invalidate the link the customer already opened.
+ */
+export async function createSetupClaimForProvisioning(
+  provisioningId: string,
+) {
   const token = generateSetupClaimToken();
   const tokenHash = hashSetupClaimToken(token);
   const expiresAt = new Date(
     Date.now() + SAAS_SETUP_CLAIM_TTL_MINUTES * 60 * 1000,
   );
 
-  const claim = await prisma.$transaction(async (tx) => {
-    const lockKey = `saas-setup-claim:${provisioning.id}`;
+  const result = await prisma.$transaction(async (tx) => {
+    const lockKey = `saas-setup-claim:${provisioningId}`;
     await tx.$queryRaw<Array<{ acquired: number }>>`
       SELECT 1::int AS acquired
       FROM pg_advisory_xact_lock(hashtextextended(${lockKey}, 0))
     `;
 
     const freshProvisioning = await tx.saasProvisioning.findUnique({
-      where: { id: provisioning.id },
+      where: { id: provisioningId },
       include: { billingSubscription: true },
     });
 
@@ -174,31 +195,45 @@ export async function createSetupClaimFromCheckoutSession(sessionId: string) {
       throw new Error("Subscription is no longer eligible for setup.");
     }
 
-    await tx.saasSetupClaim.updateMany({
+    const activeClaims = await tx.saasSetupClaim.count({
       where: {
-        provisioningId: provisioning.id,
+        provisioningId,
         usedAt: null,
         revokedAt: null,
+        expiresAt: {
+          gt: new Date(),
+        },
       },
-      data: { revokedAt: new Date() },
     });
 
-    return tx.saasSetupClaim.create({
+    if (activeClaims >= ACTIVE_CLAIM_LIMIT) {
+      throw new Error(
+        "Too many active setup links. Use an existing link or wait for it to expire.",
+      );
+    }
+
+    const claim = await tx.saasSetupClaim.create({
       data: {
-        provisioningId: provisioning.id,
+        provisioningId,
         tokenHash,
         hint: token.slice(-6),
         expiresAt,
       },
     });
+
+    return {
+      claim,
+      planCode: freshProvisioning.planCode,
+      environment: freshProvisioning.environment,
+    };
   });
 
   return {
     token,
-    expiresAt: claim.expiresAt,
-    provisioningId: provisioning.id,
-    planCode: provisioning.planCode,
-    environment: provisioning.environment,
+    expiresAt: result.claim.expiresAt,
+    provisioningId,
+    planCode: result.planCode,
+    environment: result.environment,
   };
 }
 
