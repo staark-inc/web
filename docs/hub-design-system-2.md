@@ -15,7 +15,7 @@ This document is the working contract for the Hub UI migration. It records the U
 
 The migration order is deliberate: tokens and primitives first, then shell, then page templates, then legacy CSS removal.
 
-The isolated interactive approval surface is documented in [`hub-design-preview.md`](./hub-design-preview.md). It is not part of production navigation and must be approved before UI-02.
+The isolated interactive approval surface is documented in [`hub-design-preview.md`](./hub-design-preview.md), with the current V2 redesign in [`hub-design-preview-v2.md`](./hub-design-preview-v2.md). It is not part of production navigation and must be approved before UI-02.
 
 ## 2. Token architecture
 

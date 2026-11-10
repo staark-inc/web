@@ -168,7 +168,25 @@ try {
   page.on("pageerror", (error) => pageErrors.push(`interaction: ${error.message}`));
 
   await page.goto(`${origin}/hub/design-preview?section=dashboard`, { waitUntil: "load" });
-  await page.getByRole("link", { name: "Review pipeline" }).click();
+  const compactToggle = page.getByRole("button", { name: "Collapse navigation" });
+  await compactToggle.click();
+  assert.equal(await page.locator('[data-compact="true"]').count(), 1);
+  const compactWidth = (await page.locator("aside").first().boundingBox())?.width || 0;
+  assert.ok(compactWidth <= 90, "Compact sidebar should collapse to the icon rail");
+  await page.getByRole("button", { name: "Expand navigation" }).click();
+  assert.equal(await page.locator('[data-compact="false"]').count(), 1);
+
+  await page.keyboard.press("Control+K");
+  const searchDialog = page.getByRole("dialog", { name: "Search Staark" });
+  await searchDialog.waitFor();
+  assert.equal(
+    await page.evaluate(() => document.activeElement?.getAttribute("type")),
+    "search",
+    "Global search shortcut must focus the search input",
+  );
+  assert.deepEqual(await axeViolations(page, "dialog[open]"), []);
+  await searchDialog.getByRole("searchbox", { name: "Search preview" }).fill("Northstar");
+  await searchDialog.getByRole("button", { name: /Northstar Dental/ }).click();
   await page.getByRole("heading", { level: 1, name: "Clients" }).waitFor();
 
   await page.getByRole("searchbox", { name: "Search clients" }).fill("Northstar");
@@ -179,7 +197,13 @@ try {
     .click();
   await page.getByText("3 records", { exact: true }).waitFor();
 
-  await page.goto(`${origin}/hub/design-preview?section=forms`, { waitUntil: "load" });
+  await page.getByRole("button", { name: "Quick create" }).click();
+  const quickCreate = page.getByRole("dialog", { name: "Quick create" });
+  await quickCreate.waitFor();
+  assert.deepEqual(await axeViolations(page, "dialog[open]"), []);
+  await quickCreate.getByRole("button", { name: /New client/ }).click();
+  await page.getByRole("heading", { level: 1, name: "Forms" }).waitFor();
+
   await page.getByRole("button", { name: "Review & save" }).click();
   await page.getByText("Enter a contact name.", { exact: true }).waitFor();
   await page.getByText("Enter an email address.", { exact: true }).waitFor();
@@ -188,9 +212,16 @@ try {
   await page.getByRole("button", { name: "Review & save" }).click();
   const confirmDialog = page.getByRole("dialog", { name: "Save preview client?" });
   await confirmDialog.waitFor();
-  assert.deepEqual(await axeViolations(page, 'dialog[open]'), []);
+  assert.deepEqual(await axeViolations(page, "dialog[open]"), []);
   await confirmDialog.getByRole("button", { name: "Save preview" }).click();
   await page.getByText("Preview client saved locally.", { exact: false }).waitFor();
+
+  await page.getByRole("button", { name: "Discard draft" }).click();
+  const discardDialog = page.getByRole("dialog", { name: "Discard this draft?" });
+  await discardDialog.waitFor();
+  assert.deepEqual(await axeViolations(page, "dialog[open]"), []);
+  await discardDialog.getByRole("button", { name: "Discard draft" }).click();
+  assert.equal(await page.getByLabel("Contact name").inputValue(), "");
 
   await page.goto(`${origin}/hub/design-preview?section=settings`, { waitUntil: "load" });
   await page.getByRole("tab", { name: "Integrations" }).click();
@@ -201,9 +232,12 @@ try {
   assert.equal(await digestSwitch.getAttribute("aria-checked"), "false");
   await digestSwitch.click();
   assert.equal(await digestSwitch.getAttribute("aria-checked"), "true");
+  await page.getByRole("tab", { name: "Security" }).click();
+  await page.getByRole("heading", { name: "TOTP authenticator enabled" }).waitFor();
+  assert.deepEqual(await axeViolations(page, "#settings-panel-security"), []);
 
   await page.goto(`${origin}/hub/design-preview?section=shell`, { waitUntil: "load" });
-  const navTrigger = page.getByRole("button", { name: "Open mobile nav" });
+  const navTrigger = page.getByRole("button", { name: "Mobile nav", exact: true });
   await navTrigger.click();
   const mobileDialog = page.getByRole("dialog", { name: "Preview navigation" });
   await mobileDialog.waitFor();
@@ -241,14 +275,19 @@ try {
   const mobileNav = mobilePage.getByRole("dialog", { name: "Preview navigation" });
   await mobileNav.waitFor();
   assert.deepEqual(await axeViolations(mobilePage, "dialog[open]"), []);
-  await mobileNav.getByRole("button", { name: "CRM collection" }).click();
+  await mobileNav.getByRole("button", { name: /^Clients/ }).click();
   await mobilePage.getByRole("heading", { level: 1, name: "Clients" }).waitFor();
   await mobileNav.waitFor({ state: "hidden" });
+  await noOverflow(mobilePage);
+
+  await mobilePage.goto(`${origin}/hub/design-preview?section=settings`, { waitUntil: "load" });
+  await mobilePage.getByLabel("Settings category").selectOption("security");
+  await mobilePage.getByRole("heading", { name: "TOTP authenticator enabled" }).waitFor();
   await noOverflow(mobilePage);
   await mobile.close();
 
   assert.deepEqual(pageErrors, [], "Preview generated page errors");
-  console.log("PASS preview interactions: filters, forms, dialog, settings, shell, mobile nav.");
+  console.log("PASS preview interactions: compact nav, search, filters, quick create, forms, settings, security, shell, mobile nav.");
 } finally {
   await browser.close();
 }

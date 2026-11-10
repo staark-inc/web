@@ -1,11 +1,11 @@
 "use client";
 
 import {
-  ArrowLeft,
   ArrowRight,
+  MoreHorizontal,
+  Plus,
   Search,
   SlidersHorizontal,
-  UserRound,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 
@@ -13,8 +13,6 @@ import {
   Button,
   Card,
   EmptyState,
-  Metric,
-  Metrics,
   PageHeader,
   StatusBadge,
 } from "@/components/hub/ui";
@@ -28,9 +26,10 @@ import {
   type PreviewStatus,
 } from "../preview-data";
 import type { PreviewSectionId } from "../preview-sections";
+import { PreviewDialog } from "../PreviewDialog";
 import styles from "../preview.module.css";
 
-const pageSize = 5;
+const pageSize = 6;
 
 const statusTone: Record<PreviewStatus, "success" | "info" | "warning"> = {
   Active: "success",
@@ -59,6 +58,7 @@ export function CollectionSection({
   const [status, setStatus] = useState<(typeof previewStatuses)[number]>("All");
   const [owner, setOwner] = useState<(typeof previewOwners)[number]>("All owners");
   const [page, setPage] = useState(1);
+  const [actionClient, setActionClient] = useState<PreviewClient | null>(null);
 
   const filtered = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -80,6 +80,7 @@ export function CollectionSection({
   const start = (currentPage - 1) * pageSize;
   const visible = filtered.slice(start, start + pageSize);
   const pageEnd = Math.min(start + pageSize, filtered.length);
+  const pipelineValue = previewClients.reduce((sum, client) => sum + client.value, 0);
 
   const counts = useMemo(
     () =>
@@ -120,66 +121,87 @@ export function CollectionSection({
     <div className={styles.sectionStack}>
       <PageHeader
         className={styles.pageHeader}
-        eyebrow="CRM / CLIENTS"
+        eyebrow="CRM / SALES WORKSPACE"
         title="Clients"
-        description="A single collection contract for search, status, ownership, table density and mobile cards."
+        description="A practical pipeline view: dense records, visible ownership and one clear next action for every account."
         action={
-          <Button type="button" onClick={() => onNavigate("forms")}>
-            New client
-            <ArrowRight size={16} aria-hidden="true" />
-          </Button>
+          <div className={styles.headerActions}>
+            <Button type="button" variant="secondary" onClick={() => onNavigate("detail")}>
+              Open priority
+            </Button>
+            <Button type="button" onClick={() => onNavigate("forms")}>
+              <Plus size={16} aria-hidden="true" />
+              New client
+            </Button>
+          </div>
         }
       />
 
-      <Metrics label="Client collection summary">
-        <Metric label="All clients" value="12" description="Across three owners" icon={<UserRound size={18} />} />
-        <Metric label="Active" value="7" description="Delivery or retainer" icon={<SlidersHorizontal size={18} />} />
-        <Metric label="At risk" value="3" description="Need intervention" icon={<ArrowLeft size={18} />} />
-      </Metrics>
+      <Card padding="none" className={styles.summaryRail}>
+        <div>
+          <span>Portfolio value</span>
+          <strong>{formatPreviewAmount(pipelineValue)}</strong>
+          <small>Across 12 active accounts</small>
+        </div>
+        <div>
+          <span>Active clients</span>
+          <strong>7</strong>
+          <small>Delivery or retainer</small>
+        </div>
+        <div>
+          <span>At risk</span>
+          <strong className={styles.riskNumber}>3</strong>
+          <small>Need intervention</small>
+        </div>
+        <div>
+          <span>Average deal</span>
+          <strong>{formatPreviewAmount(Math.round(pipelineValue / previewClients.length))}</strong>
+          <small>Portfolio snapshot</small>
+        </div>
+      </Card>
+
+      <div className={styles.collectionToolbar}>
+        <label className={styles.searchField}>
+          <span className={styles.srOnly}>Search clients</span>
+          <Search size={17} aria-hidden="true" />
+          <input
+            type="search"
+            value={query}
+            onChange={(event) => updateQuery(event.target.value)}
+            placeholder="Search company, contact or next step"
+          />
+        </label>
+
+        <label className={styles.selectField}>
+          <span className={styles.srOnly}>Filter by owner</span>
+          <select value={owner} onChange={(event) => updateOwner(event.target.value as typeof owner)}>
+            {previewOwners.map((option) => (
+              <option key={option} value={option}>{option}</option>
+            ))}
+          </select>
+        </label>
+
+        <div className={styles.filterTabs} role="group" aria-label="Filter by client status">
+          {previewStatuses.map((option) => (
+            <button
+              key={option}
+              type="button"
+              className={`${styles.filterButton} ${status === option ? styles.filterActive : ""}`}
+              aria-pressed={status === option}
+              onClick={() => updateStatus(option)}
+            >
+              {option}
+              <strong>{counts[option]}</strong>
+            </button>
+          ))}
+        </div>
+
+        <span className={styles.resultCount} aria-live="polite">
+          {filtered.length} {filtered.length === 1 ? "record" : "records"}
+        </span>
+      </div>
 
       <Card padding="none" className={styles.collectionCard}>
-        <div className={styles.toolbar}>
-          <label className={styles.searchField}>
-            <span className={styles.srOnly}>Search clients</span>
-            <Search size={17} aria-hidden="true" />
-            <input
-              type="search"
-              value={query}
-              onChange={(event) => updateQuery(event.target.value)}
-              placeholder="Search company, contact or next step"
-            />
-          </label>
-
-          <label className={styles.selectField}>
-            <span className={styles.srOnly}>Filter by owner</span>
-            <select value={owner} onChange={(event) => updateOwner(event.target.value as typeof owner)}>
-              {previewOwners.map((option) => (
-                <option key={option} value={option}>{option}</option>
-              ))}
-            </select>
-          </label>
-        </div>
-
-        <div className={styles.collectionFilterBar}>
-          <div className={styles.filterTabs} role="group" aria-label="Filter by client status">
-            {previewStatuses.map((option) => (
-              <button
-                key={option}
-                type="button"
-                className={`${styles.filterButton} ${status === option ? styles.filterActive : ""}`}
-                aria-pressed={status === option}
-                onClick={() => updateStatus(option)}
-              >
-                {option}
-                <strong>{counts[option]}</strong>
-              </button>
-            ))}
-          </div>
-          <span className={styles.resultCount} aria-live="polite">
-            {filtered.length} {filtered.length === 1 ? "record" : "records"}
-          </span>
-        </div>
-
         {visible.length === 0 ? (
           <div className={styles.emptyWrap}>
             <EmptyState
@@ -205,7 +227,7 @@ export function CollectionSection({
                     <th scope="col">Owner</th>
                     <th scope="col">Value</th>
                     <th scope="col">Next step</th>
-                    <th scope="col"><span className={styles.srOnly}>Action</span></th>
+                    <th scope="col"><span className={styles.srOnly}>Actions</span></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -213,22 +235,37 @@ export function CollectionSection({
                     <tr key={client.id}>
                       <th scope="row"><ClientIdentity client={client} /></th>
                       <td><StatusBadge tone={statusTone[client.status]}>{client.status}</StatusBadge></td>
-                      <td>{client.owner}</td>
+                      <td>
+                        <span className={styles.ownerCell}>
+                          <span>{client.owner.slice(0, 1)}</span>
+                          {client.owner}
+                        </span>
+                      </td>
                       <td className={styles.amountCell}>{formatPreviewAmount(client.value)}</td>
                       <td>
                         <span className={styles.nextStep}>{client.nextStep}</span>
                         <small>{client.updated}</small>
                       </td>
                       <td>
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant="secondary"
-                          onClick={() => onNavigate("detail")}
-                          aria-label={`Open ${client.company}`}
-                        >
-                          Open
-                        </Button>
+                        <span className={styles.rowActions}>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="secondary"
+                            onClick={() => onNavigate("detail")}
+                            aria-label={`Open ${client.company}`}
+                          >
+                            Open
+                          </Button>
+                          <button
+                            type="button"
+                            className={styles.iconAction}
+                            aria-label={`More actions for ${client.company}`}
+                            onClick={() => setActionClient(client)}
+                          >
+                            <MoreHorizontal size={16} aria-hidden="true" />
+                          </button>
+                        </span>
                       </td>
                     </tr>
                   ))}
@@ -243,22 +280,34 @@ export function CollectionSection({
                     <ClientIdentity client={client} />
                     <StatusBadge tone={statusTone[client.status]}>{client.status}</StatusBadge>
                   </div>
+                  <div className={styles.recordValue}>
+                    <span>Portfolio value</span>
+                    <strong>{formatPreviewAmount(client.value)}</strong>
+                  </div>
                   <dl className={styles.recordFacts}>
                     <div><dt>Owner</dt><dd>{client.owner}</dd></div>
-                    <div><dt>Value</dt><dd>{formatPreviewAmount(client.value)}</dd></div>
-                    <div><dt>Next step</dt><dd>{client.nextStep}</dd></div>
                     <div><dt>Updated</dt><dd>{client.updated}</dd></div>
+                    <div><dt>Next step</dt><dd>{client.nextStep}</dd></div>
                   </dl>
-                  <Button
-                    type="button"
-                    size="sm"
-                    variant="secondary"
-                    block
-                    onClick={() => onNavigate("detail")}
-                    aria-label={`Open ${client.company}`}
-                  >
-                    Open client
-                  </Button>
+                  <div className={styles.recordActions}>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="secondary"
+                      onClick={() => onNavigate("detail")}
+                      aria-label={`Open ${client.company}`}
+                    >
+                      Open client
+                    </Button>
+                    <button
+                      type="button"
+                      className={styles.iconAction}
+                      aria-label={`More actions for ${client.company}`}
+                      onClick={() => setActionClient(client)}
+                    >
+                      <MoreHorizontal size={16} aria-hidden="true" />
+                    </button>
+                  </div>
                 </Card>
               ))}
             </div>
@@ -296,6 +345,41 @@ export function CollectionSection({
       <p className={styles.dataNote}>
         Fictional client data only. Search, filters and pagination run entirely in local state.
       </p>
+
+      <PreviewDialog
+        open={Boolean(actionClient)}
+        onClose={() => setActionClient(null)}
+        title={actionClient ? actionClient.company : "Client actions"}
+        description={actionClient ? `${actionClient.contact} · ${actionClient.status} · ${formatPreviewAmount(actionClient.value)}` : undefined}
+        footer={
+          <>
+            <Button type="button" variant="secondary" onClick={() => setActionClient(null)}>
+              Close
+            </Button>
+            <Button
+              type="button"
+              onClick={() => {
+                setActionClient(null);
+                onNavigate("detail");
+              }}
+            >
+              Open client
+              <ArrowRight size={15} aria-hidden="true" />
+            </Button>
+          </>
+        }
+      >
+        <div className={styles.quickActionsList}>
+          <button type="button" onClick={() => { setActionClient(null); onNavigate("detail"); }}>
+            <SlidersHorizontal size={16} aria-hidden="true" />
+            <span><strong>Open record</strong><small>Review activity, notes and next steps</small></span>
+          </button>
+          <button type="button" onClick={() => { setActionClient(null); onNavigate("forms"); }}>
+            <Plus size={16} aria-hidden="true" />
+            <span><strong>Create follow-up</strong><small>Open the local client intake form</small></span>
+          </button>
+        </div>
+      </PreviewDialog>
     </div>
   );
 }
