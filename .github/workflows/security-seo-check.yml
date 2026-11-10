@@ -14,6 +14,7 @@ jobs:
     env:
       DATABASE_URL: postgresql://staark:build-only@localhost:5432/staark
       NEXT_TELEMETRY_DISABLED: "1"
+      AUTH_SECRET: ci-preview-only-not-a-production-secret-2026
     steps:
       - uses: actions/checkout@v6
         with:
@@ -28,6 +29,7 @@ jobs:
         run: npm run check:hub-ui-contract
       - run: npm ci
       - run: npm run test:hub-ui
+      - run: npm run test:hub-preview
       - run: npm run test:security-seo
       - run: npm run test:news
       - run: npm run test:public-website
@@ -60,4 +62,5 @@ jobs:
           npm run check:google-ads-browser
           npm run check:hub-browser
           npm run check:hub-ui-browser
+          npm run check:hub-preview
           npm run check:hub-visual

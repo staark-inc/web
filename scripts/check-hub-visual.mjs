@@ -1,18 +1,22 @@
 #!/usr/bin/env node
 /**
- * Deterministic UI-01 visual regression check.
+ * Deterministic Hub visual regression check.
  *
  * Run against a production build: `npm run check:hub-visual`.
  * Create/refresh baselines on the same Linux + Playwright image used by CI:
  *   HUB_VISUAL_UPDATE=1 npm run check:hub-visual
  *
- * Routes: authenticated-shell fixture, login and the test-only foundation
- * fixture. Fonts are bundled by next/font, animations are disabled and all
- * external requests are blocked.
+ * Routes: authenticated-shell fixture, login, the test-only foundation fixture
+ * and all six authenticated design-preview sections. Fonts are bundled by
+ * next/font, animations are disabled and all external requests are blocked.
+ *
+ * AUTH_SECRET must match the running server so the preview session cookie is
+ * accepted. The cookie is test-only and never used outside browser checks.
  */
 import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import { SignJWT } from "jose";
 import { chromium } from "playwright";
 import sharp from "sharp";
 
@@ -31,11 +35,42 @@ const viewports = [
   { width: 1440, height: 900 },
 ];
 
+const previewSections = [
+  "dashboard",
+  "collection",
+  "detail",
+  "forms",
+  "settings",
+  "shell",
+];
+
 const routes = [
   { name: "hub-workspace", path: "/hub-ui-fixture", ready: ".hub-page" },
   { name: "foundation", path: "/hub-ui-foundation", ready: "[data-sw-ui] h1" },
   { name: "login", path: "/hub/login", ready: ".hub-login-card" },
+  ...previewSections.map((section) => ({
+    name: `preview-${section}`,
+    path: `/hub/design-preview?section=${section}`,
+    ready: "#preview-main h1",
+    auth: true,
+  })),
 ];
+
+const authSecret = process.env.AUTH_SECRET;
+if (!authSecret) {
+  console.error("AUTH_SECRET is required for the authenticated design-preview visual routes.");
+  process.exit(1);
+}
+
+const previewSession = await new SignJWT({
+  email: "preview.qa@staark.example",
+  role: "ADMIN",
+})
+  .setProtectedHeader({ alg: "HS256" })
+  .setSubject("preview-qa")
+  .setIssuedAt()
+  .setExpirationTime("1h")
+  .sign(new TextEncoder().encode(authSecret));
 
 const browser = await chromium.launch({
   headless: true,
@@ -106,6 +141,19 @@ try {
         hasTouch: false,
         isMobile: false,
       });
+
+      if (route.auth) {
+        await context.addCookies([
+          {
+            name: "staark_hub_session",
+            value: previewSession,
+            url: new URL(origin).origin,
+            httpOnly: true,
+            sameSite: "Lax",
+            secure: origin.startsWith("https://"),
+          },
+        ]);
+      }
 
       await context.addInitScript(() => {
         localStorage.setItem(
